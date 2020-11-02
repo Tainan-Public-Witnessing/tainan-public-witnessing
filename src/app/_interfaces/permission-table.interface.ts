@@ -1,3 +1,3 @@
-export interface IPermissionTable {
+export interface PermissionTable {
   home: boolean;
 }

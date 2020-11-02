@@ -1,22 +1,22 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import { IGlobalEvent } from 'src/app/_interfaces/global-event.interface';
+import { GlobalEvent } from 'src/app/_interfaces/global-event.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GlobalEventService {
 
-  globalEvent$ = new Subject<IGlobalEvent>();
+  globalEvent$ = new Subject<GlobalEvent>();
 
   constructor() { }
 
-  emitGlobalEvent = (globalEvent: IGlobalEvent): void => {
+  emitGlobalEvent = (globalEvent: GlobalEvent): void => {
     this.globalEvent$.next(globalEvent);
   }
 
-  getGlobalEventById = (id: string): Observable<IGlobalEvent> => {
+  getGlobalEventById = (id: string): Observable<GlobalEvent> => {
     return this.globalEvent$.pipe(
       filter(globalEvent => globalEvent.id === id)
     );

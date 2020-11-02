@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { IPermissionTable } from '../_interfaces/permission-table.interface';
+import { PermissionTable } from '../_interfaces/permission-table.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PermissionService {
 
-  currentPermissionTable$ = new BehaviorSubject<IPermissionTable>(null);
+  currentPermissionTable$ = new BehaviorSubject<PermissionTable>(null);
 
   constructor() { }
 

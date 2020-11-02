@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { IMenuLink } from 'src/app/_interfaces/menu-link.interface';
+import { MenuLink } from 'src/app/_interfaces/menu-link.interface';
 import { PermissionService } from 'src/app/_services/permission.service';
 import { GlobalEventService } from '../_services/global-event.service';
 
@@ -12,11 +12,11 @@ import { GlobalEventService } from '../_services/global-event.service';
 })
 export class MenuComponent implements OnInit {
 
-  MENU_LINKS: IMenuLink[] = [
+  MENU_LINKS: MenuLink[] = [
     { display: 'Home', url: 'home'}
   ];
 
-  currentMenuLinks$: Observable<IMenuLink[]>;
+  currentMenuLinks$: Observable<MenuLink[]>;
 
   constructor(
     private permissionService: PermissionService,

@@ -1,4 +1,4 @@
-export interface IMenuLink {
+export interface MenuLink {
   display: string;
   url: string;
 }
