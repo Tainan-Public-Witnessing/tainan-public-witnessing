@@ -1,5 +1,7 @@
 <mat-selection-list multiple="false">
-  <mat-list-option *ngFor="let menuLink of menuLinks" [routerLink]="menuLink.url">
+  <mat-list-option
+    *ngFor="let menuLink of (currentMenuLinks$ | async)"
+    [routerLink]="menuLink.url">
     {{menuLink.display}}
   </mat-list-option>
 </mat-selection-list>

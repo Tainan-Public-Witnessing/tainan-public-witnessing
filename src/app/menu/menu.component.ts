@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { IMenuLink } from 'src/app/_interfaces/menu-link.interface';
+import { PermissionService } from 'src/app/_services/permission.service';
 
 @Component({
   selector: 'app-menu',
@@ -8,14 +11,20 @@ import { IMenuLink } from 'src/app/_interfaces/menu-link.interface';
 })
 export class MenuComponent implements OnInit {
 
-  menuLinks: IMenuLink[];
+  MENU_LINKS: IMenuLink[] = [
+    { display: 'Home', url: 'home'}
+  ];
 
-  constructor() { }
+  currentMenuLinks$: Observable<IMenuLink[]>;
+
+  constructor(
+    private permissionService: PermissionService
+  ) { }
 
   ngOnInit(): void {
-    this.menuLinks = [
-      { display: 'Home', url: 'home'}
-    ];
+    this.currentMenuLinks$ = this.permissionService.currentPermissionTable$.pipe(
+      map(permissionTable => this.MENU_LINKS.filter(menuLink => permissionTable[menuLink.url]))
+    );
   }
 
 }
