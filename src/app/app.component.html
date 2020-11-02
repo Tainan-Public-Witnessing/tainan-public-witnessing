@@ -1,0 +1,22 @@
+<div class="app">
+
+  <mat-toolbar>
+
+    <button mat-icon-button (click)="onMenuButtonClick()">
+      <mat-icon>menu</mat-icon>
+    </button>
+
+    <span>台南都市公眾見證</span>
+
+    <span class="spacer"></span>
+  </mat-toolbar>
+
+  <mat-sidenav-container>
+
+    <mat-sidenav #sidenav mode="over">Sidenav content</mat-sidenav>
+
+    <mat-sidenav-content>
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>
