@@ -1,9 +1,9 @@
 import { Observable } from 'rxjs';
-import { UserGuidMapItem } from 'src/app/_interfaces/user.interface';
+import { UserUuidMapItem } from 'src/app/_interfaces/user.interface';
 
 export interface Api {
-  readUserGuidMap: () => Observable<UserGuidMapItem[]>;
-  createUserGuidMapItem: (userGuidMapItem: UserGuidMapItem) => void;
-  updateUserGuidMapItem: (userGuidMapItem: UserGuidMapItem) => void;
-  deleteUserGuidMapItem: (guid: string) => void;
+  readUserUuidMap: () => Observable<UserUuidMapItem[]>;
+  createUserUuidMapItem: (userUuidMapItem: UserUuidMapItem) => void;
+  updateUserUuidMapItem: (userUuidMapItem: UserUuidMapItem) => void;
+  deleteUserUuidMapItem: (uuid: string) => void;
 }

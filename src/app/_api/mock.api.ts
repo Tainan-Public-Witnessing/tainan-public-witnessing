@@ -1,48 +1,49 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
+import { v5 as uuidv5 } from 'uuid';
+import { environment } from 'src/environments/environment';
 import { Api } from 'src/app/_interfaces/api.interface';
-import { UserGuidMapItem } from 'src/app/_interfaces/user.interface';
+import { UserUuidMapItem } from 'src/app/_interfaces/user.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MockApi implements Api {
 
-  /** user guid map */
+  /** user uuid map */
 
-  private userGuidMap: UserGuidMapItem[] = [
-    { guid: 'haha', username: 'John'}
-  ];
+  private userUuidMap$ = new BehaviorSubject<UserUuidMapItem[]>([
+    { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5f8', username: 'John'}
+  ]);
 
-  private userGuidMap$ = new BehaviorSubject<UserGuidMapItem[]>(this.userGuidMap);
-
-  readUserGuidMap = () => {
-    return this.userGuidMap$;
+  readUserUuidMap = () => {
+    return this.userUuidMap$;
   }
 
-  createUserGuidMapItem = (userGuidMapItem: UserGuidMapItem) => {
-    const existObject = this.userGuidMap.find(item => item.guid === userGuidMapItem.guid);
-    if (!existObject) {
-      this.userGuidMap.push(userGuidMapItem);
-      this.userGuidMap$.next(this.userGuidMap);
-    }
+  createUserUuidMapItem = (userUuidMapItem: UserUuidMapItem) => {
+    const userUuidMap = this.userUuidMap$.getValue();
+    userUuidMapItem.uuid = uuidv5(userUuidMapItem.username, environment.UUID_NAMESPACE);
+    userUuidMap.push(userUuidMapItem);
+    this.userUuidMap$.next(userUuidMap);
   }
 
-  updateUserGuidMapItem = (userGuidMapItem: UserGuidMapItem) => {
-    const existObject = this.userGuidMap.find(item => item.guid === userGuidMapItem.guid);
+  updateUserUuidMapItem = (userUuidMapItem: UserUuidMapItem) => {
+    const userUuidMap = this.userUuidMap$.getValue();
+    const existObject = userUuidMap.find(item => item.uuid === userUuidMapItem.uuid);
     if (existObject) {
       for (const index of Object.keys(existObject)) {
-        existObject[index] = userGuidMapItem[index];
+        existObject[index] = userUuidMapItem[index];
       }
-      this.userGuidMap$.next(this.userGuidMap);
+      this.userUuidMap$.next(userUuidMap);
     }
   }
 
-  deleteUserGuidMapItem = (guid: string) => {
-    const existIndex = this.userGuidMap.findIndex(item => item.guid === guid);
+  deleteUserUuidMapItem = (uuid: string) => {
+    const userUuidMap = this.userUuidMap$.getValue();
+    const existIndex = userUuidMap.findIndex(item => item.uuid === uuid);
     if (existIndex !== -1) {
-      this.userGuidMap.splice(existIndex, 1);
-      this.userGuidMap$.next(this.userGuidMap);
+      userUuidMap.splice(existIndex, 1);
+      this.userUuidMap$.next(userUuidMap);
     }
   }
 }

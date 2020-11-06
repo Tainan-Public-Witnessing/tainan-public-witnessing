@@ -3,7 +3,8 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  UUID_NAMESPACE: '7b921192-c856-5152-8444-bb08b1efac9b'
 };
 
 /*

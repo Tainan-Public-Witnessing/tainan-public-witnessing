@@ -9,7 +9,6 @@ import { UserService } from 'src/app/_services/user.service';
 })
 export class UsersComponent implements OnInit {
 
-  cgcontrol = new FormControl();
   cncontrol = new FormControl();
   ugcontrol = new FormControl();
   uncontrol = new FormControl();
@@ -20,26 +19,26 @@ export class UsersComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.userService.loadUserGuidMap();
-    this.userService.userGuidMap$.subscribe(data => console.log('user guid map', data));
+    this.userService.loadUserUuidMap();
+    this.userService.userUuidMap$.subscribe(data => console.log('user uuid map', data));
   }
 
   create = () => {
-    this.userService.createUserGuidMapItem({
-      guid: this.cgcontrol.value,
+    this.userService.createUserUuidMapItem({
+      uuid: null,
       username: this.cncontrol.value
     });
   }
 
   update = () => {
-    this.userService.updateUserGuidMapItem({
-      guid: this.ugcontrol.value,
+    this.userService.updateUserUuidMapItem({
+      uuid: this.ugcontrol.value,
       username: this.uncontrol.value
     });
   }
 
   delete = () => {
-    this.userService.deleteUserGuidMapItem(this.dgcontrol.value);
+    this.userService.deleteUserUuidMapItem(this.dgcontrol.value);
   }
 
 }

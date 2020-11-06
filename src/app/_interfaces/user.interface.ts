@@ -1,7 +1,7 @@
 import { Gender } from 'src/app/_enum/gender.emun';
 
 export interface User {
-  guid: string;
+  uuid: string;
   username: string;
   name: string;
   gender: Gender;
@@ -14,7 +14,7 @@ export interface User {
   tags?: string[];
 }
 
-export interface UserGuidMapItem {
-  guid: string;
+export interface UserUuidMapItem {
+  uuid: string;
   username: string;
 }

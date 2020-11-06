@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { User, UserGuidMapItem } from 'src/app/_interfaces/user.interface';
+import { User, UserUuidMapItem } from 'src/app/_interfaces/user.interface';
 import { MockApi } from 'src/app/_api/mock.api';
 
 @Injectable({
@@ -8,7 +8,7 @@ import { MockApi } from 'src/app/_api/mock.api';
 })
 export class UserService {
 
-  userGuidMap$: BehaviorSubject<UserGuidMapItem[]> = new BehaviorSubject<UserGuidMapItem[]>(null);
+  userUuidMap$: BehaviorSubject<UserUuidMapItem[]> = new BehaviorSubject<UserUuidMapItem[]>(null);
   user$: BehaviorSubject<User> = new BehaviorSubject<User>(null);
   users$: BehaviorSubject<User[]> = new BehaviorSubject<User[]>(null);
 
@@ -16,22 +16,22 @@ export class UserService {
     private mockApi: MockApi
   ) { }
 
-  loadUserGuidMap = () => {
-    if (!this.userGuidMap$.getValue()) {
-      this.mockApi.readUserGuidMap().subscribe(this.userGuidMap$);
+  loadUserUuidMap = () => {
+    if (!this.userUuidMap$.getValue()) {
+      this.mockApi.readUserUuidMap().subscribe(this.userUuidMap$);
     }
   }
 
-  createUserGuidMapItem = (userGuidMapItem: UserGuidMapItem) => {
-    this.mockApi.createUserGuidMapItem(userGuidMapItem);
+  createUserUuidMapItem = (userUuidMapItem: UserUuidMapItem) => {
+    this.mockApi.createUserUuidMapItem(userUuidMapItem);
   }
 
-  updateUserGuidMapItem = (userGuidMapItem: UserGuidMapItem) => {
-    this.mockApi.updateUserGuidMapItem(userGuidMapItem);
+  updateUserUuidMapItem = (userUuidMapItem: UserUuidMapItem) => {
+    this.mockApi.updateUserUuidMapItem(userUuidMapItem);
   }
 
-  deleteUserGuidMapItem = (guid: string) => {
-    this.mockApi.deleteUserGuidMapItem(guid);
+  deleteUserUuidMapItem = (uuid: string) => {
+    this.mockApi.deleteUserUuidMapItem(uuid);
   }
 
 }
