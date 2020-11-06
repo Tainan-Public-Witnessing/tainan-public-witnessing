@@ -8,12 +8,12 @@ import { PermissionTable } from '../_interfaces/permission-table.interface';
 })
 export class PermissionService {
 
-  currentPermissionTable$ = new BehaviorSubject<PermissionTable>(null);
+  permissionTable$ = new BehaviorSubject<PermissionTable>(null);
 
   constructor() { }
 
   getPermissionByKey = (key: string): Observable<boolean> => {
-    return this.currentPermissionTable$.pipe(
+    return this.permissionTable$.pipe(
       map(permissionTable => permissionTable[key])
     );
   }

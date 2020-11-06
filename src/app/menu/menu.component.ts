@@ -13,7 +13,8 @@ import { GlobalEventService } from '../_services/global-event.service';
 export class MenuComponent implements OnInit {
 
   MENU_LINKS: MenuLink[] = [
-    { display: 'Home', url: 'home'}
+    { display: 'Home', url: 'home'},
+    { display: 'Users', url: 'users'}
   ];
 
   currentMenuLinks$: Observable<MenuLink[]>;
@@ -24,7 +25,7 @@ export class MenuComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.currentMenuLinks$ = this.permissionService.currentPermissionTable$.pipe(
+    this.currentMenuLinks$ = this.permissionService.permissionTable$.pipe(
       map(permissionTable => this.MENU_LINKS.filter(menuLink => permissionTable[menuLink.url]))
     );
   }

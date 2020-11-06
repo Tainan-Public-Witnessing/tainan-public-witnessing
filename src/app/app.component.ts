@@ -29,8 +29,9 @@ export class AppComponent implements OnInit {
       this.sidenav.close();
     });
 
-    this.permisionService.currentPermissionTable$.next({ // fake permission table
-      home: true
+    this.permisionService.permissionTable$.next({ // fake permission table
+      home: true,
+      users: true
     });
   }
 

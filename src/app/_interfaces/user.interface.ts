@@ -13,3 +13,8 @@ export interface User {
   note?: string;
   tags?: string[];
 }
+
+export interface UserGuidMapItem {
+  guid: string;
+  username: string;
+}
