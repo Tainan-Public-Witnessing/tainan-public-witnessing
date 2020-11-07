@@ -1,0 +1,18 @@
+<mat-list cdkDropList (cdkDropListDropped)="drop($event)">
+
+  <mat-list-item
+    *ngFor="let congregation of (congregations$ | async)"
+    cdkDrag>
+
+    {{congregation.name}}
+    <span class="spacer"></span>
+    <mat-icon cdkDragHandle>drag_handle</mat-icon>
+
+    <div *cdkDragPlaceholder></div>
+    <div *cdkDragPreview matchSize="true">
+      {{congregation.name}}
+      <span class="spacer"></span>
+      <mat-icon>drag_handle</mat-icon>
+    </div>
+  </mat-list-item>
+</mat-list>

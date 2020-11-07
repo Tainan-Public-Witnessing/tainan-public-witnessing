@@ -8,6 +8,8 @@ import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
+import { DragDropModule } from '@angular/cdk/drag-drop';
+
 @NgModule({
   declarations: [],
   imports: [
@@ -19,7 +21,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     MatInputModule,
     MatListModule,
     MatSidenavModule,
-    MatToolbarModule
+    MatToolbarModule,
+    DragDropModule
   ]
 })
 export class AngularMaterialModule { }

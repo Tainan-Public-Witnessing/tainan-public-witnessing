@@ -31,7 +31,8 @@ export class AppComponent implements OnInit {
 
     this.permisionService.permissionTable$.next({ // fake permission table
       home: true,
-      users: true
+      users: true,
+      congregations: true
     });
   }
 

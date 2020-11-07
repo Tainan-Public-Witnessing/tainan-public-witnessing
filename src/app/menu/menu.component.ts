@@ -14,7 +14,8 @@ export class MenuComponent implements OnInit {
 
   MENU_LINKS: MenuLink[] = [
     { display: 'Home', url: 'home'},
-    { display: 'Users', url: 'users'}
+    { display: 'Users', url: 'users'},
+    { display: 'Congregations', url: 'congregations'}
   ];
 
   currentMenuLinks$: Observable<MenuLink[]>;
