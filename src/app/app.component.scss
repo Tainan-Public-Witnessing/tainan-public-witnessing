@@ -11,5 +11,15 @@
     .mat-sidenav {
       width: 256px;
     }
+
+    .mat-sidenav-content {
+      display: flex;
+      justify-content: center;
+
+      div {
+        width: 100%;
+        max-width: $page-max-width;
+      }
+    }
   }
 }

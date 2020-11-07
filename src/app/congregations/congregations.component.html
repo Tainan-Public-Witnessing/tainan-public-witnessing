@@ -1,3 +1,9 @@
+<div class="title-bar">
+  <h1>Congregations</h1>
+  <span class="spacer"></span>
+  <button mat-icon-button><mat-icon>add</mat-icon></button>
+</div>
+
 <mat-list cdkDropList (cdkDropListDropped)="drop($event)">
 
   <mat-list-item
@@ -6,6 +12,8 @@
 
     {{congregation.name}}
     <span class="spacer"></span>
+    <button mat-icon-button><mat-icon>delete</mat-icon></button>
+    <button mat-icon-button><mat-icon>edit</mat-icon></button>
     <mat-icon cdkDragHandle>drag_handle</mat-icon>
 
     <div *cdkDragPlaceholder></div>
