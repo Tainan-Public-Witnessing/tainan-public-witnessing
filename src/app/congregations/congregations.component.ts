@@ -1,6 +1,7 @@
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { Component, OnInit } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { BehaviorSubject, race, Subject, timer } from 'rxjs';
+import { map, switchAll, takeUntil } from 'rxjs/operators';
 import { Congregation } from 'src/app/_interfaces/congregation.interface';
 import { CongregationsService } from 'src/app/_services/congregations.service';
 
@@ -9,23 +10,47 @@ import { CongregationsService } from 'src/app/_services/congregations.service';
   templateUrl: './congregations.component.html',
   styleUrls: ['./congregations.component.scss']
 })
-export class CongregationsComponent implements OnInit {
+export class CongregationsComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  congregations$: BehaviorSubject<Congregation[]>;
+  @ViewChild(CdkDropList) cdkDropList: CdkDropList;
+
+  congregations$ = new BehaviorSubject<Congregation[]>(null);
+  exitComponent$ = new Subject<void>();
+  unsubscribe$ = new Subject<void>();
 
   constructor(
     private congregationService: CongregationsService
   ) { }
 
   ngOnInit(): void {
-    this.congregations$ = this.congregationService.congregations$;
+    this.congregationService.congregations$.pipe(takeUntil(this.unsubscribe$)).subscribe(this.congregations$);
     this.congregationService.loadCongregations();
   }
 
-  drop(event: CdkDragDrop<string[]>) {
-    const congregations = this.congregations$.getValue();
-    moveItemInArray(congregations, event.previousIndex, event.currentIndex);
-    this.congregationService.sortCongregations(congregations);
+  ngAfterViewInit(): void {
+    this.subscribeDrop();
+    this.subscribeSort();
   }
 
+  ngOnDestroy(): void {
+    this.exitComponent$.next();
+    this.unsubscribe$.next();
+  }
+
+  private subscribeDrop = (): void => {
+    this.cdkDropList.dropped.pipe(takeUntil(this.unsubscribe$)).subscribe(e => {
+      const congregations = this.congregations$.getValue();
+      moveItemInArray(congregations, e.previousIndex, e.currentIndex);
+      this.congregations$.next(congregations);
+    });
+  }
+
+  private subscribeSort = (): void => {
+    this.cdkDropList.sorted.pipe(
+      map(() => race(timer(5000), this.exitComponent$)),
+      switchAll()
+    ).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
+      this.congregationService.sortCongregations(this.congregations$.getValue());
+    });
+  }
 }

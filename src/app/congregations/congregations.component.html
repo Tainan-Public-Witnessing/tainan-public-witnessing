@@ -4,23 +4,25 @@
   <button mat-icon-button><mat-icon>add</mat-icon></button>
 </div>
 
-<mat-list cdkDropList (cdkDropListDropped)="drop($event)">
+<div class="overflow">
+  <mat-list cdkDropList>
 
-  <mat-list-item
-    *ngFor="let congregation of (congregations$ | async)"
-    cdkDrag>
-
-    {{congregation.name}}
-    <span class="spacer"></span>
-    <button mat-icon-button><mat-icon>delete</mat-icon></button>
-    <button mat-icon-button><mat-icon>edit</mat-icon></button>
-    <mat-icon cdkDragHandle>drag_handle</mat-icon>
-
-    <div *cdkDragPlaceholder></div>
-    <div *cdkDragPreview matchSize="true">
+    <mat-list-item
+      *ngFor="let congregation of (congregations$ | async)"
+      cdkDrag>
+  
       {{congregation.name}}
       <span class="spacer"></span>
-      <mat-icon>drag_handle</mat-icon>
-    </div>
-  </mat-list-item>
-</mat-list>
+      <button mat-icon-button><mat-icon>delete</mat-icon></button>
+      <button mat-icon-button><mat-icon>edit</mat-icon></button>
+      <mat-icon cdkDragHandle>drag_handle</mat-icon>
+  
+      <div *cdkDragPlaceholder></div>
+      <div *cdkDragPreview matchSize="true">
+        {{congregation.name}}
+        <span class="spacer"></span>
+        <mat-icon>drag_handle</mat-icon>
+      </div>
+    </mat-list-item>
+  </mat-list>
+</div>

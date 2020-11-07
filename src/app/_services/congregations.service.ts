@@ -3,7 +3,6 @@ import { BehaviorSubject } from 'rxjs';
 import { MockApi } from 'src/app/_api/mock.api';
 import { Congregation } from 'src/app/_interfaces/congregation.interface';
 
-
 @Injectable({
   providedIn: 'root'
 })
