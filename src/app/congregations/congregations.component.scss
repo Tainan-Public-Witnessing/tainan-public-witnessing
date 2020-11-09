@@ -33,10 +33,11 @@
   width: calc(100% - 2 * #{$list-item-padding}) !important;
   max-width: $page-max-width - $list-item-padding * 2;
   height: $list-item-height;
+  background: #f5f5f5;
 }
 
 .cdk-drag-placeholder {
-  background: #f5f5f5;
+  border: 1px dashed darkgray;
   max-width: $page-max-width;
   height: $list-item-height;
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);

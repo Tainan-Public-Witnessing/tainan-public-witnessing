@@ -1,5 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Congregation } from 'src/app/_interfaces/congregation.interface';
 import { CongregationFormDialogData } from './congregation-form-dialog-data.interface';
 
 @Component({
@@ -11,6 +13,7 @@ export class CongregationFormDialogComponent implements OnInit {
 
   mode: string;
   title: string;
+  congregationControl: FormControl;
 
   constructor(
     private dialogRef: MatDialogRef<CongregationFormDialogComponent>,
@@ -20,10 +23,16 @@ export class CongregationFormDialogComponent implements OnInit {
   ngOnInit(): void {
     this.mode = this.data.mode;
     this.title = this.mode === 'CREATE' ? 'Create congregation' : 'Edit congregation';
+    this.congregationControl = new FormControl('', Validators.required);
   }
 
   onSubmitClick = () => {
-    this.dialogRef.close('hi');
+    if (this.congregationControl.status === 'VALID') {
+      this.dialogRef.close({
+        uuid: null,
+        name: this.congregationControl.value
+      } as Congregation);
+    }
   }
 
   onCancelClick = () => {
