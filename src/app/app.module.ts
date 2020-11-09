@@ -11,6 +11,7 @@ import { HomeComponent } from './home/home.component';
 import { UsersComponent } from './users/users.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CongregationsComponent } from './congregations/congregations.component';
+import { CongregationFormDialogComponent } from './congregations/congregation-form-dialog/congregation-form-dialog.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,11 @@ import { CongregationsComponent } from './congregations/congregations.component'
     MenuComponent,
     HomeComponent,
     UsersComponent,
-    CongregationsComponent
+    CongregationsComponent,
+    CongregationFormDialogComponent,
+  ],
+  entryComponents: [
+    CongregationFormDialogComponent
   ],
   imports: [
     BrowserModule,

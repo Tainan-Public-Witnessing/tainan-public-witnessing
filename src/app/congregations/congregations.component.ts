@@ -1,9 +1,12 @@
 import { CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject, race, Subject, timer } from 'rxjs';
 import { map, switchAll, takeUntil } from 'rxjs/operators';
 import { Congregation } from 'src/app/_interfaces/congregation.interface';
 import { CongregationsService } from 'src/app/_services/congregations.service';
+import { CongregationFormDialogData } from './congregation-form-dialog/congregation-form-dialog-data.interface';
+import { CongregationFormDialogComponent } from './congregation-form-dialog/congregation-form-dialog.component';
 
 @Component({
   selector: 'app-congregations',
@@ -19,7 +22,8 @@ export class CongregationsComponent implements OnInit, AfterViewInit, OnDestroy 
   unsubscribe$ = new Subject<void>();
 
   constructor(
-    private congregationService: CongregationsService
+    private congregationService: CongregationsService,
+    private matDialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -35,6 +39,15 @@ export class CongregationsComponent implements OnInit, AfterViewInit, OnDestroy 
   ngOnDestroy(): void {
     this.exitComponent$.next();
     this.unsubscribe$.next();
+  }
+
+  onAddButtonClick = () => {
+    this.matDialog.open(CongregationFormDialogComponent, {
+      disableClose: false,
+      data: {
+        mode: 'CREATE'
+      } as CongregationFormDialogData
+    }).afterClosed().subscribe(data => console.log('dialog data', data));
   }
 
   private subscribeDrop = (): void => {
