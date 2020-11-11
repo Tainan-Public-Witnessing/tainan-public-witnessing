@@ -1,0 +1,32 @@
+<div class="title-bar">
+  <h1>Tags</h1>
+  <span class="spacer"></span>
+  <button mat-icon-button (click)="onAddButtonClick()"><mat-icon>add</mat-icon></button>
+</div>
+
+<div class="overflow">
+  <mat-list cdkDropList>
+
+    <mat-list-item
+      *ngFor="let tag of (tags$ | async)"
+      cdkDrag>
+  
+      {{tag.name}}
+
+      <span class="spacer"></span>
+
+      <button mat-icon-button (click)="onDeleteButtonClick(tag)"><mat-icon>delete</mat-icon></button>
+
+      <button mat-icon-button (click)="onEditButtonClick(tag)"><mat-icon>edit</mat-icon></button>
+
+      <mat-icon cdkDragHandle>drag_handle</mat-icon>
+  
+      <div *cdkDragPlaceholder></div>
+      <div *cdkDragPreview matchSize="true">
+        {{tag.name}}
+        <span class="spacer"></span>
+        <mat-icon>drag_handle</mat-icon>
+      </div>
+    </mat-list-item>
+  </mat-list>
+</div>

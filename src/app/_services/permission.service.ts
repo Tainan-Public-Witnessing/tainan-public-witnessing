@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { PermissionTable } from '../_interfaces/permission-table.interface';
+import { PermissionTable } from 'src/app/_interfaces/permission-table.interface';
 
 @Injectable({
   providedIn: 'root'

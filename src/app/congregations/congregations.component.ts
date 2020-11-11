@@ -5,8 +5,8 @@ import { BehaviorSubject, race, Subject, timer } from 'rxjs';
 import { map, switchAll, takeUntil } from 'rxjs/operators';
 import { Congregation } from 'src/app/_interfaces/congregation.interface';
 import { CongregationsService } from 'src/app/_services/congregations.service';
-import { ConfirmDialogData } from '../_elements/dialogs/confirm-dialog/confirm-dialog-data.interface';
-import { ConfirmDialogComponent } from '../_elements/dialogs/confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogData } from 'src/app/_elements/dialogs/confirm-dialog/confirm-dialog-data.interface';
+import { ConfirmDialogComponent } from 'src/app/_elements/dialogs/confirm-dialog/confirm-dialog.component';
 import { CongregationFormDialogData } from './congregation-form-dialog/congregation-form-dialog-data.interface';
 import { CongregationFormDialogComponent } from './congregation-form-dialog/congregation-form-dialog.component';
 

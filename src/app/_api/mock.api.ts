@@ -5,6 +5,7 @@ import { environment } from 'src/environments/environment';
 import { Api } from 'src/app/_interfaces/api.interface';
 import { UserUuidMapItem } from 'src/app/_interfaces/user.interface';
 import { Congregation } from 'src/app/_interfaces/congregation.interface';
+import { Tag } from 'src/app/_interfaces/tag.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -14,14 +15,20 @@ export class MockApi implements Api {
   /** mock data */
 
   private userUuidMap$ = new BehaviorSubject<UserUuidMapItem[]>([
-    { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5f8', username: 'John'}
+    { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5f8', username: 'John' },
   ]);
 
   private congregations$ = new BehaviorSubject<Congregation[]>([
-    { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5f7', name: 'EastTainan'},
-    { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5f8', name: 'NorthTainan'},
-    { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5f9', name: 'WestTainan'},
-    { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5f0', name: 'SouthTainan'}
+    { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5f7', name: 'EastTainan' },
+    { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5f8', name: 'NorthTainan' },
+    { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5f9', name: 'WestTainan' },
+    { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5f0', name: 'SouthTainan' },
+  ]);
+
+  private tags$ = new BehaviorSubject<Tag[]>([
+    { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5a0', name: 'overseer' },
+    { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5a1', name: 'elder' },
+    { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5a2', name: 'pioneer' },
   ]);
 
   /** user uuid map */
@@ -84,6 +91,8 @@ export class MockApi implements Api {
         existObject[index] = congregation[index];
       }
       this.congregations$.next(congregations);
+    } else {
+      return Promise.reject('CONGREGATION_DO_NOT_EXIST');
     }
     return Promise.resolve('SUCCESS');
   }
@@ -94,6 +103,53 @@ export class MockApi implements Api {
     if (existIndex !== -1) {
       congregations.splice(existIndex, 1);
       this.congregations$.next(congregations);
+    } else {
+      return Promise.reject('CONGREGATION_DO_NOT_EXIST');
+    }
+    return Promise.resolve('SUCCESS');
+  }
+
+  /** tags */
+
+  readTags = () => {
+    return this.tags$;
+  }
+
+  sortTags = (tags: Tag[]) => {
+    this.tags$.next(tags);
+    return Promise.resolve('SUCCESS');
+  }
+
+  createTag = (tag: Tag) => {
+    const tags = this.tags$.getValue();
+    tag.uuid = uuidv5(tag.name, environment.UUID_NAMESPACE);
+    tags.push(tag);
+    this.congregations$.next(tags);
+    return Promise.resolve('SUCCESS');
+  }
+
+  updateTag = (tag: Tag) => {
+    const tags = this.tags$.getValue();
+    const existObject = tags.find(object => object.uuid === tag.uuid);
+    if (existObject) {
+      for (const index of Object.keys(existObject)) {
+        existObject[index] = tag[index];
+      }
+      this.tags$.next(tags);
+    } else {
+      return Promise.reject('TAG_DO_NOT_EXIST');
+    }
+    return Promise.resolve('SUCCESS');
+  }
+
+  deleteTag = (uuid: string) => {
+    const tags = this.tags$.getValue();
+    const existIndex = tags.findIndex(object => object.uuid === uuid);
+    if (existIndex !== -1) {
+      tags.splice(existIndex, 1);
+      this.congregations$.next(tags);
+    } else {
+      return Promise.reject('TAG_DO_NOT_EXIST');
     }
     return Promise.resolve('SUCCESS');
   }

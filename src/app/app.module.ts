@@ -13,6 +13,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CongregationsComponent } from './congregations/congregations.component';
 import { CongregationFormDialogComponent } from './congregations/congregation-form-dialog/congregation-form-dialog.component';
 import { ConfirmDialogComponent } from './_elements/dialogs/confirm-dialog/confirm-dialog.component';
+import { TagsComponent } from './tags/tags.component';
+import { TagFormDialogComponent } from './tags/tag-form-dialog/tag-form-dialog.component';
 
 @NgModule({
   declarations: [
@@ -23,10 +25,13 @@ import { ConfirmDialogComponent } from './_elements/dialogs/confirm-dialog/confi
     CongregationsComponent,
     CongregationFormDialogComponent,
     ConfirmDialogComponent,
+    TagsComponent,
+    TagFormDialogComponent,
   ],
   entryComponents: [
     CongregationFormDialogComponent,
     ConfirmDialogComponent,
+    TagFormDialogComponent,
   ],
   imports: [
     BrowserModule,

@@ -68,5 +68,4 @@ export class CongregationFormDialogComponent implements OnInit {
   onCancelClick = () => {
     this.dialogRef.close(null);
   }
-
 }

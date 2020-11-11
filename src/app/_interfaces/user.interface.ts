@@ -1,5 +1,6 @@
 import { Gender } from 'src/app/_enums/gender.emun';
 import { Congregation } from 'src/app/_interfaces/congregation.interface';
+import { Tag } from 'src/app/_interfaces/tag.interface';
 
 export interface User {
   uuid: string;
@@ -12,7 +13,7 @@ export interface User {
   phone?: string;
   address?: string;
   note?: string;
-  tags?: string[];
+  tags?: Tag[];
 }
 
 export interface UserUuidMapItem {
