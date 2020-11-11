@@ -9,8 +9,8 @@ export interface Api {
   deleteUserUuidMapItem: (uuid: string) => void;
 
   readCongregations: () => Observable<Congregation[]>;
-  sortCongregations: (congregations: Congregation[]) => void;
-  createCongregation: (congregation: Congregation) => void;
-  updateCongregation: (congregation: Congregation) => void;
-  deleteCongregation: (uuid: string) => void;
+  sortCongregations: (congregations: Congregation[]) => Promise<string>;
+  createCongregation: (congregation: Congregation) => Promise<string>;
+  updateCongregation: (congregation: Congregation) => Promise<string>;
+  deleteCongregation: (uuid: string) => Promise<string>;
 }

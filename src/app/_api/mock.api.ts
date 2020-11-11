@@ -65,6 +65,7 @@ export class MockApi implements Api {
 
   sortCongregations = (congregations: Congregation[]) => {
     this.congregations$.next(congregations);
+    return Promise.resolve('SUCCESS');
   }
 
   createCongregation = (congregation: Congregation) => {
@@ -72,6 +73,7 @@ export class MockApi implements Api {
     congregation.uuid = uuidv5(congregation.name, environment.UUID_NAMESPACE);
     congregations.push(congregation);
     this.congregations$.next(congregations);
+    return Promise.resolve('SUCCESS');
   }
 
   updateCongregation = (congregation: Congregation) => {
@@ -83,6 +85,7 @@ export class MockApi implements Api {
       }
       this.congregations$.next(congregations);
     }
+    return Promise.resolve('SUCCESS');
   }
 
   deleteCongregation = (uuid: string) => {
@@ -92,5 +95,6 @@ export class MockApi implements Api {
       congregations.splice(existIndex, 1);
       this.congregations$.next(congregations);
     }
+    return Promise.resolve('SUCCESS');
   }
 }

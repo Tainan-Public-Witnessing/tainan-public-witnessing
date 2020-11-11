@@ -12,9 +12,13 @@
       cdkDrag>
   
       {{congregation.name}}
+
       <span class="spacer"></span>
+
       <button mat-icon-button><mat-icon>delete</mat-icon></button>
-      <button mat-icon-button><mat-icon>edit</mat-icon></button>
+
+      <button mat-icon-button (click)="onEditButtonClick(congregation)"><mat-icon>edit</mat-icon></button>
+
       <mat-icon cdkDragHandle>drag_handle</mat-icon>
   
       <div *cdkDragPlaceholder></div>

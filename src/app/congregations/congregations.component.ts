@@ -48,9 +48,22 @@ export class CongregationsComponent implements OnInit, AfterViewInit, OnDestroy 
       data: {
         mode: 'CREATE'
       } as CongregationFormDialogData
-    }).afterClosed().subscribe(congregation => {
-      this.congregationService.createCongregation(congregation);
     });
+  }
+
+  onEditButtonClick = (congregation: Congregation) => {
+    this.matDialog.open(CongregationFormDialogComponent, {
+      disableClose: true,
+      panelClass: 'dialog-panel',
+      data: {
+        mode: 'EDIT',
+        congregation
+      } as CongregationFormDialogData
+    });
+  }
+
+  onDeleteButtonClick = (congregation: Congregation) => {
+    
   }
 
   private subscribeDrop = (): void => {

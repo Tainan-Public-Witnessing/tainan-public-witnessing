@@ -21,18 +21,36 @@ export class CongregationsService {
   }
 
   sortCongregations = (congregations: Congregation[]) => {
-    this.mockApi.sortCongregations(congregations);
+    return this.mockApi.sortCongregations(congregations);
   }
 
-  createCongregation = (congregation: Congregation) => {
-    this.mockApi.createCongregation(congregation);
+  createCongregation = (congregation: Congregation): Promise<any> => {
+    const congregations = this.congregations$.getValue();
+    if (congregations) {
+      if (!congregations.find(c => c.name === congregation.name)) {
+        return this.mockApi.createCongregation(congregation);
+      } else {
+        return Promise.reject('CONGREGATION_NAME_EXISTED');
+      }
+    } else {
+      return Promise.reject('CONGREGATIONS_NOT_LOADED');
+    }
   }
 
   updateCongregation = (congregation: Congregation) => {
-    this.mockApi.updateCongregation(congregation);
+    const congregations = this.congregations$.getValue();
+    if (congregations) {
+      if (!congregations.find(c => c.name === congregation.name)) {
+        return this.mockApi.updateCongregation(congregation);
+      } else {
+        return Promise.reject('CONGREGATION_NAME_EXISTED');
+      }
+    } else {
+      return Promise.reject('CONGREGATIONS_NOT_LOADED');
+    }
   }
 
   deleteCongregation = (uuid: string) => {
-    this.mockApi.deleteCongregation(uuid);
+    return this.mockApi.deleteCongregation(uuid);
   }
 }
