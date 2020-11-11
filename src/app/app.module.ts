@@ -12,6 +12,7 @@ import { UsersComponent } from './users/users.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CongregationsComponent } from './congregations/congregations.component';
 import { CongregationFormDialogComponent } from './congregations/congregation-form-dialog/congregation-form-dialog.component';
+import { ConfirmDialogComponent } from './_elements/dialogs/confirm-dialog/confirm-dialog.component';
 
 @NgModule({
   declarations: [
@@ -21,9 +22,11 @@ import { CongregationFormDialogComponent } from './congregations/congregation-fo
     UsersComponent,
     CongregationsComponent,
     CongregationFormDialogComponent,
+    ConfirmDialogComponent,
   ],
   entryComponents: [
-    CongregationFormDialogComponent
+    CongregationFormDialogComponent,
+    ConfirmDialogComponent,
   ],
   imports: [
     BrowserModule,

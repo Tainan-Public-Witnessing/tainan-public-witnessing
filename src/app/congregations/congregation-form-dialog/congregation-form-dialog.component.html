@@ -4,6 +4,7 @@
   <mat-form-field class="full-width">
     <mat-label>Congregation name</mat-label>
     <input matInput [formControl]="congregationControl">
+    <mat-error *ngIf="congregationControl.hasError('existed')">Congregation name already existed!</mat-error>
   </mat-form-field>
 </div>
 

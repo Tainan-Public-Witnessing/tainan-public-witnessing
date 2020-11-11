@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Congregation } from 'src/app/_interfaces/congregation.interface';
@@ -23,9 +23,13 @@ export class CongregationFormDialogComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+
     this.mode = this.data.mode;
+
     this.title = this.mode === 'CREATE' ? 'Create congregation' : 'Edit congregation';
+
     this.congregationControl = new FormControl('', Validators.required);
+
     if (this.mode === 'EDIT') {
       this.congregationControl.setValue(this.data.congregation.name);
     }
@@ -41,15 +45,23 @@ export class CongregationFormDialogComponent implements OnInit {
           name: this.congregationControl.value
         } as Congregation);
       } else { // EDIT mode
-        response = this.congregationService.updateCongregation({
-          uuid: this.data.congregation.uuid,
-          name: this.congregationControl.value
-        } as Congregation);
+        if (this.data.congregation.name !== this.congregationControl.value) {
+          response = this.congregationService.updateCongregation({
+            uuid: this.data.congregation.uuid,
+            name: this.congregationControl.value
+          } as Congregation);
+        } else { // no changes
+          response = Promise.resolve('NO_CHANGES');
+        }
       }
 
       response.then(() => {
         this.dialogRef.close(null);
-      }).catch(reason => console.log(reason));
+      }).catch(reason => {
+        if (reason === 'CONGREGATION_NAME_EXISTED') {
+          this.congregationControl.setErrors({existed: true});
+        }
+      });
     }
   }
 
