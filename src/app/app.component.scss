@@ -19,6 +19,7 @@
       div {
         width: 100%;
         max-width: $page-max-width;
+        min-width: $page-min-width;
         height: 100%;
         overflow: hidden;
       }
