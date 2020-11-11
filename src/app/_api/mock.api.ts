@@ -6,6 +6,8 @@ import { Api } from 'src/app/_interfaces/api.interface';
 import { UserPrimarykey } from 'src/app/_interfaces/user.interface';
 import { Congregation } from 'src/app/_interfaces/congregation.interface';
 import { Tag } from 'src/app/_interfaces/tag.interface';
+import { Profile, ProfilePrimarykey } from 'src/app/_interfaces/profile.interface';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -30,6 +32,20 @@ export class MockApi implements Api {
     { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5a1', name: 'elder' },
     { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5a2', name: 'pioneer' },
   ]);
+
+  private profilePrimarykeys$ = new BehaviorSubject<ProfilePrimarykey[]>([
+    { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5b0', name: 'administrator' },
+  ]);
+
+  private profiles$ = new BehaviorSubject<Profile[]>([{
+    uuid: 'e90966a2-91a8-5480-bc02-64f88277e5a1',
+    name: 'administrator',
+    home: true,
+    users: true,
+    congregations: true,
+    tags: true,
+    profiles: true,
+  }]);
 
   /** user uuid map */
 
@@ -150,6 +166,92 @@ export class MockApi implements Api {
       this.congregations$.next(tags);
     } else {
       return Promise.reject('TAG_DO_NOT_EXIST');
+    }
+    return Promise.resolve('SUCCESS');
+  }
+
+  /** profile primary key */
+
+  readProfilePrimarykeys = () => {
+    return this.profilePrimarykeys$;
+  }
+
+  sortProfilePrimarykeys = (profilePrimarykeys: ProfilePrimarykey[]) => {
+    this.profilePrimarykeys$.next(profilePrimarykeys);
+    return Promise.resolve('SUCCESS');
+  }
+
+  createProfilePrimarykey = (profilePrimarykey: ProfilePrimarykey) => {
+    const profilePrimarykeys = this.profilePrimarykeys$.getValue();
+    profilePrimarykey.uuid = uuidv5(profilePrimarykey.name, environment.UUID_NAMESPACE);
+    profilePrimarykeys.push(profilePrimarykey);
+    this.profilePrimarykeys$.next(profilePrimarykeys);
+    return Promise.resolve('SUCCESS');
+  }
+
+  updateProfilePrimarykey = (profilePrimarykey: ProfilePrimarykey) => {
+    const profilePrimarykeys = this.profilePrimarykeys$.getValue();
+    const existObject = profilePrimarykeys.find(object => object.uuid === profilePrimarykey.uuid);
+    if (existObject) {
+      for (const index of Object.keys(existObject)) {
+        existObject[index] = profilePrimarykey[index];
+      }
+      this.profilePrimarykeys$.next(profilePrimarykeys);
+    } else {
+      return Promise.reject('PROFILE_PRIMARYKEY_DO_NOT_EXIST');
+    }
+    return Promise.resolve('SUCCESS');
+  }
+
+  deleteProfilePrimarykey = (uuid: string) => {
+    const profilePrimarykeys = this.profilePrimarykeys$.getValue();
+    const existIndex = profilePrimarykeys.findIndex(object => object.uuid === uuid);
+    if (existIndex !== -1) {
+      profilePrimarykeys.splice(existIndex, 1);
+      this.profilePrimarykeys$.next(profilePrimarykeys);
+    } else {
+      return Promise.reject('PROFILE_PRIMARYKEY_DO_NOT_EXIST');
+    }
+    return Promise.resolve('SUCCESS');
+  }
+
+  /** profile */
+
+  readProfile = (uuid: string) => {
+    return this.profiles$.pipe(
+      map(profiles => profiles.find(profile => profile.uuid === uuid))
+    );
+  }
+
+  createProfile = (profile: Profile) => {
+    const profiles = this.profiles$.getValue();
+    profiles.push(profile);
+    this.profiles$.next(profiles);
+    return Promise.resolve('SUCCESS');
+  }
+
+  updateProfile = (profile: Profile) => {
+    const profiles = this.profiles$.getValue();
+    const existObject = profiles.find(object => object.uuid === profile.uuid);
+    if (existObject) {
+      for (const index of Object.keys(existObject)) {
+        existObject[index] = profile[index];
+      }
+      this.profiles$.next(profiles);
+    } else {
+      return Promise.reject('PROFILE_DO_NOT_EXIST');
+    }
+    return Promise.resolve('SUCCESS');
+  }
+
+  deleteProfile = (uuid: string) => {
+    const profiles = this.profiles$.getValue();
+    const existIndex = profiles.findIndex(object => object.uuid === uuid);
+    if (existIndex !== -1) {
+      profiles.splice(existIndex, 1);
+      this.profiles$.next(profiles);
+    } else {
+      return Promise.reject('PROFILE_DO_NOT_EXIST');
     }
     return Promise.resolve('SUCCESS');
   }

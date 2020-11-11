@@ -29,13 +29,7 @@ export class AppComponent implements OnInit {
       this.sidenav.close();
     });
 
-    this.permisionService.profile$.next({ // fake permission table
-      uuid: '',
-      home: true,
-      users: true,
-      congregations: true,
-      tags: true,
-    });
+    this.permisionService.loadProfile('e90966a2-91a8-5480-bc02-64f88277e5a1');
   }
 
   onMenuButtonClick = () => {

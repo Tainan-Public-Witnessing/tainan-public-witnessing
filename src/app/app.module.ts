@@ -15,6 +15,7 @@ import { CongregationFormDialogComponent } from './congregations/congregation-fo
 import { ConfirmDialogComponent } from './_elements/dialogs/confirm-dialog/confirm-dialog.component';
 import { TagsComponent } from './tags/tags.component';
 import { TagFormDialogComponent } from './tags/tag-form-dialog/tag-form-dialog.component';
+import { ProfilesComponent } from './profiles/profiles.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { TagFormDialogComponent } from './tags/tag-form-dialog/tag-form-dialog.c
     ConfirmDialogComponent,
     TagsComponent,
     TagFormDialogComponent,
+    ProfilesComponent,
   ],
   entryComponents: [
     CongregationFormDialogComponent,

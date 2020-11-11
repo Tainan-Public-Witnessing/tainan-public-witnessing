@@ -4,7 +4,8 @@ import { Routes, RouterModule } from '@angular/router';
 import { HomeComponent } from 'src/app/home/home.component';
 import { UsersComponent } from 'src/app/users/users.component';
 import { CongregationsComponent } from 'src/app//congregations/congregations.component';
-import { TagsComponent } from 'src/app//tags/tags.component';
+import { TagsComponent } from 'src/app/tags/tags.component';
+import { ProfilesComponent } from 'src/app/profiles/profiles.component';
 
 
 const routes: Routes = [
@@ -12,6 +13,7 @@ const routes: Routes = [
   {path: 'users', component: UsersComponent},
   {path: 'congregations', component: CongregationsComponent},
   {path: 'tags', component: TagsComponent},
+  {path: 'profiles', component: ProfilesComponent},
 ];
 
 @NgModule({
