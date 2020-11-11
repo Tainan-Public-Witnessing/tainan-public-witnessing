@@ -1,20 +1,20 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { PermissionTable } from 'src/app/_interfaces/permission-table.interface';
+import { Profile } from 'src/app/_interfaces/profile.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PermissionService {
 
-  permissionTable$ = new BehaviorSubject<PermissionTable>(null);
+  profile$ = new BehaviorSubject<Profile>(null);
 
   constructor() { }
 
   getPermissionByKey = (key: string): Observable<boolean> => {
-    return this.permissionTable$.pipe(
-      map(permissionTable => permissionTable[key])
+    return this.profile$.pipe(
+      map(profile => profile[key])
     );
   }
 }

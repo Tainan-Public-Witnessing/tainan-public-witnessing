@@ -3,7 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import { v5 as uuidv5 } from 'uuid';
 import { environment } from 'src/environments/environment';
 import { Api } from 'src/app/_interfaces/api.interface';
-import { UserUuidMapItem } from 'src/app/_interfaces/user.interface';
+import { UserPrimarykey } from 'src/app/_interfaces/user.interface';
 import { Congregation } from 'src/app/_interfaces/congregation.interface';
 import { Tag } from 'src/app/_interfaces/tag.interface';
 
@@ -14,7 +14,7 @@ export class MockApi implements Api {
 
   /** mock data */
 
-  private userUuidMap$ = new BehaviorSubject<UserUuidMapItem[]>([
+  private userPrimarykeys$ = new BehaviorSubject<UserPrimarykey[]>([
     { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5f8', username: 'John' },
   ]);
 
@@ -33,34 +33,34 @@ export class MockApi implements Api {
 
   /** user uuid map */
 
-  readUserUuidMap = () => {
-    return this.userUuidMap$;
+  readUserPrimarykeys = () => {
+    return this.userPrimarykeys$;
   }
 
-  createUserUuidMapItem = (userUuidMapItem: UserUuidMapItem) => {
-    const userUuidMap = this.userUuidMap$.getValue();
-    userUuidMapItem.uuid = uuidv5(userUuidMapItem.username, environment.UUID_NAMESPACE);
-    userUuidMap.push(userUuidMapItem);
-    this.userUuidMap$.next(userUuidMap);
+  createUserPrimarykey = (userPrimarykey: UserPrimarykey) => {
+    const userUuidMap = this.userPrimarykeys$.getValue();
+    userPrimarykey.uuid = uuidv5(userPrimarykey.username, environment.UUID_NAMESPACE);
+    userUuidMap.push(userPrimarykey);
+    this.userPrimarykeys$.next(userUuidMap);
   }
 
-  updateUserUuidMapItem = (userUuidMapItem: UserUuidMapItem) => {
-    const userUuidMap = this.userUuidMap$.getValue();
-    const existObject = userUuidMap.find(object => object.uuid === userUuidMapItem.uuid);
+  updateUserPrimarykey = (userPrimarykey: UserPrimarykey) => {
+    const userUuidMap = this.userPrimarykeys$.getValue();
+    const existObject = userUuidMap.find(object => object.uuid === userPrimarykey.uuid);
     if (existObject) {
       for (const index of Object.keys(existObject)) {
-        existObject[index] = userUuidMapItem[index];
+        existObject[index] = userPrimarykey[index];
       }
-      this.userUuidMap$.next(userUuidMap);
+      this.userPrimarykeys$.next(userUuidMap);
     }
   }
 
-  deleteUserUuidMapItem = (uuid: string) => {
-    const userUuidMap = this.userUuidMap$.getValue();
+  deleteUserPrimarykey = (uuid: string) => {
+    const userUuidMap = this.userPrimarykeys$.getValue();
     const existIndex = userUuidMap.findIndex(item => item.uuid === uuid);
     if (existIndex !== -1) {
       userUuidMap.splice(existIndex, 1);
-      this.userUuidMap$.next(userUuidMap);
+      this.userPrimarykeys$.next(userUuidMap);
     }
   }
 

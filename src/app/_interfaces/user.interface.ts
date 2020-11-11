@@ -16,7 +16,7 @@ export interface User {
   tags?: Tag[];
 }
 
-export interface UserUuidMapItem {
+export interface UserPrimarykey {
   uuid: string;
   username: string;
 }

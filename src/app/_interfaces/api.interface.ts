@@ -1,14 +1,14 @@
 import { Observable } from 'rxjs';
-import { UserUuidMapItem } from 'src/app/_interfaces/user.interface';
+import { UserPrimarykey } from 'src/app/_interfaces/user.interface';
 import { Congregation } from 'src/app/_interfaces/congregation.interface';
 import { Tag } from 'src/app/_interfaces/tag.interface';
 
 export interface Api {
 
-  readUserUuidMap: () => Observable<UserUuidMapItem[]>;
-  createUserUuidMapItem: (userUuidMapItem: UserUuidMapItem) => void;
-  updateUserUuidMapItem: (userUuidMapItem: UserUuidMapItem) => void;
-  deleteUserUuidMapItem: (uuid: string) => void;
+  readUserPrimarykeys: () => Observable<UserPrimarykey[]>;
+  createUserPrimarykey: (userUuidMapItem: UserPrimarykey) => void;
+  updateUserPrimarykey: (userUuidMapItem: UserPrimarykey) => void;
+  deleteUserPrimarykey: (uuid: string) => void;
 
   readCongregations: () => Observable<Congregation[]>;
   sortCongregations: (congregations: Congregation[]) => Promise<string>;

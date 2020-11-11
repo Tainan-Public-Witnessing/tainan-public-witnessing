@@ -19,26 +19,26 @@ export class UsersComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.userService.loadUserUuidMap();
-    this.userService.userUuidMap$.subscribe(data => console.log('user uuid map', data));
+    this.userService.loadUserPrimarykeys();
+    this.userService.userPrimarykeys$.subscribe(data => console.log('user uuid map', data));
   }
 
   create = () => {
-    this.userService.createUserUuidMapItem({
+    this.userService.createUserPrimarykey({
       uuid: null,
       username: this.cncontrol.value
     });
   }
 
   update = () => {
-    this.userService.updateUserUuidMapItem({
+    this.userService.updateUserPrimarykey({
       uuid: this.ugcontrol.value,
       username: this.uncontrol.value
     });
   }
 
   delete = () => {
-    this.userService.deleteUserUuidMapItem(this.dgcontrol.value);
+    this.userService.deleteUserPrimarykey(this.dgcontrol.value);
   }
 
 }
