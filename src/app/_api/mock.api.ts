@@ -8,6 +8,7 @@ import { Congregation } from 'src/app/_interfaces/congregation.interface';
 import { Tag } from 'src/app/_interfaces/tag.interface';
 import { Profile, ProfilePrimarykey } from 'src/app/_interfaces/profile.interface';
 import { map } from 'rxjs/operators';
+import { PermissionKey } from '../_enums/permission-key.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -40,11 +41,14 @@ export class MockApi implements Api {
   private profiles$ = new BehaviorSubject<Profile[]>([{
     uuid: 'e90966a2-91a8-5480-bc02-64f88277e5a1',
     name: 'administrator',
-    home: true,
-    users: true,
-    congregations: true,
-    tags: true,
-    profiles: true,
+    permissions: [
+      { key: PermissionKey.PAGE_HOME, access: true},
+      { key: PermissionKey.PAGE_CONGREGATIONS, access: true},
+      { key: PermissionKey.PAGE_USERS, access: true},
+      { key: PermissionKey.PAGE_TAGS, access: true},
+      { key: PermissionKey.PAGE_PROFILES, access: true},
+      { key: PermissionKey.PAGE_PROFILE_EDIT, access: true},
+    ]
   }]);
 
   /** user uuid map */

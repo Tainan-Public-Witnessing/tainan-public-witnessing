@@ -29,7 +29,9 @@ export class MenuComponent implements OnInit {
 
   ngOnInit(): void {
     this.currentMenuLinks$ = this.permissionService.profile$.pipe(
-      map(profile => this.MENU_LINKS.filter(menuLink => profile[menuLink.url]))
+      map(profile => this.MENU_LINKS.filter(menuLink => {
+        return profile.permissions.find(permission => permission.key === menuLink.url);
+      }))
     );
   }
 

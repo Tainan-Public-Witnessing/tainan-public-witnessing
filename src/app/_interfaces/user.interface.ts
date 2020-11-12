@@ -1,4 +1,4 @@
-import { Gender } from 'src/app/_enums/gender.emun';
+import { Gender } from 'src/app/_enums/gender.enum';
 import { Congregation } from 'src/app/_interfaces/congregation.interface';
 import { Tag } from 'src/app/_interfaces/tag.interface';
 

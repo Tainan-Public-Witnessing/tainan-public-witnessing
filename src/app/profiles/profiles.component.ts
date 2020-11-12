@@ -7,6 +7,7 @@ import { Profile, ProfilePrimarykey } from 'src/app/_interfaces/profile.interfac
 import { PermissionService } from 'src/app/_services/permission.service';
 import { ConfirmDialogData } from 'src/app/_elements/dialogs/confirm-dialog/confirm-dialog-data.interface';
 import { ConfirmDialogComponent } from 'src/app/_elements/dialogs/confirm-dialog/confirm-dialog.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-profiles',
@@ -22,7 +23,8 @@ export class ProfilesComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     private profileService: PermissionService,
-    private matDialog: MatDialog
+    private matDialog: MatDialog,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -51,14 +53,7 @@ export class ProfilesComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onEditButtonClick = (profile: Profile) => {
-    // this.matDialog.open(ProfileFormDialogComponent, {
-    //   disableClose: true,
-    //   panelClass: 'dialog-panel',
-    //   data: {
-    //     mode: 'EDIT',
-    //     profile
-    //   } as ProfileFormDialogData
-    // });
+    this.router.navigate(['profiles', 'EDIT', profile.uuid]);
   }
 
   onDeleteButtonClick = (profile: Profile) => {
