@@ -3,22 +3,22 @@ import { FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Tag } from 'src/app/_interfaces/tag.interface';
 import { TagsService } from 'src/app/_services/tags.service';
-import { TagFormDialogData } from './tag-form-dialog-data.interface';
+import { TagDialogData } from './tag-dialog-data.interface';
 
 @Component({
-  selector: 'app-tag-form-dialog',
-  templateUrl: './tag-form-dialog.component.html',
-  styleUrls: ['./tag-form-dialog.component.scss']
+  selector: 'app-tag-dialog',
+  templateUrl: './tag-dialog.component.html',
+  styleUrls: ['./tag-dialog.component.scss']
 })
-export class TagFormDialogComponent implements OnInit {
+export class TagDialogComponent implements OnInit {
 
   mode: string;
   title: string;
   tagControl: FormControl;
 
   constructor(
-    private dialogRef: MatDialogRef<TagFormDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) private data: TagFormDialogData,
+    private dialogRef: MatDialogRef<TagDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) private data: TagDialogData,
     private tagService: TagsService
   ) { }
 

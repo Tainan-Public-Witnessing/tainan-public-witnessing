@@ -3,22 +3,22 @@ import { FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Congregation } from 'src/app/_interfaces/congregation.interface';
 import { CongregationsService } from 'src/app/_services/congregations.service';
-import { CongregationFormDialogData } from './congregation-form-dialog-data.interface';
+import { CongregationDialogData } from './congregation-dialog-data.interface';
 
 @Component({
-  selector: 'app-congregation-form-dialog',
-  templateUrl: './congregation-form-dialog.component.html',
-  styleUrls: ['./congregation-form-dialog.component.scss']
+  selector: 'app-congregation-dialog',
+  templateUrl: './congregation-dialog.component.html',
+  styleUrls: ['./congregation-dialog.component.scss']
 })
-export class CongregationFormDialogComponent implements OnInit {
+export class CongregationDialogComponent implements OnInit {
 
   mode: string;
   title: string;
   congregationControl: FormControl;
 
   constructor(
-    private dialogRef: MatDialogRef<CongregationFormDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) private data: CongregationFormDialogData,
+    private dialogRef: MatDialogRef<CongregationDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) private data: CongregationDialogData,
     private congregationService: CongregationsService
   ) { }
 

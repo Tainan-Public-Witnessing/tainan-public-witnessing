@@ -7,8 +7,8 @@ import { Tag } from 'src/app/_interfaces/tag.interface';
 import { TagsService } from 'src/app/_services/tags.service';
 import { ConfirmDialogData } from '../_elements/dialogs/confirm-dialog/confirm-dialog-data.interface';
 import { ConfirmDialogComponent } from '../_elements/dialogs/confirm-dialog/confirm-dialog.component';
-import { TagFormDialogData } from './tag-form-dialog/tag-form-dialog-data.interface';
-import { TagFormDialogComponent } from './tag-form-dialog/tag-form-dialog.component';
+import { TagDialogData } from './tag-dialog/tag-dialog-data.interface';
+import { TagDialogComponent } from './tag-dialog/tag-dialog.component';
 
 @Component({
   selector: 'app-tags',
@@ -43,23 +43,23 @@ export class TagsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onAddButtonClick = () => {
-    this.matDialog.open(TagFormDialogComponent, {
+    this.matDialog.open(TagDialogComponent, {
       disableClose: true,
       panelClass: 'dialog-panel',
       data: {
         mode: 'CREATE'
-      } as TagFormDialogData
+      } as TagDialogData
     });
   }
 
   onEditButtonClick = (tag: Tag) => {
-    this.matDialog.open(TagFormDialogComponent, {
+    this.matDialog.open(TagDialogComponent, {
       disableClose: true,
       panelClass: 'dialog-panel',
       data: {
         mode: 'EDIT',
         tag
-      } as TagFormDialogData
+      } as TagDialogData
     });
   }
 

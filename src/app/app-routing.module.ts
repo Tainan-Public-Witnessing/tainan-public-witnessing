@@ -6,7 +6,7 @@ import { UsersComponent } from 'src/app/users/users.component';
 import { CongregationsComponent } from 'src/app//congregations/congregations.component';
 import { TagsComponent } from 'src/app/tags/tags.component';
 import { ProfilesComponent } from 'src/app/profiles/profiles.component';
-import { ProfileFormComponent } from 'src/app/profiles/profile-form/profile-form.component';
+import { ProfileComponent } from 'src/app/profiles/profile/profile.component';
 
 
 const routes: Routes = [
@@ -15,7 +15,7 @@ const routes: Routes = [
   {path: 'congregations', component: CongregationsComponent},
   {path: 'tags', component: TagsComponent},
   {path: 'profiles', component: ProfilesComponent},
-  {path: 'profile/:mode', component: ProfileFormComponent},
+  {path: 'profile/:mode', component: ProfileComponent},
 ];
 
 @NgModule({

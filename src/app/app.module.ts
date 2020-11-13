@@ -11,12 +11,12 @@ import { HomeComponent } from './home/home.component';
 import { UsersComponent } from './users/users.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CongregationsComponent } from './congregations/congregations.component';
-import { CongregationFormDialogComponent } from './congregations/congregation-form-dialog/congregation-form-dialog.component';
+import { CongregationDialogComponent } from './congregations/congregation-dialog/congregation-dialog.component';
 import { ConfirmDialogComponent } from './_elements/dialogs/confirm-dialog/confirm-dialog.component';
 import { TagsComponent } from './tags/tags.component';
-import { TagFormDialogComponent } from './tags/tag-form-dialog/tag-form-dialog.component';
+import { TagDialogComponent } from './tags/tag-dialog/tag-dialog.component';
 import { ProfilesComponent } from './profiles/profiles.component';
-import { ProfileFormComponent } from './profiles/profile-form/profile-form.component';
+import { ProfileComponent } from './profiles/profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -25,17 +25,17 @@ import { ProfileFormComponent } from './profiles/profile-form/profile-form.compo
     HomeComponent,
     UsersComponent,
     CongregationsComponent,
-    CongregationFormDialogComponent,
+    CongregationDialogComponent,
     ConfirmDialogComponent,
     TagsComponent,
-    TagFormDialogComponent,
+    TagDialogComponent,
     ProfilesComponent,
-    ProfileFormComponent,
+    ProfileComponent,
   ],
   entryComponents: [
-    CongregationFormDialogComponent,
+    CongregationDialogComponent,
     ConfirmDialogComponent,
-    TagFormDialogComponent,
+    TagDialogComponent,
   ],
   imports: [
     BrowserModule,

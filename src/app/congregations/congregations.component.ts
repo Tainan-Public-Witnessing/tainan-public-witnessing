@@ -7,8 +7,8 @@ import { Congregation } from 'src/app/_interfaces/congregation.interface';
 import { CongregationsService } from 'src/app/_services/congregations.service';
 import { ConfirmDialogData } from 'src/app/_elements/dialogs/confirm-dialog/confirm-dialog-data.interface';
 import { ConfirmDialogComponent } from 'src/app/_elements/dialogs/confirm-dialog/confirm-dialog.component';
-import { CongregationFormDialogData } from './congregation-form-dialog/congregation-form-dialog-data.interface';
-import { CongregationFormDialogComponent } from './congregation-form-dialog/congregation-form-dialog.component';
+import { CongregationDialogData } from './congregation-dialog/congregation-dialog-data.interface';
+import { CongregationDialogComponent } from './congregation-dialog/congregation-dialog.component';
 
 @Component({
   selector: 'app-congregations',
@@ -44,23 +44,23 @@ export class CongregationsComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   onAddButtonClick = () => {
-    this.matDialog.open(CongregationFormDialogComponent, {
+    this.matDialog.open(CongregationDialogComponent, {
       disableClose: true,
       panelClass: 'dialog-panel',
       data: {
         mode: 'CREATE'
-      } as CongregationFormDialogData
+      } as CongregationDialogData
     });
   }
 
   onEditButtonClick = (congregation: Congregation) => {
-    this.matDialog.open(CongregationFormDialogComponent, {
+    this.matDialog.open(CongregationDialogComponent, {
       disableClose: true,
       panelClass: 'dialog-panel',
       data: {
         mode: 'EDIT',
         congregation
-      } as CongregationFormDialogData
+      } as CongregationDialogData
     });
   }
 

@@ -4,11 +4,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PermissionKey } from 'src/app/_enums/permission-key.enum';
 
 @Component({
-  selector: 'app-profile-form',
-  templateUrl: './profile-form.component.html',
-  styleUrls: ['./profile-form.component.scss']
+  selector: 'app-profile',
+  templateUrl: './profile.component.html',
+  styleUrls: ['./profile.component.scss']
 })
-export class ProfileFormComponent implements OnInit {
+export class ProfileComponent implements OnInit {
 
   uuid: string;
   mode: string;
