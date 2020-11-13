@@ -13,11 +13,11 @@ import { GlobalEventService } from '../_services/global-event.service';
 export class MenuComponent implements OnInit {
 
   MENU_LINKS: MenuLink[] = [
-    { display: 'Home', url: 'home'},
-    { display: 'Users', url: 'users'},
-    { display: 'Congregations', url: 'congregations'},
-    { display: 'Tags', url: 'tags'},
-    { display: 'Profiles', url: 'profiles'},
+    { display: 'Home', url: '/home'},
+    { display: 'Users', url: '/users'},
+    { display: 'Congregations', url: '/congregations'},
+    { display: 'Tags', url: '/tags'},
+    { display: 'Profiles', url: '/profiles'},
   ];
 
   currentMenuLinks$: Observable<MenuLink[]>;
@@ -30,7 +30,7 @@ export class MenuComponent implements OnInit {
   ngOnInit(): void {
     this.currentMenuLinks$ = this.permissionService.profile$.pipe(
       map(profile => this.MENU_LINKS.filter(menuLink => {
-        return profile.permissions.find(permission => permission.key === menuLink.url);
+        return profile.permissions.find(permission => permission.urlKey === menuLink.url).access;
       }))
     );
   }

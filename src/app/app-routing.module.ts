@@ -15,7 +15,7 @@ const routes: Routes = [
   {path: 'congregations', component: CongregationsComponent},
   {path: 'tags', component: TagsComponent},
   {path: 'profiles', component: ProfilesComponent},
-  {path: 'profiles/:mode/:uuid', component: ProfileFormComponent},
+  {path: 'profile/:mode', component: ProfileFormComponent},
 ];
 
 @NgModule({

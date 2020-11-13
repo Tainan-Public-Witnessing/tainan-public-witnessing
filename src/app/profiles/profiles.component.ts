@@ -30,6 +30,7 @@ export class ProfilesComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit(): void {
     this.profileService.profilePrimarykeys$.pipe(takeUntil(this.unsubscribe$)).subscribe(this.profilePrimarykeys$);
     this.profileService.loadProfilePrimarykeys();
+    console.log(this.router.url);
   }
 
   ngAfterViewInit(): void {
@@ -43,17 +44,11 @@ export class ProfilesComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onAddButtonClick = () => {
-    // this.matDialog.open(ProfileFormDialogComponent, {
-    //   disableClose: true,
-    //   panelClass: 'dialog-panel',
-    //   data: {
-    //     mode: 'CREATE'
-    //   } as ProfileFormDialogData
-    // });
+    this.router.navigate(['profile', 'create']);
   }
 
   onEditButtonClick = (profile: Profile) => {
-    this.router.navigate(['profiles', 'EDIT', profile.uuid]);
+    this.router.navigate(['profile', 'edit', {uuid: profile.uuid}]);
   }
 
   onDeleteButtonClick = (profile: Profile) => {

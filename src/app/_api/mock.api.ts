@@ -42,12 +42,12 @@ export class MockApi implements Api {
     uuid: 'e90966a2-91a8-5480-bc02-64f88277e5a1',
     name: 'administrator',
     permissions: [
-      { key: PermissionKey.PAGE_HOME, access: true},
-      { key: PermissionKey.PAGE_CONGREGATIONS, access: true},
-      { key: PermissionKey.PAGE_USERS, access: true},
-      { key: PermissionKey.PAGE_TAGS, access: true},
-      { key: PermissionKey.PAGE_PROFILES, access: true},
-      { key: PermissionKey.PAGE_PROFILE_EDIT, access: true},
+      { key: PermissionKey.HOME_READ, access: true, urlKey: '/home' },
+      { key: PermissionKey.CONGREGATIONS_READ, access: true, urlKey: '/congregations' },
+      { key: PermissionKey.USERS_READ, access: true, urlKey: '/users' },
+      { key: PermissionKey.TAGS_READ, access: true, urlKey: '/tags' },
+      { key: PermissionKey.PROFILES_READ, access: true, urlKey: '/profiles' },
+      { key: PermissionKey.PROFILE_READ, access: true, urlKey: '/profile/read' },
     ]
   }]);
 

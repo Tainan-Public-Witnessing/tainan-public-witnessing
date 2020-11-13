@@ -4,4 +4,18 @@
   <!-- <button mat-icon-button (click)="onAddButtonClick()"><mat-icon>add</mat-icon></button> -->
 </div>
 
-{{uuid}}{{mode}}
+<form [formGroup]="profileForm">
+
+  <div *ngFor="let key of permissionKeys">
+    
+    {{key}}
+
+    <span class="spacer"></span>
+
+    <mat-slide-toggle
+      [formControlName]="key"
+      color="primary">
+    </mat-slide-toggle>
+  </div>
+  
+</form>

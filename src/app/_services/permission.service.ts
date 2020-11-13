@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Profile, ProfilePrimarykey } from 'src/app/_interfaces/profile.interface';
 import { MockApi } from 'src/app/_api/mock.api';
+import { PermissionKey } from '../_enums/permission-key.enum';
 
 @Injectable({
   providedIn: 'root'

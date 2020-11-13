@@ -1,8 +1,8 @@
 export enum PermissionKey {
-  PAGE_HOME = 'home',
-  PAGE_USERS = 'users',
-  PAGE_CONGREGATIONS = 'congregations',
-  PAGE_TAGS = 'tags',
-  PAGE_PROFILES = 'profiles',
-  PAGE_PROFILE_EDIT = 'profile/EDIT',
+  HOME_READ = 'HOME_READ',
+  USERS_READ = 'USERS_READ',
+  CONGREGATIONS_READ = 'CONGREGATIONS_READ',
+  TAGS_READ = 'TAGS_READ',
+  PROFILES_READ = 'PROFILES_READ',
+  PROFILE_READ = 'PROFILE_READ',
 }
