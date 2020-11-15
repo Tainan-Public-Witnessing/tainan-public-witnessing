@@ -1,21 +1,30 @@
 <div class="title-bar">
-  <h1>Profile</h1>
+  <h1>{{title}}</h1>
   <span class="spacer"></span>
-  <!-- <button mat-icon-button (click)="onAddButtonClick()"><mat-icon>add</mat-icon></button> -->
+  <button mat-button color="accent" (click)="onCancelClick()">cancel</button>
+  <button mat-button color="primary" (click)="onSubmitClick()">submit</button>
 </div>
 
 <form [formGroup]="profileForm">
 
-  <div *ngFor="let key of permissionKeys">
+  <mat-form-field class="full-width">
+    <mat-label>Profile name</mat-label>
+    <input matInput formControlName="name">
+    <!-- <mat-error *ngIf="tagControl.hasError('existed')">Tag name already existed!</mat-error> -->
+  </mat-form-field>
+
+  <mat-list>
+
+    <mat-list-item *ngFor="let key of permissionKeys">
     
-    {{key}}
-
-    <span class="spacer"></span>
-
-    <mat-slide-toggle
-      [formControlName]="key"
-      color="primary">
-    </mat-slide-toggle>
-  </div>
+      {{key}}
   
+      <span class="spacer"></span>
+  
+      <mat-slide-toggle
+        [formControlName]="key"
+        color="primary">
+      </mat-slide-toggle>
+    </mat-list-item>
+  </mat-list>
 </form>

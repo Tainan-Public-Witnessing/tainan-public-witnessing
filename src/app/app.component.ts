@@ -3,7 +3,7 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { GlobalEventService } from 'src/app/_services/global-event.service';
-import { PermissionService } from 'src/app/_services/permission.service';
+import { AuthorityService } from './_services/authority.service';
 
 @Component({
   selector: 'app-root',
@@ -17,7 +17,7 @@ export class AppComponent implements OnInit {
   unsubscribe$ = new Subject<void>();
 
   constructor(
-    private permisionService: PermissionService,
+    private authorityService: AuthorityService,
     private globalEventService: GlobalEventService
   ) {}
 
@@ -29,7 +29,7 @@ export class AppComponent implements OnInit {
       this.sidenav.close();
     });
 
-    this.permisionService.loadProfile('e90966a2-91a8-5480-bc02-64f88277e5a1');
+    this.authorityService.initialize();
   }
 
   onMenuButtonClick = () => {

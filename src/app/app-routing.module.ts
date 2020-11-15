@@ -10,6 +10,7 @@ import { ProfileComponent } from 'src/app/profiles/profile/profile.component';
 
 
 const routes: Routes = [
+  {path: '', pathMatch: 'full', redirectTo: 'home'},
   {path: 'home', component: HomeComponent},
   {path: 'users', component: UsersComponent},
   {path: 'congregations', component: CongregationsComponent},

@@ -20,7 +20,6 @@ export class UsersComponent implements OnInit {
 
   ngOnInit(): void {
     this.userService.loadUserPrimarykeys();
-    this.userService.userPrimarykeys$.subscribe(data => console.log('user uuid map', data));
   }
 
   create = () => {

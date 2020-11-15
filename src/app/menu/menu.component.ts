@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { MenuLink } from 'src/app/_interfaces/menu-link.interface';
-import { PermissionService } from 'src/app/_services/permission.service';
+import { AuthorityService } from '../_services/authority.service';
 import { GlobalEventService } from '../_services/global-event.service';
 
 @Component({
@@ -23,12 +23,12 @@ export class MenuComponent implements OnInit {
   currentMenuLinks$: Observable<MenuLink[]>;
 
   constructor(
-    private permissionService: PermissionService,
+    private authorityService: AuthorityService,
     private globalEventService: GlobalEventService
   ) { }
 
   ngOnInit(): void {
-    this.currentMenuLinks$ = this.permissionService.profile$.pipe(
+    this.currentMenuLinks$ = this.authorityService.currentProfile$.pipe(
       map(profile => this.MENU_LINKS.filter(menuLink => {
         return profile.permissions.find(permission => permission.urlKey === menuLink.url).access;
       }))

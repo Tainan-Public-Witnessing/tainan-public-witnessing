@@ -4,10 +4,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject, race, Subject, timer } from 'rxjs';
 import { map, switchAll, takeUntil } from 'rxjs/operators';
 import { Profile, ProfilePrimarykey } from 'src/app/_interfaces/profile.interface';
-import { PermissionService } from 'src/app/_services/permission.service';
 import { ConfirmDialogData } from 'src/app/_elements/dialogs/confirm-dialog/confirm-dialog-data.interface';
 import { ConfirmDialogComponent } from 'src/app/_elements/dialogs/confirm-dialog/confirm-dialog.component';
 import { Router } from '@angular/router';
+import { ProfilesService } from 'src/app/_services/profiles.service';
 
 @Component({
   selector: 'app-profiles',
@@ -22,15 +22,14 @@ export class ProfilesComponent implements OnInit, AfterViewInit, OnDestroy {
   unsubscribe$ = new Subject<void>();
 
   constructor(
-    private profileService: PermissionService,
+    private profilesService: ProfilesService,
     private matDialog: MatDialog,
     private router: Router
   ) { }
 
   ngOnInit(): void {
-    this.profileService.profilePrimarykeys$.pipe(takeUntil(this.unsubscribe$)).subscribe(this.profilePrimarykeys$);
-    this.profileService.loadProfilePrimarykeys();
-    console.log(this.router.url);
+    this.profilesService.profilePrimarykeys$.pipe(takeUntil(this.unsubscribe$)).subscribe(this.profilePrimarykeys$);
+    this.profilesService.loadProfilePrimarykeys();
   }
 
   ngAfterViewInit(): void {
@@ -79,7 +78,7 @@ export class ProfilesComponent implements OnInit, AfterViewInit, OnDestroy {
       map(() => race(timer(5000), this.exitComponent$)),
       switchAll()
     ).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
-      this.profileService.sortProfilePrimarykeys(this.profilePrimarykeys$.getValue());
+      this.profilesService.sortProfilePrimarykeys(this.profilePrimarykeys$.getValue());
     });
   }
 }
