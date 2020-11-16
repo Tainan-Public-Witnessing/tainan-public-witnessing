@@ -35,19 +35,19 @@ export class MockApi implements Api {
   ]);
 
   private profilePrimarykeys$ = new BehaviorSubject<ProfilePrimarykey[]>([
-    { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5b0', name: 'administrator' },
+    { uuid: 'e90966a2-91a8-5480-bc02-64f88277e5a1', name: 'administrator' },
   ]);
 
   private profiles$ = new BehaviorSubject<Profile[]>([{
     uuid: 'e90966a2-91a8-5480-bc02-64f88277e5a1',
     name: 'administrator',
     permissions: [
-      { key: PermissionKey.HOME_READ, access: true, urlKey: '/home' },
-      { key: PermissionKey.CONGREGATIONS_READ, access: true, urlKey: '/congregations' },
-      { key: PermissionKey.USERS_READ, access: true, urlKey: '/users' },
-      { key: PermissionKey.TAGS_READ, access: true, urlKey: '/tags' },
-      { key: PermissionKey.PROFILES_READ, access: true, urlKey: '/profiles' },
-      { key: PermissionKey.PROFILE_READ, access: true, urlKey: '/profile/read' },
+      { key: PermissionKey.HOME_READ, access: true },
+      { key: PermissionKey.CONGREGATIONS_READ, access: true },
+      { key: PermissionKey.USERS_READ, access: true },
+      { key: PermissionKey.TAGS_READ, access: true },
+      { key: PermissionKey.PROFILES_READ, access: true },
+      { key: PermissionKey.PROFILE_READ, access: true },
     ]
   }]);
 
@@ -190,7 +190,7 @@ export class MockApi implements Api {
     profilePrimarykey.uuid = uuidv5(profilePrimarykey.name, environment.UUID_NAMESPACE);
     profilePrimarykeys.push(profilePrimarykey);
     this.profilePrimarykeys$.next(profilePrimarykeys);
-    return Promise.resolve('SUCCESS');
+    return Promise.resolve(profilePrimarykey.uuid);
   }
 
   updateProfilePrimarykey = (profilePrimarykey: ProfilePrimarykey) => {
@@ -213,10 +213,10 @@ export class MockApi implements Api {
     if (existIndex !== -1) {
       profilePrimarykeys.splice(existIndex, 1);
       this.profilePrimarykeys$.next(profilePrimarykeys);
+      return Promise.resolve(uuid);
     } else {
       return Promise.reject('PROFILE_PRIMARYKEY_DO_NOT_EXIST');
     }
-    return Promise.resolve('SUCCESS');
   }
 
   /** profile */

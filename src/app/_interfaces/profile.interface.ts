@@ -14,5 +14,10 @@ export interface ProfilePrimarykey {
 export interface Permission {
   key: PermissionKey;
   access: boolean;
+}
+
+export interface PermissionData {
+  key: PermissionKey;
   urlKey: string;
+  description: string;
 }

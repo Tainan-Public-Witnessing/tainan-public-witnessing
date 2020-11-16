@@ -50,6 +50,10 @@ export class ProfilesComponent implements OnInit, AfterViewInit, OnDestroy {
     this.router.navigate(['profile', 'edit', {uuid: profile.uuid}]);
   }
 
+  onInfoButtonClick = (profile: Profile) => {
+    this.router.navigate(['profile', 'read', {uuid: profile.uuid}]);
+  }
+
   onDeleteButtonClick = (profile: Profile) => {
     this.matDialog.open(ConfirmDialogComponent, {
       disableClose: true,
@@ -60,7 +64,7 @@ export class ProfilesComponent implements OnInit, AfterViewInit, OnDestroy {
       } as ConfirmDialogData
     }).afterClosed().subscribe(result => {
       if (result) {
-        // this.profileService.deleteProfile(profile.uuid);
+        this.profilesService.deleteProfile(profile.uuid);
       }
     });
   }

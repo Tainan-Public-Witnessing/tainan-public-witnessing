@@ -43,13 +43,13 @@ export class TagDialogComponent implements OnInit {
         response = this.tagService.createTag({
           uuid: null,
           name: this.tagControl.value
-        } as Tag);
+        });
       } else { // EDIT mode
         if (this.data.tag.name !== this.tagControl.value) {
           response = this.tagService.updateTag({
             uuid: this.data.tag.uuid,
             name: this.tagControl.value
-          } as Tag);
+          });
         } else { // no changes
           response = Promise.resolve('NO_CHANGES');
         }
