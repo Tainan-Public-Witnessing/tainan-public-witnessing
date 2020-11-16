@@ -3,15 +3,16 @@ import { BehaviorSubject } from 'rxjs';
 import { Profile, ProfilePrimarykey, PermissionData } from 'src/app/_interfaces/profile.interface';
 import { MockApi } from 'src/app/_api/mock.api';
 import { PermissionKey } from 'src/app/_enums/permission-key.enum';
+import { Status } from '../_enums/status.enum';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProfilesService {
 
-  profilePrimarykeys$ = new BehaviorSubject<ProfilePrimarykey[]>(null);
-  // profiles: BehaviorSubject<Profile>[] = [];
-  profiles: Map<string, BehaviorSubject<Profile>> = new Map();
+  private profilePrimarykeys$ = new BehaviorSubject<ProfilePrimarykey[]>(null);
+  private profiles: Map<string, BehaviorSubject<Profile>> = new Map();
+  private profilesMaxSize = 10;
 
   PERMISSION_DATAS: PermissionData[] = [
     { key: PermissionKey.HOME_READ, urlKey: '/home', description: 'Can read Home page' },
@@ -26,28 +27,31 @@ export class ProfilesService {
     private mockApi: MockApi
   ) { }
 
-  loadProfilePrimarykeys = () => {
+  getProfilePrimarykeys = (): BehaviorSubject<ProfilePrimarykey[]> => {
     if (!this.profilePrimarykeys$.getValue()) {
       this.mockApi.readProfilePrimarykeys().subscribe(this.profilePrimarykeys$);
     }
+    return this.profilePrimarykeys$;
   }
 
   sortProfilePrimarykeys = (profilePrimarykeys: ProfilePrimarykey[]) => {
-    return this.mockApi.sortProfilePrimarykeys(profilePrimarykeys);
+    return this.mockApi.updateProfilePrimarykeys(profilePrimarykeys);
   }
 
-  loadProfileByUuid = (uuid: string): BehaviorSubject<Profile> => {
+  getProfileByUuid = (uuid: string): BehaviorSubject<Profile> => {
     if (this.profiles.has(uuid)) {
       return this.profiles.get(uuid);
     } else {
       const profile$ = new BehaviorSubject<Profile>(null);
       this.mockApi.readProfile(uuid).subscribe(profile$);
       this.profiles.set(uuid, profile$);
+      this.checkProfilesSize();
+      console.log('size', this.profiles.size);
       return profile$;
     }
   }
 
-  createProfile = (profile: Profile): Promise<string> => {
+  createProfile = (profile: Profile): Promise<Status> => {
     const profilePrimarykeys = this.profilePrimarykeys$.getValue();
     if (profilePrimarykeys) {
       if (!profilePrimarykeys.find(object => object.name === profile.name)) {
@@ -59,34 +63,40 @@ export class ProfilesService {
           return this.mockApi.createProfile(profile);
         });
       } else {
-        return Promise.reject('PROFILE_NAME_EXISTED');
+        return Promise.reject(Status.EXISTED);
       }
     } else {
-      return Promise.reject('PROFILE_PRIMARY_KEYS_NOT_LOADED');
+      return Promise.reject(Status.NOT_LOADED);
     }
   }
 
-  updateProfile = (profile: Profile): Promise<string> => {
+  updateProfile = (profile: Profile): Promise<Status> => {
     const profilePrimarykeys = this.profilePrimarykeys$.getValue();
     if (profilePrimarykeys) {
       if (!profilePrimarykeys.find(object => object.name === profile.name && object.uuid !== profile.uuid)) {
         return this.mockApi.updateProfilePrimarykey({
           uuid: profile.uuid,
           name: profile.name
-        }).then(uuid => {
+        }).then(() => {
           return this.mockApi.updateProfile(profile);
         });
       } else {
-        return Promise.reject('PROFILE_NAME_EXISTED');
+        return Promise.reject(Status.EXISTED);
       }
     } else {
-      return Promise.reject('PROFILE_PRIMARY_KEYS_NOT_LOADED');
+      return Promise.reject(Status.NOT_LOADED);
     }
   }
 
-  deleteProfile = (uuid: string) => {
-    return this.mockApi.deleteProfilePrimarykey(uuid).then(deletedUuid => {
-      return this.mockApi.deleteProfile(deletedUuid);
+  deleteProfile = (uuid: string): Promise<Status> => {
+    return this.mockApi.deleteProfilePrimarykey(uuid).then(() => {
+      return this.mockApi.deleteProfile(uuid);
     });
+  }
+
+  private checkProfilesSize = () => {
+    if ( this.profiles.size > this.profilesMaxSize) {
+      this.profiles.delete(this.profiles.keys().next().value);
+    }
   }
 }

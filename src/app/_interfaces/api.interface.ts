@@ -1,8 +1,9 @@
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { UserPrimarykey } from 'src/app/_interfaces/user.interface';
 import { Congregation } from 'src/app/_interfaces/congregation.interface';
 import { Tag } from 'src/app/_interfaces/tag.interface';
 import { Profile, ProfilePrimarykey } from 'src/app/_interfaces/profile.interface';
+import { Status } from 'src/app/_enums/status.enum';
 
 export interface Api {
 
@@ -24,13 +25,13 @@ export interface Api {
   deleteTag: (uuid: string) => Promise<string>;
 
   readProfilePrimarykeys: () => Observable<ProfilePrimarykey[]>;
-  sortProfilePrimarykeys: (profilePrimarykeys: ProfilePrimarykey[]) => Promise<string>;
+  updateProfilePrimarykeys: (profilePrimarykeys: ProfilePrimarykey[]) => Promise<Status>;
   createProfilePrimarykey: (profilePrimarykey: ProfilePrimarykey) => Promise<string>;
-  updateProfilePrimarykey: (profilePrimarykey: ProfilePrimarykey) => Promise<string>;
-  deleteProfilePrimarykey: (uuid: string) => Promise<string>;
+  updateProfilePrimarykey: (profilePrimarykey: ProfilePrimarykey) => Promise<Status>;
+  deleteProfilePrimarykey: (uuid: string) => Promise<Status>;
 
   readProfile: (uuid: string) => Observable<Profile>;
-  createProfile: (profile: Profile) => Promise<string>;
-  updateProfile: (profile: Profile) => Promise<string>;
-  deleteProfile: (uuid: string) => Promise<string>;
+  createProfile: (profile: Profile) => Promise<Status>;
+  updateProfile: (profile: Profile) => Promise<Status>;
+  deleteProfile: (uuid: string) => Promise<Status>;
 }

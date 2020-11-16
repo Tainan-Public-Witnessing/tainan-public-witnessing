@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { Mode } from 'src/app/_enums/mode.enum';
 import { PermissionKey } from 'src/app/_enums/permission-key.enum';
+import { Status } from 'src/app/_enums/status.enum';
 import { Profile } from 'src/app/_interfaces/profile.interface';
 import { ProfilesService } from 'src/app/_services/profiles.service';
 
@@ -11,13 +14,14 @@ import { ProfilesService } from 'src/app/_services/profiles.service';
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, OnDestroy {
 
   mode: string;
   uuid: string;
   title: string;
   profileForm: FormGroup;
   permissionKeys = Object.values(PermissionKey);
+  unsubscribe$ = new Subject<void>();
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -33,16 +37,16 @@ export class ProfileComponent implements OnInit {
       this.uuid = params.uuid;
 
       switch (params.mode) {
-        case 'create':
+        case Mode.CREATE:
           this.title = 'Create profile';
           break;
 
-        case 'edit':
+        case Mode.UPDATE:
           this.title = 'Edit profile';
           this.setFormGroupValueByUuid(params.uuid);
           break;
 
-        case 'read':
+        case Mode.READ:
           this.title = 'Profile';
           this.setFormGroupValueByUuid(params.uuid);
           this.profileForm.disable();
@@ -51,12 +55,17 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+  }
+
   onCancelClick = () => {
     this.router.navigate(['profiles']);
   }
 
   onSubmitClick = () => {
     if ( this.profileForm.status === 'VALID') {
+
       const profile: Profile = {
         uuid: null,
         name: this.profileForm.value.name,
@@ -69,19 +78,19 @@ export class ProfileComponent implements OnInit {
         });
       }
 
-      let response: Promise<string>;
+      let response: Promise<Status>;
 
-      if (this.mode === 'create') {
+      if (this.mode === Mode.CREATE) {
         response = this.profilesService.createProfile(profile);
-      } else { // edit mode
+      } else { // update mode
         profile.uuid = this.uuid;
         response = this.profilesService.updateProfile(profile);
       }
 
-      response.then(data => {
+      response.then(() => {
         this.router.navigate(['profiles']);
-      }).catch(reasion => {
-        if (reasion === 'PROFILE_NAME_EXISTED') {
+      }).catch(reason => {
+        if (reason === Status.EXISTED) {
           this.profileForm.controls.name.setErrors({existed: true});
         }
       });
@@ -101,7 +110,7 @@ export class ProfileComponent implements OnInit {
   }
 
   private setFormGroupValueByUuid = (uuid: string) => {
-    this.profilesService.loadProfileByUuid(uuid).subscribe(profile => {
+    this.profilesService.getProfileByUuid(uuid).pipe(takeUntil(this.unsubscribe$)).subscribe(profile => {
       this.profileForm.controls.name.setValue(profile.name);
       profile.permissions.forEach(permission => {
         this.profileForm.controls[permission.key].setValue(permission.access);

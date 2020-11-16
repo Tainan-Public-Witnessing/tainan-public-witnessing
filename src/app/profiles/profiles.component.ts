@@ -8,6 +8,7 @@ import { ConfirmDialogData } from 'src/app/_elements/dialogs/confirm-dialog/conf
 import { ConfirmDialogComponent } from 'src/app/_elements/dialogs/confirm-dialog/confirm-dialog.component';
 import { Router } from '@angular/router';
 import { ProfilesService } from 'src/app/_services/profiles.service';
+import { Mode } from '../_enums/mode.enum';
 
 @Component({
   selector: 'app-profiles',
@@ -28,8 +29,7 @@ export class ProfilesComponent implements OnInit, AfterViewInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.profilesService.profilePrimarykeys$.pipe(takeUntil(this.unsubscribe$)).subscribe(this.profilePrimarykeys$);
-    this.profilesService.loadProfilePrimarykeys();
+    this.profilesService.getProfilePrimarykeys().pipe(takeUntil(this.unsubscribe$)).subscribe(this.profilePrimarykeys$);
   }
 
   ngAfterViewInit(): void {
@@ -43,15 +43,15 @@ export class ProfilesComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onAddButtonClick = () => {
-    this.router.navigate(['profile', 'create']);
+    this.router.navigate(['profile', Mode.CREATE]);
   }
 
   onEditButtonClick = (profile: Profile) => {
-    this.router.navigate(['profile', 'edit', {uuid: profile.uuid}]);
+    this.router.navigate(['profile', Mode.UPDATE, {uuid: profile.uuid}]);
   }
 
   onInfoButtonClick = (profile: Profile) => {
-    this.router.navigate(['profile', 'read', {uuid: profile.uuid}]);
+    this.router.navigate(['profile', Mode.READ, {uuid: profile.uuid}]);
   }
 
   onDeleteButtonClick = (profile: Profile) => {
