@@ -9,6 +9,7 @@ import { ConfirmDialogData } from 'src/app/_elements/dialogs/confirm-dialog/conf
 import { ConfirmDialogComponent } from 'src/app/_elements/dialogs/confirm-dialog/confirm-dialog.component';
 import { CongregationDialogData } from './congregation-dialog/congregation-dialog-data.interface';
 import { CongregationDialogComponent } from './congregation-dialog/congregation-dialog.component';
+import { Mode } from 'src/app/_enums/mode.enum';
 
 @Component({
   selector: 'app-congregations',
@@ -29,8 +30,7 @@ export class CongregationsComponent implements OnInit, AfterViewInit, OnDestroy 
   ) { }
 
   ngOnInit(): void {
-    this.congregationService.congregations$.pipe(takeUntil(this.unsubscribe$)).subscribe(this.congregations$);
-    this.congregationService.loadCongregations();
+    this.congregationService.getCongregations().pipe(takeUntil(this.unsubscribe$)).subscribe(this.congregations$);
   }
 
   ngAfterViewInit(): void {
@@ -48,7 +48,7 @@ export class CongregationsComponent implements OnInit, AfterViewInit, OnDestroy 
       disableClose: true,
       panelClass: 'dialog-panel',
       data: {
-        mode: 'CREATE'
+        mode: Mode.CREATE
       } as CongregationDialogData
     });
   }
@@ -58,7 +58,7 @@ export class CongregationsComponent implements OnInit, AfterViewInit, OnDestroy 
       disableClose: true,
       panelClass: 'dialog-panel',
       data: {
-        mode: 'EDIT',
+        mode: Mode.UPDATE,
         congregation
       } as CongregationDialogData
     });

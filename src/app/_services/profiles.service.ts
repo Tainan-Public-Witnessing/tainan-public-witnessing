@@ -34,7 +34,7 @@ export class ProfilesService {
     return this.profilePrimarykeys$;
   }
 
-  sortProfilePrimarykeys = (profilePrimarykeys: ProfilePrimarykey[]) => {
+  sortProfilePrimarykeys = (profilePrimarykeys: ProfilePrimarykey[]): Promise<Status> => {
     return this.mockApi.updateProfilePrimarykeys(profilePrimarykeys);
   }
 
@@ -46,7 +46,6 @@ export class ProfilesService {
       this.mockApi.readProfile(uuid).subscribe(profile$);
       this.profiles.set(uuid, profile$);
       this.checkProfilesSize();
-      console.log('size', this.profiles.size);
       return profile$;
     }
   }
@@ -94,7 +93,7 @@ export class ProfilesService {
     });
   }
 
-  private checkProfilesSize = () => {
+  private checkProfilesSize = (): void => {
     if ( this.profiles.size > this.profilesMaxSize) {
       this.profiles.delete(this.profiles.keys().next().value);
     }

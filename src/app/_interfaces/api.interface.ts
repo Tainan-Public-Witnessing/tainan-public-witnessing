@@ -13,10 +13,10 @@ export interface Api {
   deleteUserPrimarykey: (uuid: string) => void;
 
   readCongregations: () => Observable<Congregation[]>;
-  sortCongregations: (congregations: Congregation[]) => Promise<string>;
+  updateCongregations: (congregations: Congregation[]) => Promise<Status>;
   createCongregation: (congregation: Congregation) => Promise<string>;
-  updateCongregation: (congregation: Congregation) => Promise<string>;
-  deleteCongregation: (uuid: string) => Promise<string>;
+  updateCongregation: (congregation: Congregation) => Promise<Status>;
+  deleteCongregation: (uuid: string) => Promise<Status>;
 
   readTags: () => Observable<Tag[]>;
   sortTags: (tags: Tag[]) => Promise<string>;

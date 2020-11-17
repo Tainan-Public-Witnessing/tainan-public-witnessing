@@ -88,23 +88,27 @@ export class MockApi implements Api {
   /** congregations */
 
   readCongregations = () => {
+    console.log('api', 'readCongregations');
     return this.congregations$;
   }
 
-  sortCongregations = (congregations: Congregation[]) => {
+  updateCongregations = (congregations: Congregation[]) => {
+    console.log('api', 'updateCongregations');
     this.congregations$.next(congregations);
-    return Promise.resolve('SUCCESS');
+    return Promise.resolve(Status.SUCCESS);
   }
 
   createCongregation = (congregation: Congregation) => {
+    console.log('api', 'createCongregation');
     const congregations = this.congregations$.getValue();
-    congregation.uuid = uuidv5(congregation.name, environment.UUID_NAMESPACE);
+    congregation.uuid = uuidv5(new Date().toString(), environment.UUID_NAMESPACE);
     congregations.push(congregation);
     this.congregations$.next(congregations);
-    return Promise.resolve('SUCCESS');
+    return Promise.resolve(congregation.uuid);
   }
 
   updateCongregation = (congregation: Congregation) => {
+    console.log('api', 'updateCongregation');
     const congregations = this.congregations$.getValue();
     const existObject = congregations.find(object => object.uuid === congregation.uuid);
     if (existObject) {
@@ -112,22 +116,23 @@ export class MockApi implements Api {
         existObject[index] = congregation[index];
       }
       this.congregations$.next(congregations);
+      return Promise.resolve(Status.SUCCESS);
     } else {
-      return Promise.reject('CONGREGATION_DO_NOT_EXIST');
+      return Promise.reject(Status.NOT_EXIST);
     }
-    return Promise.resolve('SUCCESS');
   }
 
   deleteCongregation = (uuid: string) => {
+    console.log('api', 'deleteCongregation');
     const congregations = this.congregations$.getValue();
     const existIndex = congregations.findIndex(object => object.uuid === uuid);
     if (existIndex !== -1) {
       congregations.splice(existIndex, 1);
       this.congregations$.next(congregations);
+      return Promise.resolve(Status.SUCCESS);
     } else {
-      return Promise.reject('CONGREGATION_DO_NOT_EXIST');
+      return Promise.reject(Status.NOT_EXIST);
     }
-    return Promise.resolve('SUCCESS');
   }
 
   /** tags */

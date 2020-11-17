@@ -68,7 +68,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
       const profile: Profile = {
         uuid: null,
-        name: this.profileForm.value.name,
+        name: this.profileForm.value.name.trim(),
         permissions: []
       };
       for (const key of this.permissionKeys) {
@@ -84,7 +84,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
         response = this.profilesService.createProfile(profile);
       } else { // update mode
         profile.uuid = this.uuid;
-        response = this.profilesService.updateProfile(profile);
+        if (this.profileForm.dirty) {
+          response = this.profilesService.updateProfile(profile);
+        } else {
+          response = Promise.resolve(Status.NO_CHANGES);
+        }
       }
 
       response.then(() => {

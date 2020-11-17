@@ -3,4 +3,5 @@ export enum Status {
   NOT_LOADED,
   EXISTED,
   NOT_EXIST,
+  NO_CHANGES,
 }
