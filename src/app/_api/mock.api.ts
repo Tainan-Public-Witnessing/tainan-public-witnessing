@@ -138,23 +138,27 @@ export class MockApi implements Api {
   /** tags */
 
   readTags = () => {
+    console.log('api', 'readTags');
     return this.tags$;
   }
 
-  sortTags = (tags: Tag[]) => {
+  updateTags = (tags: Tag[]) => {
+    console.log('api', 'updateTags');
     this.tags$.next(tags);
-    return Promise.resolve('SUCCESS');
+    return Promise.resolve(Status.SUCCESS);
   }
 
   createTag = (tag: Tag) => {
+    console.log('api', 'createTag');
     const tags = this.tags$.getValue();
-    tag.uuid = uuidv5(tag.name, environment.UUID_NAMESPACE);
+    tag.uuid = uuidv5(new Date().toString(), environment.UUID_NAMESPACE);
     tags.push(tag);
     this.congregations$.next(tags);
-    return Promise.resolve('SUCCESS');
+    return Promise.resolve(tag.uuid);
   }
 
   updateTag = (tag: Tag) => {
+    console.log('api', 'updateTag');
     const tags = this.tags$.getValue();
     const existObject = tags.find(object => object.uuid === tag.uuid);
     if (existObject) {
@@ -162,22 +166,23 @@ export class MockApi implements Api {
         existObject[index] = tag[index];
       }
       this.tags$.next(tags);
+      return Promise.resolve(Status.SUCCESS);
     } else {
-      return Promise.reject('TAG_DO_NOT_EXIST');
+      return Promise.reject(Status.NOT_EXIST);
     }
-    return Promise.resolve('SUCCESS');
   }
 
   deleteTag = (uuid: string) => {
+    console.log('api', 'deleteTag');
     const tags = this.tags$.getValue();
     const existIndex = tags.findIndex(object => object.uuid === uuid);
     if (existIndex !== -1) {
       tags.splice(existIndex, 1);
       this.congregations$.next(tags);
+      return Promise.resolve(Status.SUCCESS);
     } else {
-      return Promise.reject('TAG_DO_NOT_EXIST');
+      return Promise.reject(Status.NOT_EXIST);
     }
-    return Promise.resolve('SUCCESS');
   }
 
   /** profile primary key */

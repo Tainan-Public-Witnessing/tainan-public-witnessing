@@ -1,6 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Mode } from 'src/app/_enums/mode.enum';
+import { Status } from 'src/app/_enums/status.enum';
 import { Tag } from 'src/app/_interfaces/tag.interface';
 import { TagsService } from 'src/app/_services/tags.service';
 import { TagDialogData } from './tag-dialog-data.interface';
@@ -12,7 +14,6 @@ import { TagDialogData } from './tag-dialog-data.interface';
 })
 export class TagDialogComponent implements OnInit {
 
-  mode: string;
   title: string;
   tagControl: FormControl;
 
@@ -24,44 +25,46 @@ export class TagDialogComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.mode = this.data.mode;
-
-    this.title = this.mode === 'CREATE' ? 'Create tag' : 'Edit tag';
+    this.title = this.data.mode === Mode.CREATE ? 'Create tag' : 'Edit tag';
 
     this.tagControl = new FormControl('', Validators.required);
 
-    if (this.mode === 'EDIT') {
+    if (this.data.mode === Mode.UPDATE) {
       this.tagControl.setValue(this.data.tag.name);
     }
   }
 
   onSubmitClick = () => {
     if (this.tagControl.status === 'VALID') {
-      let response: Promise<string>;
 
-      if (this.mode === 'CREATE') {
+      let response: Promise<Status>;
+      const value = this.tagControl.value.trim();
+
+      if (this.data.mode === Mode.CREATE) {
         response = this.tagService.createTag({
           uuid: null,
-          name: this.tagControl.value
+          name: value
         });
       } else { // EDIT mode
-        if (this.data.tag.name !== this.tagControl.value) {
+        if (this.tagControl.dirty) {
           response = this.tagService.updateTag({
             uuid: this.data.tag.uuid,
-            name: this.tagControl.value
+            name: value
           });
         } else { // no changes
-          response = Promise.resolve('NO_CHANGES');
+          response = Promise.resolve(Status.NO_CHANGES);
         }
       }
 
       response.then(() => {
         this.dialogRef.close(null);
       }).catch(reason => {
-        if (reason === 'TAG_NAME_EXISTED') {
+        if (reason === Status.EXISTED) {
           this.tagControl.setErrors({existed: true});
         }
       });
+    } else {
+      this.tagControl.markAllAsTouched();
     }
   }
 

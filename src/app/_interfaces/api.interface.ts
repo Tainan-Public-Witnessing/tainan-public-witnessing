@@ -19,10 +19,10 @@ export interface Api {
   deleteCongregation: (uuid: string) => Promise<Status>;
 
   readTags: () => Observable<Tag[]>;
-  sortTags: (tags: Tag[]) => Promise<string>;
+  updateTags: (tags: Tag[]) => Promise<Status>;
   createTag: (tags: Tag) => Promise<string>;
-  updateTag: (tags: Tag) => Promise<string>;
-  deleteTag: (uuid: string) => Promise<string>;
+  updateTag: (tags: Tag) => Promise<Status>;
+  deleteTag: (uuid: string) => Promise<Status>;
 
   readProfilePrimarykeys: () => Observable<ProfilePrimarykey[]>;
   updateProfilePrimarykeys: (profilePrimarykeys: ProfilePrimarykey[]) => Promise<Status>;

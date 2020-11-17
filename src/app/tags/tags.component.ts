@@ -7,6 +7,7 @@ import { Tag } from 'src/app/_interfaces/tag.interface';
 import { TagsService } from 'src/app/_services/tags.service';
 import { ConfirmDialogData } from '../_elements/dialogs/confirm-dialog/confirm-dialog-data.interface';
 import { ConfirmDialogComponent } from '../_elements/dialogs/confirm-dialog/confirm-dialog.component';
+import { Mode } from '../_enums/mode.enum';
 import { TagDialogData } from './tag-dialog/tag-dialog-data.interface';
 import { TagDialogComponent } from './tag-dialog/tag-dialog.component';
 
@@ -28,8 +29,7 @@ export class TagsComponent implements OnInit, AfterViewInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.tagService.tags$.pipe(takeUntil(this.unsubscribe$)).subscribe(this.tags$);
-    this.tagService.loadTags();
+    this.tagService.getTags().pipe(takeUntil(this.unsubscribe$)).subscribe(this.tags$);
   }
 
   ngAfterViewInit(): void {
@@ -47,7 +47,7 @@ export class TagsComponent implements OnInit, AfterViewInit, OnDestroy {
       disableClose: true,
       panelClass: 'dialog-panel',
       data: {
-        mode: 'CREATE'
+        mode: Mode.CREATE
       } as TagDialogData
     });
   }
@@ -57,7 +57,7 @@ export class TagsComponent implements OnInit, AfterViewInit, OnDestroy {
       disableClose: true,
       panelClass: 'dialog-panel',
       data: {
-        mode: 'EDIT',
+        mode: Mode.UPDATE,
         tag
       } as TagDialogData
     });
