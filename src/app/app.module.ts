@@ -17,6 +17,7 @@ import { TagsComponent } from './tags/tags.component';
 import { TagDialogComponent } from './tags/tag-dialog/tag-dialog.component';
 import { ProfilesComponent } from './profiles/profiles.component';
 import { ProfileComponent } from './profiles/profile/profile.component';
+import { UserComponent } from './users/user/user.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { ProfileComponent } from './profiles/profile/profile.component';
     TagDialogComponent,
     ProfilesComponent,
     ProfileComponent,
+    UserComponent,
   ],
   entryComponents: [
     CongregationDialogComponent,

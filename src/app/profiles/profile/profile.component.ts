@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -26,7 +26,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private profilesService: ProfilesService
+    private profilesService: ProfilesService,
+    private formBuilder: FormBuilder,
   ) { }
 
   ngOnInit(): void {
@@ -105,12 +106,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   private buildFormGroup = (): FormGroup => {
     const group = {
-      name: new FormControl('', Validators.required)
+      name: ['', Validators.required]
     };
     for (const key of this.permissionKeys) {
-      group[key] = new FormControl(false);
+      group[key] = [false]
     }
-    return new FormGroup(group);
+    return this.formBuilder.group(group);
   }
 
   private setFormGroupValueByUuid = (uuid: string) => {

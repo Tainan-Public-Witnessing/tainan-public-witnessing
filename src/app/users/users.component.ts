@@ -1,9 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { UsersService } from 'src/app/_services/users.service';
 import { UserPrimarykey } from 'src/app/_interfaces/user.interface';
 import { takeUntil } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { Mode } from 'src/app/_enums/mode.enum';
 
 @Component({
   selector: 'app-users',
@@ -16,6 +17,7 @@ export class UsersComponent implements OnInit, OnDestroy {
   unsubscribe$ = new Subject();
 
   constructor(
+    private router: Router,
     private usersService: UsersService
   ) { }
 
@@ -28,7 +30,7 @@ export class UsersComponent implements OnInit, OnDestroy {
   }
 
   onAddButtonClick = () => {
-    // this.router.navigate(['profile', Mode.CREATE]);
+    this.router.navigate(['user', Mode.CREATE]);
   }
 
   onEditButtonClick = (userPrimarykey: UserPrimarykey) => {

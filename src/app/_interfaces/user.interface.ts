@@ -7,11 +7,11 @@ export interface User {
   gender: Gender;
   congregation: string; // uuid
   profile: string; // uuid
-  cellphone?: string;
-  phone?: string;
-  address?: string;
-  note?: string;
-  tags?: string[]; // uuid
+  cellphone: string;
+  phone: string;
+  address: string;
+  note: string;
+  tags: string[]; // uuid
 }
 
 export interface UserPrimarykey {

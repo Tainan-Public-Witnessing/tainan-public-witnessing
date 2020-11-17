@@ -1,0 +1,61 @@
+<div class="title-bar">
+  <h1>{{title}}</h1>
+  <span class="spacer"></span>
+  <button mat-button color="accent" (click)="onCancelClick()">{{mode === 'read' ? 'back' : 'cancel'}}</button>
+  <button mat-button color="primary" *ngIf="mode !== 'read'" (click)="onSubmitClick()">submit</button>
+</div>
+
+<form [formGroup]="userForm">
+
+  <mat-form-field class="full-width">
+    <mat-label>User name</mat-label>
+    <input matInput formControlName="username" required>
+    <mat-error *ngIf="userForm.controls.username.hasError('existed')">User name already existed!</mat-error>
+  </mat-form-field>
+
+  <mat-form-field class="full-width">
+    <mat-label>Name</mat-label>
+    <input matInput formControlName="name" required>
+  </mat-form-field>
+
+  <mat-form-field class="full-width">
+    <mat-label>Gender</mat-label>
+    <input matInput formControlName="gender" required>
+  </mat-form-field>
+
+  <mat-form-field class="full-width">
+    <mat-label>Congregation</mat-label>
+    <input matInput formControlName="congregation" required>
+  </mat-form-field>
+
+  <mat-form-field class="full-width">
+    <mat-label>Profile</mat-label>
+    <input matInput formControlName="profile" required>
+  </mat-form-field>
+
+  <mat-form-field class="full-width">
+    <mat-label>Cellphone</mat-label>
+    <input matInput formControlName="cellphone" required>
+  </mat-form-field>
+
+  <mat-form-field class="full-width">
+    <mat-label>Phone</mat-label>
+    <input matInput formControlName="phone" required>
+  </mat-form-field>
+
+  <mat-form-field class="full-width">
+    <mat-label>Address</mat-label>
+    <input matInput formControlName="address" required>
+  </mat-form-field>
+
+  <mat-form-field class="full-width">
+    <mat-label>Note</mat-label>
+    <input matInput formControlName="note" required>
+  </mat-form-field>
+
+  <mat-form-field class="full-width">
+    <mat-label>Tags</mat-label>
+    <input matInput formControlName="tags" required>
+  </mat-form-field>
+
+</form>

@@ -9,7 +9,7 @@
 
   <mat-form-field class="full-width">
     <mat-label>Profile name</mat-label>
-    <input matInput formControlName="name">
+    <input matInput formControlName="name" required>
     <mat-error *ngIf="profileForm.controls.name.hasError('existed')">Profile name already existed!</mat-error>
   </mat-form-field>
 
