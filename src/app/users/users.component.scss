@@ -1,0 +1,27 @@
+@import 'src/app/_styles/global';
+
+:host {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+
+  .title-bar {
+    display: flex;
+    align-items: center;
+    height: $page-title-height;
+  }
+
+  .overflow {
+    height: 100%;
+    overflow: auto;
+
+    .mat-list {
+      width: 100%;
+      
+      .mat-list-item {
+        height: $list-item-height;
+      }
+    }
+  }
+}

@@ -1,4 +1,4 @@
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { UserPrimarykey } from 'src/app/_interfaces/user.interface';
 import { Congregation } from 'src/app/_interfaces/congregation.interface';
 import { Tag } from 'src/app/_interfaces/tag.interface';
@@ -8,9 +8,9 @@ import { Status } from 'src/app/_enums/status.enum';
 export interface Api {
 
   readUserPrimarykeys: () => Observable<UserPrimarykey[]>;
-  createUserPrimarykey: (userPrimaryke: UserPrimarykey) => void;
-  updateUserPrimarykey: (userPrimaryke: UserPrimarykey) => void;
-  deleteUserPrimarykey: (uuid: string) => void;
+  createUserPrimarykey: (userPrimaryke: UserPrimarykey) => Promise<string>;
+  updateUserPrimarykey: (userPrimaryke: UserPrimarykey) => Promise<Status>;
+  deleteUserPrimarykey: (uuid: string) => Promise<Status>;
 
   readCongregations: () => Observable<Congregation[]>;
   updateCongregations: (congregations: Congregation[]) => Promise<Status>;

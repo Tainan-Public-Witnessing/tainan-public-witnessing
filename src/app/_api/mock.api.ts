@@ -3,13 +3,14 @@ import { BehaviorSubject } from 'rxjs';
 import { v5 as uuidv5 } from 'uuid';
 import { environment } from 'src/environments/environment';
 import { Api } from 'src/app/_interfaces/api.interface';
-import { UserPrimarykey } from 'src/app/_interfaces/user.interface';
+import { User, UserPrimarykey } from 'src/app/_interfaces/user.interface';
 import { Congregation } from 'src/app/_interfaces/congregation.interface';
 import { Tag } from 'src/app/_interfaces/tag.interface';
 import { Profile, ProfilePrimarykey } from 'src/app/_interfaces/profile.interface';
 import { map } from 'rxjs/operators';
-import { PermissionKey } from '../_enums/permission-key.enum';
-import { Status } from '../_enums/status.enum';
+import { PermissionKey } from 'src/app/_enums/permission-key.enum';
+import { Status } from 'src/app/_enums/status.enum';
+import { Gender } from 'src/app/_enums/gender.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +21,22 @@ export class MockApi implements Api {
 
   private userPrimarykeys$ = new BehaviorSubject<UserPrimarykey[]>([
     { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5f8', username: 'John' },
+  ]);
+
+  private users$ = new BehaviorSubject<User[]>([
+    {
+      uuid: 'e90966a2-91a8-5480-bc02-67f88277e5f8',
+      username: 'John',
+      name: 'John Smith',
+      gender: Gender.MAN,
+      congregation: 'e90966a2-91a8-5480-bc02-67f88277e5f7',
+      profile: 'e90966a2-91a8-5480-bc02-64f88277e5a1', // uuid
+      cellphone: '0987654321',
+      phone: '0987654321',
+      address: 'Earth',
+      note: 'Nice guy',
+      tags: ['e90966a2-91a8-5480-bc02-67f88277e5a1', 'e90966a2-91a8-5480-bc02-67f88277e5a2']
+    }
   ]);
 
   private congregations$ = new BehaviorSubject<Congregation[]>([
@@ -55,17 +72,21 @@ export class MockApi implements Api {
   /** user uuid map */
 
   readUserPrimarykeys = () => {
+    console.log('api', 'readUserPrimarykeys');
     return this.userPrimarykeys$;
   }
 
   createUserPrimarykey = (userPrimarykey: UserPrimarykey) => {
+    console.log('api', 'createUserPrimarykey');
     const userUuidMap = this.userPrimarykeys$.getValue();
-    userPrimarykey.uuid = uuidv5(userPrimarykey.username, environment.UUID_NAMESPACE);
+    userPrimarykey.uuid = uuidv5(new Date().toString(), environment.UUID_NAMESPACE);
     userUuidMap.push(userPrimarykey);
     this.userPrimarykeys$.next(userUuidMap);
+    return Promise.resolve(userPrimarykey.uuid);
   }
 
   updateUserPrimarykey = (userPrimarykey: UserPrimarykey) => {
+    console.log('api', 'updateUserPrimarykey');
     const userUuidMap = this.userPrimarykeys$.getValue();
     const existObject = userUuidMap.find(object => object.uuid === userPrimarykey.uuid);
     if (existObject) {
@@ -73,15 +94,22 @@ export class MockApi implements Api {
         existObject[index] = userPrimarykey[index];
       }
       this.userPrimarykeys$.next(userUuidMap);
+      return Promise.resolve(Status.SUCCESS);
+    } else {
+      return Promise.reject(Status.NOT_EXIST);
     }
   }
 
   deleteUserPrimarykey = (uuid: string) => {
+    console.log('api', 'deleteUserPrimarykey');
     const userUuidMap = this.userPrimarykeys$.getValue();
     const existIndex = userUuidMap.findIndex(item => item.uuid === uuid);
     if (existIndex !== -1) {
       userUuidMap.splice(existIndex, 1);
       this.userPrimarykeys$.next(userUuidMap);
+      return Promise.resolve(Status.SUCCESS);
+    } else {
+      return Promise.reject(Status.NOT_EXIST);
     }
   }
 

@@ -1,28 +1,25 @@
-<h1>create</h1>
-<mat-form-field>
-  <mat-label>name</mat-label>
-  <input matInput [formControl]="cncontrol">
-</mat-form-field>
+<div class="title-bar">
+  <h1>Users</h1>
+  <span class="spacer"></span>
+  <button mat-icon-button (click)="onAddButtonClick()"><mat-icon>add</mat-icon></button>
+</div>
 
-<button mat-button (click)="create()">submit</button>
+<div class="overflow">
+  <mat-list>
 
-<h1>update</h1>
-<mat-form-field>
-  <mat-label>uuid</mat-label>
-  <input matInput [formControl]="ugcontrol">
-</mat-form-field>
+    <mat-list-item
+      *ngFor="let userPrimarykey of (userPrimarykeys$ | async)"
+      cdkDrag>
+  
+      {{userPrimarykey.username}}
 
-<mat-form-field>
-  <mat-label>name</mat-label>
-  <input matInput [formControl]="uncontrol">
-</mat-form-field>
+      <span class="spacer"></span>
 
-<button mat-button (click)="update()">submit</button>
+      <button mat-icon-button (click)="onDeleteButtonClick(userPrimarykey)"><mat-icon>delete</mat-icon></button>
 
-<h1>delete</h1>
-<mat-form-field>
-  <mat-label>uuid</mat-label>
-  <input matInput [formControl]="dgcontrol">
-</mat-form-field>
+      <button mat-icon-button (click)="onEditButtonClick(userPrimarykey)"><mat-icon>edit</mat-icon></button>
 
-<button mat-button (click)="delete()">submit</button>
+      <button mat-icon-button (click)="onInfoButtonClick(userPrimarykey)"><mat-icon>info</mat-icon></button>
+    </mat-list-item>
+  </mat-list>
+</div>

@@ -1,43 +1,56 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { UserService } from 'src/app/_services/user.service';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { UsersService } from 'src/app/_services/users.service';
+import { UserPrimarykey } from 'src/app/_interfaces/user.interface';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-users',
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.scss']
 })
-export class UsersComponent implements OnInit {
+export class UsersComponent implements OnInit, OnDestroy {
 
-  cncontrol = new FormControl();
-  ugcontrol = new FormControl();
-  uncontrol = new FormControl();
-  dgcontrol = new FormControl();
+  userPrimarykeys$ = new BehaviorSubject<UserPrimarykey[]>(null);
+  unsubscribe$ = new Subject();
 
   constructor(
-    private userService: UserService
+    private usersService: UsersService
   ) { }
 
   ngOnInit(): void {
-    this.userService.loadUserPrimarykeys();
+    this.usersService.getUserPrimarykeys().pipe(takeUntil(this.unsubscribe$)).subscribe(this.userPrimarykeys$);
   }
 
-  create = () => {
-    this.userService.createUserPrimarykey({
-      uuid: null,
-      username: this.cncontrol.value
-    });
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
   }
 
-  update = () => {
-    this.userService.updateUserPrimarykey({
-      uuid: this.ugcontrol.value,
-      username: this.uncontrol.value
-    });
+  onAddButtonClick = () => {
+    // this.router.navigate(['profile', Mode.CREATE]);
   }
 
-  delete = () => {
-    this.userService.deleteUserPrimarykey(this.dgcontrol.value);
+  onEditButtonClick = (userPrimarykey: UserPrimarykey) => {
+    // this.router.navigate(['profile', Mode.UPDATE, {uuid: profile.uuid}]);
   }
 
+  onInfoButtonClick = (userPrimarykey: UserPrimarykey) => {
+    // this.router.navigate(['profile', Mode.READ, {uuid: profile.uuid}]);
+  }
+
+  onDeleteButtonClick = (userPrimarykey: UserPrimarykey) => {
+    // this.matDialog.open(ConfirmDialogComponent, {
+    //   disableClose: true,
+    //   panelClass: 'dialog-panel',
+    //   data: {
+    //     title: 'Delete profile',
+    //     message: 'Are you sure to delete ' + profile.name + '?'
+    //   } as ConfirmDialogData
+    // }).afterClosed().subscribe(result => {
+    //   if (result) {
+    //     this.profilesService.deleteProfile(profile.uuid);
+    //   }
+    // });
+  }
 }
