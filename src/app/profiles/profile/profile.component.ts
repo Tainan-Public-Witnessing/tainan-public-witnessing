@@ -109,7 +109,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
       name: ['', Validators.required]
     };
     for (const key of this.permissionKeys) {
-      group[key] = [false]
+      group[key] = [false];
     }
     return this.formBuilder.group(group);
   }

@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { UserPrimarykey } from 'src/app/_interfaces/user.interface';
+import { User, UserPrimarykey } from 'src/app/_interfaces/user.interface';
 import { Congregation } from 'src/app/_interfaces/congregation.interface';
 import { Tag } from 'src/app/_interfaces/tag.interface';
 import { Profile, ProfilePrimarykey } from 'src/app/_interfaces/profile.interface';
@@ -11,6 +11,11 @@ export interface Api {
   createUserPrimarykey: (userPrimaryke: UserPrimarykey) => Promise<string>;
   updateUserPrimarykey: (userPrimaryke: UserPrimarykey) => Promise<Status>;
   deleteUserPrimarykey: (uuid: string) => Promise<Status>;
+
+  readUser: (uuid: string) => Observable<User>;
+  createUser: (user: User) => Promise<Status>;
+  updateUser: (user: User) => Promise<Status>;
+  deleteUser: (uuid: string) => Promise<Status>;
 
   readCongregations: () => Observable<Congregation[]>;
   updateCongregations: (congregations: Congregation[]) => Promise<Status>;

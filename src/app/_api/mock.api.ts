@@ -30,7 +30,7 @@ export class MockApi implements Api {
       name: 'John Smith',
       gender: Gender.MAN,
       congregation: 'e90966a2-91a8-5480-bc02-67f88277e5f7',
-      profile: 'e90966a2-91a8-5480-bc02-64f88277e5a1', // uuid
+      profile: 'e90966a2-91a8-5480-bc02-64f88277e5a1',
       cellphone: '0987654321',
       phone: '0987654321',
       address: 'Earth',
@@ -107,6 +107,49 @@ export class MockApi implements Api {
     if (existIndex !== -1) {
       userUuidMap.splice(existIndex, 1);
       this.userPrimarykeys$.next(userUuidMap);
+      return Promise.resolve(Status.SUCCESS);
+    } else {
+      return Promise.reject(Status.NOT_EXIST);
+    }
+  }
+
+  readUser = (uuid: string) => {
+    console.log('api', 'readUser');
+    return this.users$.pipe(
+      map(users => users.find(user => user.uuid === uuid))
+    );
+  }
+
+  createUser = (user: User) => {
+    console.log('api', 'createUser');
+    const users = this.users$.getValue();
+    users.push(user);
+    this.users$.next(users);
+    return Promise.resolve(Status.SUCCESS);
+  }
+
+  updateUser = (user: User) => {
+    console.log('api', 'updateUser');
+    const users = this.users$.getValue();
+    const existObject = users.find(object => object.uuid === user.uuid);
+    if (existObject) {
+      for (const index of Object.keys(existObject)) {
+        existObject[index] = user[index];
+      }
+      this.users$.next(users);
+      return Promise.resolve(Status.SUCCESS);
+    } else {
+      return Promise.reject(Status.NOT_EXIST);
+    }
+  }
+
+  deleteUser = (uuid: string) => {
+    console.log('api', 'deleteUser');
+    const users = this.users$.getValue();
+    const existIndex = users.findIndex(object => object.uuid === uuid);
+    if (existIndex !== -1) {
+      users.splice(existIndex, 1);
+      this.users$.next(users);
       return Promise.resolve(Status.SUCCESS);
     } else {
       return Promise.reject(Status.NOT_EXIST);

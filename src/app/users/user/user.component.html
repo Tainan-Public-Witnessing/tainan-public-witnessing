@@ -5,57 +5,74 @@
   <button mat-button color="primary" *ngIf="mode !== 'read'" (click)="onSubmitClick()">submit</button>
 </div>
 
-<form [formGroup]="userForm">
+<div class="overflow">
+  <form [formGroup]="userForm">
 
-  <mat-form-field class="full-width">
-    <mat-label>User name</mat-label>
-    <input matInput formControlName="username" required>
-    <mat-error *ngIf="userForm.controls.username.hasError('existed')">User name already existed!</mat-error>
-  </mat-form-field>
-
-  <mat-form-field class="full-width">
-    <mat-label>Name</mat-label>
-    <input matInput formControlName="name" required>
-  </mat-form-field>
-
-  <mat-form-field class="full-width">
-    <mat-label>Gender</mat-label>
-    <input matInput formControlName="gender" required>
-  </mat-form-field>
-
-  <mat-form-field class="full-width">
-    <mat-label>Congregation</mat-label>
-    <input matInput formControlName="congregation" required>
-  </mat-form-field>
-
-  <mat-form-field class="full-width">
-    <mat-label>Profile</mat-label>
-    <input matInput formControlName="profile" required>
-  </mat-form-field>
-
-  <mat-form-field class="full-width">
-    <mat-label>Cellphone</mat-label>
-    <input matInput formControlName="cellphone" required>
-  </mat-form-field>
-
-  <mat-form-field class="full-width">
-    <mat-label>Phone</mat-label>
-    <input matInput formControlName="phone" required>
-  </mat-form-field>
-
-  <mat-form-field class="full-width">
-    <mat-label>Address</mat-label>
-    <input matInput formControlName="address" required>
-  </mat-form-field>
-
-  <mat-form-field class="full-width">
-    <mat-label>Note</mat-label>
-    <input matInput formControlName="note" required>
-  </mat-form-field>
-
-  <mat-form-field class="full-width">
-    <mat-label>Tags</mat-label>
-    <input matInput formControlName="tags" required>
-  </mat-form-field>
-
-</form>
+    <mat-form-field class="full-width">
+      <mat-label>User name</mat-label>
+      <input matInput formControlName="username" required>
+      <mat-error *ngIf="userForm.controls.username.hasError('existed')">User name already existed!</mat-error>
+    </mat-form-field>
+  
+    <mat-form-field class="full-width">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" required>
+    </mat-form-field>
+  
+    <mat-form-field class="full-width">
+      <mat-label>Gender</mat-label>
+      <mat-select formControlName="gender" required>
+        <mat-option *ngFor="let gender of genders" [value]="gender">
+          {{gender}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  
+    <mat-form-field class="full-width">
+      <mat-label>Congregation</mat-label>
+      <mat-select formControlName="congregation" required>
+        <mat-option *ngFor="let congregation of (congregations$ | async)" [value]="congregation.uuid">
+          {{congregation.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  
+    <mat-form-field class="full-width">
+      <mat-label>Profile</mat-label>
+      <mat-select formControlName="profile" required>
+        <mat-option *ngFor="let profilePrimarykey of (profilePrimarykeys$ | async)" [value]="profilePrimarykey.uuid">
+          {{profilePrimarykey.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    
+    <mat-form-field class="full-width">
+      <mat-label>Tags</mat-label>
+      <mat-select formControlName="tags" multiple="true">
+        <mat-option *ngFor="let tag of (tags$ | async)" [value]="tag.uuid">
+          {{tag.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  
+    <mat-form-field class="full-width">
+      <mat-label>Cellphone</mat-label>
+      <input matInput formControlName="cellphone">
+    </mat-form-field>
+  
+    <mat-form-field class="full-width">
+      <mat-label>Phone</mat-label>
+      <input matInput formControlName="phone">
+    </mat-form-field>
+  
+    <mat-form-field class="full-width">
+      <mat-label>Address</mat-label>
+      <input matInput formControlName="address">
+    </mat-form-field>
+  
+    <mat-form-field class="full-width">
+      <mat-label>Note</mat-label>
+      <textarea matInput cdkTextareaAutosize formControlName="note" cdkAutosizeMinRows="3"></textarea>
+    </mat-form-field>
+  </form>
+</div>
