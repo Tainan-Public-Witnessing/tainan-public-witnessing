@@ -18,6 +18,7 @@ import { TagDialogComponent } from './tags/tag-dialog/tag-dialog.component';
 import { ProfilesComponent } from './profiles/profiles.component';
 import { ProfileComponent } from './profiles/profile/profile.component';
 import { UserComponent } from './users/user/user.component';
+import { LoginDialogComponent } from './_elements/dialogs/login-dialog/login-dialog.component';
 
 @NgModule({
   declarations: [
@@ -33,11 +34,13 @@ import { UserComponent } from './users/user/user.component';
     ProfilesComponent,
     ProfileComponent,
     UserComponent,
+    LoginDialogComponent,
   ],
   entryComponents: [
     CongregationDialogComponent,
     ConfirmDialogComponent,
     TagDialogComponent,
+    LoginDialogComponent,
   ],
   imports: [
     BrowserModule,

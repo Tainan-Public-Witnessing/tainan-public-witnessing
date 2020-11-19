@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { MenuLink } from 'src/app/_interfaces/menu-link.interface';
-import { PermissionKey } from '../_enums/permission-key.enum';
-import { AuthorityService } from '../_services/authority.service';
-import { GlobalEventService } from '../_services/global-event.service';
+import { LoginDialogComponent } from 'src/app/_elements/dialogs/login-dialog/login-dialog.component';
+import { PermissionKey } from 'src/app/_enums/permission-key.enum';
+import { AuthorityService } from 'src/app/_services/authority.service';
+import { GlobalEventService } from 'src/app/_services/global-event.service';
 
 @Component({
   selector: 'app-menu',
@@ -25,7 +27,8 @@ export class MenuComponent implements OnInit {
 
   constructor(
     private authorityService: AuthorityService,
-    private globalEventService: GlobalEventService
+    private globalEventService: GlobalEventService,
+    private matDiolog: MatDialog,
   ) { }
 
   ngOnInit(): void {
@@ -42,4 +45,20 @@ export class MenuComponent implements OnInit {
     });
   }
 
+  onLoginClick = () => {
+    this.globalEventService.emitGlobalEvent({
+      id: 'ON_MENU_LINK_CLICK'
+    });
+
+    this.matDiolog.open(LoginDialogComponent, {
+      disableClose: true,
+      panelClass: 'dialog-panel',
+    });
+  }
+
+  onLogoutClick = () => {
+    this.globalEventService.emitGlobalEvent({
+      id: 'ON_MENU_LINK_CLICK'
+    });
+  }
 }

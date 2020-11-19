@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -19,6 +20,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     CommonModule
   ],
   exports: [
+    MatAutocompleteModule,
     MatButtonModule,
     MatDialogModule,
     MatIconModule,

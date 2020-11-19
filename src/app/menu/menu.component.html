@@ -5,4 +5,12 @@
     [routerLink]="menuLink.url">
     {{menuLink.display}}
   </mat-list-option>
+
+  <mat-list-option (click)="onLoginClick()">
+    Login
+  </mat-list-option>
+
+  <mat-list-option (click)="onLogoutClick()">
+    Logout
+  </mat-list-option>
 </mat-selection-list>
