@@ -7,7 +7,7 @@
       <mat-label>Username</mat-label>
       <input matInput formControlName="username" [matAutocomplete]="auto">
       <mat-autocomplete #auto="matAutocomplete">
-        <mat-option *ngFor="let userPrimaryKey of (userPrimaryKeys$ | async)" [value]="userPrimaryKey.username">
+        <mat-option *ngFor="let userPrimaryKey of (usernameAutoComplete$ | async)" [value]="userPrimaryKey.username">
           {{userPrimaryKey.username}}
         </mat-option>
       </mat-autocomplete>

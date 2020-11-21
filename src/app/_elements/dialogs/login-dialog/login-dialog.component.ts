@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
 import { UsersService } from 'src/app/_services/users.service';
 import { UserPrimarykey } from 'src/app/_interfaces/user.interface';
-import { takeUntil } from 'rxjs/operators';
+import { map, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login-dialog',
@@ -15,6 +15,7 @@ export class LoginDialogComponent implements OnInit, OnDestroy {
 
   loginForm: FormGroup;
   userPrimaryKeys$ = new BehaviorSubject<UserPrimarykey[]>(null);
+  usernameAutoComplete$: Observable<UserPrimarykey[]>;
   unsubscribe$ = new Subject<void>();
 
   constructor(
@@ -30,6 +31,8 @@ export class LoginDialogComponent implements OnInit, OnDestroy {
       username: ['', Validators.required],
       password: ['', Validators.required],
     });
+
+    this.usernameAutoComplete$ = this.pipeUsernameAutoComplete();
   }
 
   ngOnDestroy(): void {
@@ -42,6 +45,15 @@ export class LoginDialogComponent implements OnInit, OnDestroy {
 
   onConfirmClick = () => {
 
+  }
+
+  private pipeUsernameAutoComplete = (): Observable<UserPrimarykey[]> => {
+    return combineLatest([
+      this.userPrimaryKeys$,
+      this.loginForm.controls.username.valueChanges,
+    ]).pipe(
+      map(data => data[0].filter(userPrimaryKey => userPrimaryKey.username.includes(data[1])))
+    );
   }
 
 }
