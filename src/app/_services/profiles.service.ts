@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { Profile, ProfilePrimarykey, PermissionData } from 'src/app/_interfaces/profile.interface';
+import { Profile, ProfilePrimarykey } from 'src/app/_interfaces/profile.interface';
 import { MockApi } from 'src/app/_api/mock.api';
-import { PermissionKey } from 'src/app/_enums/permission-key.enum';
 import { Status } from '../_enums/status.enum';
 
 @Injectable({
@@ -13,15 +12,6 @@ export class ProfilesService {
   private profilePrimarykeys$ = new BehaviorSubject<ProfilePrimarykey[]>(null);
   private profiles: Map<string, BehaviorSubject<Profile>> = new Map();
   private profilesMaxSize = 10;
-
-  PERMISSION_DATAS: PermissionData[] = [
-    { key: PermissionKey.HOME_READ, urlKey: '/home', description: 'Can read Home page' },
-    { key: PermissionKey.CONGREGATIONS_READ, urlKey: '/congregations', description: 'Can read Congregations page' },
-    { key: PermissionKey.USERS_READ, urlKey: '/users', description: 'Can read users page' },
-    { key: PermissionKey.TAGS_READ, urlKey: '/tags', description: 'Can read Tags page' },
-    { key: PermissionKey.PROFILES_READ, urlKey: '/profiles', description: 'Can read Profiles page' },
-    { key: PermissionKey.PROFILE_READ, urlKey: '/profile/read', description: 'Can read Profile page' },
-  ];
 
   constructor(
     private mockApi: MockApi

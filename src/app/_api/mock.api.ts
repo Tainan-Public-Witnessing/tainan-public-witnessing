@@ -73,6 +73,7 @@ export class MockApi implements Api {
 
   private profilePrimarykeys$ = new BehaviorSubject<ProfilePrimarykey[]>([
     { uuid: 'e90966a2-91a8-5480-bc02-64f88277e5a1', name: 'administrator' },
+    { uuid: 'e90966a2-91c8-5480-bc02-64f88277e5a1', name: 'user' },
   ]);
 
   private profiles$ = new BehaviorSubject<Profile[]>([
@@ -83,9 +84,14 @@ export class MockApi implements Api {
         { key: PermissionKey.HOME_READ, access: true },
         { key: PermissionKey.CONGREGATIONS_READ, access: true },
         { key: PermissionKey.USERS_READ, access: true },
+        { key: PermissionKey.USER_READ, access: true },
+        { key: PermissionKey.USER_CREATE, access: true },
+        { key: PermissionKey.USER_UPDATE, access: true },
         { key: PermissionKey.TAGS_READ, access: true },
         { key: PermissionKey.PROFILES_READ, access: true },
         { key: PermissionKey.PROFILE_READ, access: true },
+        { key: PermissionKey.PROFILE_CREATE, access: true },
+        { key: PermissionKey.PROFILE_UPDATE, access: true },
       ]
     },
     {
@@ -95,9 +101,14 @@ export class MockApi implements Api {
         { key: PermissionKey.HOME_READ, access: true },
         { key: PermissionKey.CONGREGATIONS_READ, access: false },
         { key: PermissionKey.USERS_READ, access: false },
+        { key: PermissionKey.USER_READ, access: false },
+        { key: PermissionKey.USER_CREATE, access: false },
+        { key: PermissionKey.USER_UPDATE, access: false },
         { key: PermissionKey.TAGS_READ, access: false },
         { key: PermissionKey.PROFILES_READ, access: false },
         { key: PermissionKey.PROFILE_READ, access: false },
+        { key: PermissionKey.PROFILE_CREATE, access: false },
+        { key: PermissionKey.PROFILE_UPDATE, access: false },
       ]
     }
   ]);
