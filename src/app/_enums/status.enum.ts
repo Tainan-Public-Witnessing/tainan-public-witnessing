@@ -4,4 +4,5 @@ export enum Status {
   EXISTED = 'EXISTED',
   NOT_EXIST = 'NOT_EXIST',
   NO_CHANGES = 'NO_CHANGES',
+  WRONG_PASSWORD = 'WRONG_PASSWORD',
 }

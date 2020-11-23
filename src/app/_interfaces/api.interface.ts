@@ -5,7 +5,16 @@ import { Tag } from 'src/app/_interfaces/tag.interface';
 import { Profile, ProfilePrimarykey } from 'src/app/_interfaces/profile.interface';
 import { Status } from 'src/app/_enums/status.enum';
 
+export interface UserAuthorityStatus {
+  uuid: string;
+  password: string;
+  online: boolean;
+}
+
 export interface Api {
+
+  login: (uuid: string, password: string) => Promise<Status>;
+  logout: (uuid: string) => Promise<Status>;
 
   readUserPrimarykeys: () => Observable<UserPrimarykey[]>;
   createUserPrimarykey: (userPrimaryke: UserPrimarykey) => Promise<string>;

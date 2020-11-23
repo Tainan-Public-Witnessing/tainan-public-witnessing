@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { v5 as uuidv5 } from 'uuid';
 import { environment } from 'src/environments/environment';
-import { Api } from 'src/app/_interfaces/api.interface';
+import { Api, UserAuthorityStatus } from 'src/app/_interfaces/api.interface';
 import { User, UserPrimarykey } from 'src/app/_interfaces/user.interface';
 import { Congregation } from 'src/app/_interfaces/congregation.interface';
 import { Tag } from 'src/app/_interfaces/tag.interface';
@@ -19,8 +19,14 @@ export class MockApi implements Api {
 
   /** mock data */
 
+  private userAuthorityStatuses$ = new BehaviorSubject<UserAuthorityStatus[]>([
+    { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5f8', password: '7f15fa00-23ef-5e5c-9365-50de9d7e1ca5', online: false },
+    { uuid: 'e90966a2-91a8-5480-bc02-60f88277e5f8', password: '36e52acf-1879-5f09-9f64-56ef4a2d2145', online: false },
+  ]);
+
   private userPrimarykeys$ = new BehaviorSubject<UserPrimarykey[]>([
     { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5f8', username: 'John' },
+    { uuid: 'e90966a2-91a8-5480-bc02-60f88277e5f8', username: 'Peter' },
   ]);
 
   private users$ = new BehaviorSubject<User[]>([
@@ -36,6 +42,19 @@ export class MockApi implements Api {
       address: 'Earth',
       note: 'Nice guy',
       tags: ['e90966a2-91a8-5480-bc02-67f88277e5a1', 'e90966a2-91a8-5480-bc02-67f88277e5a2']
+    },
+    {
+      uuid: 'e90966a2-91a8-5480-bc02-60f88277e5f8',
+      username: 'Peter',
+      name: 'Peter Hi',
+      gender: Gender.MAN,
+      congregation: 'e90966a2-91a8-5480-bc02-67f88277e5f0',
+      profile: 'e90966a2-91c8-5480-bc02-64f88277e5a1',
+      cellphone: '0987654321',
+      phone: '0987654321',
+      address: 'Earth',
+      note: 'Nice guy',
+      tags: ['e90966a2-91a8-5480-bc02-67f88277e5a2']
     }
   ]);
 
@@ -56,18 +75,61 @@ export class MockApi implements Api {
     { uuid: 'e90966a2-91a8-5480-bc02-64f88277e5a1', name: 'administrator' },
   ]);
 
-  private profiles$ = new BehaviorSubject<Profile[]>([{
-    uuid: 'e90966a2-91a8-5480-bc02-64f88277e5a1',
-    name: 'administrator',
-    permissions: [
-      { key: PermissionKey.HOME_READ, access: true },
-      { key: PermissionKey.CONGREGATIONS_READ, access: true },
-      { key: PermissionKey.USERS_READ, access: true },
-      { key: PermissionKey.TAGS_READ, access: true },
-      { key: PermissionKey.PROFILES_READ, access: true },
-      { key: PermissionKey.PROFILE_READ, access: true },
-    ]
-  }]);
+  private profiles$ = new BehaviorSubject<Profile[]>([
+    {
+      uuid: 'e90966a2-91a8-5480-bc02-64f88277e5a1',
+      name: 'administrator',
+      permissions: [
+        { key: PermissionKey.HOME_READ, access: true },
+        { key: PermissionKey.CONGREGATIONS_READ, access: true },
+        { key: PermissionKey.USERS_READ, access: true },
+        { key: PermissionKey.TAGS_READ, access: true },
+        { key: PermissionKey.PROFILES_READ, access: true },
+        { key: PermissionKey.PROFILE_READ, access: true },
+      ]
+    },
+    {
+      uuid: 'e90966a2-91c8-5480-bc02-64f88277e5a1',
+      name: 'user',
+      permissions: [
+        { key: PermissionKey.HOME_READ, access: true },
+        { key: PermissionKey.CONGREGATIONS_READ, access: false },
+        { key: PermissionKey.USERS_READ, access: false },
+        { key: PermissionKey.TAGS_READ, access: false },
+        { key: PermissionKey.PROFILES_READ, access: false },
+        { key: PermissionKey.PROFILE_READ, access: false },
+      ]
+    }
+  ]);
+
+  /** authority */
+  login = (uuid: string, password: string) => {
+    console.log('api', 'login');
+    const userAuthorityStatuses = this.userAuthorityStatuses$.getValue();
+    const existObject = userAuthorityStatuses.find(object => object.uuid === uuid);
+    if (existObject) {
+      if (existObject.password === uuidv5(password, environment.UUID_NAMESPACE)) {
+        existObject.online = true;
+        return Promise.resolve(Status.SUCCESS);
+      } else {
+        return Promise.reject(Status.WRONG_PASSWORD);
+      }
+    } else {
+      return Promise.reject(Status.NOT_EXIST);
+    }
+  }
+
+  logout = (uuid: string) => {
+    console.log('api', 'logout');
+    const userAuthorityStatuses = this.userAuthorityStatuses$.getValue();
+    const existObject = userAuthorityStatuses.find(object => object.uuid === uuid);
+    if (existObject) {
+      existObject.online = false;
+      return Promise.resolve(Status.SUCCESS);
+    } else {
+      return Promise.reject(Status.NOT_EXIST);
+    }
+  }
 
   /** user uuid map */
 
@@ -78,22 +140,22 @@ export class MockApi implements Api {
 
   createUserPrimarykey = (userPrimarykey: UserPrimarykey) => {
     console.log('api', 'createUserPrimarykey');
-    const userUuidMap = this.userPrimarykeys$.getValue();
+    const userPrimarykeys = this.userPrimarykeys$.getValue();
     userPrimarykey.uuid = uuidv5(new Date().toString(), environment.UUID_NAMESPACE);
-    userUuidMap.push(userPrimarykey);
-    this.userPrimarykeys$.next(userUuidMap);
+    userPrimarykeys.push(userPrimarykey);
+    this.userPrimarykeys$.next(userPrimarykeys);
     return Promise.resolve(userPrimarykey.uuid);
   }
 
   updateUserPrimarykey = (userPrimarykey: UserPrimarykey) => {
     console.log('api', 'updateUserPrimarykey');
-    const userUuidMap = this.userPrimarykeys$.getValue();
-    const existObject = userUuidMap.find(object => object.uuid === userPrimarykey.uuid);
+    const userPrimarykeys = this.userPrimarykeys$.getValue();
+    const existObject = userPrimarykeys.find(object => object.uuid === userPrimarykey.uuid);
     if (existObject) {
       for (const index of Object.keys(existObject)) {
         existObject[index] = userPrimarykey[index];
       }
-      this.userPrimarykeys$.next(userUuidMap);
+      this.userPrimarykeys$.next(userPrimarykeys);
       return Promise.resolve(Status.SUCCESS);
     } else {
       return Promise.reject(Status.NOT_EXIST);
@@ -102,11 +164,11 @@ export class MockApi implements Api {
 
   deleteUserPrimarykey = (uuid: string) => {
     console.log('api', 'deleteUserPrimarykey');
-    const userUuidMap = this.userPrimarykeys$.getValue();
-    const existIndex = userUuidMap.findIndex(item => item.uuid === uuid);
+    const userPrimarykeys = this.userPrimarykeys$.getValue();
+    const existIndex = userPrimarykeys.findIndex(item => item.uuid === uuid);
     if (existIndex !== -1) {
-      userUuidMap.splice(existIndex, 1);
-      this.userPrimarykeys$.next(userUuidMap);
+      userPrimarykeys.splice(existIndex, 1);
+      this.userPrimarykeys$.next(userPrimarykeys);
       return Promise.resolve(Status.SUCCESS);
     } else {
       return Promise.reject(Status.NOT_EXIST);

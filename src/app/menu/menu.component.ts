@@ -24,6 +24,7 @@ export class MenuComponent implements OnInit {
   ];
 
   currentMenuLinks$: Observable<MenuLink[]>;
+  isLoggedIn$: Observable<boolean>;
 
   constructor(
     private authorityService: AuthorityService,
@@ -37,6 +38,8 @@ export class MenuComponent implements OnInit {
         return profile.permissions.find(permission => permission.key === menuLink.permissionKey).access;
       }))
     );
+
+    this.isLoggedIn$ = this.authorityService.currentUser$.pipe(map(user => !!user));
   }
 
   onMenuLinkClick = () => {
@@ -60,5 +63,7 @@ export class MenuComponent implements OnInit {
     this.globalEventService.emitGlobalEvent({
       id: 'ON_MENU_LINK_CLICK'
     });
+
+    this.authorityService.logout();
   }
 }

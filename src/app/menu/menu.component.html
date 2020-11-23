@@ -6,11 +6,11 @@
     {{menuLink.display}}
   </mat-list-option>
 
-  <mat-list-option (click)="onLoginClick()">
+  <mat-list-option *ngIf="!(this.isLoggedIn$ | async)" (click)="onLoginClick()">
     Login
   </mat-list-option>
 
-  <mat-list-option (click)="onLogoutClick()">
+  <mat-list-option *ngIf="this.isLoggedIn$ | async" (click)="onLogoutClick()">
     Logout
   </mat-list-option>
 </mat-selection-list>

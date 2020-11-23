@@ -5,6 +5,8 @@ import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
 import { UsersService } from 'src/app/_services/users.service';
 import { UserPrimarykey } from 'src/app/_interfaces/user.interface';
 import { map, takeUntil } from 'rxjs/operators';
+import { AuthorityService } from 'src/app/_services/authority.service';
+import { Status } from 'src/app/_enums/status.enum';
 
 @Component({
   selector: 'app-login-dialog',
@@ -22,6 +24,7 @@ export class LoginDialogComponent implements OnInit, OnDestroy {
     private dialogRef: MatDialogRef<LoginDialogComponent>,
     private formBuilder: FormBuilder,
     private usersService: UsersService,
+    private authorityService: AuthorityService,
   ) { }
 
   ngOnInit(): void {
@@ -44,7 +47,35 @@ export class LoginDialogComponent implements OnInit, OnDestroy {
   }
 
   onConfirmClick = () => {
+    if (this.loginForm.status === 'VALID') {
 
+      const uuid = this.userPrimaryKeys$.getValue().find(userPrimaryKey => {
+        return userPrimaryKey.username === this.loginForm.value.username;
+      })?.uuid;
+
+      if (uuid) {
+        this.authorityService.login(
+          uuid,
+          this.loginForm.value.password
+        ).then(() => {
+          this.dialogRef.close(null);
+        }).catch(reason => {
+          if (reason === Status.WRONG_PASSWORD) {
+            this.loginForm.controls.password.setErrors({
+              wrongPassword: true
+            });
+          } else {
+            console.log('reason', reason);
+          }
+        });
+      } else { // username not exist
+        this.loginForm.controls.username.setErrors({
+          notExist: true
+        });
+      }
+    } else { // not valid
+      this.loginForm.markAllAsTouched();
+    }
   }
 
   private pipeUsernameAutoComplete = (): Observable<UserPrimarykey[]> => {
@@ -52,7 +83,7 @@ export class LoginDialogComponent implements OnInit, OnDestroy {
       this.userPrimaryKeys$,
       this.loginForm.controls.username.valueChanges,
     ]).pipe(
-      map(data => data[0].filter(userPrimaryKey => userPrimaryKey.username.includes(data[1])))
+      map(data => data[0].filter(userPrimaryKey => userPrimaryKey.username.toLowerCase().includes(data[1].toLowerCase())))
     );
   }
 
