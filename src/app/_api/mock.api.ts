@@ -73,7 +73,7 @@ export class MockApi implements Api {
 
   private profilePrimarykeys$ = new BehaviorSubject<ProfilePrimarykey[]>([
     { uuid: 'e90966a2-91a8-5480-bc02-64f88277e5a1', name: 'administrator' },
-    { uuid: 'e90966a2-91c8-5480-bc02-64f88277e5a1', name: 'user' },
+    { uuid: 'e90966a2-91c8-5480-bc02-64f88277e5a1', name: 'manager' },
   ]);
 
   private profiles$ = new BehaviorSubject<Profile[]>([
@@ -83,32 +83,54 @@ export class MockApi implements Api {
       permissions: [
         { key: PermissionKey.HOME_READ, access: true },
         { key: PermissionKey.CONGREGATIONS_READ, access: true },
+        { key: PermissionKey.CONGREGATIONS_SORT, access: true },
+        { key: PermissionKey.CONGREGATION_CREATE, access: true },
+        { key: PermissionKey.CONGREGATION_UPDATE, access: true },
+        { key: PermissionKey.CONGREGATION_DELETE, access: true },
         { key: PermissionKey.USERS_READ, access: true },
         { key: PermissionKey.USER_READ, access: true },
         { key: PermissionKey.USER_CREATE, access: true },
         { key: PermissionKey.USER_UPDATE, access: true },
+        { key: PermissionKey.USER_DELETE, access: true },
         { key: PermissionKey.TAGS_READ, access: true },
+        { key: PermissionKey.TAGS_SORT, access: true },
+        { key: PermissionKey.TAG_CREATE, access: true },
+        { key: PermissionKey.TAG_UPDATE, access: true },
+        { key: PermissionKey.TAG_DELETE, access: true },
         { key: PermissionKey.PROFILES_READ, access: true },
+        { key: PermissionKey.PROFILES_SORT, access: true },
         { key: PermissionKey.PROFILE_READ, access: true },
         { key: PermissionKey.PROFILE_CREATE, access: true },
         { key: PermissionKey.PROFILE_UPDATE, access: true },
+        { key: PermissionKey.PROFILE_DELETE, access: true },
       ]
     },
     {
       uuid: 'e90966a2-91c8-5480-bc02-64f88277e5a1',
-      name: 'user',
+      name: 'manager',
       permissions: [
         { key: PermissionKey.HOME_READ, access: true },
-        { key: PermissionKey.CONGREGATIONS_READ, access: false },
-        { key: PermissionKey.USERS_READ, access: false },
-        { key: PermissionKey.USER_READ, access: false },
+        { key: PermissionKey.CONGREGATIONS_READ, access: true },
+        { key: PermissionKey.CONGREGATIONS_SORT, access: false },
+        { key: PermissionKey.CONGREGATION_CREATE, access: false },
+        { key: PermissionKey.CONGREGATION_UPDATE, access: false },
+        { key: PermissionKey.CONGREGATION_DELETE, access: false },
+        { key: PermissionKey.USERS_READ, access: true },
+        { key: PermissionKey.USER_READ, access: true },
         { key: PermissionKey.USER_CREATE, access: false },
         { key: PermissionKey.USER_UPDATE, access: false },
-        { key: PermissionKey.TAGS_READ, access: false },
-        { key: PermissionKey.PROFILES_READ, access: false },
-        { key: PermissionKey.PROFILE_READ, access: false },
+        { key: PermissionKey.USER_DELETE, access: false },
+        { key: PermissionKey.TAGS_READ, access: true },
+        { key: PermissionKey.TAGS_SORT, access: false },
+        { key: PermissionKey.TAG_CREATE, access: false },
+        { key: PermissionKey.TAG_UPDATE, access: false },
+        { key: PermissionKey.TAG_DELETE, access: false },
+        { key: PermissionKey.PROFILES_READ, access: true },
+        { key: PermissionKey.PROFILES_SORT, access: false },
+        { key: PermissionKey.PROFILE_READ, access: true },
         { key: PermissionKey.PROFILE_CREATE, access: false },
         { key: PermissionKey.PROFILE_UPDATE, access: false },
+        { key: PermissionKey.PROFILE_DELETE, access: false },
       ]
     }
   ]);

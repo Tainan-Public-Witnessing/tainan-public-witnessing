@@ -1,11 +1,17 @@
 <div class="title-bar">
+
   <h1>Congregations</h1>
   <span class="spacer"></span>
-  <button mat-icon-button (click)="onAddButtonClick()"><mat-icon>add</mat-icon></button>
+
+  <button mat-icon-button 
+    *ngIf="congregationCreateAccess$ | async"
+    (click)="onAddButtonClick()">
+    <mat-icon>add</mat-icon>
+  </button>
 </div>
 
 <div class="overflow">
-  <mat-list cdkDropList>
+  <mat-list cdkDropList [cdkDropListDisabled]="!(congregationsSortAccess$ | async)">
 
     <mat-list-item
       *ngFor="let congregation of (congregations$ | async)"
@@ -15,11 +21,19 @@
 
       <span class="spacer"></span>
 
-      <button mat-icon-button (click)="onDeleteButtonClick(congregation)"><mat-icon>delete</mat-icon></button>
+      <button mat-icon-button 
+        *ngIf="congregationDeleteAccess$ | async"
+        (click)="onDeleteButtonClick(congregation)">
+        <mat-icon>delete</mat-icon>
+      </button>
 
-      <button mat-icon-button (click)="onEditButtonClick(congregation)"><mat-icon>edit</mat-icon></button>
+      <button mat-icon-button 
+        *ngIf="congregationUpdateAccess$ | async"
+        (click)="onEditButtonClick(congregation)">
+        <mat-icon>edit</mat-icon>
+      </button>
 
-      <mat-icon cdkDragHandle>drag_handle</mat-icon>
+      <mat-icon cdkDragHandle *ngIf="congregationsSortAccess$ | async">drag_handle</mat-icon>
   
       <div *cdkDragPlaceholder></div>
       <div *cdkDragPreview matchSize="true">

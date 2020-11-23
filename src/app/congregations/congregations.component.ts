@@ -1,7 +1,7 @@
 import { CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { BehaviorSubject, race, Subject, timer } from 'rxjs';
+import { BehaviorSubject, Observable, race, Subject, timer } from 'rxjs';
 import { map, switchAll, takeUntil } from 'rxjs/operators';
 import { Congregation } from 'src/app/_interfaces/congregation.interface';
 import { CongregationsService } from 'src/app/_services/congregations.service';
@@ -10,6 +10,8 @@ import { ConfirmDialogComponent } from 'src/app/_elements/dialogs/confirm-dialog
 import { CongregationDialogData } from './congregation-dialog/congregation-dialog-data.interface';
 import { CongregationDialogComponent } from './congregation-dialog/congregation-dialog.component';
 import { Mode } from 'src/app/_enums/mode.enum';
+import { AuthorityService } from 'src/app/_services/authority.service';
+import { PermissionKey } from 'src/app/_enums/permission-key.enum';
 
 @Component({
   selector: 'app-congregations',
@@ -21,16 +23,26 @@ export class CongregationsComponent implements OnInit, AfterViewInit, OnDestroy 
   @ViewChild(CdkDropList) cdkDropList: CdkDropList;
 
   congregations$ = new BehaviorSubject<Congregation[]>(null);
+  congregationsSortAccess$: Observable<boolean>;
+  congregationCreateAccess$: Observable<boolean>;
+  congregationUpdateAccess$: Observable<boolean>;
+  congregationDeleteAccess$: Observable<boolean>;
   exitComponent$ = new Subject<void>();
   unsubscribe$ = new Subject<void>();
 
   constructor(
+    private authorityService: AuthorityService,
     private congregationService: CongregationsService,
     private matDialog: MatDialog
   ) { }
 
   ngOnInit(): void {
     this.congregationService.getCongregations().pipe(takeUntil(this.unsubscribe$)).subscribe(this.congregations$);
+
+    this.congregationsSortAccess$ = this.authorityService.getPermissionByKey(PermissionKey.CONGREGATIONS_SORT);
+    this.congregationCreateAccess$ = this.authorityService.getPermissionByKey(PermissionKey.CONGREGATION_CREATE);
+    this.congregationUpdateAccess$ = this.authorityService.getPermissionByKey(PermissionKey.CONGREGATION_UPDATE);
+    this.congregationDeleteAccess$ = this.authorityService.getPermissionByKey(PermissionKey.CONGREGATION_DELETE);
   }
 
   ngAfterViewInit(): void {

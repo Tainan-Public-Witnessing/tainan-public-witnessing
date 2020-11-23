@@ -1,11 +1,18 @@
 <div class="title-bar">
+
   <h1>Profiles</h1>
+
   <span class="spacer"></span>
-  <button mat-icon-button (click)="onAddButtonClick()"><mat-icon>add</mat-icon></button>
+
+  <button mat-icon-button 
+    *ngIf="profileCreateAccess$ | async"
+    (click)="onAddButtonClick()">
+    <mat-icon>add</mat-icon>
+  </button>
 </div>
 
 <div class="overflow">
-  <mat-list cdkDropList>
+  <mat-list cdkDropList [cdkDropListDisabled]="!(profilesSortAccess$ | async)">
 
     <mat-list-item
       *ngFor="let profilePrimarykey of (profilePrimarykeys$ | async)"
@@ -15,13 +22,25 @@
 
       <span class="spacer"></span>
 
-      <button mat-icon-button (click)="onDeleteButtonClick(profilePrimarykey)"><mat-icon>delete</mat-icon></button>
+      <button mat-icon-button 
+        *ngIf="profileDeleteAccess$ | async"
+        (click)="onDeleteButtonClick(profilePrimarykey)">
+        <mat-icon>delete</mat-icon>
+      </button>
 
-      <button mat-icon-button (click)="onEditButtonClick(profilePrimarykey)"><mat-icon>edit</mat-icon></button>
+      <button mat-icon-button 
+        *ngIf="profileUpdateAccess$ | async"
+        (click)="onEditButtonClick(profilePrimarykey)">
+        <mat-icon>edit</mat-icon>
+      </button>
 
-      <button mat-icon-button (click)="onInfoButtonClick(profilePrimarykey)"><mat-icon>info</mat-icon></button>
+      <button mat-icon-button 
+        *ngIf="profileReadAccess$ | async"
+        (click)="onInfoButtonClick(profilePrimarykey)">
+        <mat-icon>info</mat-icon>
+      </button>
 
-      <mat-icon cdkDragHandle>drag_handle</mat-icon>
+      <mat-icon cdkDragHandle *ngIf="profilesSortAccess$ | async">drag_handle</mat-icon>
   
       <div *cdkDragPlaceholder></div>
       <div *cdkDragPreview matchSize="true">

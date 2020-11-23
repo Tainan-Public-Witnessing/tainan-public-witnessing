@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { UsersService } from 'src/app/_services/users.service';
 import { UserPrimarykey } from 'src/app/_interfaces/user.interface';
 import { takeUntil } from 'rxjs/operators';
@@ -8,6 +8,9 @@ import { Mode } from 'src/app/_enums/mode.enum';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from 'src/app/_elements/dialogs/confirm-dialog/confirm-dialog.component';
 import { ConfirmDialogData } from 'src/app/_elements/dialogs/confirm-dialog/confirm-dialog-data.interface';
+import { AuthorityService } from 'src/app/_services/authority.service';
+import { Permission } from 'src/app/_interfaces/profile.interface';
+import { PermissionKey } from '../_enums/permission-key.enum';
 
 @Component({
   selector: 'app-users',
@@ -17,9 +20,14 @@ import { ConfirmDialogData } from 'src/app/_elements/dialogs/confirm-dialog/conf
 export class UsersComponent implements OnInit, OnDestroy {
 
   userPrimarykeys$ = new BehaviorSubject<UserPrimarykey[]>(null);
+  userCreateAccess$: Observable<boolean>;
+  userUpdateAccess$: Observable<boolean>;
+  userDeleteAccess$: Observable<boolean>;
+  userReadAccess$: Observable<boolean>;
   unsubscribe$ = new Subject();
 
   constructor(
+    private authorityService: AuthorityService,
     private router: Router,
     private usersService: UsersService,
     private matDialog: MatDialog,
@@ -27,6 +35,11 @@ export class UsersComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.usersService.getUserPrimarykeys().pipe(takeUntil(this.unsubscribe$)).subscribe(this.userPrimarykeys$);
+
+    this.userCreateAccess$ = this.authorityService.getPermissionByKey(PermissionKey.USER_CREATE);
+    this.userUpdateAccess$ = this.authorityService.getPermissionByKey(PermissionKey.USER_UPDATE);
+    this.userDeleteAccess$ = this.authorityService.getPermissionByKey(PermissionKey.USER_DELETE);
+    this.userReadAccess$ = this.authorityService.getPermissionByKey(PermissionKey.USER_READ);
   }
 
   ngOnDestroy(): void {

@@ -5,26 +5,28 @@
   <button mat-button color="primary" *ngIf="mode !== 'read'" (click)="onSubmitClick()">submit</button>
 </div>
 
-<form [formGroup]="profileForm">
+<div class="overflow">
+  <form [formGroup]="profileForm">
 
-  <mat-form-field class="full-width">
-    <mat-label>Profile name</mat-label>
-    <input matInput formControlName="name" required>
-    <mat-error *ngIf="profileForm.controls.name.hasError('existed')">Profile name already existed!</mat-error>
-  </mat-form-field>
-
-  <mat-list>
-
-    <mat-list-item *ngFor="let key of permissionKeys">
+    <mat-form-field class="full-width">
+      <mat-label>Profile name</mat-label>
+      <input matInput formControlName="name" required>
+      <mat-error *ngIf="profileForm.controls.name.hasError('existed')">Profile name already existed!</mat-error>
+    </mat-form-field>
+  
+    <mat-list>
+  
+      <mat-list-item *ngFor="let key of permissionKeys">
+      
+        {{key}}
     
-      {{key}}
-  
-      <span class="spacer"></span>
-  
-      <mat-slide-toggle
-        [formControlName]="key"
-        color="primary">
-      </mat-slide-toggle>
-    </mat-list-item>
-  </mat-list>
-</form>
+        <span class="spacer"></span>
+    
+        <mat-slide-toggle
+          [formControlName]="key"
+          color="primary">
+        </mat-slide-toggle>
+      </mat-list-item>
+    </mat-list>
+  </form>
+</div>

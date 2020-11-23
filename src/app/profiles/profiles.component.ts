@@ -1,14 +1,16 @@
 import { CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { BehaviorSubject, race, Subject, timer } from 'rxjs';
+import { BehaviorSubject, Observable, race, Subject, timer } from 'rxjs';
 import { map, switchAll, takeUntil } from 'rxjs/operators';
 import { Profile, ProfilePrimarykey } from 'src/app/_interfaces/profile.interface';
 import { ConfirmDialogData } from 'src/app/_elements/dialogs/confirm-dialog/confirm-dialog-data.interface';
 import { ConfirmDialogComponent } from 'src/app/_elements/dialogs/confirm-dialog/confirm-dialog.component';
 import { Router } from '@angular/router';
 import { ProfilesService } from 'src/app/_services/profiles.service';
-import { Mode } from '../_enums/mode.enum';
+import { Mode } from 'src/app/_enums/mode.enum';
+import { AuthorityService } from 'src/app/_services/authority.service';
+import { PermissionKey } from 'src/app/_enums/permission-key.enum';
 
 @Component({
   selector: 'app-profiles',
@@ -19,10 +21,16 @@ export class ProfilesComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(CdkDropList) cdkDropList: CdkDropList;
 
   profilePrimarykeys$ = new BehaviorSubject<ProfilePrimarykey[]>(null);
+  profilesSortAccess$: Observable<boolean>;
+  profileReadAccess$: Observable<boolean>;
+  profileCreateAccess$: Observable<boolean>;
+  profileUpdateAccess$: Observable<boolean>;
+  profileDeleteAccess$: Observable<boolean>;
   exitComponent$ = new Subject<void>();
   unsubscribe$ = new Subject<void>();
 
   constructor(
+    private authorityService: AuthorityService,
     private profilesService: ProfilesService,
     private matDialog: MatDialog,
     private router: Router
@@ -30,6 +38,12 @@ export class ProfilesComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     this.profilesService.getProfilePrimarykeys().pipe(takeUntil(this.unsubscribe$)).subscribe(this.profilePrimarykeys$);
+
+    this.profilesSortAccess$ = this.authorityService.getPermissionByKey(PermissionKey.PROFILES_SORT);
+    this.profileReadAccess$ = this.authorityService.getPermissionByKey(PermissionKey.PROFILE_READ);
+    this.profileCreateAccess$ = this.authorityService.getPermissionByKey(PermissionKey.PROFILE_CREATE);
+    this.profileUpdateAccess$ = this.authorityService.getPermissionByKey(PermissionKey.PROFILE_UPDATE);
+    this.profileDeleteAccess$ = this.authorityService.getPermissionByKey(PermissionKey.PROFILE_DELETE);
   }
 
   ngAfterViewInit(): void {

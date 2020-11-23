@@ -1,25 +1,43 @@
 <div class="title-bar">
+
   <h1>Users</h1>
+
   <span class="spacer"></span>
-  <button mat-icon-button (click)="onAddButtonClick()"><mat-icon>add</mat-icon></button>
+
+  <button mat-icon-button 
+    *ngIf="userCreateAccess$ | async"
+    (click)="onAddButtonClick()">
+    <mat-icon>add</mat-icon>
+  </button>
 </div>
 
 <div class="overflow">
   <mat-list>
 
     <mat-list-item
-      *ngFor="let userPrimarykey of (userPrimarykeys$ | async)"
-      cdkDrag>
+      *ngFor="let userPrimarykey of (userPrimarykeys$ | async)">
   
       {{userPrimarykey.username}}
 
       <span class="spacer"></span>
 
-      <button mat-icon-button (click)="onDeleteButtonClick(userPrimarykey)"><mat-icon>delete</mat-icon></button>
+      <button mat-icon-button
+        *ngIf="userDeleteAccess$ | async"
+        (click)="onDeleteButtonClick(userPrimarykey)">
+        <mat-icon>delete</mat-icon>
+      </button>
 
-      <button mat-icon-button (click)="onEditButtonClick(userPrimarykey)"><mat-icon>edit</mat-icon></button>
+      <button mat-icon-button
+        *ngIf="userUpdateAccess$ | async"
+        (click)="onEditButtonClick(userPrimarykey)">
+        <mat-icon>edit</mat-icon>
+      </button>
 
-      <button mat-icon-button (click)="onInfoButtonClick(userPrimarykey)"><mat-icon>info</mat-icon></button>
+      <button mat-icon-button
+        *ngIf="userReadAccess$ | async"
+        (click)="onInfoButtonClick(userPrimarykey)">
+        <mat-icon>info</mat-icon>
+      </button>
     </mat-list-item>
   </mat-list>
 </div>

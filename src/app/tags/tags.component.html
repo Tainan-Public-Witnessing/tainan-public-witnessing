@@ -1,11 +1,18 @@
 <div class="title-bar">
+
   <h1>Tags</h1>
+
   <span class="spacer"></span>
-  <button mat-icon-button (click)="onAddButtonClick()"><mat-icon>add</mat-icon></button>
+
+  <button mat-icon-button 
+    *ngIf="tagCreateAccess$ | async"
+    (click)="onAddButtonClick()">
+    <mat-icon>add</mat-icon>
+  </button>
 </div>
 
 <div class="overflow">
-  <mat-list cdkDropList>
+  <mat-list cdkDropList [cdkDropListDisabled]="!(tagsSortAccess$ | async)">
 
     <mat-list-item
       *ngFor="let tag of (tags$ | async)"
@@ -15,11 +22,19 @@
 
       <span class="spacer"></span>
 
-      <button mat-icon-button (click)="onDeleteButtonClick(tag)"><mat-icon>delete</mat-icon></button>
+      <button mat-icon-button 
+        *ngIf="tagDeleteAccess$ | async"
+        (click)="onDeleteButtonClick(tag)">
+        <mat-icon>delete</mat-icon>
+      </button>
 
-      <button mat-icon-button (click)="onEditButtonClick(tag)"><mat-icon>edit</mat-icon></button>
+      <button mat-icon-button 
+        *ngIf="tagUpdateAccess$ | async"
+        (click)="onEditButtonClick(tag)">
+        <mat-icon>edit</mat-icon>
+      </button>
 
-      <mat-icon cdkDragHandle>drag_handle</mat-icon>
+      <mat-icon cdkDragHandle *ngIf="tagsSortAccess$ | async">drag_handle</mat-icon>
   
       <div *cdkDragPlaceholder></div>
       <div *cdkDragPreview matchSize="true">

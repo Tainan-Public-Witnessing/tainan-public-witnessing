@@ -38,15 +38,26 @@ export class AuthorityService implements CanActivate {
     permissions: [
       { key: PermissionKey.HOME_READ, access: true },
       { key: PermissionKey.CONGREGATIONS_READ, access: false },
+      { key: PermissionKey.CONGREGATIONS_SORT, access: false },
+      { key: PermissionKey.CONGREGATION_CREATE, access: false },
+      { key: PermissionKey.CONGREGATION_UPDATE, access: false },
+      { key: PermissionKey.CONGREGATION_DELETE, access: false },
       { key: PermissionKey.USERS_READ, access: false },
       { key: PermissionKey.USER_READ, access: false },
       { key: PermissionKey.USER_CREATE, access: false },
       { key: PermissionKey.USER_UPDATE, access: false },
+      { key: PermissionKey.USER_DELETE, access: false },
       { key: PermissionKey.TAGS_READ, access: false },
+      { key: PermissionKey.TAGS_SORT, access: false },
+      { key: PermissionKey.TAG_CREATE, access: false },
+      { key: PermissionKey.TAG_UPDATE, access: false },
+      { key: PermissionKey.TAG_DELETE, access: false },
       { key: PermissionKey.PROFILES_READ, access: false },
+      { key: PermissionKey.PROFILES_SORT, access: false },
       { key: PermissionKey.PROFILE_READ, access: false },
       { key: PermissionKey.PROFILE_CREATE, access: false },
       { key: PermissionKey.PROFILE_UPDATE, access: false },
+      { key: PermissionKey.PROFILE_DELETE, access: false },
     ]
   };
 
@@ -65,9 +76,9 @@ export class AuthorityService implements CanActivate {
     });
   }
 
-  getPermissionByKey = (key: PermissionKey): Observable<Permission> => {
+  getPermissionByKey = (key: PermissionKey): Observable<boolean> => {
     return this.currentProfile$.pipe(
-      map(profile => profile.permissions.find(permission => permission.key === key))
+      map(profile => profile.permissions.find(permission => permission.key === key).access)
     );
   }
 
@@ -82,6 +93,7 @@ export class AuthorityService implements CanActivate {
     this.mockApi.logout(this.currentUser$.getValue().uuid).then(() => {
       this.subscription.unsubscribe();
       this.currentUser$.next(null);
+      this.router.navigate(['home']);
     });
   }
 
