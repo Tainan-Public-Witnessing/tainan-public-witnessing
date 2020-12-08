@@ -11,6 +11,7 @@ import { ConfirmDialogData } from 'src/app/_elements/dialogs/confirm-dialog/conf
 import { AuthorityService } from 'src/app/_services/authority.service';
 import { Permission } from 'src/app/_interfaces/profile.interface';
 import { PermissionKey } from '../_enums/permission-key.enum';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-users',
@@ -28,6 +29,7 @@ export class UsersComponent implements OnInit, OnDestroy {
 
   constructor(
     private authorityService: AuthorityService,
+    private translateService: TranslateService,
     private router: Router,
     private usersService: UsersService,
     private matDialog: MatDialog,
@@ -63,8 +65,8 @@ export class UsersComponent implements OnInit, OnDestroy {
       disableClose: true,
       panelClass: 'dialog-panel',
       data: {
-        title: 'Delete profile',
-        message: 'Are you sure to delete ' + userPrimarykey.username + '?'
+        title: 'USERS.DELETE_TITLE',
+        message: this.translateService.instant('GLOBAL.DELETE_MESSAGE', {value: userPrimarykey.username})
       } as ConfirmDialogData
     }).afterClosed().subscribe(result => {
       if (result) {

@@ -12,6 +12,7 @@ import { AuthorityService } from 'src/app/_services/authority.service';
 import { TagDialogData } from './tag-dialog/tag-dialog-data.interface';
 import { TagDialogComponent } from './tag-dialog/tag-dialog.component';
 import { PermissionKey } from 'src/app/_enums/permission-key.enum';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-tags',
@@ -31,6 +32,7 @@ export class TagsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     private authorityService: AuthorityService,
+    private translateService: TranslateService,
     private tagService: TagsService,
     private matDialog: MatDialog
   ) { }
@@ -80,8 +82,8 @@ export class TagsComponent implements OnInit, AfterViewInit, OnDestroy {
       disableClose: true,
       panelClass: 'dialog-panel',
       data: {
-        title: 'Delete tag',
-        message: 'Are you sure to delete ' + tag.name + '?'
+        title: 'TAGS.DELETE_TITLE',
+        message: this.translateService.instant('GLOBAL.DELETE_MESSAGE', {value: tag.name})
       } as ConfirmDialogData
     }).afterClosed().subscribe(result => {
       if (result) {

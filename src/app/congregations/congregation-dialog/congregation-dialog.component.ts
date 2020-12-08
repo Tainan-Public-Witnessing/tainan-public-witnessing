@@ -25,7 +25,7 @@ export class CongregationDialogComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.title = this.data.mode === Mode.CREATE ? 'Create congregation' : 'Edit congregation';
+    this.title = this.data.mode === Mode.CREATE ? 'CONGREGATIONS.CREATE_TITLE' : 'CONGREGATIONS.EDIT_TITLE';
 
     this.congregationControl = new FormControl('', Validators.required);
 

@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Gender } from 'src/app/_enums/gender.enum';
 import { Mode } from 'src/app/_enums/mode.enum';
@@ -25,6 +25,7 @@ export class UserComponent implements OnInit, OnDestroy {
   mode: string;
   uuid: string;
   title: string;
+  cancelButtonText: string;
   userForm: FormGroup;
   genders = Object.values(Gender);
   congregations$ = new BehaviorSubject<Congregation[]>(null);
@@ -57,16 +58,19 @@ export class UserComponent implements OnInit, OnDestroy {
 
       switch (params.mode) {
         case Mode.CREATE:
-          this.title = 'Create User';
+          this.title = 'USERS.CREATE_TITLE';
+          this.cancelButtonText = 'GLOBAL.CANCEL';
           break;
 
         case Mode.UPDATE:
-          this.title = 'Edit User';
+          this.title = 'USERS.EDIT_TITLE';
+          this.cancelButtonText = 'GLOBAL.CANCEL';
           this.setFormGroupValueByUuid(params.uuid);
           break;
 
         case Mode.READ:
-          this.title = 'User';
+          this.title = 'USERS.READ_TITLE';
+          this.cancelButtonText = 'GLOBAL.BACK';
           this.setFormGroupValueByUuid(params.uuid);
           this.userForm.disable();
           break;

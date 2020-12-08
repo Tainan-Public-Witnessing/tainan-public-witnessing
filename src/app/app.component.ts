@@ -22,12 +22,12 @@ export class AppComponent implements OnInit {
   constructor(
     private authorityService: AuthorityService,
     private globalEventService: GlobalEventService,
-    private translate: TranslateService,
+    private translateService: TranslateService,
   ) {}
 
   ngOnInit(): void {
 
-    this.translate.setDefaultLang(Language.EN);
+    this.translateService.setDefaultLang(Language.EN);
 
     this.globalEventService.getGlobalEventById('ON_MENU_LINK_CLICK').pipe(
       takeUntil(this.unsubscribe$)
@@ -43,6 +43,6 @@ export class AppComponent implements OnInit {
   }
 
   onLanguageButtonClick = (language: Language) => {
-    this.translate.use(language);
+    this.translateService.use(language);
   }
 }

@@ -11,6 +11,7 @@ import { ProfilesService } from 'src/app/_services/profiles.service';
 import { Mode } from 'src/app/_enums/mode.enum';
 import { AuthorityService } from 'src/app/_services/authority.service';
 import { PermissionKey } from 'src/app/_enums/permission-key.enum';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-profiles',
@@ -32,6 +33,7 @@ export class ProfilesComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private authorityService: AuthorityService,
     private profilesService: ProfilesService,
+    private translateService: TranslateService,
     private matDialog: MatDialog,
     private router: Router
   ) { }
@@ -73,8 +75,8 @@ export class ProfilesComponent implements OnInit, AfterViewInit, OnDestroy {
       disableClose: true,
       panelClass: 'dialog-panel',
       data: {
-        title: 'Delete profile',
-        message: 'Are you sure to delete ' + profile.name + '?'
+        title: 'PROFILES.DELETE_TITLE',
+        message: this.translateService.instant('GLOBAL.DELETE_MESSAGE', {value: profile.name})
       } as ConfirmDialogData
     }).afterClosed().subscribe(result => {
       if (result) {

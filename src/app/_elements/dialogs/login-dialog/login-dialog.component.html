@@ -1,28 +1,32 @@
-<h1 mat-dialog-title>Login</h1>
+<h1 mat-dialog-title>{{ "LOGIN.TITLE" | translate }}</h1>
 
 <div mat-dialog-content>
   <form [formGroup]="loginForm">
 
     <mat-form-field class="full-width">
-      <mat-label>Username</mat-label>
+      <mat-label>{{ "LOGIN.LABEL.USERNAME" | translate }}</mat-label>
       <input matInput formControlName="username" [matAutocomplete]="auto">
       <mat-autocomplete #auto="matAutocomplete">
         <mat-option *ngFor="let userPrimaryKey of (usernameAutoComplete$ | async)" [value]="userPrimaryKey.username">
           {{userPrimaryKey.username}}
         </mat-option>
       </mat-autocomplete>
-      <mat-error *ngIf="loginForm.controls.username.hasError('notExist')">User not exist!</mat-error>
+      <mat-error *ngIf="loginForm.controls.username.hasError('notExist')">
+        {{ "GLOBAL.DONOT_EXIST_ERROR" | translate: { value: "LOGIN.LABEL.USERNAME" | translate } }}
+      </mat-error>
     </mat-form-field>
 
     <mat-form-field class="full-width">
-      <mat-label>Password</mat-label>
+      <mat-label>{{ "LOGIN.LABEL.PASSWORD" | translate }}</mat-label>
       <input matInput formControlName="password" type="password">
-      <mat-error *ngIf="loginForm.controls.password.hasError('wrongPassword')">Wrong password!</mat-error>
+      <mat-error *ngIf="loginForm.controls.password.hasError('wrongPassword')">
+        {{ "LOGIN.WRONG_PASSWORD_ERROR" | translate }}
+      </mat-error>
     </mat-form-field>
   </form>
 </div>
 
 <div mat-dialog-actions>
-  <button mat-button color="accent" (click)="onCancelClick()" cdkFocusInitial>cancel</button>
-  <button mat-button color="primary" (click)="onConfirmClick()">login</button>
+  <button mat-button color="accent" (click)="onCancelClick()" cdkFocusInitial>{{ "GLOBAL.CANCEL" | translate }}</button>
+  <button mat-button color="primary" (click)="onConfirmClick()">{{ "GLOBAL.LOG_IN" | translate }}</button>
 </div>

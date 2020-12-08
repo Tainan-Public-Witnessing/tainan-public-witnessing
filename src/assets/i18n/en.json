@@ -1,9 +1,70 @@
 {
   "GLOBAL": {
-    "SITE_NAME": "Tainan Public Witnessing"
+    "SITE_NAME": "Tainan Public Witnessing",
+    "LOG_IN": "Log in",
+    "LOG_OUT": "Log out",
+    "SUBMIT": "Submit",
+    "CONFIRM": "Confirm",
+    "CANCEL": "Cancel",
+    "BACK": "Back",
+    "DELETE_MESSAGE": "Are you sure to delete {{value}}?",
+    "EXISTED_ERROR": "{{value}} already existed!",
+    "DONOT_EXIST_ERROR": "{{value}} do not exist!"
   },
   "LANGUAGE": {
     "EN": "English",
     "ZH": "Chinese"
+  },
+  "LOGIN": {
+    "TITLE": "Login",
+    "LABEL": {
+      "USERNAME": "User name",
+      "PASSWORD": "Password"
+    },
+    "WRONG_PASSWORD_ERROR": "Wrong password!"
+  },
+  "HOME": {
+    "TITLE": "Home"
+  },
+  "USERS": {
+    "TITLE": "Users",
+    "CREATE_TITLE": "Create user",
+    "EDIT_TITLE": "Edit user",
+    "READ_TITLE": "User",
+    "DELETE_TITLE": "Delete user",
+    "LABEL": {
+      "USERNAME": "User name",
+      "NAME": "Name",
+      "GENDER": "Gender",
+      "CONGREGATION": "Congregation",
+      "PROFILE": "Profile",
+      "TAGS": "Tags",
+      "CELLPHONE": "Cellphone",
+      "PHONE": "Phone",
+      "ADDRESS": "Address",
+      "NOTE": "Note"
+    }
+  },
+  "CONGREGATIONS": {
+    "TITLE": "Congregations",
+    "CREATE_TITLE": "Create congregation",
+    "EDIT_TITLE": "Edit congregation",
+    "DELETE_TITLE": "Delete congregation",
+    "NAME_LABEL": "Congregation name"
+  },
+  "TAGS": {
+    "TITLE": "Tags",
+    "CREATE_TITLE": "Create tag",
+    "EDIT_TITLE": "Edit tag",
+    "DELETE_TITLE": "Delete tag",
+    "NAME_LABEL": "Tag name"
+  },
+  "PROFILES": {
+    "TITLE": "Profiles",
+    "CREATE_TITLE": "Create profile",
+    "EDIT_TITLE": "Edit profile",
+    "READ_TITLE": "Profile",
+    "DELETE_TITLE": "Delete profile",
+    "NAME_LABEL": "Profile name"
   }
 }

@@ -12,6 +12,7 @@ import { CongregationDialogComponent } from './congregation-dialog/congregation-
 import { Mode } from 'src/app/_enums/mode.enum';
 import { AuthorityService } from 'src/app/_services/authority.service';
 import { PermissionKey } from 'src/app/_enums/permission-key.enum';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-congregations',
@@ -33,6 +34,7 @@ export class CongregationsComponent implements OnInit, AfterViewInit, OnDestroy 
   constructor(
     private authorityService: AuthorityService,
     private congregationService: CongregationsService,
+    private translateService: TranslateService,
     private matDialog: MatDialog
   ) { }
 
@@ -81,8 +83,8 @@ export class CongregationsComponent implements OnInit, AfterViewInit, OnDestroy 
       disableClose: true,
       panelClass: 'dialog-panel',
       data: {
-        title: 'Delete congregation',
-        message: 'Are you sure to delete ' + congregation.name + '?'
+        title: 'CONGREGATIONS.DELETE_TITLE',
+        message: this.translateService.instant('GLOBAL.DELETE_MESSAGE', {value: congregation.name})
       } as ConfirmDialogData
     }).afterClosed().subscribe(result => {
       if (result) {

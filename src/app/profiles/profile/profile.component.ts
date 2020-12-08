@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -19,6 +19,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   mode: string;
   uuid: string;
   title: string;
+  cancelButtonText: string;
   profileForm: FormGroup;
   permissionKeys = Object.values(PermissionKey);
   unsubscribe$ = new Subject<void>();
@@ -39,16 +40,19 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
       switch (params.mode) {
         case Mode.CREATE:
-          this.title = 'Create profile';
+          this.title = 'PROFILES.CREATE_TITLE';
+          this.cancelButtonText = 'GLOBAL.CANCEL';
           break;
 
         case Mode.UPDATE:
-          this.title = 'Edit profile';
+          this.title = 'PROFILES.EDIT_TITLE';
+          this.cancelButtonText = 'GLOBAL.CANCEL';
           this.setFormGroupValueByUuid(params.uuid);
           break;
 
         case Mode.READ:
-          this.title = 'Profile';
+          this.title = 'PROFILES.READ_TITLE';
+          this.cancelButtonText = 'GLOBAL.BACK';
           this.setFormGroupValueByUuid(params.uuid);
           this.profileForm.disable();
           break;

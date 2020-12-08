@@ -25,7 +25,7 @@ export class TagDialogComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.title = this.data.mode === Mode.CREATE ? 'Create tag' : 'Edit tag';
+    this.title = this.data.mode === Mode.CREATE ? 'TAGS.CREATE_TITLE' : 'TAGS.EDIT_TITLE';
 
     this.tagControl = new FormControl('', Validators.required);
 

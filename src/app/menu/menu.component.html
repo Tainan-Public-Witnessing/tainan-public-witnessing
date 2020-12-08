@@ -3,14 +3,14 @@
     *ngFor="let menuLink of (currentMenuLinks$ | async)"
     (click)="onMenuLinkClick()"
     [routerLink]="menuLink.url">
-    {{menuLink.display}}
+    {{menuLink.display | translate}}
   </mat-list-option>
 
   <mat-list-option *ngIf="!(this.isLoggedIn$ | async)" (click)="onLoginClick()">
-    Login
+    {{ "GLOBAL.LOG_IN" | translate }}
   </mat-list-option>
 
   <mat-list-option *ngIf="this.isLoggedIn$ | async" (click)="onLogoutClick()">
-    Logout
+    {{ "GLOBAL.LOG_OUT" | translate }}
   </mat-list-option>
 </mat-selection-list>

@@ -16,11 +16,11 @@ import { GlobalEventService } from 'src/app/_services/global-event.service';
 export class MenuComponent implements OnInit {
 
   MENU_LINKS: MenuLink[] = [
-    { display: 'Home', url: 'home', permissionKey: PermissionKey.HOME_READ },
-    { display: 'Users', url: 'users', permissionKey: PermissionKey.USERS_READ},
-    { display: 'Congregations', url: 'congregations', permissionKey: PermissionKey.CONGREGATIONS_READ},
-    { display: 'Tags', url: 'tags', permissionKey: PermissionKey.TAGS_READ},
-    { display: 'Profiles', url: 'profiles', permissionKey: PermissionKey.PROFILES_READ},
+    { display: 'HOME.TITLE', url: 'home', permissionKey: PermissionKey.HOME_READ },
+    { display: 'USERS.TITLE', url: 'users', permissionKey: PermissionKey.USERS_READ},
+    { display: 'CONGREGATIONS.TITLE', url: 'congregations', permissionKey: PermissionKey.CONGREGATIONS_READ},
+    { display: 'TAGS.TITLE', url: 'tags', permissionKey: PermissionKey.TAGS_READ},
+    { display: 'PROFILES.TITLE', url: 'profiles', permissionKey: PermissionKey.PROFILES_READ},
   ];
 
   currentMenuLinks$: Observable<MenuLink[]>;

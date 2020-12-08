@@ -319,7 +319,7 @@ export class MockApi implements Api {
     const tags = this.tags$.getValue();
     tag.uuid = uuidv5(new Date().toString(), environment.UUID_NAMESPACE);
     tags.push(tag);
-    this.congregations$.next(tags);
+    this.tags$.next(tags);
     return Promise.resolve(tag.uuid);
   }
 
