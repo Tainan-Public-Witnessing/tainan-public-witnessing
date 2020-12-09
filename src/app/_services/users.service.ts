@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { User, UserPrimarykey } from 'src/app/_interfaces/user.interface';
-import { MockApi } from 'src/app/_api/mock.api';
+import { Api } from 'src/app/_api/mock.api';
 import { Status } from '../_enums/status.enum';
 
 @Injectable({
@@ -14,12 +14,12 @@ export class UsersService {
   private usersMaxSize = 20;
 
   constructor(
-    private mockApi: MockApi
+    private api: Api
   ) { }
 
   getUserPrimarykeys = (): BehaviorSubject<UserPrimarykey[]> => {
     if (!this.userPrimarykeys$.getValue()) {
-      this.mockApi.readUserPrimarykeys().subscribe(this.userPrimarykeys$);
+      this.api.readUserPrimarykeys().subscribe(this.userPrimarykeys$);
     }
     return this.userPrimarykeys$;
   }
@@ -29,7 +29,7 @@ export class UsersService {
       return this.users.get(uuid);
     } else {
       const user$ = new BehaviorSubject<User>(null);
-      this.mockApi.readUser(uuid).subscribe(user$);
+      this.api.readUser(uuid).subscribe(user$);
       this.users.set(uuid, user$);
       this.checkUsersSize();
       return user$;
@@ -40,12 +40,12 @@ export class UsersService {
     const userPrimarykeys = this.userPrimarykeys$.getValue();
     if (userPrimarykeys) {
       if (!userPrimarykeys.find(object => object.username === user.username)) {
-        return this.mockApi.createUserPrimarykey({
+        return this.api.createUserPrimarykey({
           uuid: null,
           username: user.username
         }).then(uuid => {
           user.uuid = uuid;
-          return this.mockApi.createUser(user);
+          return this.api.createUser(user);
         });
       } else {
         return Promise.reject(Status.EXISTED);
@@ -59,11 +59,11 @@ export class UsersService {
     const userPrimarykeys = this.userPrimarykeys$.getValue();
     if (userPrimarykeys) {
       if (!userPrimarykeys.find(object => object.username === user.username && object.uuid !== user.uuid)) {
-        return this.mockApi.updateUserPrimarykey({
+        return this.api.updateUserPrimarykey({
           uuid: user.uuid,
           username: user.username
         }).then(() => {
-          return this.mockApi.updateUser(user);
+          return this.api.updateUser(user);
         });
       } else {
         return Promise.reject(Status.EXISTED);
@@ -74,8 +74,8 @@ export class UsersService {
   }
 
   deleteUser = (uuid: string): Promise<Status> => {
-    return this.mockApi.deleteUserPrimarykey(uuid).then(() => {
-      return this.mockApi.deleteUser(uuid);
+    return this.api.deleteUserPrimarykey(uuid).then(() => {
+      return this.api.deleteUser(uuid);
     });
   }
 

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Tag } from 'src/app/_interfaces/tag.interface';
-import { MockApi } from 'src/app/_api/mock.api';
+import { Api } from 'src/app/_api/mock.api';
 import { Status } from 'src/app/_enums/status.enum';
 
 @Injectable({
@@ -12,25 +12,25 @@ export class TagsService {
   private tags$ = new BehaviorSubject<Tag[]>(null);
 
   constructor(
-    private mockApi: MockApi
+    private api: Api
   ) { }
 
   getTags = (): BehaviorSubject<Tag[]> => {
     if (!this.tags$.getValue()) {
-      this.mockApi.readTags().subscribe(this.tags$);
+      this.api.readTags().subscribe(this.tags$);
     }
     return this.tags$;
   }
 
   sortTags = (tags: Tag[]): Promise<Status> => {
-    return this.mockApi.updateTags(tags);
+    return this.api.updateTags(tags);
   }
 
   createTag = (tag: Tag): Promise<Status> => {
     const tags = this.tags$.getValue();
     if (tags) {
       if (!tags.find(c => c.name === tag.name)) {
-        return this.mockApi.createTag(tag).then(() => Promise.resolve(Status.SUCCESS));
+        return this.api.createTag(tag).then(() => Promise.resolve(Status.SUCCESS));
       } else {
         return Promise.reject(Status.EXISTED);
       }
@@ -43,7 +43,7 @@ export class TagsService {
     const tags = this.tags$.getValue();
     if (tags) {
       if (!tags.find(object => object.name === tag.name)) {
-        return this.mockApi.updateTag(tag);
+        return this.api.updateTag(tag);
       } else {
         return Promise.reject(Status.EXISTED);
       }
@@ -53,6 +53,6 @@ export class TagsService {
   }
 
   deleteTag = (uuid: string): Promise<Status> => {
-    return this.mockApi.deleteTag(uuid);
+    return this.api.deleteTag(uuid);
   }
 }

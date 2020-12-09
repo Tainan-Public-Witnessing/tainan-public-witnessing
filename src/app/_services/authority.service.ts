@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Permission, PermissionData, Profile } from 'src/app/_interfaces/profile.interface';
-import { MockApi } from 'src/app/_api/mock.api';
+import { Api } from 'src/app/_api/mock.api';
 import { PermissionKey } from 'src/app/_enums/permission-key.enum';
 import { Status } from '../_enums/status.enum';
 import { User } from '../_interfaces/user.interface';
@@ -62,14 +62,14 @@ export class AuthorityService implements CanActivate {
   };
 
   constructor(
-    private mockApi: MockApi,
+    private api: Api,
     private router: Router,
   ) { }
 
   initialize = () => {
     this.currentUser$.subscribe(user => {
       if (user) {
-        this.mockApi.readProfile(user.profile).subscribe(this.currentProfile$);
+        this.api.readProfile(user.profile).subscribe(this.currentProfile$);
       } else {
         this.currentProfile$.next(this.guestProfile);
       }
@@ -83,14 +83,14 @@ export class AuthorityService implements CanActivate {
   }
 
   login = (uuid: string, password: string): Promise<Status> => {
-    return this.mockApi.login(uuid, password).then(() => {
-      this.subscription = this.mockApi.readUser(uuid).subscribe(this.currentUser$);
+    return this.api.login(uuid, password).then(() => {
+      this.subscription = this.api.readUser(uuid).subscribe(this.currentUser$);
       return Promise.resolve(Status.SUCCESS);
     });
   }
 
   logout = () => {
-    this.mockApi.logout(this.currentUser$.getValue().uuid).then(() => {
+    this.api.logout(this.currentUser$.getValue().uuid).then(() => {
       this.subscription.unsubscribe();
       this.currentUser$.next(null);
       this.router.navigate(['home']);

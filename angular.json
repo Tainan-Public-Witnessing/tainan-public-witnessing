@@ -61,6 +61,14 @@
                   "maximumError": "10kb"
                 }
               ]
+            },
+            "firebase": {
+              "fileReplacements": [
+                {
+                  "replace": "src/app/_api/mock.api",
+                  "with": "src/app/_api/firebase.api"
+                }
+              ]
             }
           }
         },
@@ -72,6 +80,9 @@
           "configurations": {
             "production": {
               "browserTarget": "TainanPublicWitnessing:build:production"
+            },
+            "firebase": {
+              "browserTarget": "TainanPublicWitnessing:build:firebase"
             }
           }
         },

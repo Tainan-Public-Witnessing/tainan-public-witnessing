@@ -11,7 +11,7 @@ export interface UserAuthorityStatus {
   online: boolean;
 }
 
-export interface Api {
+export interface ApiInterface {
 
   login: (uuid: string, password: string) => Promise<Status>;
   logout: (uuid: string) => Promise<Status>;

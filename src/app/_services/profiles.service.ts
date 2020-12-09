@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Profile, ProfilePrimarykey } from 'src/app/_interfaces/profile.interface';
-import { MockApi } from 'src/app/_api/mock.api';
+import { Api } from 'src/app/_api/mock.api';
 import { Status } from '../_enums/status.enum';
 
 @Injectable({
@@ -14,18 +14,18 @@ export class ProfilesService {
   private profilesMaxSize = 10;
 
   constructor(
-    private mockApi: MockApi
+    private api: Api
   ) { }
 
   getProfilePrimarykeys = (): BehaviorSubject<ProfilePrimarykey[]> => {
     if (!this.profilePrimarykeys$.getValue()) {
-      this.mockApi.readProfilePrimarykeys().subscribe(this.profilePrimarykeys$);
+      this.api.readProfilePrimarykeys().subscribe(this.profilePrimarykeys$);
     }
     return this.profilePrimarykeys$;
   }
 
   sortProfilePrimarykeys = (profilePrimarykeys: ProfilePrimarykey[]): Promise<Status> => {
-    return this.mockApi.updateProfilePrimarykeys(profilePrimarykeys);
+    return this.api.updateProfilePrimarykeys(profilePrimarykeys);
   }
 
   getProfileByUuid = (uuid: string): BehaviorSubject<Profile> => {
@@ -33,7 +33,7 @@ export class ProfilesService {
       return this.profiles.get(uuid);
     } else {
       const profile$ = new BehaviorSubject<Profile>(null);
-      this.mockApi.readProfile(uuid).subscribe(profile$);
+      this.api.readProfile(uuid).subscribe(profile$);
       this.profiles.set(uuid, profile$);
       this.checkProfilesSize();
       return profile$;
@@ -44,12 +44,12 @@ export class ProfilesService {
     const profilePrimarykeys = this.profilePrimarykeys$.getValue();
     if (profilePrimarykeys) {
       if (!profilePrimarykeys.find(object => object.name === profile.name)) {
-        return this.mockApi.createProfilePrimarykey({
+        return this.api.createProfilePrimarykey({
           uuid: null,
           name: profile.name
         }).then(uuid => {
           profile.uuid = uuid;
-          return this.mockApi.createProfile(profile);
+          return this.api.createProfile(profile);
         });
       } else {
         return Promise.reject(Status.EXISTED);
@@ -63,11 +63,11 @@ export class ProfilesService {
     const profilePrimarykeys = this.profilePrimarykeys$.getValue();
     if (profilePrimarykeys) {
       if (!profilePrimarykeys.find(object => object.name === profile.name && object.uuid !== profile.uuid)) {
-        return this.mockApi.updateProfilePrimarykey({
+        return this.api.updateProfilePrimarykey({
           uuid: profile.uuid,
           name: profile.name
         }).then(() => {
-          return this.mockApi.updateProfile(profile);
+          return this.api.updateProfile(profile);
         });
       } else {
         return Promise.reject(Status.EXISTED);
@@ -78,8 +78,8 @@ export class ProfilesService {
   }
 
   deleteProfile = (uuid: string): Promise<Status> => {
-    return this.mockApi.deleteProfilePrimarykey(uuid).then(() => {
-      return this.mockApi.deleteProfile(uuid);
+    return this.api.deleteProfilePrimarykey(uuid).then(() => {
+      return this.api.deleteProfile(uuid);
     });
   }
 
