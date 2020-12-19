@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { tap } from 'rxjs/operators';
 import { Api } from 'src/app/_api/mock.api';
 import { Congregation } from 'src/app/_interfaces/congregation.interface';
 import { Status } from '../_enums/status.enum';

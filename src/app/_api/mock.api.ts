@@ -59,16 +59,16 @@ export class Api implements ApiInterface {
   ]);
 
   private congregations$ = new BehaviorSubject<Congregation[]>([
-    { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5f7', name: 'EastTainan' },
-    { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5f8', name: 'NorthTainan' },
-    { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5f9', name: 'WestTainan' },
-    { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5f0', name: 'SouthTainan' },
+    { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5f7', name: 'EastTainan', order: 0 },
+    { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5f8', name: 'NorthTainan', order: 1 },
+    { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5f9', name: 'WestTainan', order: 2 },
+    { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5f0', name: 'SouthTainan', order: 3 },
   ]);
 
   private tags$ = new BehaviorSubject<Tag[]>([
-    { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5a0', name: 'overseer' },
-    { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5a1', name: 'elder' },
-    { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5a2', name: 'pioneer' },
+    { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5a0', name: 'overseer', order: 0 },
+    { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5a1', name: 'elder', order: 1 },
+    { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5a2', name: 'pioneer', order: 2 },
   ]);
 
   private profilePrimarykeys$ = new BehaviorSubject<ProfilePrimarykey[]>([
@@ -134,6 +134,14 @@ export class Api implements ApiInterface {
       ]
     }
   ]);
+
+  unsubscribeStream = (key: string) => {
+    return;
+  }
+
+  unsubsctibeStreams = () => {
+    return;
+  }
 
   /** authority */
   login = (uuid: string, password: string) => {

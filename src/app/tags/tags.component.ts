@@ -2,7 +2,7 @@ import { CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject, Subject, timer, race, Observable } from 'rxjs';
-import { map, switchAll, takeUntil } from 'rxjs/operators';
+import { first, map, switchAll, takeUntil } from 'rxjs/operators';
 import { Tag } from 'src/app/_interfaces/tag.interface';
 import { TagsService } from 'src/app/_services/tags.service';
 import { ConfirmDialogData } from 'src/app/_elements/dialogs/confirm-dialog/confirm-dialog-data.interface';
@@ -27,7 +27,7 @@ export class TagsComponent implements OnInit, AfterViewInit, OnDestroy {
   tagCreateAccess$: Observable<boolean>;
   tagUpdateAccess$: Observable<boolean>;
   tagDeleteAccess$: Observable<boolean>;
-  exitComponent$ = new Subject<void>();
+  savedata$ = new Subject<void>();
   unsubscribe$ = new Subject<void>();
 
   constructor(
@@ -52,8 +52,9 @@ export class TagsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.exitComponent$.next();
+    this.savedata$.next();
     this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   onAddButtonClick = () => {
@@ -102,9 +103,10 @@ export class TagsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private subscribeSort = (): void => {
     this.cdkDropList.sorted.pipe(
-      map(() => race(timer(5000), this.exitComponent$)),
-      switchAll()
-    ).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
+      map(() => race(timer(10000).pipe(first()), this.savedata$)),
+      switchAll(),
+      takeUntil(this.unsubscribe$)
+    ).subscribe(() => {
       this.tagService.sortTags(this.tags$.getValue());
     });
   }

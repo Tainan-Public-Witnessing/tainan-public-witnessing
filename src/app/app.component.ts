@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { TranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
@@ -6,13 +6,14 @@ import { takeUntil } from 'rxjs/operators';
 import { GlobalEventService } from 'src/app/_services/global-event.service';
 import { Language } from 'src/app/_enums/language.enum';
 import { AuthorityService } from 'src/app/_services/authority.service';
+import { Api } from 'src/app/_api/mock.api';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
 
   @ViewChild('sidenav') sidenav: MatSidenav;
 
@@ -23,6 +24,7 @@ export class AppComponent implements OnInit {
     private authorityService: AuthorityService,
     private globalEventService: GlobalEventService,
     private translateService: TranslateService,
+    private api: Api,
   ) {}
 
   ngOnInit(): void {
@@ -36,6 +38,10 @@ export class AppComponent implements OnInit {
     });
 
     this.authorityService.initialize();
+  }
+
+  ngOnDestroy(): void {
+    this.api.unsubsctibeStreams();
   }
 
   onMenuButtonClick = () => {

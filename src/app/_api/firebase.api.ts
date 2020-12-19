@@ -12,7 +12,6 @@ import { filter, map, tap } from 'rxjs/operators';
 import { PermissionKey } from 'src/app/_enums/permission-key.enum';
 import { Status } from 'src/app/_enums/status.enum';
 import { Gender } from 'src/app/_enums/gender.enum';
-import { discardPeriodicTasks } from '@angular/core/testing';
 
 @Injectable({
   providedIn: 'root'
@@ -64,11 +63,7 @@ export class Api implements ApiInterface {
     }
   ]);
 
-  private tags$ = new BehaviorSubject<Tag[]>([
-    { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5a0', name: 'overseer' },
-    { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5a1', name: 'elder' },
-    { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5a2', name: 'pioneer' },
-  ]);
+  private tags$ = new BehaviorSubject<Tag[]>([]);
 
   private profilePrimarykeys$ = new BehaviorSubject<ProfilePrimarykey[]>([
     { uuid: 'e90966a2-91a8-5480-bc02-64f88277e5a1', name: 'administrator' },
@@ -134,6 +129,8 @@ export class Api implements ApiInterface {
     }
   ]);
 
+  private streams = new Map<string, () => void>();
+
   private getCollection = <T>(collectionName: string): AngularFirestoreCollection<T> => {
     const propertyName = collectionName + 'Collection';
     if (!this[propertyName]) {
@@ -146,6 +143,15 @@ export class Api implements ApiInterface {
     if (!environment.production) {
       console.log('api', message);
     }
+  }
+
+  unsubscribeStream = (key: string) => {
+    this.streams.get(key)();
+    this.streams.delete(key);
+  }
+
+  unsubsctibeStreams = () => {
+    this.streams.forEach(stream => stream());
   }
 
   /** authority */
@@ -270,7 +276,11 @@ export class Api implements ApiInterface {
     this.debugMessage('readCongregations');
 
     const congregations$ = new Subject<QuerySnapshot<Congregation>>();
-    this.getCollection<Congregation>('congregations').ref.onSnapshot(congregations$);
+    this.streams.set(
+      'congregations',
+      this.getCollection<Congregation>('congregations').ref.onSnapshot(congregations$)
+    );
+
     return congregations$.pipe(
       filter(snapshot => !snapshot.metadata.fromCache),
       map(snapshot => snapshot.docs.map(doc => doc.data())),
@@ -296,6 +306,7 @@ export class Api implements ApiInterface {
     this.debugMessage('createCongregation');
 
     congregation.uuid = uuidv5(new Date().toString(), environment.UUID_NAMESPACE);
+
     return this.getCollection<Congregation>('congregations')
       .doc(congregation.uuid)
       .set(congregation)
@@ -325,51 +336,64 @@ export class Api implements ApiInterface {
   /** tags */
 
   readTags = () => {
-    console.log('api', 'readTags');
-    return this.tags$;
+    this.debugMessage('readTags');
+
+    const tags$ = new Subject<QuerySnapshot<Tag>>();
+    this.streams.set(
+      'tags',
+      this.getCollection<Tag>('tags').ref.onSnapshot(tags$)
+    );
+
+    return tags$.pipe(
+      filter(snapshot => !snapshot.metadata.fromCache),
+      map(snapshot => snapshot.docs.map(doc => doc.data())),
+      map((tags) => tags.sort((a, b) => a.order - b.order))
+    );
   }
 
   updateTags = (tags: Tag[]) => {
-    console.log('api', 'updateTags');
-    this.tags$.next(tags);
-    return Promise.resolve(Status.SUCCESS);
+    this.debugMessage('updateTags');
+
+    const collection = this.getCollection<Tag>('tags');
+    const batch = this.angularFirestore.firestore.batch();
+
+    tags.forEach((tag, index) => {
+      tag.order = index;
+      batch.update(collection.doc(tag.uuid).ref, tag);
+    });
+
+    return batch.commit().then(() => Status.SUCCESS);
   }
 
   createTag = (tag: Tag) => {
-    console.log('api', 'createTag');
-    const tags = this.tags$.getValue();
+    this.debugMessage('createTag');
+
     tag.uuid = uuidv5(new Date().toString(), environment.UUID_NAMESPACE);
-    tags.push(tag);
-    this.tags$.next(tags);
-    return Promise.resolve(tag.uuid);
+
+    return this.getCollection<Tag>('tags')
+      .doc(tag.uuid)
+      .set(tag)
+      .then(() => tag.uuid);
   }
 
   updateTag = (tag: Tag) => {
-    console.log('api', 'updateTag');
-    const tags = this.tags$.getValue();
-    const existObject = tags.find(object => object.uuid === tag.uuid);
-    if (existObject) {
-      for (const index of Object.keys(existObject)) {
-        existObject[index] = tag[index];
-      }
-      this.tags$.next(tags);
-      return Promise.resolve(Status.SUCCESS);
-    } else {
-      return Promise.reject(Status.NOT_EXIST);
-    }
+    this.debugMessage('updateTag');
+
+    return this.getCollection<Tag>('tags')
+      .doc(tag.uuid)
+      .update(tag)
+      .then(() => Status.SUCCESS)
+      .catch(() => Status.NOT_EXIST);
   }
 
   deleteTag = (uuid: string) => {
-    console.log('api', 'deleteTag');
-    const tags = this.tags$.getValue();
-    const existIndex = tags.findIndex(object => object.uuid === uuid);
-    if (existIndex !== -1) {
-      tags.splice(existIndex, 1);
-      this.tags$.next(tags);
-      return Promise.resolve(Status.SUCCESS);
-    } else {
-      return Promise.reject(Status.NOT_EXIST);
-    }
+    this.debugMessage('deleteTag');
+
+    return this.getCollection<Tag>('tags')
+      .doc(uuid)
+      .delete()
+      .then(() => Status.SUCCESS)
+      .catch(() => Status.NOT_EXIST);
   }
 
   /** profile primary key */

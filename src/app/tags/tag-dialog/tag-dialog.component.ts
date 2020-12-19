@@ -43,13 +43,15 @@ export class TagDialogComponent implements OnInit {
       if (this.data.mode === Mode.CREATE) {
         response = this.tagService.createTag({
           uuid: null,
-          name: value
+          name: value,
+          order: 0
         });
       } else { // EDIT mode
         if (this.tagControl.dirty) {
           response = this.tagService.updateTag({
             uuid: this.data.tag.uuid,
-            name: value
+            name: value,
+            order: this.data.tag.order
           });
         } else { // no changes
           response = Promise.resolve(Status.NO_CHANGES);

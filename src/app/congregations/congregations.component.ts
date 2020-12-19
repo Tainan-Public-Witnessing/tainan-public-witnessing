@@ -55,6 +55,7 @@ export class CongregationsComponent implements OnInit, AfterViewInit, OnDestroy 
   ngOnDestroy(): void {
     this.savedata$.next();
     this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   onAddButtonClick = () => {
