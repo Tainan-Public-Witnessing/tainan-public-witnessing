@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { AngularFirestore, AngularFirestoreCollection, QuerySnapshot } from '@angular/fire/firestore';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { v5 as uuidv5 } from 'uuid';
 import { environment } from 'src/environments/environment';
 import { ApiInterface, UserAuthorityStatus } from 'src/app/_interfaces/api.interface';
@@ -7,15 +8,20 @@ import { User, UserPrimarykey } from 'src/app/_interfaces/user.interface';
 import { Congregation } from 'src/app/_interfaces/congregation.interface';
 import { Tag } from 'src/app/_interfaces/tag.interface';
 import { Profile, ProfilePrimarykey } from 'src/app/_interfaces/profile.interface';
-import { map } from 'rxjs/operators';
+import { filter, map, tap } from 'rxjs/operators';
 import { PermissionKey } from 'src/app/_enums/permission-key.enum';
 import { Status } from 'src/app/_enums/status.enum';
 import { Gender } from 'src/app/_enums/gender.enum';
+import { discardPeriodicTasks } from '@angular/core/testing';
 
 @Injectable({
   providedIn: 'root'
 })
 export class Api implements ApiInterface {
+
+  constructor(
+    private angularFirestore: AngularFirestore
+  ) {}
 
   /** mock data */
 
@@ -56,13 +62,6 @@ export class Api implements ApiInterface {
       note: 'Nice guy',
       tags: ['e90966a2-91a8-5480-bc02-67f88277e5a2']
     }
-  ]);
-
-  private congregations$ = new BehaviorSubject<Congregation[]>([
-    { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5f7', name: 'EastTainan' },
-    { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5f8', name: 'NorthTainan' },
-    { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5f9', name: 'WestTainan' },
-    { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5f0', name: 'SouthTainan' },
   ]);
 
   private tags$ = new BehaviorSubject<Tag[]>([
@@ -134,6 +133,20 @@ export class Api implements ApiInterface {
       ]
     }
   ]);
+
+  private getCollection = <T>(collectionName: string): AngularFirestoreCollection<T> => {
+    const propertyName = collectionName + 'Collection';
+    if (!this[propertyName]) {
+      this[propertyName] = this.angularFirestore.collection<T>(environment.FIRESTORE_ROOT + collectionName);
+    }
+    return this[propertyName];
+  }
+
+  private debugMessage = (message: string) => {
+    if (!environment.production) {
+      console.log('api', message);
+    }
+  }
 
   /** authority */
   login = (uuid: string, password: string) => {
@@ -254,51 +267,59 @@ export class Api implements ApiInterface {
   /** congregations */
 
   readCongregations = () => {
-    console.log('api', 'readCongregations');
-    return this.congregations$;
+    this.debugMessage('readCongregations');
+
+    const congregations$ = new Subject<QuerySnapshot<Congregation>>();
+    this.getCollection<Congregation>('congregations').ref.onSnapshot(congregations$);
+    return congregations$.pipe(
+      filter(snapshot => !snapshot.metadata.fromCache),
+      map(snapshot => snapshot.docs.map(doc => doc.data())),
+      map((congregations) => congregations.sort((a, b) => a.order - b.order))
+    );
   }
 
   updateCongregations = (congregations: Congregation[]) => {
-    console.log('api', 'updateCongregations');
-    this.congregations$.next(congregations);
-    return Promise.resolve(Status.SUCCESS);
+    this.debugMessage('updateCongregations');
+
+    const collection = this.getCollection<Congregation>('congregations');
+    const batch = this.angularFirestore.firestore.batch();
+
+    congregations.forEach((congregation, index) => {
+      congregation.order = index;
+      batch.update(collection.doc(congregation.uuid).ref, congregation);
+    });
+
+    return batch.commit().then(() => Status.SUCCESS);
   }
 
   createCongregation = (congregation: Congregation) => {
-    console.log('api', 'createCongregation');
-    const congregations = this.congregations$.getValue();
+    this.debugMessage('createCongregation');
+
     congregation.uuid = uuidv5(new Date().toString(), environment.UUID_NAMESPACE);
-    congregations.push(congregation);
-    this.congregations$.next(congregations);
-    return Promise.resolve(congregation.uuid);
+    return this.getCollection<Congregation>('congregations')
+      .doc(congregation.uuid)
+      .set(congregation)
+      .then(() => congregation.uuid);
   }
 
   updateCongregation = (congregation: Congregation) => {
-    console.log('api', 'updateCongregation');
-    const congregations = this.congregations$.getValue();
-    const existObject = congregations.find(object => object.uuid === congregation.uuid);
-    if (existObject) {
-      for (const index of Object.keys(existObject)) {
-        existObject[index] = congregation[index];
-      }
-      this.congregations$.next(congregations);
-      return Promise.resolve(Status.SUCCESS);
-    } else {
-      return Promise.reject(Status.NOT_EXIST);
-    }
+    this.debugMessage('updateCongregation');
+
+    return this.getCollection<Congregation>('congregations')
+      .doc(congregation.uuid)
+      .update(congregation)
+      .then(() => Status.SUCCESS)
+      .catch(() => Status.NOT_EXIST);
   }
 
   deleteCongregation = (uuid: string) => {
-    console.log('api', 'deleteCongregation');
-    const congregations = this.congregations$.getValue();
-    const existIndex = congregations.findIndex(object => object.uuid === uuid);
-    if (existIndex !== -1) {
-      congregations.splice(existIndex, 1);
-      this.congregations$.next(congregations);
-      return Promise.resolve(Status.SUCCESS);
-    } else {
-      return Promise.reject(Status.NOT_EXIST);
-    }
+    this.debugMessage('deleteCongregation');
+
+    return this.getCollection<Congregation>('congregations')
+      .doc(uuid)
+      .delete()
+      .then(() => Status.SUCCESS)
+      .catch(() => Status.NOT_EXIST);
   }
 
   /** tags */
@@ -344,7 +365,7 @@ export class Api implements ApiInterface {
     const existIndex = tags.findIndex(object => object.uuid === uuid);
     if (existIndex !== -1) {
       tags.splice(existIndex, 1);
-      this.congregations$.next(tags);
+      this.tags$.next(tags);
       return Promise.resolve(Status.SUCCESS);
     } else {
       return Promise.reject(Status.NOT_EXIST);

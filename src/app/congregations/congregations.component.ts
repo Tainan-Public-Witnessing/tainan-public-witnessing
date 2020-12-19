@@ -2,7 +2,7 @@ import { CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject, Observable, race, Subject, timer } from 'rxjs';
-import { map, switchAll, takeUntil } from 'rxjs/operators';
+import { first, map, switchAll, takeUntil } from 'rxjs/operators';
 import { Congregation } from 'src/app/_interfaces/congregation.interface';
 import { CongregationsService } from 'src/app/_services/congregations.service';
 import { ConfirmDialogData } from 'src/app/_elements/dialogs/confirm-dialog/confirm-dialog-data.interface';
@@ -28,7 +28,7 @@ export class CongregationsComponent implements OnInit, AfterViewInit, OnDestroy 
   congregationCreateAccess$: Observable<boolean>;
   congregationUpdateAccess$: Observable<boolean>;
   congregationDeleteAccess$: Observable<boolean>;
-  exitComponent$ = new Subject<void>();
+  savedata$ = new Subject<void>();
   unsubscribe$ = new Subject<void>();
 
   constructor(
@@ -53,7 +53,7 @@ export class CongregationsComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   ngOnDestroy(): void {
-    this.exitComponent$.next();
+    this.savedata$.next();
     this.unsubscribe$.next();
   }
 
@@ -103,9 +103,10 @@ export class CongregationsComponent implements OnInit, AfterViewInit, OnDestroy 
 
   private subscribeSort = (): void => {
     this.cdkDropList.sorted.pipe(
-      map(() => race(timer(5000), this.exitComponent$)),
-      switchAll()
-    ).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
+      map(() => race(timer(10000).pipe(first()), this.savedata$)),
+      switchAll(),
+      takeUntil(this.unsubscribe$)
+    ).subscribe(() => {
       this.congregationService.sortCongregations(this.congregations$.getValue());
     });
   }

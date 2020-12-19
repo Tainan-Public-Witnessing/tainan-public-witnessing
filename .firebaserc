@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "tainan-public-witnessing": {
+      "hosting": {
+        "TainanPublicWitnessing": [
+          "tainan-public-witnessing"
+        ]
+      }
+    }
+  }
+}

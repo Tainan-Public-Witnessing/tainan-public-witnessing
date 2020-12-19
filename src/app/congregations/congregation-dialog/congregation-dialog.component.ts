@@ -42,13 +42,15 @@ export class CongregationDialogComponent implements OnInit {
       if (this.data.mode === Mode.CREATE) {
         response = this.congregationService.createCongregation({
           uuid: null,
-          name: value
+          name: value,
+          order: 0
         } as Congregation);
       } else { // EDIT mode
         if (this.congregationControl.dirty) {
           response = this.congregationService.updateCongregation({
             uuid: this.data.congregation.uuid,
-            name: value
+            name: value,
+            order: this.data.congregation.order
           } as Congregation);
         } else { // no changes
           response = Promise.resolve(Status.NO_CHANGES);
