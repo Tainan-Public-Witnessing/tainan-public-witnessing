@@ -16,31 +16,35 @@
 
     <mat-list-item
       *ngFor="let profilePrimarykey of (profilePrimarykeys$ | async)"
+      [cdkDragDisabled]="profilesService.isDefaultProfile(profilePrimarykey.uuid)"
       cdkDrag>
-  
+
       {{profilePrimarykey.name}}
-
+      
       <span class="spacer"></span>
-
+      
       <button mat-icon-button 
-        *ngIf="profileDeleteAccess$ | async"
+        *ngIf="(profileDeleteAccess$ | async) && !profilesService.isDefaultProfile(profilePrimarykey.uuid)"
         (click)="onDeleteButtonClick(profilePrimarykey)">
         <mat-icon>delete</mat-icon>
       </button>
-
+      
       <button mat-icon-button 
-        *ngIf="profileUpdateAccess$ | async"
+        *ngIf="(profileUpdateAccess$ | async) && !profilesService.isDefaultProfile(profilePrimarykey.uuid)"
         (click)="onEditButtonClick(profilePrimarykey)">
         <mat-icon>edit</mat-icon>
       </button>
-
+    
       <button mat-icon-button 
         *ngIf="profileReadAccess$ | async"
         (click)="onInfoButtonClick(profilePrimarykey)">
         <mat-icon>info</mat-icon>
       </button>
-
-      <mat-icon cdkDragHandle *ngIf="profilesSortAccess$ | async">drag_handle</mat-icon>
+  
+      <mat-icon cdkDragHandle 
+        *ngIf="(profilesSortAccess$ | async) && !profilesService.isDefaultProfile(profilePrimarykey.uuid)">
+        drag_handle
+      </mat-icon>
   
       <div *cdkDragPlaceholder></div>
       <div *cdkDragPreview matchSize="true">

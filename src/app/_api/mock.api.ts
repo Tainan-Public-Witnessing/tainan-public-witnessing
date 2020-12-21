@@ -141,7 +141,7 @@ export class Api implements ApiInterface {
     return;
   }
 
-  unsubsctibeStreams = () => {
+  unsubscribeStreams = () => {
     return;
   }
 

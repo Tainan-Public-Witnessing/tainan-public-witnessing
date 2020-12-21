@@ -79,7 +79,7 @@ export class ProfilesService {
     const profilePrimarykeys = this.profilePrimarykeys$.getValue();
     const defaultProfilePrimarykeys = this.defaultProfilePrimarykeys$.getValue();
     if (profilePrimarykeys) {
-      if (
+      if ( // not exist
         !profilePrimarykeys.find(object => object.name === profile.name) &&
         !defaultProfilePrimarykeys.find(object => object.name === profile.name)
       ) {
@@ -91,7 +91,7 @@ export class ProfilesService {
           profile.uuid = uuid;
           return this.api.createProfile(profile);
         });
-      } else {
+      } else { // existed
         return Promise.reject(Status.EXISTED);
       }
     } else {
@@ -128,13 +128,15 @@ export class ProfilesService {
     });
   }
 
-  isDefaultProfile = (uuid: string) => {
-    return this.defaultProfilePrimarykeys$.getValue().find(profilePrimarykeys => profilePrimarykeys.uuid === uuid);
+  isDefaultProfile = (uuid: string): boolean => {
+    return !!this.defaultProfilePrimarykeys$.getValue().find(profilePrimarykeys => profilePrimarykeys.uuid === uuid);
   }
 
   private checkProfilesSize = (): void => {
     if ( this.profiles.size > this.profilesMaxSize) {
-      this.profiles.delete(this.profiles.keys().next().value);
+      const uuid = this.profiles.keys().next().value;
+      this.profiles.delete(uuid);
+      this.api.unsubscribeStream(uuid);
     }
   }
 

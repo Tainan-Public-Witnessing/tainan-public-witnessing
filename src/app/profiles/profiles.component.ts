@@ -32,7 +32,7 @@ export class ProfilesComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     private authorityService: AuthorityService,
-    private profilesService: ProfilesService,
+    public profilesService: ProfilesService,
     private translateService: TranslateService,
     private matDialog: MatDialog,
     private router: Router

@@ -1,16 +1,15 @@
-import { Injectable } from '@angular/core';
-import { Action, AngularFirestore, AngularFirestoreCollection, DocumentSnapshot, QuerySnapshot } from '@angular/fire/firestore';
-import * as firebase from 'firebase/app';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { v5 as uuidv5 } from 'uuid';
 import { environment } from 'src/environments/environment';
+import { Injectable } from '@angular/core';
+import { AngularFirestore, AngularFirestoreCollection, DocumentSnapshot, QuerySnapshot } from '@angular/fire/firestore';
+import * as firebase from 'firebase/app';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
+import { v5 as uuidv5 } from 'uuid';
 import { ApiInterface, UserAuthorityStatus } from 'src/app/_interfaces/api.interface';
 import { User, UserPrimarykey } from 'src/app/_interfaces/user.interface';
 import { Congregation } from 'src/app/_interfaces/congregation.interface';
 import { Tag } from 'src/app/_interfaces/tag.interface';
 import { Profile, ProfilePrimarykey } from 'src/app/_interfaces/profile.interface';
-import { filter, map, tap } from 'rxjs/operators';
-import { PermissionKey } from 'src/app/_enums/permission-key.enum';
 import { Status } from 'src/app/_enums/status.enum';
 import { Gender } from 'src/app/_enums/gender.enum';
 

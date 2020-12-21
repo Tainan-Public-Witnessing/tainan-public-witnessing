@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { PermissionData, Profile } from 'src/app/_interfaces/profile.interface';
 import { Api } from 'src/app/_api/mock.api';
-import { PermissionKey } from 'src/app/_enums/permission-key.enum';
-import { Status } from '../_enums/status.enum';
-import { User } from '../_interfaces/user.interface';
-import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
 import { ProfilesService } from './profiles.service';
+import { PermissionData, Profile } from 'src/app/_interfaces/profile.interface';
+import { PermissionKey } from 'src/app/_enums/permission-key.enum';
+import { Status } from 'src/app/_enums/status.enum';
+import { User } from 'src/app/_interfaces/user.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -72,7 +72,6 @@ export class AuthorityService implements CanActivate {
   }
 
   canActivate = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
-    // console.log('url', state.url.split(';')[0]);
     const key = this.PERMISSION_DATAS.find(permissionData => permissionData.urlKey === state.url.split(';')[0]).key;
     const access = this.currentProfile$.getValue().permissions.find(permission => permission.key === key).access;
     if (access) {

@@ -41,7 +41,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.api.unsubsctibeStreams();
+    this.api.unsubscribeStreams();
   }
 
   onMenuButtonClick = () => {
