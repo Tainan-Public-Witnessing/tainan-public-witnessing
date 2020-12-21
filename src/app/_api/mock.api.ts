@@ -72,14 +72,15 @@ export class Api implements ApiInterface {
   ]);
 
   private profilePrimarykeys$ = new BehaviorSubject<ProfilePrimarykey[]>([
-    { uuid: 'e90966a2-91a8-5480-bc02-64f88277e5a1', name: 'administrator' },
-    { uuid: 'e90966a2-91c8-5480-bc02-64f88277e5a1', name: 'manager' },
+    { uuid: 'e90966a2-91a8-5480-bc02-64f88277e5a1', name: 'administrator', order: 0 },
+    { uuid: 'e90966a2-91c8-5480-bc02-64f88277e5a1', name: 'manager', order: 1 },
   ]);
 
   private profiles$ = new BehaviorSubject<Profile[]>([
     {
       uuid: 'e90966a2-91a8-5480-bc02-64f88277e5a1',
       name: 'administrator',
+      order: 0,
       permissions: [
         { key: PermissionKey.HOME_READ, access: true },
         { key: PermissionKey.CONGREGATIONS_READ, access: true },
@@ -108,6 +109,7 @@ export class Api implements ApiInterface {
     {
       uuid: 'e90966a2-91c8-5480-bc02-64f88277e5a1',
       name: 'manager',
+      order: 1,
       permissions: [
         { key: PermissionKey.HOME_READ, access: true },
         { key: PermissionKey.CONGREGATIONS_READ, access: true },

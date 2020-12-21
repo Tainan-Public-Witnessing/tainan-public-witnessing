@@ -1,0 +1,29 @@
+{
+  "uuid": "e90966a2-91a8-6480-bc02-67f68267e5a1",
+  "name": "guest",
+  "order": -1,
+  "permissions": [
+    { "key": "HOME_READ", "access": true },
+    { "key": "CONGREGATIONS_READ", "access": false },
+    { "key": "CONGREGATIONS_SORT", "access": false },
+    { "key": "CONGREGATION_CREATE", "access": false },
+    { "key": "CONGREGATION_UPDATE", "access": false },
+    { "key": "CONGREGATION_DELETE", "access": false },
+    { "key": "USERS_READ", "access": false },
+    { "key": "USER_READ", "access": false },
+    { "key": "USER_CREATE", "access": false },
+    { "key": "USER_UPDATE", "access": false },
+    { "key": "USER_DELETE", "access": false },
+    { "key": "TAGS_READ", "access": false },
+    { "key": "TAGS_SORT", "access": false },
+    { "key": "TAG_CREATE", "access": false },
+    { "key": "TAG_UPDATE", "access": false },
+    { "key": "TAG_DELETE", "access": false },
+    { "key": "PROFILES_READ", "access": false },
+    { "key": "PROFILES_SORT", "access": false },
+    { "key": "PROFILE_READ", "access": false },
+    { "key": "PROFILE_CREATE", "access": false },
+    { "key": "PROFILE_UPDATE", "access": false },
+    { "key": "PROFILE_DELETE", "access": false }
+  ]
+}

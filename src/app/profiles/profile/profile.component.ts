@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { filter, takeUntil } from 'rxjs/operators';
 import { Mode } from 'src/app/_enums/mode.enum';
 import { PermissionKey } from 'src/app/_enums/permission-key.enum';
 import { Status } from 'src/app/_enums/status.enum';
@@ -19,6 +19,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   mode: string;
   uuid: string;
   title: string;
+  order: number;
   cancelButtonText: string;
   profileForm: FormGroup;
   permissionKeys = Object.values(PermissionKey);
@@ -74,6 +75,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
       const profile: Profile = {
         uuid: null,
         name: this.profileForm.value.name.trim(),
+        order: 0,
         permissions: []
       };
       for (const key of this.permissionKeys) {
@@ -89,6 +91,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
         response = this.profilesService.createProfile(profile);
       } else { // update mode
         profile.uuid = this.uuid;
+        profile.order = this.order;
         if (this.profileForm.dirty) {
           response = this.profilesService.updateProfile(profile);
         } else {
@@ -119,7 +122,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   private setFormGroupValueByUuid = (uuid: string) => {
-    this.profilesService.getProfileByUuid(uuid).pipe(takeUntil(this.unsubscribe$)).subscribe(profile => {
+    this.profilesService.getProfileByUuid(uuid).pipe(
+      filter(profile => !!profile),
+      takeUntil(this.unsubscribe$)
+    ).subscribe(profile => {
+      this.order = profile.order;
       this.profileForm.controls.name.setValue(profile.name);
       profile.permissions.forEach(permission => {
         this.profileForm.controls[permission.key].setValue(permission.access);

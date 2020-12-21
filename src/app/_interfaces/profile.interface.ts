@@ -1,14 +1,13 @@
 import { PermissionKey } from 'src/app/_enums/permission-key.enum';
 
-export interface Profile {
-  uuid: string;
-  name: string;
-  permissions: Permission[];
-}
-
 export interface ProfilePrimarykey {
   uuid: string;
   name: string;
+  order: number;
+}
+
+export interface Profile extends ProfilePrimarykey {
+  permissions: Permission[];
 }
 
 export interface Permission {

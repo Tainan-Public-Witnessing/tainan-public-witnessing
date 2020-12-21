@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Permission, PermissionData, Profile } from 'src/app/_interfaces/profile.interface';
+import { PermissionData, Profile } from 'src/app/_interfaces/profile.interface';
 import { Api } from 'src/app/_api/mock.api';
 import { PermissionKey } from 'src/app/_enums/permission-key.enum';
 import { Status } from '../_enums/status.enum';
 import { User } from '../_interfaces/user.interface';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
+import { ProfilesService } from './profiles.service';
 
 @Injectable({
   providedIn: 'root'
@@ -32,46 +33,19 @@ export class AuthorityService implements CanActivate {
     { key: PermissionKey.PROFILE_UPDATE, urlKey: '/profile/update', description: '' },
   ];
 
-  private guestProfile: Profile = {
-    uuid: '',
-    name: 'guest',
-    permissions: [
-      { key: PermissionKey.HOME_READ, access: true },
-      { key: PermissionKey.CONGREGATIONS_READ, access: false },
-      { key: PermissionKey.CONGREGATIONS_SORT, access: false },
-      { key: PermissionKey.CONGREGATION_CREATE, access: false },
-      { key: PermissionKey.CONGREGATION_UPDATE, access: false },
-      { key: PermissionKey.CONGREGATION_DELETE, access: false },
-      { key: PermissionKey.USERS_READ, access: false },
-      { key: PermissionKey.USER_READ, access: false },
-      { key: PermissionKey.USER_CREATE, access: false },
-      { key: PermissionKey.USER_UPDATE, access: false },
-      { key: PermissionKey.USER_DELETE, access: false },
-      { key: PermissionKey.TAGS_READ, access: false },
-      { key: PermissionKey.TAGS_SORT, access: false },
-      { key: PermissionKey.TAG_CREATE, access: false },
-      { key: PermissionKey.TAG_UPDATE, access: false },
-      { key: PermissionKey.TAG_DELETE, access: false },
-      { key: PermissionKey.PROFILES_READ, access: false },
-      { key: PermissionKey.PROFILES_SORT, access: false },
-      { key: PermissionKey.PROFILE_READ, access: false },
-      { key: PermissionKey.PROFILE_CREATE, access: false },
-      { key: PermissionKey.PROFILE_UPDATE, access: false },
-      { key: PermissionKey.PROFILE_DELETE, access: false },
-    ]
-  };
-
   constructor(
     private api: Api,
     private router: Router,
+    private profilesService: ProfilesService,
   ) { }
 
   initialize = () => {
     this.currentUser$.subscribe(user => {
       if (user) {
-        this.api.readProfile(user.profile).subscribe(this.currentProfile$);
+        this.profilesService.getProfileByUuid(user.profile).subscribe(this.currentProfile$);
       } else {
-        this.currentProfile$.next(this.guestProfile);
+        // guest profile
+        this.currentProfile$.next(this.profilesService.getProfileByUuid('e90966a2-91a8-6480-bc02-67f68267e5a1').getValue());
       }
     });
   }

@@ -1,0 +1,29 @@
+{
+  "uuid": "e90946a4-94a8-5440-bc02-64f88277e5a1",
+  "name": "administrator",
+  "order": -1,
+  "permissions": [
+    { "key": "HOME_READ", "access": true },
+    { "key": "CONGREGATIONS_READ", "access": true },
+    { "key": "CONGREGATIONS_SORT", "access": true },
+    { "key": "CONGREGATION_CREATE", "access": true },
+    { "key": "CONGREGATION_UPDATE", "access": true },
+    { "key": "CONGREGATION_DELETE", "access": true },
+    { "key": "USERS_READ", "access": true },
+    { "key": "USER_READ", "access": true },
+    { "key": "USER_CREATE", "access": true },
+    { "key": "USER_UPDATE", "access": true },
+    { "key": "USER_DELETE", "access": true },
+    { "key": "TAGS_READ", "access": true },
+    { "key": "TAGS_SORT", "access": true },
+    { "key": "TAG_CREATE", "access": true },
+    { "key": "TAG_UPDATE", "access": true },
+    { "key": "TAG_DELETE", "access": true },
+    { "key": "PROFILES_READ", "access": true },
+    { "key": "PROFILES_SORT", "access": true },
+    { "key": "PROFILE_READ", "access": true },
+    { "key": "PROFILE_CREATE", "access": true },
+    { "key": "PROFILE_UPDATE", "access": true },
+    { "key": "PROFILE_DELETE", "access": true }
+  ]
+}

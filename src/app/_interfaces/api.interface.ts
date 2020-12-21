@@ -14,7 +14,7 @@ export interface UserAuthorityStatus {
 export interface ApiInterface {
 
   unsubscribeStream: (key: string) => void;
-  unsubsctibeStreams: () => void;
+  unsubscribeStreams: () => void;
 
   login: (uuid: string, password: string) => Promise<Status>;
   logout: (uuid: string) => Promise<Status>;
