@@ -1,7 +1,7 @@
 {
   "uuid": "e90946a4-94a8-5440-bc02-64f88277e5a1",
   "name": "administrator",
-  "order": -1,
+  "order": 0,
   "permissions": [
     { "key": "HOME_READ", "access": true },
     { "key": "CONGREGATIONS_READ", "access": true },

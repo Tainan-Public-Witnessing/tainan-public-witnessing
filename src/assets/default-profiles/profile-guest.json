@@ -1,7 +1,7 @@
 {
   "uuid": "e90966a2-91a8-6480-bc02-67f68267e5a1",
   "name": "guest",
-  "order": -1,
+  "order": 0,
   "permissions": [
     { "key": "HOME_READ", "access": true },
     { "key": "CONGREGATIONS_READ", "access": false },

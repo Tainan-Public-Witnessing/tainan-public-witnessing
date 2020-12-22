@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 import { Profile, ProfilePrimarykey } from 'src/app/_interfaces/profile.interface';
 import { Api } from 'src/app/_api/mock.api';
 import { Status } from 'src/app/_enums/status.enum';
-// @ts-ignore
-import * as ADMINISTRATOR from 'src/assets/profiles/profile-administrator.json';
-// @ts-ignore
-import * as GUEST from 'src/assets/profiles/profile-guest.json';
-import { map, tap } from 'rxjs/operators';
+import * as ADMINISTRATOR from 'src/assets/default-profiles/profile-administrator.json';
+import * as GUEST from 'src/assets/default-profiles/profile-guest.json';
 
 @Injectable({
   providedIn: 'root'
@@ -15,27 +13,23 @@ import { map, tap } from 'rxjs/operators';
 export class ProfilesService {
 
   // tslint:disable-next-line: no-string-literal
-  readonly administrator: Profile = ADMINISTRATOR['default'] as Profile;
+  private readonly administrator = ADMINISTRATOR['default'] as Profile;
   // tslint:disable-next-line: no-string-literal
-  readonly guest: Profile = GUEST['default'] as Profile;
+  private readonly guest = GUEST['default'] as Profile;
 
   private profilePrimarykeys$ = new BehaviorSubject<ProfilePrimarykey[]>(null);
   private defaultProfilePrimarykeys$ = new BehaviorSubject<ProfilePrimarykey[]>([
-    // tslint:disable-next-line: no-string-literal
-    ADMINISTRATOR['default'],
-    // tslint:disable-next-line: no-string-literal
-    GUEST['default']
+    this.administrator,
+    this.guest
   ]);
 
-  private profiles: Map<string, BehaviorSubject<Profile>> = new Map();
-  private defaultProfiles: Map<string, BehaviorSubject<Profile>> = new Map([
-    // tslint:disable-next-line: no-string-literal
-    [this.administrator.uuid, new BehaviorSubject(ADMINISTRATOR['default'])],
-    // tslint:disable-next-line: no-string-literal
-    [this.guest.uuid, new BehaviorSubject(GUEST['default'])]
+  private profiles = new Map<string, BehaviorSubject<Profile>>();
+  private defaultProfiles = new Map<string, BehaviorSubject<Profile>>([
+    [this.administrator.uuid, new BehaviorSubject(this.administrator)],
+    [this.guest.uuid, new BehaviorSubject(this.guest)]
   ]);
 
-  private profilesMaxSize = 10;
+  private readonly profilesMaxSize = 10;
 
   constructor(
     private api: Api
@@ -51,6 +45,7 @@ export class ProfilesService {
   }
 
   sortProfilePrimarykeys = (profilePrimarykeys: ProfilePrimarykey[]): Promise<Status> => {
+    // remove default profile primarykeys
     const updateProfileprimaykeys = [...profilePrimarykeys];
     this.defaultProfilePrimarykeys$.getValue().forEach(defaultProfilePrimarykey => {
       const index = updateProfileprimaykeys.findIndex(updateProfileprimaykey => {
@@ -68,7 +63,7 @@ export class ProfilesService {
       return this.profiles.get(uuid);
     } else {
       const profile$ = new BehaviorSubject<Profile>(null);
-      this.api.readProfile(uuid).pipe(tap(data => console.log('service get profile', data))).subscribe(profile$);
+      this.api.readProfile(uuid).subscribe(profile$);
       this.profiles.set(uuid, profile$);
       this.checkProfilesSize();
       return profile$;
@@ -129,7 +124,7 @@ export class ProfilesService {
   }
 
   isDefaultProfile = (uuid: string): boolean => {
-    return !!this.defaultProfilePrimarykeys$.getValue().find(profilePrimarykeys => profilePrimarykeys.uuid === uuid);
+    return !!this.defaultProfilePrimarykeys$.getValue().find(profilePrimarykey => profilePrimarykey.uuid === uuid);
   }
 
   private checkProfilesSize = (): void => {
@@ -139,5 +134,4 @@ export class ProfilesService {
       this.api.unsubscribeStream(uuid);
     }
   }
-
 }

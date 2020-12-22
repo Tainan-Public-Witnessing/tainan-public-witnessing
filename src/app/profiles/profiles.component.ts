@@ -27,7 +27,7 @@ export class ProfilesComponent implements OnInit, AfterViewInit, OnDestroy {
   profileCreateAccess$: Observable<boolean>;
   profileUpdateAccess$: Observable<boolean>;
   profileDeleteAccess$: Observable<boolean>;
-  exitComponent$ = new Subject<void>();
+  savedata$ = new Subject<void>();
   unsubscribe$ = new Subject<void>();
 
   constructor(
@@ -54,7 +54,7 @@ export class ProfilesComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.exitComponent$.next();
+    this.savedata$.next();
     this.unsubscribe$.next();
   }
 
@@ -95,9 +95,10 @@ export class ProfilesComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private subscribeSort = (): void => {
     this.cdkDropList.sorted.pipe(
-      map(() => race(timer(5000), this.exitComponent$)),
-      switchAll()
-    ).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
+      map(() => race(timer(10000), this.savedata$)),
+      switchAll(),
+      takeUntil(this.unsubscribe$)
+    ).subscribe(() => {
       this.profilesService.sortProfilePrimarykeys(this.profilePrimarykeys$.getValue());
     });
   }

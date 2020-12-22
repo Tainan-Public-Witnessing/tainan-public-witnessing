@@ -8,6 +8,7 @@ import { PermissionData, Profile } from 'src/app/_interfaces/profile.interface';
 import { PermissionKey } from 'src/app/_enums/permission-key.enum';
 import { Status } from 'src/app/_enums/status.enum';
 import { User } from 'src/app/_interfaces/user.interface';
+import { UsersService } from './users.service';
 
 @Injectable({
   providedIn: 'root'
@@ -37,6 +38,7 @@ export class AuthorityService implements CanActivate {
     private api: Api,
     private router: Router,
     private profilesService: ProfilesService,
+    private usersService: UsersService
   ) { }
 
   initialize = () => {
@@ -58,7 +60,7 @@ export class AuthorityService implements CanActivate {
 
   login = (uuid: string, password: string): Promise<Status> => {
     return this.api.login(uuid, password).then(() => {
-      this.subscription = this.api.readUser(uuid).subscribe(this.currentUser$);
+      this.subscription = this.usersService.getUserByUuid(uuid, {immortal: true}).subscribe(this.currentUser$);
       return Promise.resolve(Status.SUCCESS);
     });
   }

@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { filter, takeUntil } from 'rxjs/operators';
 import { Gender } from 'src/app/_enums/gender.enum';
 import { Mode } from 'src/app/_enums/mode.enum';
 import { Status } from 'src/app/_enums/status.enum';
@@ -146,7 +146,10 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   private setFormGroupValueByUuid = (uuid: string): void => {
-    this.userService.getUserByUuid(uuid).pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
+    this.userService.getUserByUuid(uuid).pipe(
+      filter(user => !!user),
+      takeUntil(this.unsubscribe$)
+    ).subscribe(user => {
       const values = {...user};
       delete values.uuid;
       this.userForm.setValue(values);
