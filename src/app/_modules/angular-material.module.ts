@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -13,6 +14,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
+import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
@@ -23,6 +25,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
   exports: [
     MatAutocompleteModule,
     MatButtonModule,
+    MatDatepickerModule,
     MatDialogModule,
     MatIconModule,
     MatInputModule,
@@ -32,7 +35,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     MatSidenavModule,
     MatSlideToggleModule,
     MatToolbarModule,
-    DragDropModule
+    MatMomentDateModule,
+    DragDropModule,
   ]
 })
 export class AngularMaterialModule { }

@@ -1,6 +1,7 @@
 import { environment } from 'src/environments/environment';
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection, DocumentSnapshot, QuerySnapshot } from '@angular/fire/firestore';
+import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
@@ -11,15 +12,19 @@ import { Congregation } from 'src/app/_interfaces/congregation.interface';
 import { Tag } from 'src/app/_interfaces/tag.interface';
 import { Profile, ProfilePrimarykey } from 'src/app/_interfaces/profile.interface';
 import { Status } from 'src/app/_enums/status.enum';
-import { Gender } from 'src/app/_enums/gender.enum';
 
 @Injectable({
   providedIn: 'root'
 })
 export class Api implements ApiInterface {
 
+  private readonly mailSurfix = '@mail.tpw';
+  private streams = new Map<string, () => void>();
+
   constructor(
-    private angularFirestore: AngularFirestore
+    private angularFirestore: AngularFirestore,
+    private angularFireAuth: AngularFireAuth,
+    private angularFireAuthForCreate: AngularFireAuth
   ) {}
 
   /** mock data */
@@ -29,42 +34,6 @@ export class Api implements ApiInterface {
     { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5f8', password: '7f15fa00-23ef-5e5c-9365-50de9d7e1ca5', online: false },
     { uuid: 'e90966a2-91a8-5480-bc02-60f88277e5f8', password: '36e52acf-1879-5f09-9f64-56ef4a2d2145', online: false },
   ]);
-
-  private userPrimarykeys$ = new BehaviorSubject<UserPrimarykey[]>([
-    { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5f8', username: 'John' },
-    { uuid: 'e90966a2-91a8-5480-bc02-60f88277e5f8', username: 'Peter' },
-  ]);
-
-  private users$ = new BehaviorSubject<User[]>([
-    {
-      uuid: 'e90966a2-91a8-5480-bc02-67f88277e5f8',
-      username: 'John',
-      name: 'John Smith',
-      gender: Gender.MAN,
-      congregation: 'e90966a2-91a8-5480-bc02-67f88277e5f7',
-      profile: 'e90946a4-94a8-5440-bc02-64f88277e5a1',
-      cellphone: '0987654321',
-      phone: '0987654321',
-      address: 'Earth',
-      note: 'Nice guy',
-      tags: ['e90966a2-91a8-5480-bc02-67f88277e5a1', 'e90966a2-91a8-5480-bc02-67f88277e5a2']
-    },
-    {
-      uuid: 'e90966a2-91a8-5480-bc02-60f88277e5f8',
-      username: 'Peter',
-      name: 'Peter Hi',
-      gender: Gender.MAN,
-      congregation: 'e90966a2-91a8-5480-bc02-67f88277e5f0',
-      profile: 'e90966a2-91c8-5480-bc02-64f88277e5a1',
-      cellphone: '0987654321',
-      phone: '0987654321',
-      address: 'Earth',
-      note: 'Nice guy',
-      tags: ['e90966a2-91a8-5480-bc02-67f88277e5a2']
-    }
-  ]);
-
-  private streams = new Map<string, () => void>();
 
   private getCollection = <T>(collectionName: string): AngularFirestoreCollection<T> => {
     const propertyName = collectionName + 'Collection';
@@ -191,6 +160,10 @@ export class Api implements ApiInterface {
 
   createUser = (user: User) => {
     this.debugMessage('createUser');
+
+    // this.angularFireAuthForCreate.createUserWithEmailAndPassword(
+    //   userPrimarykey.uuid + this.mailSurfix,
+    //   user.)
 
     return this.getCollection<User>('users')
       .doc(user.uuid)

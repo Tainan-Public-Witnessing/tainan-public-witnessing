@@ -20,6 +20,7 @@ export class Api implements ApiInterface {
   /** mock data */
 
   private userAuthorityStatuses$ = new BehaviorSubject<UserAuthorityStatus[]>([
+    { uuid: 'e90866a2-91a8-5480-bc02-67f88277e5f8', password: '7f15fa00-23ef-5e5c-9365-50de9d7e1ca5', online: false },
     { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5f8', password: '7f15fa00-23ef-5e5c-9365-50de9d7e1ca5', online: false },
     { uuid: 'e90966a2-91a8-5480-bc02-60f88277e5f8', password: '36e52acf-1879-5f09-9f64-56ef4a2d2145', online: false },
   ]);
@@ -37,6 +38,8 @@ export class Api implements ApiInterface {
       gender: Gender.MAN,
       congregation: 'e90966a2-91a8-5480-bc02-67f88277e5f7',
       profile: 'e90966a2-91a8-5480-bc02-64f88277e5a1',
+      baptizeDate: '2020-04-01',
+      birthDate: '2000-04-01',
       cellphone: '0987654321',
       phone: '0987654321',
       address: 'Earth',
@@ -50,6 +53,8 @@ export class Api implements ApiInterface {
       gender: Gender.MAN,
       congregation: 'e90966a2-91a8-5480-bc02-67f88277e5f0',
       profile: 'e90966a2-91c8-5480-bc02-64f88277e5a1',
+      baptizeDate: '2020-04-01',
+      birthDate: '2000-04-01',
       cellphone: '0987654321',
       phone: '0987654321',
       address: 'Earth',

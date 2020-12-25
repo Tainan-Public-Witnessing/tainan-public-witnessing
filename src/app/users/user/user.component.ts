@@ -14,6 +14,7 @@ import { CongregationsService } from 'src/app/_services/congregations.service';
 import { ProfilesService } from 'src/app/_services/profiles.service';
 import { TagsService } from 'src/app/_services/tags.service';
 import { UsersService } from 'src/app/_services/users.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-user',
@@ -49,7 +50,6 @@ export class UserComponent implements OnInit, OnDestroy {
     this.profilesService.getProfilePrimarykeys().pipe(takeUntil(this.unsubscribe$)).subscribe(this.profilePrimarykeys$);
     this.tagService.getTags().pipe(takeUntil(this.unsubscribe$)).subscribe(this.tags$);
 
-    // this.congregations$.subscribe(data => console.log(data))
     this.userForm = this.buildFormGroup();
 
     this.activatedRoute.params.subscribe(params => {
@@ -89,6 +89,11 @@ export class UserComponent implements OnInit, OnDestroy {
   onSubmitClick = () => {
     if (this.userForm.status === 'VALID') {
 
+      const baptizeDateValue = this.userForm.value.baptizeDate;
+      const birthDateValue = this.userForm.value.birthDate;
+      const baptizeDate = typeof(baptizeDateValue) === 'string' ? baptizeDateValue : baptizeDateValue.format('YYYY-MM-DD');
+      const birthDate = typeof(birthDateValue) === 'string' ? birthDateValue : birthDateValue.format('YYYY-MM-DD');
+
       const user: User = {
         uuid: null,
         username: this.userForm.value.username.trim(),
@@ -96,6 +101,8 @@ export class UserComponent implements OnInit, OnDestroy {
         gender: this.userForm.value.gender,
         congregation: this.userForm.value.congregation,
         profile: this.userForm.value.profile,
+        baptizeDate,
+        birthDate,
         cellphone: this.userForm.value.cellphone.trim(),
         phone: this.userForm.value.phone.trim(),
         address: this.userForm.value.address.trim(),
@@ -137,6 +144,8 @@ export class UserComponent implements OnInit, OnDestroy {
       gender: ['', Validators.required],
       congregation: ['', Validators.required],
       profile: ['', Validators.required],
+      baptizeDate: ['', Validators.required],
+      birthDate: [''],
       cellphone: [''],
       phone: [''],
       address: [''],

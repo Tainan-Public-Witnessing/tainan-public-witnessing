@@ -27,6 +27,7 @@ import { ProfilesComponent } from './profiles/profiles.component';
 import { ProfileComponent } from './profiles/profile/profile.component';
 import { UserComponent } from './users/user/user.component';
 import { LoginDialogComponent } from './_elements/dialogs/login-dialog/login-dialog.component';
+import { MAT_DATE_FORMATS } from '@angular/material/core';
 
 // AoT requires an exported function for factories of translate module
 export function HttpLoaderFactory(http: HttpClient) {
@@ -73,7 +74,19 @@ export function HttpLoaderFactory(http: HttpClient) {
       }
     }),
   ],
-  providers: [],
+  providers: [
+    {
+      provide: MAT_DATE_FORMATS,
+      useValue: {
+        parse: {
+          dateInput: ['YYYY-MM-DD'],
+        },
+        display: {
+          dateInput: 'YYYY-MM-DD'
+        },
+      },
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

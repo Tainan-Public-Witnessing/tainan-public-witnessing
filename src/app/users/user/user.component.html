@@ -45,6 +45,20 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
+
+    <mat-form-field class="full-width">
+      <mat-label>{{ "USERS.LABEL.BAPTIZE_DATE" | translate }}</mat-label>
+      <input matInput formControlName="baptizeDate" [matDatepicker]="baptizeDatePicker">
+      <mat-datepicker-toggle matSuffix [for]="baptizeDatePicker"></mat-datepicker-toggle>
+      <mat-datepicker touchUi #baptizeDatePicker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field class="full-width">
+      <mat-label>{{ "USERS.LABEL.BIRTH_DATE" | translate }}</mat-label>
+      <input matInput formControlName="birthDate" [matDatepicker]="birthDatePicker">
+      <mat-datepicker-toggle matSuffix [for]="birthDatePicker"></mat-datepicker-toggle>
+      <mat-datepicker touchUi #birthDatePicker></mat-datepicker>
+    </mat-form-field>
     
     <mat-form-field class="full-width">
       <mat-label>{{ "USERS.LABEL.TAGS" | translate }}</mat-label>

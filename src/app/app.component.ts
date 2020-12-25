@@ -4,9 +4,10 @@ import { TranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { GlobalEventService } from 'src/app/_services/global-event.service';
-import { Language } from 'src/app/_enums/language.enum';
+import { Language, MomentLocale } from 'src/app/_enums/language.enum';
 import { AuthorityService } from 'src/app/_services/authority.service';
 import { Api } from 'src/app/_api/mock.api';
+import { DateAdapter } from '@angular/material/core';
 
 @Component({
   selector: 'app-root',
@@ -25,6 +26,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private globalEventService: GlobalEventService,
     private translateService: TranslateService,
     private api: Api,
+    private dateAdapter: DateAdapter<any>
   ) {}
 
   ngOnInit(): void {
@@ -50,5 +52,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
   onLanguageButtonClick = (language: Language) => {
     this.translateService.use(language);
+    this.dateAdapter.setLocale(MomentLocale[language.toUpperCase()]);
   }
 }
