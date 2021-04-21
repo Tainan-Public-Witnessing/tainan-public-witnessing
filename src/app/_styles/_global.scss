@@ -11,3 +11,10 @@ $page-title-height: 80px;
 .full-width {
   width: 100%;
 }
+
+.title-bar {
+  display: flex;
+  align-items: center;
+  height: $page-title-height;
+  margin-left: 8px;
+}
