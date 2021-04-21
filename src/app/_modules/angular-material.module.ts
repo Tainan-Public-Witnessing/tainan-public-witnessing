@@ -16,6 +16,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { A11yModule } from '@angular/cdk/a11y';
 
 @NgModule({
   declarations: [],
@@ -37,6 +38,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     MatToolbarModule,
     MatMomentDateModule,
     DragDropModule,
+    A11yModule,
   ]
 })
 export class AngularMaterialModule { }
