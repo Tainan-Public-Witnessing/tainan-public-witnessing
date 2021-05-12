@@ -7,6 +7,7 @@
     "CONFIRM": "Confirm",
     "CANCEL": "Cancel",
     "BACK": "Back",
+    "WELCOME_MESSAGE": "Hi! {{value}}",
     "DELETE_MESSAGE": "Are you sure to delete {{value}}?",
     "EXISTED_ERROR": "{{value}} already existed!",
     "DONOT_EXIST_ERROR": "{{value}} do not exist!"

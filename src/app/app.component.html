@@ -2,21 +2,26 @@
 
   <mat-toolbar>
 
-    <button mat-icon-button #menuButton (click)="onMenuButtonClick()">
+    <button mat-icon-button #menuButton id="menuButton">
       <mat-icon>menu</mat-icon>
     </button>
 
-    <span>{{ 'GLOBAL.SITE_NAME' | translate }}</span>
+    <span id="title">{{ 'GLOBAL.SITE_NAME' | translate }}</span>
 
     <span class="spacer"></span>
 
+    <span *ngIf="currentUsername$ | async" class="welcome-message">
+      {{'GLOBAL.WELCOME_MESSAGE' | translate: {value: currentUsername$ | async} }}
+    </span>
+
     <button mat-icon-button
-      [matMenuTriggerFor]="languageMenu">
+      [matMenuTriggerFor]="languageMenu" id="translateButton">
       <mat-icon>translate</mat-icon>
     </button>
     <mat-menu #languageMenu="matMenu">
       <button mat-menu-item
         *ngFor="let language of languages"
+        [id]="'languageButton' + (language | uppercase)"
         (click)="onLanguageButtonClick(language)">
         {{ 'LANGUAGE.' + language | uppercase | translate }}
       </button>

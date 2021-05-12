@@ -2,8 +2,8 @@ import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular
 import { MatSidenav } from '@angular/material/sidenav';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { TranslateService } from '@ngx-translate/core';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Subject, fromEvent, Observable } from 'rxjs';
+import { takeUntil, map } from 'rxjs/operators';
 import { GlobalEventService } from 'src/app/_services/global-event.service';
 import { Language, MomentLocale } from 'src/app/_enums/language.enum';
 import { AuthorityService } from 'src/app/_services/authority.service';
@@ -21,6 +21,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('sidenav') sidenav: MatSidenav;
   @ViewChild('menuButton') menuButton: MatButton;
 
+  currentUsername$: Observable<string|null>;
   languages: string[] = Object.values(Language);
   unsubscribe$ = new Subject<void>();
 
@@ -43,19 +44,27 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       this.sidenav.close();
     });
 
+    this.currentUsername$ = this.authorityService.currentUser$.pipe(
+      map(user => user ? user.username : null),
+    );
+
     this.authorityService.initialize();
   }
 
   ngAfterViewInit(): void {
+    fromEvent(this.menuButton._elementRef.nativeElement, 'click').pipe(
+      takeUntil(this.unsubscribe$)
+    ).subscribe(() => {
+      this.sidenav.toggle();
+    });
+
     this.focusMonitor.stopMonitoring(this.menuButton._elementRef.nativeElement);
   }
 
   ngOnDestroy(): void {
     this.api.unsubscribeStreams();
-  }
-
-  onMenuButtonClick = () => {
-    this.sidenav.toggle();
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   onLanguageButtonClick = (language: Language) => {

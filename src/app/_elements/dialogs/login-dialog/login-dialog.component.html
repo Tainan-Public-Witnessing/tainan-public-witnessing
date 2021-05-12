@@ -5,7 +5,7 @@
 
     <mat-form-field class="full-width">
       <mat-label>{{ "LOGIN.LABEL.USERNAME" | translate }}</mat-label>
-      <input matInput formControlName="username" [matAutocomplete]="auto" cdkFocusInitial>
+      <input matInput formControlName="username" [matAutocomplete]="auto" cdkFocusInitial id="usernameInput">
       <mat-autocomplete #auto="matAutocomplete">
         <mat-option *ngFor="let userPrimaryKey of (usernameAutoComplete$ | async)" [value]="userPrimaryKey.username">
           {{userPrimaryKey.username}}
@@ -18,7 +18,7 @@
 
     <mat-form-field class="full-width">
       <mat-label>{{ "LOGIN.LABEL.PASSWORD" | translate }}</mat-label>
-      <input matInput formControlName="password" type="password">
+      <input matInput formControlName="password" type="password" id="passwordInput">
       <mat-error *ngIf="loginForm.controls.password.hasError('wrongPassword')">
         {{ "LOGIN.WRONG_PASSWORD_ERROR" | translate }}
       </mat-error>
@@ -27,6 +27,19 @@
 </div>
 
 <div mat-dialog-actions>
-  <button mat-button color="accent" (click)="onCancelClick()" cdkFocusInitial>{{ "GLOBAL.CANCEL" | translate }}</button>
-  <button mat-button color="primary" (click)="onConfirmClick()">{{ "GLOBAL.LOG_IN" | translate }}</button>
+
+  <button mat-button
+    color="accent"
+    (click)="onCancelClick()"
+    cdkFocusInitial
+    id="loginCancelButton">
+    {{ "GLOBAL.CANCEL" | translate }}
+  </button>
+
+  <button mat-button
+    color="primary"
+    (click)="onConfirmClick()"
+    id="loginSubmitButton">
+    {{ "GLOBAL.LOG_IN" | translate }}
+  </button>
 </div>

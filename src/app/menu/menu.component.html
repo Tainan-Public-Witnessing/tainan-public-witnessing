@@ -6,11 +6,17 @@
     {{menuLink.display | translate}}
   </mat-list-option>
 
-  <mat-list-option *ngIf="!(this.isLoggedIn$ | async)" (click)="onLoginClick()">
+  <mat-list-option
+    *ngIf="!(this.isLoggedIn$ | async)"
+    (click)="onLoginClick()"
+    id="loginButton">
     {{ "GLOBAL.LOG_IN" | translate }}
   </mat-list-option>
 
-  <mat-list-option *ngIf="this.isLoggedIn$ | async" (click)="onLogoutClick()">
+  <mat-list-option
+    *ngIf="this.isLoggedIn$ | async"
+    (click)="onLogoutClick()"
+    id="logoutButton">
     {{ "GLOBAL.LOG_OUT" | translate }}
   </mat-list-option>
 </mat-selection-list>

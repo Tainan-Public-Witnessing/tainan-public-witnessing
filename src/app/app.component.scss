@@ -5,6 +5,13 @@
   display: flex;
   flex-direction: column;
 
+  .mat-toolbar {
+    .welcome-message {
+      margin-right: 8px;
+      font-size: smaller;
+    }
+  }
+
   .mat-sidenav-container {
     flex: 1 1 auto;
 

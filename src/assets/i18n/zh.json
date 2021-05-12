@@ -7,6 +7,7 @@
     "CONFIRM": "確認",
     "CANCEL": "取消",
     "BACK": "返回",
+    "WELCOME_MESSAGE": "{{value}}，你好！",
     "DELETE_MESSAGE": "你確定要刪除{{value}}嗎？",
     "EXISTED_ERROR": "{{value}}已存在！",
     "DONOT_EXIST_ERROR": "{{value}}不存在！"
