@@ -43,7 +43,7 @@ export class LoginDialogComponent implements OnInit, OnDestroy {
   }
 
   onCancelClick = () => {
-    this.dialogRef.close(null);
+    this.dialogRef.close(false);
   }
 
   onConfirmClick = () => {
@@ -58,20 +58,16 @@ export class LoginDialogComponent implements OnInit, OnDestroy {
           uuid,
           this.loginForm.value.password
         ).then(() => {
-          this.dialogRef.close(null);
+          this.dialogRef.close(true);
         }).catch(reason => {
           if (reason === Status.WRONG_PASSWORD) {
-            this.loginForm.controls.password.setErrors({
-              wrongPassword: true
-            });
+            this.loginForm.controls.password.setErrors({ wrongPassword: true });
           } else {
             console.log('reason', reason);
           }
         });
       } else { // username not exist
-        this.loginForm.controls.username.setErrors({
-          notExist: true
-        });
+        this.loginForm.controls.username.setErrors({ notExist: true });
       }
     } else { // not valid
       this.loginForm.markAllAsTouched();

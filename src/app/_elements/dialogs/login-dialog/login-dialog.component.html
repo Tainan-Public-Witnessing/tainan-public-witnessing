@@ -11,7 +11,7 @@
           {{userPrimaryKey.username}}
         </mat-option>
       </mat-autocomplete>
-      <mat-error *ngIf="loginForm.controls.username.hasError('notExist')">
+      <mat-error *ngIf="loginForm.controls.username.hasError('notExist')" id="usernameNotExistErrorMessage">
         {{ "GLOBAL.DONOT_EXIST_ERROR" | translate: { value: "LOGIN.LABEL.USERNAME" | translate } }}
       </mat-error>
     </mat-form-field>
@@ -19,7 +19,7 @@
     <mat-form-field class="full-width">
       <mat-label>{{ "LOGIN.LABEL.PASSWORD" | translate }}</mat-label>
       <input matInput formControlName="password" type="password" id="passwordInput">
-      <mat-error *ngIf="loginForm.controls.password.hasError('wrongPassword')">
+      <mat-error *ngIf="loginForm.controls.password.hasError('wrongPassword')" id="wrongPasswordErrorrMessage">
         {{ "LOGIN.WRONG_PASSWORD_ERROR" | translate }}
       </mat-error>
     </mat-form-field>

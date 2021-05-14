@@ -30,10 +30,28 @@ describe('workspace-project App', () => {
   it('should login seccessfully', () => {
     page.clickMenuButton();
     page.clickLoginButton();
-    page.enterUsername();
-    page.enterPassword();
+    page.enterUsername('administrator');
+    page.enterPassword('admin');
     page.clickLoginSubmitButton();
     expect(page.getWelcomeMessage()).toEqual('Hi! administrator');
+  });
+
+  it('should display error message if entering wrong username while login', () => {
+    page.clickMenuButton();
+    page.clickLoginButton();
+    page.enterUsername('wrong name');
+    page.enterPassword('admin');
+    page.clickLoginSubmitButton();
+    expect(page.getUsernameNotExistErrorMessage()).toEqual('User name do not exist!');
+  });
+
+  it('should display error message if entering wrong password while login', () => {
+    page.clickMenuButton();
+    page.clickLoginButton();
+    page.enterUsername('administrator');
+    page.enterPassword('wrong password');
+    page.clickLoginSubmitButton();
+    expect(page.getWrongPasswordErrorrMessage()).toEqual('Wrong password!');
   });
 
   afterEach(async () => {

@@ -1,6 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { CongregationsComponent } from './congregations.component';
+
+class AuthorityServiceStub {
+  
+}
 
 describe('CongregationsComponent', () => {
   let component: CongregationsComponent;
@@ -9,17 +12,13 @@ describe('CongregationsComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ CongregationsComponent ]
-    })
-    .compileComponents();
+    }).compileComponents().then(() => {
+      fixture = TestBed.createComponent(CongregationsComponent);
+      component = fixture.componentInstance;
+    });
   }));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(CongregationsComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
+  it('should create comgregation.component', () => {
     expect(component).toBeTruthy();
   });
 });

@@ -12,10 +12,10 @@ export class AppPage {
 
   clickMenuButton = (): void => {
     $('#menuButton').click();
-    browser.sleep(400);
   }
 
   isSidenavDisplayed = (): Promise<boolean> => {
+    browser.sleep(400);
     return $('mat-sidenav').isDisplayed() as Promise<boolean>;
   }
 
@@ -31,12 +31,12 @@ export class AppPage {
     $('#loginButton').click();
   }
 
-  enterUsername = (): void => {
-    $('#usernameInput').sendKeys('administrator');
+  enterUsername = (username: string): void => {
+    $('#usernameInput').sendKeys(username);
   }
 
-  enterPassword = (): void => {
-    $('#passwordInput').sendKeys('admin');
+  enterPassword = (password: string): void => {
+    $('#passwordInput').sendKeys(password);
   }
 
   clickLoginSubmitButton = (): void => {
@@ -45,5 +45,15 @@ export class AppPage {
 
   getWelcomeMessage = (): Promise<string> => {
     return $('.welcome-message').getText() as Promise<string>;
+  }
+
+  getUsernameNotExistErrorMessage = (): Promise<string> => {
+    browser.sleep(100);
+    return $('#usernameNotExistErrorMessage').getText() as Promise<string>;
+  }
+
+  getWrongPasswordErrorrMessage = (): Promise<string> => {
+    browser.sleep(100);
+    return $('#wrongPasswordErrorrMessage').getText() as Promise<string>;
   }
 }
