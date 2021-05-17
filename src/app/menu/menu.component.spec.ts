@@ -1,6 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MenuComponent } from './menu.component';
+import { AuthorityService } from 'src/app/_services/authority.service';
+import { AuthorityServiceStub } from 'src/app/_stubs/authority.service.stub';
+import { MatDialog } from '@angular/material/dialog';
 
 describe('MenuComponent', () => {
   let component: MenuComponent;
@@ -8,18 +11,20 @@ describe('MenuComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MenuComponent ]
-    })
-    .compileComponents();
+      declarations: [
+        MenuComponent
+      ],
+      providers: [
+        { provide: AuthorityService, useClass: AuthorityServiceStub },
+        { provide: MatDialog, useValue: {} },
+      ]
+    }).compileComponents().then(() => {
+      fixture = TestBed.createComponent(MenuComponent);
+      component = fixture.componentInstance;
+    });
   }));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(MenuComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
+  it('should create menu.component', () => {
     expect(component).toBeTruthy();
   });
 });

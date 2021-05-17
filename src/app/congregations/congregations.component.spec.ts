@@ -8,10 +8,6 @@ import { HttpLoaderFactory } from '../app.module';
 import { HttpClient } from '@angular/common/http';
 import { AuthorityServiceStub } from 'src/app/_stubs/authority.service.stub';
 
-class MatDialogStub {
-
-}
-
 describe('CongregationsComponent', () => {
   let component: CongregationsComponent;
   let fixture: ComponentFixture<CongregationsComponent>;
@@ -33,7 +29,7 @@ describe('CongregationsComponent', () => {
       providers: [
         { provide: AuthorityService, useClass: AuthorityServiceStub },
         { provide: TranslateService, useClass: TranslateServiceStub },
-        { provide: MatDialog, useClass: MatDialogStub },
+        { provide: MatDialog, useValue: {} },
       ]
     }).compileComponents().then(() => {
       fixture = TestBed.createComponent(CongregationsComponent);
