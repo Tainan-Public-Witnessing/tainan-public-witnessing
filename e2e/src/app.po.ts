@@ -15,7 +15,7 @@ export class AppPage {
   }
 
   isSidenavDisplayed = (): Promise<boolean> => {
-    browser.sleep(400);
+    browser.sleep(500);
     return $('mat-sidenav').isDisplayed() as Promise<boolean>;
   }
 

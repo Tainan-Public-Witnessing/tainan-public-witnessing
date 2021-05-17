@@ -1,23 +1,13 @@
 import { TestBed, async, ComponentFixture } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
-import { Observable, of } from 'rxjs';
 import { TranslateService, TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { DateAdapter } from '@angular/material/core';
 import { HttpLoaderFactory } from './app.module';
 import { HttpClient } from '@angular/common/http';
 import { AngularMaterialModule } from './_modules/angular-material.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { EventEmitter } from '@angular/core';
-
-class TranslateServiceStub {
-  onLangChange: EventEmitter<any> = new EventEmitter();
-  onTranslationChange: EventEmitter<any> = new EventEmitter();
-  onDefaultLangChange: EventEmitter<any> = new EventEmitter();
-  setDefaultLang = (lang: string): void => {};
-  use = (lang: string): Observable<any> => of();
-  get = (key: string): Observable<any> => of('translate text');
-}
+import { TranslateServiceStub } from 'src/app/_stubs/translate.service.stub';
 
 class DateAdapterStub {
   setLocale = (locale: any): void => {};
