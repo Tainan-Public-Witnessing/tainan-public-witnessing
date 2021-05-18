@@ -2,7 +2,8 @@
   <mat-list-option
     *ngFor="let menuLink of (currentMenuLinks$ | async)"
     (click)="onMenuLinkClick()"
-    [routerLink]="menuLink.url">
+    [routerLink]="menuLink.url"
+    [id]="'menuLink_' + menuLink.url">
     {{menuLink.display | translate}}
   </mat-list-option>
 
