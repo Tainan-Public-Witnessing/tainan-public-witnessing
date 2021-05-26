@@ -1,11 +1,12 @@
 import { AppPage } from './app.po';
 import { browser, logging } from 'protractor';
+import { GlobalE2e } from './global.e2e';
 
 describe('workspace-project App', () => {
-  let page: AppPage;
+  const page = new AppPage();
+  const globalE2e = new GlobalE2e();
 
   beforeEach(() => {
-    page = new AppPage();
     page.navigateTo();
   });
 
@@ -31,9 +32,7 @@ describe('workspace-project App', () => {
   it('should login and logout seccessfully', () => {
     page.clickMenuButton();
     page.clickLoginButton();
-    page.enterUsername('administrator');
-    page.enterPassword('admin');
-    page.clickLoginSubmitButton();
+    globalE2e.login('administrator', 'admin');
     expect(page.getWelcomeMessage()).toEqual('Hi! administrator');
 
     page.clickMenuButton();
@@ -44,27 +43,21 @@ describe('workspace-project App', () => {
   it('should display error message if entering wrong username while login', () => {
     page.clickMenuButton();
     page.clickLoginButton();
-    page.enterUsername('wrong name');
-    page.enterPassword('admin');
-    page.clickLoginSubmitButton();
+    globalE2e.login('wrong name', 'admin');
     expect(page.getUsernameNotExistErrorMessage()).toEqual('User name do not exist!');
   });
 
   it('should display error message if entering wrong password while login', () => {
     page.clickMenuButton();
     page.clickLoginButton();
-    page.enterUsername('administrator');
-    page.enterPassword('wrong password');
-    page.clickLoginSubmitButton();
+    globalE2e.login('administrator', 'wrong password');
     expect(page.getWrongPasswordErrorrMessage()).toEqual('Wrong password!');
   });
 
   it('should goto correct page if menuLink clicked', () => {
     page.clickMenuButton();
     page.clickLoginButton();
-    page.enterUsername('administrator');
-    page.enterPassword('admin');
-    page.clickLoginSubmitButton();
+    globalE2e.login('administrator', 'admin');
 
     page.clickMenuButton();
     page.clickMenuLink('users');
