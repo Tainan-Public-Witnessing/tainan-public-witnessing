@@ -15,6 +15,11 @@ describe('users page', () => {
     expect(usersPage.getPageTitleText()).toEqual('Users');
   });
 
+  it('should create user', () => {
+    usersPage.clickCreateUserButton();
+
+  });
+
   afterEach(async () => {
     // Assert that there are no errors emitted from the browser
     const logs = await browser.manage().logs().get(logging.Type.BROWSER);

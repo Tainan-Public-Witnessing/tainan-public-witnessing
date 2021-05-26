@@ -10,18 +10,18 @@
 
     <mat-form-field class="full-width">
       <mat-label>{{ "USERS.LABEL.USERNAME" | translate }}</mat-label>
-      <input matInput formControlName="username" required>
+      <input matInput formControlName="username" required id="username-input">
       <mat-error *ngIf="userForm.controls.username.hasError('existed')">User name already existed!</mat-error>
     </mat-form-field>
   
     <mat-form-field class="full-width">
       <mat-label>{{ "USERS.LABEL.NAME" | translate }}</mat-label>
-      <input matInput formControlName="name" required>
+      <input matInput formControlName="name" required id="name-input">
     </mat-form-field>
   
     <mat-form-field class="full-width">
       <mat-label>{{ "USERS.LABEL.GENDER" | translate }}</mat-label>
-      <mat-select formControlName="gender" required>
+      <mat-select formControlName="gender" required  id="gender-input">
         <mat-option *ngFor="let gender of genders" [value]="gender">
           {{gender}}
         </mat-option>
@@ -30,7 +30,7 @@
   
     <mat-form-field class="full-width">
       <mat-label>{{ "USERS.LABEL.CONGREGATION" | translate }}</mat-label>
-      <mat-select formControlName="congregation" required>
+      <mat-select formControlName="congregation" required  id="congregation-input">
         <mat-option *ngFor="let congregation of (congregations$ | async)" [value]="congregation.uuid">
           {{congregation.name}}
         </mat-option>
@@ -39,7 +39,7 @@
   
     <mat-form-field class="full-width">
       <mat-label>{{ "USERS.LABEL.PROFILE" | translate }}</mat-label>
-      <mat-select formControlName="profile" required>
+      <mat-select formControlName="profile" required id="profile-input">
         <mat-option *ngFor="let profilePrimarykey of (profilePrimarykeys$ | async)" [value]="profilePrimarykey.uuid">
           {{profilePrimarykey.name}}
         </mat-option>
@@ -48,21 +48,21 @@
 
     <mat-form-field class="full-width">
       <mat-label>{{ "USERS.LABEL.BAPTIZE_DATE" | translate }}</mat-label>
-      <input matInput formControlName="baptizeDate" [matDatepicker]="baptizeDatePicker">
-      <mat-datepicker-toggle matSuffix [for]="baptizeDatePicker"></mat-datepicker-toggle>
+      <input matInput formControlName="baptizeDate" required [matDatepicker]="baptizeDatePicker">
+      <mat-datepicker-toggle matSuffix [for]="baptizeDatePicker" id="baptize-date-picker"></mat-datepicker-toggle>
       <mat-datepicker touchUi #baptizeDatePicker></mat-datepicker>
     </mat-form-field>
 
     <mat-form-field class="full-width">
       <mat-label>{{ "USERS.LABEL.BIRTH_DATE" | translate }}</mat-label>
       <input matInput formControlName="birthDate" [matDatepicker]="birthDatePicker">
-      <mat-datepicker-toggle matSuffix [for]="birthDatePicker"></mat-datepicker-toggle>
+      <mat-datepicker-toggle matSuffix [for]="birthDatePicker"  id="birth-date-picker"></mat-datepicker-toggle>
       <mat-datepicker touchUi #birthDatePicker></mat-datepicker>
     </mat-form-field>
     
     <mat-form-field class="full-width">
       <mat-label>{{ "USERS.LABEL.TAGS" | translate }}</mat-label>
-      <mat-select formControlName="tags" multiple="true">
+      <mat-select formControlName="tags" multiple="true" id="tags-input">
         <mat-option *ngFor="let tag of (tags$ | async)" [value]="tag.uuid">
           {{tag.name}}
         </mat-option>
@@ -71,22 +71,29 @@
   
     <mat-form-field class="full-width">
       <mat-label>{{ "USERS.LABEL.CELLPHONE" | translate }}</mat-label>
-      <input matInput formControlName="cellphone">
+      <input matInput formControlName="cellphone" id="cellphone-input">
     </mat-form-field>
   
     <mat-form-field class="full-width">
       <mat-label>{{ "USERS.LABEL.PHONE" | translate }}</mat-label>
-      <input matInput formControlName="phone">
+      <input matInput formControlName="phone" id="phone-input">
     </mat-form-field>
   
     <mat-form-field class="full-width">
       <mat-label>{{ "USERS.LABEL.ADDRESS" | translate }}</mat-label>
-      <input matInput formControlName="address">
+      <input matInput formControlName="address" id="address-input">
     </mat-form-field>
   
     <mat-form-field class="full-width">
       <mat-label>{{ "USERS.LABEL.NOTE" | translate }}</mat-label>
-      <textarea matInput cdkTextareaAutosize formControlName="note" cdkAutosizeMinRows="3"></textarea>
+      <textarea
+        matInput
+        cdkTextareaAutosize
+        formControlName="note"
+        cdkAutosizeMinRows="3"
+        id="note-input">
+      </textarea>
     </mat-form-field>
+
   </form>
 </div>

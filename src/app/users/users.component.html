@@ -6,7 +6,8 @@
 
   <button mat-icon-button 
     *ngIf="userCreateAccess$ | async"
-    (click)="onAddButtonClick()">
+    (click)="onAddButtonClick()"
+    id="create-user-button">
     <mat-icon>add</mat-icon>
   </button>
 </div>

@@ -218,6 +218,13 @@ export class Api implements ApiInterface {
     const users = this.users$.getValue();
     users.push(user);
     this.users$.next(users);
+
+    const userAuthorityStatuses = this.userAuthorityStatuses$.getValue();
+    userAuthorityStatuses.push({
+      uuid: user.uuid,
+      password: uuidv5(user.baptizeDate.split('-').join(''), environment.UUID_NAMESPACE),
+      online: false,
+    });
     return Promise.resolve(Status.SUCCESS);
   }
 
