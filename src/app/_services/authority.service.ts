@@ -33,7 +33,7 @@ export class AuthorityService {
         this.profilesService.getProfileByUuid(user.profile).subscribe(this.currentProfile$);
       } else {
         // guest profile
-        this.currentProfile$.next(this.profilesService.getProfileByUuid('e90966a2-91a8-6480-bc02-67f68267e5a1').getValue());
+        this.currentProfile$.next(this.profilesService.getProfileByUuid('PROFILE_GUEST_UUID').getValue());
       }
     });
   }
@@ -46,14 +46,16 @@ export class AuthorityService {
 
   login = (uuid: string, password: string): Promise<Status> => {
     return this.api.login(uuid, password).then(() => {
-      this.subscription = this.usersService.getUserByUuid(uuid, {immortal: true}).subscribe(this.currentUser$);
+      this.subscription = this.usersService.getUserByUuid(uuid, { immortal: true }).subscribe(this.currentUser$);
       return Promise.resolve(Status.SUCCESS);
     });
   }
 
   logout = () => {
-    this.api.logout(this.currentUser$.getValue().uuid).then(() => {
-      this.subscription.unsubscribe();
+    const uuid = this.currentUser$.getValue().uuid;
+    this.api.logout(uuid).then(() => {
+      this.usersService.removeImmortal(uuid);  // set immortal user to normal user
+      this.subscription.unsubscribe();  // keep currentUser$ alive
       this.currentUser$.next(null);
       this.router.navigate(['home']);
     });

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, combineLatest } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { User, UserPrimarykey } from 'src/app/_interfaces/user.interface';
 import { Api } from 'src/app/_api/mock.api';
@@ -19,7 +19,7 @@ export class UsersService {
   private defaultUserPrimarykeys$ = new BehaviorSubject<UserPrimarykey[]>([this.administrator]);
 
   private users = new Map<string, BehaviorSubject<User>>();
-  private defaultUsers = new Map<string, BehaviorSubject<User>>([
+  private immortalUsers = new Map<string, BehaviorSubject<User>>([
     [this.administrator.uuid, new BehaviorSubject(this.administrator)]
   ]);
 
@@ -31,8 +31,11 @@ export class UsersService {
 
   getUserPrimarykeys = (): BehaviorSubject<UserPrimarykey[]> => {
     if (!this.userPrimarykeys$.getValue()) {
-      this.api.readUserPrimarykeys().pipe(
-        map(userPrimarykeys => this.defaultUserPrimarykeys$.getValue().concat(userPrimarykeys))
+      combineLatest([
+        this.defaultUserPrimarykeys$,
+        this.api.readUserPrimarykeys()
+      ]).pipe(
+        map(([defaultUserPrimarykeys, userPrimarykeys]) => defaultUserPrimarykeys.concat(userPrimarykeys))
       ).subscribe(this.userPrimarykeys$);
     }
     return this.userPrimarykeys$;
@@ -42,17 +45,19 @@ export class UsersService {
    * @description If options.immortal set to true, the returned observable will not be unsubscribe when checking users size.
    */
   getUserByUuid = (uuid: string, options?: GetDataOptions): BehaviorSubject<User> => {
-    if (this.defaultUsers.has(uuid)) {
-      return this.defaultUsers.get(uuid);
+    if (this.immortalUsers.has(uuid)) {
+      return this.immortalUsers.get(uuid);
     } else if (this.users.has(uuid)) {
       return this.users.get(uuid);
     } else {
       const user$ = new BehaviorSubject<User>(null);
-      if (!options?.immortal) {
-        this.api.readUser(uuid).subscribe(user$);
+      this.api.readUser(uuid).subscribe(user$);
+      if (options?.immortal) {
+        this.immortalUsers.set(uuid, user$);
+      } else {
         this.users.set(uuid, user$);
-        this.checkUsersSize();
       }
+      this.checkUsersSize();
       return user$;
     }
   }
@@ -108,8 +113,13 @@ export class UsersService {
     });
   }
 
-  isDefaultUser = (uuid: string): boolean => {
-    return !!this.defaultUserPrimarykeys$.getValue().find(userPrimarykey => userPrimarykey.uuid === uuid);
+  isImmortalUser = (uuid: string): boolean => {
+    return this.immortalUsers.has(uuid);
+  }
+
+  removeImmortal = (uuid: string): void => {
+    this.users.set(uuid, this.immortalUsers.get(uuid));
+    this.immortalUsers.delete(uuid);
   }
 
   private checkUsersSize = (): void => {

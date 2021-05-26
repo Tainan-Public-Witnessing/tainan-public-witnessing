@@ -1,10 +1,10 @@
 {
-  "uuid": "e90866a2-91a8-5480-bc02-67f88277e5f8",
+  "uuid": "USER_ADMINISTRATOR_UUID",
   "username": "administrator",
   "name": "administrator",
   "gender": "MAN",
   "congregation": "",
-  "profile": "e90946a4-94a8-5440-bc02-64f88277e5a1",
+  "profile": "PROFILE_ADMINISTRATOR_UUID",
   "cellphone": "",
   "phone": "",
   "address": "",
