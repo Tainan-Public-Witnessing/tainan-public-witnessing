@@ -12,7 +12,7 @@ export class AppPage {
   }
 
   clickMenuButton = (): void => {
-    $('#menuButton').click();
+    $('#menu-button').click();
     browser.sleep(50);
   }
 
@@ -22,37 +22,37 @@ export class AppPage {
   }
 
   clickTranslateButton = (): void => {
-    $('#translateButton').click();
+    $('#translate-button').click();
     browser.sleep(50);
   }
 
   clickLanguageButtonZH = (): void => {
-    $('#languageButtonZH').click();
+    $('#language-button-zh').click();
     browser.sleep(50);
   }
 
   clickLoginButton = (): void => {
-    $('#loginButton').click();
+    $('#login-button').click();
     browser.sleep(50);
   }
 
   clickLogoutButton = (): void => {
-    $('#logoutButton').click();
+    $('#logout-button').click();
     browser.sleep(50);
   }
 
   enterUsername = (username: string): void => {
-    $('#usernameInput').sendKeys(username);
+    $('#username-input').sendKeys(username);
     browser.sleep(50);
   }
 
   enterPassword = (password: string): void => {
-    $('#passwordInput').sendKeys(password);
+    $('#password-input').sendKeys(password);
     browser.sleep(50);
   }
 
   clickLoginSubmitButton = (): void => {
-    $('#loginSubmitButton').click();
+    $('#login-submit-button').click();
     browser.sleep(50);
   }
 
@@ -68,21 +68,21 @@ export class AppPage {
 
   getUsernameNotExistErrorMessage = (): Promise<string> => {
     browser.sleep(50);
-    return $('#usernameNotExistErrorMessage').getText() as Promise<string>;
+    return $('#username-not-exist-error-message').getText() as Promise<string>;
   }
 
   getWrongPasswordErrorrMessage = (): Promise<string> => {
     browser.sleep(50);
-    return $('#wrongPasswordErrorrMessage').getText() as Promise<string>;
+    return $('#wrong-password-error-message').getText() as Promise<string>;
   }
 
   clickMenuLink = (url: string): void => {
-    $('#menuLink_' + url).click();
+    $('#menu-link-' + url).click();
     browser.sleep(50);
   }
 
   getPageTitleText = (): Promise<string> => {
     browser.sleep(50);
-    return $('h1').getText() as Promise<string>;
+    return $('.title-bar h1').getText() as Promise<string>;
   }
 }

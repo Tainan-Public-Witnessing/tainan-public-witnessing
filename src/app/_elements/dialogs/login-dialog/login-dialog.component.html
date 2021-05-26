@@ -5,21 +5,21 @@
 
     <mat-form-field class="full-width">
       <mat-label>{{ "LOGIN.LABEL.USERNAME" | translate }}</mat-label>
-      <input matInput formControlName="username" [matAutocomplete]="auto" cdkFocusInitial id="usernameInput">
+      <input matInput formControlName="username" [matAutocomplete]="auto" cdkFocusInitial id="username-input">
       <mat-autocomplete #auto="matAutocomplete">
         <mat-option *ngFor="let userPrimaryKey of (usernameAutoComplete$ | async)" [value]="userPrimaryKey.username">
           {{userPrimaryKey.username}}
         </mat-option>
       </mat-autocomplete>
-      <mat-error *ngIf="loginForm.controls.username.hasError('notExist')" id="usernameNotExistErrorMessage">
+      <mat-error *ngIf="loginForm.controls.username.hasError('notExist')" id="username-not-exist-error-message">
         {{ "GLOBAL.DONOT_EXIST_ERROR" | translate: { value: "LOGIN.LABEL.USERNAME" | translate } }}
       </mat-error>
     </mat-form-field>
 
     <mat-form-field class="full-width">
       <mat-label>{{ "LOGIN.LABEL.PASSWORD" | translate }}</mat-label>
-      <input matInput formControlName="password" type="password" id="passwordInput">
-      <mat-error *ngIf="loginForm.controls.password.hasError('wrongPassword')" id="wrongPasswordErrorrMessage">
+      <input matInput formControlName="password" type="password" id="password-input">
+      <mat-error *ngIf="loginForm.controls.password.hasError('wrongPassword')" id="wrong-password-error-message">
         {{ "LOGIN.WRONG_PASSWORD_ERROR" | translate }}
       </mat-error>
     </mat-form-field>
@@ -32,14 +32,14 @@
     color="accent"
     (click)="onCancelClick()"
     cdkFocusInitial
-    id="loginCancelButton">
+    id="login-cancel-button">
     {{ "GLOBAL.CANCEL" | translate }}
   </button>
 
   <button mat-button
     color="primary"
     (click)="onConfirmClick()"
-    id="loginSubmitButton">
+    id="login-submit-button">
     {{ "GLOBAL.LOG_IN" | translate }}
   </button>
 </div>

@@ -3,11 +3,11 @@ import { browser, $ } from 'protractor';
 export class GlobalE2e {
 
   login = (username: string, password: string) => {
-    $('#usernameInput').sendKeys(username);
+    $('#username-input').sendKeys(username);
     browser.sleep(50);
-    $('#passwordInput').sendKeys(password);
+    $('#password-input').sendKeys(password);
     browser.sleep(50);
-    $('#loginSubmitButton').click();
+    $('#login-submit-button').click();
     browser.sleep(50);
   }
 }

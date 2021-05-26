@@ -3,21 +3,21 @@
     *ngFor="let menuLink of (currentMenuLinks$ | async)"
     (click)="onMenuLinkClick()"
     [routerLink]="menuLink.url"
-    [id]="'menuLink_' + menuLink.url">
+    [id]="'menu-link-' + menuLink.url">
     {{menuLink.display | translate}}
   </mat-list-option>
 
   <mat-list-option
     *ngIf="!(this.isLoggedIn$ | async)"
     (click)="onLoginClick()"
-    id="loginButton">
+    id="login-button">
     {{ "GLOBAL.LOG_IN" | translate }}
   </mat-list-option>
 
   <mat-list-option
     *ngIf="this.isLoggedIn$ | async"
     (click)="onLogoutClick()"
-    id="logoutButton">
+    id="logout-button">
     {{ "GLOBAL.LOG_OUT" | translate }}
   </mat-list-option>
 </mat-selection-list>
