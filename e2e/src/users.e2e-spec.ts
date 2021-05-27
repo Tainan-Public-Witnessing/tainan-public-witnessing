@@ -19,20 +19,21 @@ describe('users page', () => {
   it('should create user', () => {
     usersPage.clickCreateUserButton();
     usersPage.inputUserData({
-      uuid: '',
+      uuid: null,
       username: 'new user',
       name: 'user',
       gender: Gender.FEMALE,
       congregation: 'CONGREGATION_EAST_UUID',
       profile: 'PROFILE_MANAGER_UUID',
-      baptizeDate: '2021-05-27',
-      birthDate: '',
-      tags: [],
-      cellphone: '',
-      phone: '',
-      address: '',
-      note: ''
+      baptizeDate: 'today',
+      birthDate: 'today',
+      tags: ['TAG_ELDER_UUID', 'TAG_PIONEER_UUID'],
+      cellphone: '0987654321',
+      phone: '012345678',
+      address: 'home',
+      note: 'a nice guy'
     });
+    usersPage.clickCreateUserSubmitButton();
     expect(usersPage.getUsersListText()).toMatch('new user');
   });
 

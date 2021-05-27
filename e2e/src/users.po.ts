@@ -56,6 +56,54 @@ export class UsersPage {
     browser.sleep(50);
   }
 
+  inputBaptizeDate = (date: string): void => {
+    $('#baptize-date-input').sendKeys(date);
+    browser.sleep(50);
+  }
+
+  pickBirthDateAsToday = (): void => {
+    $('#birth-date-picker').click();
+    browser.sleep(50);
+    $('.mat-calendar-body-today').click();
+    browser.sleep(50);
+  }
+
+  inputBirthDate = (date: string): void => {
+    $('#birth-date-input').sendKeys(date);
+    browser.sleep(50);
+  }
+
+  selectTags = (tags: string[]): void => {
+    $('#tags-select').click();
+    browser.sleep(50);
+    tags.forEach(tag => {
+      $('#tag-' + tag).click();
+      browser.sleep(50);
+    });
+    $('.cdk-overlay-backdrop').click();
+    browser.sleep(50);
+  }
+
+  inputCellphone = (cellphone: string): void => {
+    $('#cellphone-input').sendKeys(cellphone);
+    browser.sleep(50);
+  }
+
+  inputPhone = (phone: string): void => {
+    $('#phone-input').sendKeys(phone);
+    browser.sleep(50);
+  }
+
+  inputAddress = (address: string): void => {
+    $('#address-input').sendKeys(address);
+    browser.sleep(50);
+  }
+
+  inputNote = (note: string): void => {
+    $('#note-input').sendKeys(note);
+    browser.sleep(50);
+  }
+
   clickCreateUserSubmitButton = (): void => {
     $('#create-user-submit-button').click();
     browser.sleep(50);
@@ -72,6 +120,11 @@ export class UsersPage {
     this.selectCongregation(userData.congregation);
     this.selectProfile(userData.profile);
     this.pickBaptizeDateAsToday();
-    this.clickCreateUserSubmitButton();
+    this.pickBirthDateAsToday();
+    this.selectTags(userData.tags);
+    this.inputCellphone(userData.cellphone);
+    this.inputPhone(userData.phone);
+    this.inputAddress(userData.address);
+    this.inputNote(userData.note);
   }
 }

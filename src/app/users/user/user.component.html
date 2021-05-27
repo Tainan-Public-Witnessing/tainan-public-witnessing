@@ -56,22 +56,25 @@
 
     <mat-form-field class="full-width">
       <mat-label>{{ "USERS.LABEL.BAPTIZE_DATE" | translate }}</mat-label>
-      <input matInput formControlName="baptizeDate" required [matDatepicker]="baptizeDatePicker">
+      <input matInput formControlName="baptizeDate" required [matDatepicker]="baptizeDatePicker" id="baptize-date-input">
       <mat-datepicker-toggle matSuffix [for]="baptizeDatePicker" id="baptize-date-picker"></mat-datepicker-toggle>
       <mat-datepicker touchUi #baptizeDatePicker></mat-datepicker>
     </mat-form-field>
 
     <mat-form-field class="full-width">
       <mat-label>{{ "USERS.LABEL.BIRTH_DATE" | translate }}</mat-label>
-      <input matInput formControlName="birthDate" [matDatepicker]="birthDatePicker">
+      <input matInput formControlName="birthDate" [matDatepicker]="birthDatePicker" id="birth-date-input">
       <mat-datepicker-toggle matSuffix [for]="birthDatePicker"  id="birth-date-picker"></mat-datepicker-toggle>
       <mat-datepicker touchUi #birthDatePicker></mat-datepicker>
     </mat-form-field>
     
     <mat-form-field class="full-width">
       <mat-label>{{ "USERS.LABEL.TAGS" | translate }}</mat-label>
-      <mat-select formControlName="tags" multiple="true" id="tags-input">
-        <mat-option *ngFor="let tag of (tags$ | async)" [value]="tag.uuid">
+      <mat-select formControlName="tags" multiple="true" id="tags-select">
+        <mat-option
+          *ngFor="let tag of (tags$ | async)"
+          [value]="tag.uuid"
+          [id]="'tag-' + tag.uuid">
           {{tag.name}}
         </mat-option>
       </mat-select>

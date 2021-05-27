@@ -42,7 +42,7 @@ export class Api implements ApiInterface {
       phone: '0987654321',
       address: 'Earth',
       note: 'Nice guy',
-      tags: ['e90966a2-91a8-5480-bc02-67f88277e5a1', 'e90966a2-91a8-5480-bc02-67f88277e5a2']
+      tags: ['TAG_ELDER_UUID', 'TAG_PIONEER_UUID']
     },
   ]);
 
@@ -54,9 +54,9 @@ export class Api implements ApiInterface {
   ]);
 
   private tags$ = new BehaviorSubject<Tag[]>([
-    { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5a0', name: 'overseer', order: 0 },
-    { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5a1', name: 'elder', order: 1 },
-    { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5a2', name: 'pioneer', order: 2 },
+    { uuid: 'TAG_OVERSEER_UUID', name: 'overseer', order: 0 },
+    { uuid: 'TAG_ELDER_UUID', name: 'elder', order: 1 },
+    { uuid: 'TAG_PIONEER_UUID', name: 'pioneer', order: 2 },
   ]);
 
   private profilePrimarykeys$ = new BehaviorSubject<ProfilePrimarykey[]>([
