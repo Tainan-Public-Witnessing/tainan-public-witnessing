@@ -2,7 +2,9 @@
   <h1>{{ title | translate }}</h1>
   <span class="spacer"></span>
   <button mat-button color="accent" (click)="onCancelClick()">{{  cancelButtonText | translate }}</button>
-  <button mat-button color="primary" *ngIf="mode !== 'read'" (click)="onSubmitClick()">{{ "GLOBAL.SUBMIT" | translate }}</button>
+  <button mat-button color="primary" *ngIf="mode !== 'read'" (click)="onSubmitClick()" id="create-user-submit-button">
+    {{ "GLOBAL.SUBMIT" | translate }}
+  </button>
 </div>
 
 <div class="overflow">
@@ -21,17 +23,20 @@
   
     <mat-form-field class="full-width">
       <mat-label>{{ "USERS.LABEL.GENDER" | translate }}</mat-label>
-      <mat-select formControlName="gender" required  id="gender-input">
-        <mat-option *ngFor="let gender of genders" [value]="gender">
-          {{gender}}
+      <mat-select formControlName="gender" required  id="gender-select">
+        <mat-option *ngFor="let gender of genders" [value]="gender" [id]="'gender-' + gender | lowercase">
+          {{ ("GENDER." + gender) | translate }}
         </mat-option>
       </mat-select>
     </mat-form-field>
   
     <mat-form-field class="full-width">
       <mat-label>{{ "USERS.LABEL.CONGREGATION" | translate }}</mat-label>
-      <mat-select formControlName="congregation" required  id="congregation-input">
-        <mat-option *ngFor="let congregation of (congregations$ | async)" [value]="congregation.uuid">
+      <mat-select formControlName="congregation" required  id="congregation-select">
+        <mat-option
+          *ngFor="let congregation of (congregations$ | async)"
+          [value]="congregation.uuid"
+          [id]="'congregation-' + congregation.uuid">
           {{congregation.name}}
         </mat-option>
       </mat-select>
@@ -39,8 +44,11 @@
   
     <mat-form-field class="full-width">
       <mat-label>{{ "USERS.LABEL.PROFILE" | translate }}</mat-label>
-      <mat-select formControlName="profile" required id="profile-input">
-        <mat-option *ngFor="let profilePrimarykey of (profilePrimarykeys$ | async)" [value]="profilePrimarykey.uuid">
+      <mat-select formControlName="profile" required id="profile-select">
+        <mat-option
+          *ngFor="let profilePrimarykey of (profilePrimarykeys$ | async)"
+          [value]="profilePrimarykey.uuid"
+          [id]="'profile-' + profilePrimarykey.uuid">
           {{profilePrimarykey.name}}
         </mat-option>
       </mat-select>

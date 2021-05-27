@@ -7,8 +7,8 @@ export interface User {
   gender: Gender;
   congregation: string; // uuid
   profile: string; // uuid
-  baptizeDate: string; // yyyyMMDD
-  birthDate: string; // yyyyMMDD
+  baptizeDate: string; // yyyy-MM-DD
+  birthDate: string; // yyyy-MM-DD
   cellphone: string;
   phone: string;
   address: string;

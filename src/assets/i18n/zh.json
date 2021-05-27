@@ -12,6 +12,10 @@
     "EXISTED_ERROR": "{{value}}已存在！",
     "DONOT_EXIST_ERROR": "{{value}}不存在！"
   },
+  "GENDER": {
+    "MALE": "男",
+    "FEMALE": "女"
+  },
   "LANGUAGE": {
     "EN": "英文",
     "ZH": "中文"

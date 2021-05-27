@@ -21,21 +21,21 @@ export class Api implements ApiInterface {
 
   private userAuthorityStatuses$ = new BehaviorSubject<UserAuthorityStatus[]>([
     { uuid: 'USER_ADMINISTRATOR_UUID', password: '7f15fa00-23ef-5e5c-9365-50de9d7e1ca5', online: false }, // administrator
-    { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5f8', password: '36e52acf-1879-5f09-9f64-56ef4a2d2145', online: false },
+    { uuid: 'USER_USER_UUID', password: '36e52acf-1879-5f09-9f64-56ef4a2d2145', online: false },
   ]);
 
   private userPrimarykeys$ = new BehaviorSubject<UserPrimarykey[]>([
-    { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5f8', username: 'user' },
+    { uuid: 'USER_USER_UUID', username: 'user' },
   ]);
 
   private users$ = new BehaviorSubject<User[]>([
     {
-      uuid: 'e90966a2-91a8-5480-bc02-67f88277e5f8',
+      uuid: 'USER_USER_UUID',
       username: 'user',
       name: 'user name',
-      gender: Gender.MAN,
-      congregation: 'e90966a2-91a8-5480-bc02-67f88277e5f7',
-      profile: 'e90966a2-91a8-5480-bc02-64f88277e5a1',
+      gender: Gender.MALE,
+      congregation: 'CONGREGATION_EAST_UUID',
+      profile: 'PROFILE_ADMINISTRATOR_UUID',
       baptizeDate: '2020-04-01',
       birthDate: '2000-04-01',
       cellphone: '0987654321',
@@ -47,10 +47,10 @@ export class Api implements ApiInterface {
   ]);
 
   private congregations$ = new BehaviorSubject<Congregation[]>([
-    { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5f7', name: 'EastTainan', order: 0 },
-    { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5f8', name: 'NorthTainan', order: 1 },
-    { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5f9', name: 'WestTainan', order: 2 },
-    { uuid: 'e90966a2-91a8-5480-bc02-67f88277e5f0', name: 'SouthTainan', order: 3 },
+    { uuid: 'CONGREGATION_EAST_UUID', name: 'East', order: 0 },
+    { uuid: 'CONGREGATION_NORTH_UUID', name: 'North', order: 1 },
+    { uuid: 'CONGREGATION_WEST_UUID', name: 'West', order: 2 },
+    { uuid: 'CONGREGATION_SOUTH_UUID', name: 'South', order: 3 },
   ]);
 
   private tags$ = new BehaviorSubject<Tag[]>([
@@ -60,13 +60,13 @@ export class Api implements ApiInterface {
   ]);
 
   private profilePrimarykeys$ = new BehaviorSubject<ProfilePrimarykey[]>([
-    { uuid: 'e90966a2-91a8-5480-bc02-64f88277e5a1', name: 'administrator', order: 0 },
-    { uuid: 'e90966a2-91c8-5480-bc02-64f88277e5a1', name: 'manager', order: 1 },
+    { uuid: 'PROFILE_ADMINISTRATOR_UUID', name: 'administrator', order: 0 },
+    { uuid: 'PROFILE_MANAGER_UUID', name: 'manager', order: 1 },
   ]);
 
   private profiles$ = new BehaviorSubject<Profile[]>([
     {
-      uuid: 'e90966a2-91a8-5480-bc02-64f88277e5a1',
+      uuid: 'PROFILE_ADMINISTRATOR_UUID',
       name: 'administrator',
       order: 0,
       permissions: [
@@ -95,7 +95,7 @@ export class Api implements ApiInterface {
       ]
     },
     {
-      uuid: 'e90966a2-91c8-5480-bc02-64f88277e5a1',
+      uuid: 'PROFILE_MANAGER_UUID',
       name: 'manager',
       order: 1,
       permissions: [

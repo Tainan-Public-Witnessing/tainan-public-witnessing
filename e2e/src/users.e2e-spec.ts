@@ -1,6 +1,7 @@
 import { UsersPage } from './users.po';
 import { browser, logging } from 'protractor';
 import { GlobalE2e } from './global.e2e';
+import { Gender } from '../../src/app/_enums/gender.enum';
 
 describe('users page', () => {
   const usersPage = new UsersPage();
@@ -17,7 +18,22 @@ describe('users page', () => {
 
   it('should create user', () => {
     usersPage.clickCreateUserButton();
-
+    usersPage.inputUserData({
+      uuid: '',
+      username: 'new user',
+      name: 'user',
+      gender: Gender.FEMALE,
+      congregation: 'CONGREGATION_EAST_UUID',
+      profile: 'PROFILE_MANAGER_UUID',
+      baptizeDate: '2021-05-27',
+      birthDate: '',
+      tags: [],
+      cellphone: '',
+      phone: '',
+      address: '',
+      note: ''
+    });
+    expect(usersPage.getUsersListText()).toMatch('new user');
   });
 
   afterEach(async () => {
