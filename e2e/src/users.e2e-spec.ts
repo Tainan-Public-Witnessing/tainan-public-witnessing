@@ -16,7 +16,25 @@ describe('users page', () => {
     expect(usersPage.getPageTitleText()).toEqual('Users');
   });
 
-  it('should create user', () => {
+  it('should display user info if info button clicked', () => {
+    usersPage.clickAdministratorInfoButton();
+    expect(usersPage.getFormText()).toMatch([
+      'administrator',
+      'administrator',
+      'Male',
+      'East',
+      'administrator',
+      '2020-04-01',
+      '2020-04-01',
+      'overseer, pioneer',
+      '0987654321',
+      '012345678',
+      'home',
+      'Can not be delete.'
+    ].join(''));
+  });
+
+  it('should create user if create button clicked', () => {
     usersPage.clickCreateUserButton();
     usersPage.inputUserData({
       uuid: null,

@@ -13,6 +13,30 @@ export class UsersPage {
     return $('.title-bar h1').getText() as Promise<string>;
   }
 
+  clickAdministratorInfoButton = (): void => {
+    $('#edit-button-USER_ADMINISTRATOR_UUID').click();
+    browser.sleep(50);
+  }
+
+  getFormText = (): Promise<string> => {
+    return Promise.all([
+      $('#username-input').getAttribute('value'),
+      $('#name-input').getAttribute('value'),
+      $('#gender-select').getText(),
+      $('#congregation-select').getText(),
+      $('#profile-select').getText(),
+      $('#baptize-date-input').getAttribute('value'),
+      $('#birth-date-input').getAttribute('value'),
+      $('#tags-select').getText(),
+      $('#cellphone-input').getAttribute('value'),
+      $('#phone-input').getAttribute('value'),
+      $('#address-input').getAttribute('value'),
+      $('#note-input').getAttribute('value')
+    ]).then(texts => {
+      return texts.join('');
+    });
+  }
+
   clickCreateUserButton = (): void => {
     $('#create-user-button').click();
     browser.sleep(50);

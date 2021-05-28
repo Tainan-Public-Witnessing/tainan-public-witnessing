@@ -43,6 +43,8 @@
       "GENDER": "Gender",
       "CONGREGATION": "Congregation",
       "PROFILE": "Profile",
+      "BAPTIZE_DATE": "Baptize date",
+      "BIRTH_DATE": "Birth date",
       "TAGS": "Tags",
       "CELLPHONE": "Cellphone",
       "PHONE": "Phone",

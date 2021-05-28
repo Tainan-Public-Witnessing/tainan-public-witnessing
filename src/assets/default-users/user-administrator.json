@@ -3,11 +3,13 @@
   "username": "administrator",
   "name": "administrator",
   "gender": "MALE",
-  "congregation": "",
+  "congregation": "CONGREGATION_EAST_UUID",
   "profile": "PROFILE_ADMINISTRATOR_UUID",
-  "cellphone": "",
-  "phone": "",
-  "address": "",
+  "baptizeDate": "2020-04-01",
+  "birthDate": "2020-04-01",
+  "cellphone": "0987654321",
+  "phone": "012345678",
+  "address": "home",
   "note": "Can not be delete.",
-  "tags": []
+  "tags": ["TAG_OVERSEER_UUID", "TAG_PIONEER_UUID"]
 }

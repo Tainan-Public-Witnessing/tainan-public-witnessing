@@ -43,6 +43,8 @@
       "GENDER": "性別",
       "CONGREGATION": "會眾",
       "PROFILE": "權限",
+      "BAPTIZE_DATE": "受浸日期",
+      "BIRTH_DATE": "出生日期",
       "TAGS": "標簽",
       "CELLPHONE": "手機",
       "PHONE": "電話",
