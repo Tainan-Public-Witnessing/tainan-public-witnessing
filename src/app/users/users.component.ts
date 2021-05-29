@@ -31,8 +31,8 @@ export class UsersComponent implements OnInit, OnDestroy {
     private authorityService: AuthorityService,
     private translateService: TranslateService,
     private router: Router,
-    private usersService: UsersService,
     private matDialog: MatDialog,
+    public usersService: UsersService, // public for checking immortal user
   ) { }
 
   ngOnInit(): void {

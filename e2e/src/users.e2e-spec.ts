@@ -17,20 +17,20 @@ describe('users page', () => {
   });
 
   it('should display user info if info button clicked', () => {
-    usersPage.clickAdministratorInfoButton();
+    usersPage.clickUserInfoButton();
     expect(usersPage.getFormText()).toMatch([
-      'administrator',
-      'administrator',
-      'Male',
+      'mock user',
+      'mock user name',
+      'Female',
       'East',
-      'administrator',
-      '2020-04-01',
-      '2020-04-01',
-      'overseer, pioneer',
+      'manager',
+      '2020-01-01',
+      '2000-01-01',
+      'elder, pioneer',
       '0987654321',
-      '012345678',
-      'home',
-      'Can not be delete.'
+      '0987654321',
+      'Earth',
+      'Nice guy'
     ].join(''));
   });
 
@@ -39,7 +39,7 @@ describe('users page', () => {
     usersPage.inputUserData({
       uuid: null,
       username: 'new user',
-      name: 'user',
+      name: 'new user name',
       gender: Gender.FEMALE,
       congregation: 'CONGREGATION_EAST_UUID',
       profile: 'PROFILE_MANAGER_UUID',
@@ -50,9 +50,45 @@ describe('users page', () => {
       phone: '012345678',
       address: 'home',
       note: 'a nice guy'
-    });
-    usersPage.clickCreateUserSubmitButton();
+    }, { inputDate: false });
+    usersPage.clickUserSubmitButton();
     expect(usersPage.getUsersListText()).toMatch('new user');
+  });
+
+  it('sould eidt user if edit button clicked', () => {
+    usersPage.clickUserEditButton();
+    usersPage.inputUserData({
+      uuid: null,
+      username: 'edit user',
+      name: 'edit user name',
+      gender: Gender.MALE,
+      congregation: 'CONGREGATION_WEST_UUID',
+      profile: 'PROFILE_ADMINISTRATOR_UUID',
+      baptizeDate: '2020-12-31',
+      birthDate: '2000-12-31',
+      tags: ['TAG_OVERSEER_UUID', 'TAG_ELDER_UUID', 'TAG_PIONEER_UUID'], // unchecked last 2
+      cellphone: '0123456789',
+      phone: '0123456789',
+      address: 'home',
+      note: 'eidt!'
+    }, { inputDate: true });
+    usersPage.clickUserSubmitButton();
+
+    usersPage.clickUserInfoButton();
+    expect(usersPage.getFormText()).toMatch([
+      'edit user',
+      'edit user name',
+      'Male',
+      'West',
+      'administrator',
+      '2020-12-31',
+      '2000-12-31',
+      'overseer',
+      '0123456789',
+      '0123456789',
+      'home',
+      'eidt!'
+    ].join(''));
   });
 
   afterEach(async () => {

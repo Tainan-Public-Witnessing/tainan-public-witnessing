@@ -41,7 +41,7 @@ export class UserComponent implements OnInit, OnDestroy {
     private congregationsService: CongregationsService,
     private profilesService: ProfilesService,
     private tagService: TagsService,
-    private userService: UsersService,
+    public usersService: UsersService,
   ) { }
 
   ngOnInit(): void {
@@ -113,11 +113,11 @@ export class UserComponent implements OnInit, OnDestroy {
       let response: Promise<Status>;
 
       if (this.mode === Mode.CREATE) {
-        response = this.userService.createUser(user);
+        response = this.usersService.createUser(user);
       } else { // update mode
         user.uuid = this.uuid;
         if (this.userForm.dirty) {
-          response = this.userService.updateUser(user);
+          response = this.usersService.updateUser(user);
         } else {
           response = Promise.resolve(Status.NO_CHANGES);
         }
@@ -155,7 +155,7 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   private setFormGroupValueByUuid = (uuid: string): void => {
-    this.userService.getUserByUuid(uuid).pipe(
+    this.usersService.getUserByUuid(uuid).pipe(
       filter(user => !!user),
       takeUntil(this.unsubscribe$)
     ).subscribe(user => {

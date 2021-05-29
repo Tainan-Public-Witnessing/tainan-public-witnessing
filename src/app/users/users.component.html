@@ -23,14 +23,14 @@
       <span class="spacer"></span>
 
       <button mat-icon-button
-        *ngIf="userDeleteAccess$ | async"
+        *ngIf="(userDeleteAccess$ | async) && !usersService.isImmortalUser(userPrimarykey.uuid)"
         (click)="onDeleteButtonClick(userPrimarykey)"
         [id]="'delete-button-' + userPrimarykey.uuid">
         <mat-icon>delete</mat-icon>
       </button>
 
       <button mat-icon-button
-        *ngIf="userUpdateAccess$ | async"
+        *ngIf="(userUpdateAccess$ | async) && !usersService.isImmortalUser(userPrimarykey.uuid)"
         (click)="onEditButtonClick(userPrimarykey)"
         [id]="'edit-button-' + userPrimarykey.uuid">
         <mat-icon>edit</mat-icon>

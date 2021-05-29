@@ -25,19 +25,19 @@ export class Api implements ApiInterface {
   ]);
 
   private userPrimarykeys$ = new BehaviorSubject<UserPrimarykey[]>([
-    { uuid: 'USER_USER_UUID', username: 'user' },
+    { uuid: 'USER_USER_UUID', username: 'mock user' },
   ]);
 
   private users$ = new BehaviorSubject<User[]>([
     {
       uuid: 'USER_USER_UUID',
-      username: 'user',
-      name: 'user name',
-      gender: Gender.MALE,
+      username: 'mock user',
+      name: 'mock user name',
+      gender: Gender.FEMALE,
       congregation: 'CONGREGATION_EAST_UUID',
-      profile: 'PROFILE_ADMINISTRATOR_UUID',
-      baptizeDate: '2020-04-01',
-      birthDate: '2000-04-01',
+      profile: 'PROFILE_MANAGER_UUID',
+      baptizeDate: '2020-01-01',
+      birthDate: '2000-01-01',
       cellphone: '0987654321',
       phone: '0987654321',
       address: 'Earth',
@@ -66,38 +66,9 @@ export class Api implements ApiInterface {
 
   private profiles$ = new BehaviorSubject<Profile[]>([
     {
-      uuid: 'PROFILE_ADMINISTRATOR_UUID',
-      name: 'administrator',
-      order: 0,
-      permissions: [
-        { key: PermissionKey.HOME_READ, access: true },
-        { key: PermissionKey.CONGREGATIONS_READ, access: true },
-        { key: PermissionKey.CONGREGATIONS_SORT, access: true },
-        { key: PermissionKey.CONGREGATION_CREATE, access: true },
-        { key: PermissionKey.CONGREGATION_UPDATE, access: true },
-        { key: PermissionKey.CONGREGATION_DELETE, access: true },
-        { key: PermissionKey.USERS_READ, access: true },
-        { key: PermissionKey.USER_READ, access: true },
-        { key: PermissionKey.USER_CREATE, access: true },
-        { key: PermissionKey.USER_UPDATE, access: true },
-        { key: PermissionKey.USER_DELETE, access: true },
-        { key: PermissionKey.TAGS_READ, access: true },
-        { key: PermissionKey.TAGS_SORT, access: true },
-        { key: PermissionKey.TAG_CREATE, access: true },
-        { key: PermissionKey.TAG_UPDATE, access: true },
-        { key: PermissionKey.TAG_DELETE, access: true },
-        { key: PermissionKey.PROFILES_READ, access: true },
-        { key: PermissionKey.PROFILES_SORT, access: true },
-        { key: PermissionKey.PROFILE_READ, access: true },
-        { key: PermissionKey.PROFILE_CREATE, access: true },
-        { key: PermissionKey.PROFILE_UPDATE, access: true },
-        { key: PermissionKey.PROFILE_DELETE, access: true },
-      ]
-    },
-    {
       uuid: 'PROFILE_MANAGER_UUID',
       name: 'manager',
-      order: 1,
+      order: 0,
       permissions: [
         { key: PermissionKey.HOME_READ, access: true },
         { key: PermissionKey.CONGREGATIONS_READ, access: true },

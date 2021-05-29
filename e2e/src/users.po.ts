@@ -1,4 +1,4 @@
-import { browser, $ } from 'protractor';
+import { browser, $, Key } from 'protractor';
 import { User } from 'src/app/_interfaces/user.interface';
 import { Gender } from 'src/app/_enums/gender.enum';
 
@@ -13,8 +13,13 @@ export class UsersPage {
     return $('.title-bar h1').getText() as Promise<string>;
   }
 
-  clickAdministratorInfoButton = (): void => {
-    $('#edit-button-USER_ADMINISTRATOR_UUID').click();
+  clickUserInfoButton = (): void => {
+    $('#info-button-USER_USER_UUID').click();
+    browser.sleep(50);
+  }
+
+  clickUserEditButton = () => {
+    $('#edit-button-USER_USER_UUID').click();
     browser.sleep(50);
   }
 
@@ -43,12 +48,16 @@ export class UsersPage {
   }
 
   inputUsername = (username: string): void => {
-    $('#username-input').sendKeys(username);
+    const usernameInput = $('#username-input');
+    usernameInput.clear();
+    usernameInput.sendKeys(username);
     browser.sleep(50);
   }
 
   inputName = (name: string): void => {
-    $('#name-input').sendKeys(name);
+    const nameInput = $('#name-input');
+    nameInput.clear();
+    nameInput.sendKeys(name);
     browser.sleep(50);
   }
 
@@ -81,7 +90,10 @@ export class UsersPage {
   }
 
   inputBaptizeDate = (date: string): void => {
-    $('#baptize-date-input').sendKeys(date);
+    const baptizeDateInput = $('#baptize-date-input');
+    baptizeDateInput.sendKeys(Key.chord(Key.CONTROL, 'a'));
+    baptizeDateInput.sendKeys(Key.DELETE);
+    baptizeDateInput.sendKeys(date);
     browser.sleep(50);
   }
 
@@ -93,7 +105,10 @@ export class UsersPage {
   }
 
   inputBirthDate = (date: string): void => {
-    $('#birth-date-input').sendKeys(date);
+    const birthDateInput = $('#birth-date-input');
+    birthDateInput.sendKeys(Key.chord(Key.CONTROL, 'a'));
+    birthDateInput.sendKeys(Key.DELETE);
+    birthDateInput.sendKeys(date);
     browser.sleep(50);
   }
 
@@ -109,26 +124,34 @@ export class UsersPage {
   }
 
   inputCellphone = (cellphone: string): void => {
-    $('#cellphone-input').sendKeys(cellphone);
+    const cellphoneInput = $('#cellphone-input');
+    cellphoneInput.clear();
+    cellphoneInput.sendKeys(cellphone);
     browser.sleep(50);
   }
 
   inputPhone = (phone: string): void => {
-    $('#phone-input').sendKeys(phone);
+    const phoneInput = $('#phone-input');
+    phoneInput.clear();
+    phoneInput.sendKeys(phone);
     browser.sleep(50);
   }
 
   inputAddress = (address: string): void => {
-    $('#address-input').sendKeys(address);
+    const addressInput = $('#address-input');
+    addressInput.clear();
+    addressInput.sendKeys(address);
     browser.sleep(50);
   }
 
   inputNote = (note: string): void => {
-    $('#note-input').sendKeys(note);
+    const noteInput = $('#note-input');
+    noteInput.clear();
+    noteInput.sendKeys(note);
     browser.sleep(50);
   }
 
-  clickCreateUserSubmitButton = (): void => {
+  clickUserSubmitButton = (): void => {
     $('#create-user-submit-button').click();
     browser.sleep(50);
   }
@@ -137,14 +160,19 @@ export class UsersPage {
     return $('#users-list').getText() as Promise<string>;
   }
 
-  inputUserData = (userData: User) => {
+  inputUserData = (userData: User, options?: { inputDate: boolean }) => {
     this.inputUsername(userData.username);
     this.inputName(userData.name);
     this.selectGender(userData.gender);
     this.selectCongregation(userData.congregation);
     this.selectProfile(userData.profile);
-    this.pickBaptizeDateAsToday();
-    this.pickBirthDateAsToday();
+    if (options.inputDate) {
+      this.inputBaptizeDate(userData.baptizeDate);
+      this.inputBirthDate(userData.birthDate);
+    } else {
+      this.pickBaptizeDateAsToday();
+      this.pickBirthDateAsToday();
+    }
     this.selectTags(userData.tags);
     this.inputCellphone(userData.cellphone);
     this.inputPhone(userData.phone);
