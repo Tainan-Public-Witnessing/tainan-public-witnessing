@@ -60,8 +60,7 @@ export class Api implements ApiInterface {
   ]);
 
   private profilePrimarykeys$ = new BehaviorSubject<ProfilePrimarykey[]>([
-    { uuid: 'PROFILE_ADMINISTRATOR_UUID', name: 'administrator', order: 0 },
-    { uuid: 'PROFILE_MANAGER_UUID', name: 'manager', order: 1 },
+    { uuid: 'PROFILE_MANAGER_UUID', name: 'manager', order: 0 },
   ]);
 
   private profiles$ = new BehaviorSubject<Profile[]>([

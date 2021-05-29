@@ -2,8 +2,12 @@ import { UsersPage } from './users.po';
 import { browser, logging } from 'protractor';
 import { GlobalE2e } from './global.e2e';
 import { Gender } from '../../src/app/_enums/gender.enum';
+import { DatePipe } from '@angular/common';
+import * as moment from 'moment';
 
 describe('users page', () => {
+  // const datePipe = new DatePipe('');
+
   const usersPage = new UsersPage();
   const globalE2e = new GlobalE2e();
 
@@ -41,18 +45,35 @@ describe('users page', () => {
       username: 'new user',
       name: 'new user name',
       gender: Gender.FEMALE,
-      congregation: 'CONGREGATION_EAST_UUID',
+      congregation: 'CONGREGATION_NORTH_UUID',
       profile: 'PROFILE_MANAGER_UUID',
       baptizeDate: 'today',
       birthDate: 'today',
-      tags: ['TAG_ELDER_UUID', 'TAG_PIONEER_UUID'],
+      tags: ['TAG_ELDER_UUID'],
       cellphone: '0987654321',
       phone: '012345678',
       address: 'home',
-      note: 'a nice guy'
+      note: 'new!'
     }, { inputDate: false });
     usersPage.clickUserSubmitButton();
     expect(usersPage.getUsersListText()).toMatch('new user');
+
+    usersPage.clickNewUserInfoButton();
+    const today = moment().format('YYYY-MM-DD');
+    expect(usersPage.getFormText()).toMatch([
+      'new user',
+      'new user name',
+      'Female',
+      'North',
+      'manager',
+      today,
+      today,
+      'elder',
+      '0987654321',
+      '012345678',
+      'home',
+      'new!'
+    ].join(''));
   });
 
   it('sould eidt user if edit button clicked', () => {

@@ -24,7 +24,7 @@
     <mat-form-field class="full-width">
       <mat-label>{{ "USERS.LABEL.GENDER" | translate }}</mat-label>
       <mat-select formControlName="gender" required  id="gender-select">
-        <mat-option *ngFor="let gender of genders" [value]="gender" [id]="'gender-' + gender | lowercase">
+        <mat-option *ngFor="let gender of genders" [value]="gender" [id]="gender | lowercase">
           {{ ("GENDER." + gender) | translate }}
         </mat-option>
       </mat-select>
@@ -36,7 +36,7 @@
         <mat-option
           *ngFor="let congregation of (congregations$ | async)"
           [value]="congregation.uuid"
-          [id]="'congregation-' + congregation.uuid">
+          [id]="congregation.uuid">
           {{congregation.name}}
         </mat-option>
       </mat-select>
@@ -48,7 +48,7 @@
         <mat-option
           *ngFor="let profilePrimarykey of (profilePrimarykeys$ | async)"
           [value]="profilePrimarykey.uuid"
-          [id]="'profile-' + profilePrimarykey.uuid">
+          [id]="profilePrimarykey.uuid">
           {{profilePrimarykey.name}}
         </mat-option>
       </mat-select>
@@ -74,7 +74,7 @@
         <mat-option
           *ngFor="let tag of (tags$ | async)"
           [value]="tag.uuid"
-          [id]="'tag-' + tag.uuid">
+          [id]="tag.uuid">
           {{tag.name}}
         </mat-option>
       </mat-select>

@@ -1,4 +1,4 @@
-import { browser, $, Key } from 'protractor';
+import { browser, $, Key, element, by } from 'protractor';
 import { User } from 'src/app/_interfaces/user.interface';
 import { Gender } from 'src/app/_enums/gender.enum';
 
@@ -14,16 +14,22 @@ export class UsersPage {
   }
 
   clickUserInfoButton = (): void => {
-    $('#info-button-USER_USER_UUID').click();
+    $('#USER_USER_UUID #info-button').click();
+    browser.sleep(50);
+  }
+
+  clickNewUserInfoButton = (): void => {
+    element(by.cssContainingText('.mat-list-item', 'new user'));
     browser.sleep(50);
   }
 
   clickUserEditButton = () => {
-    $('#edit-button-USER_USER_UUID').click();
+    $('#USER_USER_UUID #edit-button').click();
     browser.sleep(50);
   }
 
   getFormText = (): Promise<string> => {
+    browser.sleep(50);
     return Promise.all([
       $('#username-input').getAttribute('value'),
       $('#name-input').getAttribute('value'),
@@ -64,21 +70,21 @@ export class UsersPage {
   selectGender = (gender: Gender): void => {
     $('#gender-select').click();
     browser.sleep(50);
-    $('#gender-' + gender.toLowerCase()).click();
+    $('#' + gender.toLowerCase()).click();
     browser.sleep(50);
   }
 
   selectCongregation = (congregationUuid: string): void => {
     $('#congregation-select').click();
     browser.sleep(50);
-    $('#congregation-' + congregationUuid).click();
+    $('#' + congregationUuid).click();
     browser.sleep(50);
   }
 
   selectProfile = (profileUuid: string): void => {
     $('#profile-select').click();
     browser.sleep(50);
-    $('#profile-' + profileUuid).click();
+    $('#' + profileUuid).click();
     browser.sleep(50);
   }
 
@@ -112,11 +118,11 @@ export class UsersPage {
     browser.sleep(50);
   }
 
-  selectTags = (tags: string[]): void => {
+  selectTags = (tagUuids: string[]): void => {
     $('#tags-select').click();
     browser.sleep(50);
-    tags.forEach(tag => {
-      $('#tag-' + tag).click();
+    tagUuids.forEach(tagUuid => {
+      $('#' + tagUuid).click();
       browser.sleep(50);
     });
     $('.cdk-overlay-backdrop').click();
