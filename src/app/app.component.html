@@ -2,7 +2,7 @@
 
   <mat-toolbar>
 
-    <button mat-icon-button #menuButton id="menu-button">
+    <button mat-icon-button #menuButton cy="menu-button">
       <mat-icon>menu</mat-icon>
     </button>
 
@@ -15,13 +15,12 @@
     </span>
 
     <button mat-icon-button
-      [matMenuTriggerFor]="languageMenu" id="translate-button">
+      [matMenuTriggerFor]="languageMenu" cy="translate-button">
       <mat-icon>translate</mat-icon>
     </button>
     <mat-menu #languageMenu="matMenu">
       <button mat-menu-item
         *ngFor="let language of languages"
-        [id]="'language-button-' + language"
         (click)="onLanguageButtonClick(language)">
         {{ 'LANGUAGE.' + language | uppercase | translate }}
       </button>
