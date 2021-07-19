@@ -10,7 +10,7 @@
 
     <span class="spacer"></span>
 
-    <span *ngIf="currentUsername$ | async" class="welcome-message">
+    <span *ngIf="currentUsername$ | async" class="welcome-message" cy="welcome-message">
       {{'GLOBAL.WELCOME_MESSAGE' | translate: {value: currentUsername$ | async} }}
     </span>
 
@@ -21,6 +21,7 @@
     <mat-menu #languageMenu="matMenu">
       <button mat-menu-item
         *ngFor="let language of languages"
+        cy="language-buttons"
         (click)="onLanguageButtonClick(language)">
         {{ 'LANGUAGE.' + language | uppercase | translate }}
       </button>

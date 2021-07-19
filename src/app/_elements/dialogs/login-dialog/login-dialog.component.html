@@ -5,21 +5,24 @@
 
     <mat-form-field class="full-width">
       <mat-label>{{ "LOGIN.LABEL.USERNAME" | translate }}</mat-label>
-      <input matInput formControlName="username" [matAutocomplete]="auto" cdkFocusInitial id="username-input">
+      <input matInput formControlName="username" [matAutocomplete]="auto" cdkFocusInitial cy="username-input">
       <mat-autocomplete #auto="matAutocomplete">
-        <mat-option *ngFor="let userPrimaryKey of (usernameAutoComplete$ | async)" [value]="userPrimaryKey.username">
+        <mat-option
+          *ngFor="let userPrimaryKey of (usernameAutoComplete$ | async)"
+          [value]="userPrimaryKey.username"
+          cy="username-autocomplete-options">
           {{userPrimaryKey.username}}
         </mat-option>
       </mat-autocomplete>
-      <mat-error *ngIf="loginForm.controls.username.hasError('notExist')" id="username-not-exist-error-message">
+      <mat-error *ngIf="loginForm.controls.username.hasError('notExist')" cy="username-not-exist-error-message">
         {{ "GLOBAL.DONOT_EXIST_ERROR" | translate: { value: "LOGIN.LABEL.USERNAME" | translate } }}
       </mat-error>
     </mat-form-field>
 
     <mat-form-field class="full-width">
       <mat-label>{{ "LOGIN.LABEL.PASSWORD" | translate }}</mat-label>
-      <input matInput formControlName="password" type="password" id="password-input">
-      <mat-error *ngIf="loginForm.controls.password.hasError('wrongPassword')" id="wrong-password-error-message">
+      <input matInput formControlName="password" type="password" cy="password-input">
+      <mat-error *ngIf="loginForm.controls.password.hasError('wrongPassword')" cy="wrong-password-error-message">
         {{ "LOGIN.WRONG_PASSWORD_ERROR" | translate }}
       </mat-error>
     </mat-form-field>
@@ -32,14 +35,14 @@
     color="accent"
     (click)="onCancelClick()"
     cdkFocusInitial
-    id="login-cancel-button">
+    cy="login-cancel-button">
     {{ "GLOBAL.CANCEL" | translate }}
   </button>
 
   <button mat-button
     color="primary"
     (click)="onConfirmClick()"
-    id="login-submit-button">
+    cy="login-submit-button">
     {{ "GLOBAL.LOG_IN" | translate }}
   </button>
 </div>
