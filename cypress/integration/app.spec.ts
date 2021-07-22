@@ -1,4 +1,5 @@
 describe('', () => {
+
   beforeEach(() => {
     cy.visit('/');
   });
@@ -31,6 +32,15 @@ describe('', () => {
     cy.get('input[cy="password-input"]').type('admin');
     cy.get('button[cy="login-submit-button"]').click();
     cy.get('span[cy="welcome-message"]').should('contain.text', 'Hi! administrator');
+  });
+
+  it('should not login if cancel button clicked', () => {
+    cy.get('button[cy="menu-button"]').click();
+    cy.get('mat-list-option[cy="login-button"]').click();
+    cy.get('input[cy="username-input"]').type('administrator');
+    cy.get('input[cy="password-input"]').type('admin');
+    cy.get('button[cy="login-cancel-button"]').click();
+    cy.get('span[cy="welcome-message"]').should('not.exist');
   });
 
   it('should display error message if username incorrect while login', () => {

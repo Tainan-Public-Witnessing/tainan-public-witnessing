@@ -11,7 +11,6 @@ import { ProfileComponent } from 'src/app/profiles/profile/profile.component';
 import { UserComponent } from 'src/app/users/user/user.component';
 
 const routes: Routes = [
-  {path: '', pathMatch: 'full', redirectTo: 'home'},
   {path: 'home', component: HomeComponent, canActivate: [AuthorityGuardService]},
   {path: 'users', component: UsersComponent, canActivate: [AuthorityGuardService]},
   {path: 'user/:mode', component: UserComponent, canActivate: [AuthorityGuardService]},
