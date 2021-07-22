@@ -34,6 +34,15 @@ describe('', () => {
     cy.get('span[cy="welcome-message"]').should('contain.text', 'Hi! administrator');
   });
 
+  it('should logout seccessfully', () => {
+    cy.login('USER_ADMINISTRATOR_UUID', 'admin');
+    cy.get('span[cy="welcome-message"]').should('contain.text', 'Hi! administrator');
+
+    cy.get('button[cy="menu-button"]').click();
+    cy.get('mat-list-option[cy="logout-button"]').click();
+    cy.get('span[cy="welcome-message"]').should('not.exist');
+  });
+
   it('should not login if cancel button clicked', () => {
     cy.get('button[cy="menu-button"]').click();
     cy.get('mat-list-option[cy="login-button"]').click();

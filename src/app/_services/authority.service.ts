@@ -25,7 +25,13 @@ export class AuthorityService {
     private router: Router,
     private profilesService: ProfilesService,
     private usersService: UsersService
-  ) { }
+  ) {
+    // tslint:disable-next-line: no-string-literal
+    if (window['Cypress']) {
+      // tslint:disable-next-line: no-string-literal
+      window['AuthorityService'] = this;
+    }
+  }
 
   initialize = () => {
     this.currentUser$.subscribe(user => {
