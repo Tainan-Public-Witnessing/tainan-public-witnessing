@@ -1,4 +1,4 @@
-export interface CongregationKey {
+export interface SiteKey {
   uuid: string;
   name: string;
   order: number;

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { v5 as uuidv5 } from 'uuid';
 import { environment } from 'src/environments/environment';
-import { ApiInterface, UserAuthorityStatus } from 'src/app/_interfaces/api.interface';
+import { ApiInterface, UserAuthorityStatus } from 'src/app/_api/api.interface';
 import { User, UserPrimarykey } from 'src/app/_interfaces/user.interface';
 import { Congregation } from 'src/app/_interfaces/congregation.interface';
 import { Tag } from 'src/app/_interfaces/tag.interface';

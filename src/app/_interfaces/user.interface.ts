@@ -1,8 +1,10 @@
 import { Gender } from 'src/app/_enums/gender.enum';
-
-export interface User {
+export interface UserKey {
   uuid: string;
   username: string;
+  activate: boolean;
+}
+export interface User extends UserKey {
   name: string;
   gender: Gender;
   congregation: string; // uuid
@@ -14,9 +16,4 @@ export interface User {
   address: string;
   note: string;
   tags: string[]; // uuid
-}
-
-export interface UserPrimarykey {
-  uuid: string;
-  username: string;
 }
