@@ -1,4 +1,4 @@
-export interface SiteKey {
+export interface Site {
   uuid: string;
   name: string;
   order: number;

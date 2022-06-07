@@ -1,12 +1,14 @@
+import { Day } from "../_enums/day.enum";
+
 export interface ShiftKey {
   uuid: string;
   date: string; // yyyy-MM-DD
-  day: string;
+  day: Day,
   shiftHoursUuid: string;
-  siteUuid: string; // yyyy-MM-DD
+  siteUuid: string;
   activate: boolean;
 }
 
-export interface Shift {
+export interface Shift extends ShiftKey {
   crewUuids: string[];
 }

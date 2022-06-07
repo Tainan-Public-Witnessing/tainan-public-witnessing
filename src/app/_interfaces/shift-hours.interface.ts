@@ -1,7 +1,7 @@
-export interface ShiftHoursKey {
+export interface ShiftHours {
   uuid: string;
   name: string;
-  startTime: string;
-  endTime: string;
+  startTime: string; // HH:mm
+  endTime: string; // HH:mm
   activate: boolean;
 }

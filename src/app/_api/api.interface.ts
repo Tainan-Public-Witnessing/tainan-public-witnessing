@@ -1,14 +1,8 @@
 import { User, UserKey } from 'src/app/_interfaces/user.interface';
-import { CongregationKey } from 'src/app/_interfaces/congregation.interface';
-import { SiteKey } from 'src/app/_interfaces/site.interface';
-import { ShiftHoursKey } from '../_interfaces/shift-hours.interface';
+import { Congregation } from 'src/app/_interfaces/congregation.interface';
+import { Site } from 'src/app/_interfaces/site.interface';
+import { ShiftHours } from '../_interfaces/shift-hours.interface';
 import { Shift, ShiftKey } from '../_interfaces/shift.interface';
-
-export interface UserAuthorityStatus {
-  uuid: string;
-  password: string;
-  online: boolean;
-}
 
 export interface ApiInterface {
 
@@ -19,13 +13,13 @@ export interface ApiInterface {
 
   readUser: (uuid: string) => Promise<User>;
 
-  readCongregations: () => Promise<CongregationKey[]>;
+  readCongregations: () => Promise<Congregation[]>;
 
-  readSites: () => Promise<SiteKey[]>;
+  readSites: () => Promise<Site[]>;
 
-  readShiftHours: () => Promise<ShiftHoursKey[]>;
+  readShiftHours: () => Promise<ShiftHours[]>;
 
-  readShiftKeys: () => Promise<ShiftKey[]>;
+  readShiftKeys: (yearMonth: string) => Promise<ShiftKey[]>; // yyyy-MM
 
   readShift: (uuid: string) => Promise<Shift>;
 }
