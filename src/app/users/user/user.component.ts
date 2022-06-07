@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
@@ -27,7 +27,7 @@ export class UserComponent implements OnInit, OnDestroy {
   uuid: string;
   title: string;
   cancelButtonText: string;
-  userForm: FormGroup;
+  userForm: UntypedFormGroup;
   genders = Object.values(Gender);
   congregations$ = new BehaviorSubject<Congregation[]>(null);
   profilePrimarykeys$ = new BehaviorSubject<Profile[]>(null);
@@ -37,7 +37,7 @@ export class UserComponent implements OnInit, OnDestroy {
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private congregationsService: CongregationsService,
     private profilesService: ProfilesService,
     private tagService: TagsService,
@@ -137,7 +137,7 @@ export class UserComponent implements OnInit, OnDestroy {
 
   }
 
-  private buildFormGroup = (): FormGroup => {
+  private buildFormGroup = (): UntypedFormGroup => {
     return this.formBuilder.group({
       username: ['', Validators.required],
       name: ['', Validators.required],

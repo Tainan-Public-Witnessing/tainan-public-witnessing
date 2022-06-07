@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Mode } from 'src/app/_enums/mode.enum';
 import { Status } from 'src/app/_enums/status.enum';
@@ -15,7 +15,7 @@ import { CongregationDialogData } from './congregation-dialog-data.interface';
 export class CongregationDialogComponent implements OnInit {
 
   title: string;
-  congregationControl: FormControl;
+  congregationControl: UntypedFormControl;
 
   constructor(
     private dialogRef: MatDialogRef<CongregationDialogComponent>,
@@ -27,7 +27,7 @@ export class CongregationDialogComponent implements OnInit {
 
     this.title = this.data.mode === Mode.CREATE ? 'CONGREGATIONS.CREATE_TITLE' : 'CONGREGATIONS.EDIT_TITLE';
 
-    this.congregationControl = new FormControl('', Validators.required);
+    this.congregationControl = new UntypedFormControl('', Validators.required);
 
     if (this.data.mode === Mode.UPDATE) {
       this.congregationControl.setValue(this.data.congregation.name);

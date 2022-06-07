@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Mode } from 'src/app/_enums/mode.enum';
 import { Status } from 'src/app/_enums/status.enum';
@@ -15,7 +15,7 @@ import { TagDialogData } from './tag-dialog-data.interface';
 export class TagDialogComponent implements OnInit {
 
   title: string;
-  tagControl: FormControl;
+  tagControl: UntypedFormControl;
 
   constructor(
     private dialogRef: MatDialogRef<TagDialogComponent>,
@@ -27,7 +27,7 @@ export class TagDialogComponent implements OnInit {
 
     this.title = this.data.mode === Mode.CREATE ? 'TAGS.CREATE_TITLE' : 'TAGS.EDIT_TITLE';
 
-    this.tagControl = new FormControl('', Validators.required);
+    this.tagControl = new UntypedFormControl('', Validators.required);
 
     if (this.data.mode === Mode.UPDATE) {
       this.tagControl.setValue(this.data.tag.name);

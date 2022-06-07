@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
@@ -21,7 +21,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   title: string;
   order: number;
   cancelButtonText: string;
-  profileForm: FormGroup;
+  profileForm: UntypedFormGroup;
   permissionKeys = Object.values(PermissionKey);
   unsubscribe$ = new Subject<void>();
 
@@ -29,7 +29,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private profilesService: ProfilesService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
   ) { }
 
   ngOnInit(): void {
@@ -111,7 +111,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     }
   }
 
-  private buildFormGroup = (): FormGroup => {
+  private buildFormGroup = (): UntypedFormGroup => {
     const group = {
       name: ['', Validators.required]
     };

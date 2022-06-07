@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
 import { UsersService } from 'src/app/_services/users.service';
@@ -15,14 +15,14 @@ import { Status } from 'src/app/_enums/status.enum';
 })
 export class LoginDialogComponent implements OnInit, OnDestroy {
 
-  loginForm: FormGroup;
+  loginForm: UntypedFormGroup;
   userPrimaryKeys$ = new BehaviorSubject<UserPrimarykey[]>(null);
   usernameAutoComplete$: Observable<UserPrimarykey[]>;
   unsubscribe$ = new Subject<void>();
 
   constructor(
     private dialogRef: MatDialogRef<LoginDialogComponent>,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private usersService: UsersService,
     private authorityService: AuthorityService,
   ) { }
