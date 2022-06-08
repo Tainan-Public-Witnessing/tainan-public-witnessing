@@ -36,51 +36,51 @@ export function HttpLoaderFactory(http: HttpClient) {
 }
 
 @NgModule({
-    declarations: [
-        AppComponent,
-        MenuComponent,
-        HomeComponent,
-        // UsersComponent,
-        // CongregationsComponent,
-        // CongregationDialogComponent,
-        // ConfirmDialogComponent,
-        // TagsComponent,
-        // TagDialogComponent,
-        // ProfilesComponent,
-        // ProfileComponent,
-        // UserComponent,
-        LoginDialogComponent,
-        PersonalShiftComponent,
-    ],
-    imports: [
-        BrowserModule,
-        FormsModule,
-        ReactiveFormsModule,
-        AppRoutingModule,
-        BrowserAnimationsModule,
-        AngularMaterialModule,
-        HttpClientModule,
-        TranslateModule.forRoot({
-            loader: {
-                provide: TranslateLoader,
-                useFactory: HttpLoaderFactory,
-                deps: [HttpClient]
-            }
-        }),
-    ],
-    providers: [
-        {
-            provide: MAT_DATE_FORMATS,
-            useValue: {
-                parse: {
-                    dateInput: ['YYYY-MM-DD'],
-                },
-                display: {
-                    dateInput: 'YYYY-MM-DD'
-                },
-            },
-        }
-    ],
-    bootstrap: [AppComponent]
+  declarations: [
+    AppComponent,
+    MenuComponent,
+    HomeComponent,
+    // UsersComponent,
+    // CongregationsComponent,
+    // CongregationDialogComponent,
+    // ConfirmDialogComponent,
+    // TagsComponent,
+    // TagDialogComponent,
+    // ProfilesComponent,
+    // ProfileComponent,
+    // UserComponent,
+    LoginDialogComponent,
+    PersonalShiftComponent,
+  ],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    ReactiveFormsModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    AngularMaterialModule,
+    HttpClientModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    }),
+  ],
+  providers: [
+    {
+      provide: MAT_DATE_FORMATS,
+      useValue: {
+        parse: {
+          dateInput: ['YYYY-MM-DD'],
+        },
+        display: {
+          dateInput: 'YYYY-MM-DD'
+        },
+      },
+    }
+  ],
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

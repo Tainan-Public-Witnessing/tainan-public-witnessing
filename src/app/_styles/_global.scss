@@ -1,8 +1,11 @@
-$page-max-width: 640px;
-$page-min-width: 320px;
+$page-max-width: 1024px;
+$page-min-width: 256px;
 $list-item-height: 48px;
 $list-item-padding: 16px;
 $page-title-height: 80px;
+
+$background-color-toolbar: rgba(0, 64, 64, 0.2);
+$background-color-light: rgba(0, 0, 0, 0.087);
 
 .spacer {
   flex: 1 1 auto;

@@ -6,6 +6,8 @@
   flex-direction: column;
 
   .mat-toolbar {
+    background-color: $background-color-toolbar;
+
     .welcome-message {
       margin-right: 8px;
       font-size: smaller;
@@ -14,6 +16,7 @@
 
   .mat-sidenav-container {
     flex: 1 1 auto;
+    background-color: $background-color-light;
 
     .mat-sidenav {
       width: 256px;

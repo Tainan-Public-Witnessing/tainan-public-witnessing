@@ -38,6 +38,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit(): void {
 
     this.translateService.setDefaultLang(Language.ZH);
+    this.dateAdapter.setLocale(MomentLocale[Language.ZH.toUpperCase()]);
 
     this.authorityService.currentUserUuid$.pipe(
       takeUntil(this.destroy$),
