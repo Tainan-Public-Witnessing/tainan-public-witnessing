@@ -1,12 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
+import { filter, first, map, switchAll, takeUntil } from 'rxjs/operators';
 import { MenuLink } from 'src/app/_interfaces/menu-link.interface';
 import { LoginDialogComponent } from 'src/app/_elements/dialogs/login-dialog/login-dialog.component';
 import { PermissionKey } from 'src/app/_enums/permission-key.enum';
 import { AuthorityService } from 'src/app/_services/authority.service';
 import { GlobalEventService } from 'src/app/_services/global-event.service';
+import { Permission } from '../_enums/permission.enum';
+import { UsersService } from '../_services/users.service';
 
 @Component({
   selector: 'app-menu',
@@ -16,14 +18,15 @@ import { GlobalEventService } from 'src/app/_services/global-event.service';
 export class MenuComponent implements OnInit, OnDestroy {
 
   MENU_LINKS: MenuLink[] = [
-    { display: 'HOME.TITLE', url: 'home', permissionKey: PermissionKey.HOME_READ },
+    { display: 'HOME.TITLE', url: 'home', permission: Permission.GUEST },
+    { display: 'PERSONAL_SHIFT.TITLE', url: 'personal-shift', permission: Permission.USER },
     // { display: 'USERS.TITLE', url: 'users', permissionKey: PermissionKey.USERS_READ},
     // { display: 'CONGREGATIONS.TITLE', url: 'congregations', permissionKey: PermissionKey.CONGREGATIONS_READ},
     // { display: 'TAGS.TITLE', url: 'tags', permissionKey: PermissionKey.TAGS_READ},
     // { display: 'PROFILES.TITLE', url: 'profiles', permissionKey: PermissionKey.PROFILES_READ},
   ];
 
-  currentMenuLinks$ = new BehaviorSubject<MenuLink[]>(this.MENU_LINKS);
+  currentMenuLinks$ = new BehaviorSubject<MenuLink[]>([]);
   isLoggedIn$ = new BehaviorSubject<boolean>(false);
   destroy$ = new Subject<void>();
 
@@ -31,6 +34,7 @@ export class MenuComponent implements OnInit, OnDestroy {
     private authorityService: AuthorityService,
     private globalEventService: GlobalEventService,
     private matDiolog: MatDialog,
+    private usersService: UsersService,
   ) { }
 
   ngOnInit(): void {
@@ -38,6 +42,23 @@ export class MenuComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$),
       map(uuid => !!uuid)
     ).subscribe(isLoggedIn => this.isLoggedIn$.next(isLoggedIn));
+
+    this.authorityService.currentUserUuid$.pipe(
+      takeUntil(this.destroy$),
+      map(uuid => {
+        if (uuid === null) {
+          return of(Permission.GUEST);
+        } else {
+           return this.usersService.getUserByUuid(uuid).pipe(
+            filter(user => !!user),
+            first(),
+            map(user => user.permission),
+          );
+        }
+      }),
+      switchAll(),
+      map(permission => this.MENU_LINKS.filter(menuLink => menuLink.permission >= permission)),
+    ).subscribe(menuLink => this.currentMenuLinks$.next(menuLink));
   }
 
   ngOnDestroy(): void {

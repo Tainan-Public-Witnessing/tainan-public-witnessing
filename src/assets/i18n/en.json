@@ -31,6 +31,9 @@
   "HOME": {
     "TITLE": "Home"
   },
+  "PERSONAL_SHIFT": {
+    "TITLE": "Personal Shift"
+  },
   "USERS": {
     "TITLE": "Users",
     "CREATE_TITLE": "Create user",

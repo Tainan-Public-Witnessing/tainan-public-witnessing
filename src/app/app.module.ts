@@ -28,6 +28,7 @@ import { HomeComponent } from './home/home.component';
 // import { UserComponent } from './users/user/user.component';
 import { LoginDialogComponent } from './_elements/dialogs/login-dialog/login-dialog.component';
 import { MAT_DATE_FORMATS } from '@angular/material/core';
+import { PersonalShiftComponent } from './personal-shift/personal-shift.component';
 
 // AoT requires an exported function for factories of translate module
 export function HttpLoaderFactory(http: HttpClient) {
@@ -49,6 +50,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         // ProfileComponent,
         // UserComponent,
         LoginDialogComponent,
+        PersonalShiftComponent,
     ],
     imports: [
         BrowserModule,

@@ -31,6 +31,9 @@
   "HOME": {
     "TITLE": "首頁"
   },
+  "PERSONAL_SHIFT": {
+    "TITLE": "個人班表"
+  },
   "USERS": {
     "TITLE": "使用者列表",
     "CREATE_TITLE": "新增使用者",
