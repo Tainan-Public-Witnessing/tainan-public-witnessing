@@ -15,8 +15,8 @@ export class UsersService {
     private api: Api
   ) { }
 
-  getUserKeys = (forceUpdate?: boolean): BehaviorSubject<UserKey[]|null> => {
-    if (this.userKeys$.value === null || forceUpdate) {
+  getUserKeys = (): BehaviorSubject<UserKey[]|null> => {
+    if (this.userKeys$.value === null) {
       this.api.readUserKeys().then(userKeys => {
         this.userKeys$.next(userKeys);
       });
@@ -24,14 +24,10 @@ export class UsersService {
     return this.userKeys$;
   }
 
-  getUserByUuid = (uuid: string, forceUpdate?: boolean): BehaviorSubject<User|null|undefined> => {
-    const isInCache = this.users.has(uuid);
-    if (!isInCache) {
+  getUserByUuid = (uuid: string): BehaviorSubject<User|null|undefined> => {
+    if (!this.users.has(uuid)) {
       const user$ = new BehaviorSubject<User|null|undefined>(null);
       this.users.set(uuid, user$);
-    }
-    const user$ = this.users.get(uuid);
-    if (!isInCache || forceUpdate) {
       this.api.readUser(uuid).then(user => {
         user$.next(user);
       }).catch(reason => {
@@ -40,6 +36,6 @@ export class UsersService {
         }
       });
     }
-    return user$;
+    return this.users.get(uuid);
   }
 }

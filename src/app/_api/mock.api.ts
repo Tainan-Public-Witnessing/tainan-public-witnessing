@@ -10,6 +10,7 @@ import { Shift, ShiftKey } from '../_interfaces/shift.interface';
 import { Gender } from '../_enums/gender.enum';
 import { Permission } from '../_enums/permission.enum';
 import { Day } from '../_enums/day.enum';
+import { PersonalShift } from '../_interfaces/personal-shift.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -178,10 +179,44 @@ export class Api implements ApiInterface {
     }, this.shiftKeys[0]),
     Object.assign({
       crewUuids: [
+        '73783509-ecf4-4522-924b-c782d41fb95c',
         '9efe91be-3b71-40e7-8ea2-6e2768bb2ebd',
         'bdb0fd54-b203-4e87-b744-1867d7eb0932',
       ]
     }, this.shiftKeys[0]),
+  ];
+
+  private personalShifts: PersonalShift[] = [
+    {
+      uuid: '4248559d-d3bb-50de-91c5-f00fa7a5e34e',
+      userUuid: '73783509-ecf4-4522-924b-c782d41fb95c',
+      yearMonth: '2019-04',
+      shiftUuids: [
+        '056f687d-2b0b-48ee-ba30-a4190a95cacb',
+        'c1c9b287-1f8b-4364-810d-6218c535fb77',
+      ],
+    }, {
+      uuid: 'dee16a5c-b524-50f7-993c-a6cfcbfc156f',
+      userUuid: '620a6781-1ef4-4ac6-b23f-8efe20348907',
+      yearMonth: '2019-04',
+      shiftUuids: [
+        '056f687d-2b0b-48ee-ba30-a4190a95cacb',
+      ],
+    }, {
+      uuid: '9a41ff1a-d98c-53a4-b691-88c1307bed56',
+      userUuid: '9efe91be-3b71-40e7-8ea2-6e2768bb2ebd',
+      yearMonth: '2019-04',
+      shiftUuids: [
+        'c1c9b287-1f8b-4364-810d-6218c535fb77',
+      ],
+    }, {
+      uuid: '5e00b534-a49c-5584-9114-75799020eafd',
+      userUuid: 'bdb0fd54-b203-4e87-b744-1867d7eb0932',
+      yearMonth: '2019-04',
+      shiftUuids: [
+        'c1c9b287-1f8b-4364-810d-6218c535fb77',
+      ],
+    },
   ];
 
   login = (uuid: string, password: string): Promise<void> => {
@@ -242,6 +277,16 @@ export class Api implements ApiInterface {
     const index = this.shifts.findIndex(shift => shift.uuid === uuid);
     if (index > -1) {
       return Promise.resolve(Object.assign({}, this.shifts[index]));
+    } else {
+      return Promise.reject('NOT_EXIST')
+    }
+  };
+
+  readPersonalShift = (uuid: string): Promise<PersonalShift> => {
+    console.log('mock api readPersonalShift', {uuid});
+    const index = this.personalShifts.findIndex(personalShift => personalShift.uuid === uuid);
+    if (index > -1) {
+      return Promise.resolve(Object.assign({}, this.personalShifts[index]));
     } else {
       return Promise.reject('NOT_EXIST')
     }
