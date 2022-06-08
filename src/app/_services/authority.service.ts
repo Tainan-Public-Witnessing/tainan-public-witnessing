@@ -23,7 +23,8 @@ export class AuthorityService implements CanActivate {
   ) { }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
-    if (this.cookieService.get(environment.TAINAN_PUBLIC_WITNESSING_PERMISSION_TOKEN) === this.currentUserUuid$.value) {
+    if (this.cookieService.check(environment.TAINAN_PUBLIC_WITNESSING_PERMISSION_TOKEN)) {
+      this.currentUserUuid$.next(this.cookieService.get(environment.TAINAN_PUBLIC_WITNESSING_PERMISSION_TOKEN));
       this.resetPermissionCookie();
       return true;
     } else {
@@ -42,8 +43,8 @@ export class AuthorityService implements CanActivate {
   }
 
   login = (uuid: string, password: string): Promise<void> => {
-    this.currentUserUuid$.next(uuid);
     return this.api.login(uuid, password).then(() => {
+      this.currentUserUuid$.next(uuid);
       this.resetPermissionCookie();
     });
   }

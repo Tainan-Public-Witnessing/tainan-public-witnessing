@@ -8,15 +8,12 @@
       <input matInput formControlName="username" [matAutocomplete]="auto" cy="username-input">
       <mat-autocomplete #auto="matAutocomplete">
         <mat-option
-          *ngFor="let userKey of userKeys"
-          [value]="userKey.username"
+          *ngFor="let username of (autoCompleteUserKeys$ | async)"
+          [value]="username"
           cy="username-autocomplete-options">
-          {{userKey.username}}
+          {{username}}
         </mat-option>
       </mat-autocomplete>
-      <mat-error *ngIf="loginForm.controls.username.hasError('notExist')" cy="username-not-exist-error-message">
-        {{ "GLOBAL.DONOT_EXIST_ERROR" | translate: { value: "LOGIN.LABEL.USERNAME" | translate } }}
-      </mat-error>
     </mat-form-field>
 
     <mat-form-field class="full-width">

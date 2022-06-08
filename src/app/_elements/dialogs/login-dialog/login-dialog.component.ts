@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { combineLatest, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
 import { UsersService } from 'src/app/_services/users.service';
 import { UserKey } from 'src/app/_interfaces/user.interface';
 import { map, takeUntil, first, filter } from 'rxjs/operators';
@@ -15,8 +15,9 @@ import { Status } from 'src/app/_enums/status.enum';
 })
 export class LoginDialogComponent implements OnInit, OnDestroy {
 
-  loginForm: FormGroup;
-  userKeys: UserKey[];
+  loginForm!: FormGroup;
+  userKeys: UserKey[] = [];
+  autoCompleteUserKeys$ = new BehaviorSubject<string[]>([]);
   destroy$ = new Subject<void>();
 
   constructor(
@@ -33,6 +34,16 @@ export class LoginDialogComponent implements OnInit, OnDestroy {
     });
 
     this.usersService.getUserKeys().pipe(filter(userKeys => !!userKeys), first()).subscribe(userKeys => this.userKeys = userKeys);
+
+    this.loginForm.get('username')?.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(value => {
+      if (value === '') {
+        this.autoCompleteUserKeys$.next([]);
+      } else {
+        this.autoCompleteUserKeys$.next(
+          this.userKeys.filter(userKey => userKey.username.toLowerCase().includes(value.toLowerCase())).map(userKey => userKey.username)
+        );
+      }
+    })
   }
 
   ngOnDestroy(): void {
@@ -59,7 +70,7 @@ export class LoginDialogComponent implements OnInit, OnDestroy {
           }
         });
       }  else { // username not exist
-        this.loginForm.controls.username.setErrors({ notExist: true });
+        this.loginForm.setErrors({ permissionFail: true });
       }
     } else { // not valid
       this.loginForm.markAllAsTouched();
