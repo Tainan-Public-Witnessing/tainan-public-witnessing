@@ -30,7 +30,8 @@
         width: 100%;
         max-width: $page-max-width;
         min-width: $page-min-width;
-        height: 100%;
+        height: calc(100% - 16px);
+        padding-top: 16px;
         overflow: hidden;
       }
     }

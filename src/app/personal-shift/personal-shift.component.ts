@@ -1,9 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MAT_DATE_FORMATS } from '@angular/material/core';
 import { MatDatepicker } from '@angular/material/datepicker';
+import { MatDateRangePickerInput } from '@angular/material/datepicker/date-range-picker';
 import * as moment from 'moment';
 import { Moment } from 'moment';
+import { filter, map, Subject, take, takeUntil } from 'rxjs';
+import { Shift } from '../_interfaces/shift.interface';
+import { AuthorityService } from '../_services/authority.service';
+import { PersonalShiftsService } from '../_services/personal-shifts.service';
 
 @Component({
   selector: 'app-personal-shift',
@@ -23,13 +28,31 @@ import { Moment } from 'moment';
   },},
   ]
 })
-export class PersonalShiftComponent implements OnInit {
+export class PersonalShiftComponent implements OnInit, OnDestroy {
 
-  yearMonthControl = new FormControl(moment())
+  yearMonthControl = new FormControl(moment());
+  shifts: Shift[] = [];
+  destroy$ = new Subject<void>();
 
-  constructor() { }
+  constructor(
+    private authorityService: AuthorityService,
+    private personalShiftsService: PersonalShiftsService,
+  ) { }
 
   ngOnInit(): void {
+    this.yearMonthControl.valueChanges.pipe(
+      takeUntil(this.destroy$),
+      filter(value => !!value),
+      map(momentDate => momentDate.format('yyyy-MM')),
+      // map(yearMonth => this.personalShiftsService.getPersonalShift(this.authorityService.currentUserUuid$.value, yearMonth))
+    ).subscribe(value => {
+      console.log(value)
+    })
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   setMonthAndYear(normalizedMonthAndYear: Moment, datepicker: MatDatepicker<Moment>) {

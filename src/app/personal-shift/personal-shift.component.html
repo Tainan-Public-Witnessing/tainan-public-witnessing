@@ -1,11 +1,15 @@
-<mat-form-field appearance="outline">
-  <mat-label>Year and Month</mat-label>
-  <input matInput [matDatepicker]="yearMonthPicker" [formControl]="yearMonthControl">
-  <mat-datepicker-toggle matSuffix [for]="yearMonthPicker"></mat-datepicker-toggle>
-  <mat-datepicker
-    #yearMonthPicker
-    startView="year"
-    (monthSelected)="setMonthAndYear($event, yearMonthPicker)"
-    panelClass="example-month-picker">
-  </mat-datepicker>
-</mat-form-field>
+
+<div class="container">
+  <mat-form-field appearance="outline">
+    <mat-label>Year and Month</mat-label>
+    <input matInput [matDatepicker]="yearMonthPicker" [formControl]="yearMonthControl">
+    <mat-datepicker-toggle matSuffix [for]="yearMonthPicker"></mat-datepicker-toggle>
+    <mat-datepicker
+      #yearMonthPicker
+      startView="year"
+      (monthSelected)="setMonthAndYear($event, yearMonthPicker)"
+      panelClass="example-month-picker">
+    </mat-datepicker>
+  </mat-form-field>
+
+</div>
