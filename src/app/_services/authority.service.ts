@@ -1,69 +1,65 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { first, tap } from 'rxjs/operators';
 import { Api } from 'src/app/_api/mock.api';
-import { ProfilesService } from './profiles.service';
-import { Profile } from 'src/app/_interfaces/profile.interface';
-import { PermissionKey } from 'src/app/_enums/permission-key.enum';
-import { Status } from 'src/app/_enums/status.enum';
-import { User } from 'src/app/_interfaces/user.interface';
-import { UsersService } from './users.service';
+import { CookieService } from 'ngx-cookie-service';
+import { MatDialog } from '@angular/material/dialog';
+import { LoginDialogComponent } from '../_elements/dialogs/login-dialog/login-dialog.component';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthorityService {
+export class AuthorityService implements CanActivate {
 
-  currentUser$ = new BehaviorSubject<User>(null);
-  currentProfile$ = new BehaviorSubject<Profile>(null);
-  logout$ = new Subject<void>();
-  subscription: Subscription;
+  currentUserUuid$ = new BehaviorSubject<string|null>(null); // uuid
 
   constructor(
-    private api: Api,
+    private matDialog: MatDialog,
     private router: Router,
-    private profilesService: ProfilesService,
-    private usersService: UsersService
-  ) {
-    // tslint:disable-next-line: no-string-literal
-    if (window['Cypress']) {
-      // tslint:disable-next-line: no-string-literal
-      window['AuthorityService'] = this;
+    private api: Api,
+    private cookieService: CookieService,
+  ) { }
+
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
+    if (this.cookieService.get(environment.TAINAN_PUBLIC_WITNESSING_PERMISSION_TOKEN) === this.currentUserUuid$.value) {
+      this.resetPermissionCookie();
+      return true;
+    } else {
+      return this.matDialog.open(LoginDialogComponent, {
+        disableClose: true,
+        panelClass: 'dialog-panel',
+      }).afterClosed().pipe(
+        first(),
+        tap(result => {
+          if (!result) {
+            this.router.navigate(['home']);
+          }
+        })
+      );
     }
   }
 
-  initialize = () => {
-    this.currentUser$.subscribe(user => {
-      if (user) {
-        this.profilesService.getProfileByUuid(user.profile).subscribe(this.currentProfile$);
-      } else {
-        // guest profile
-        this.currentProfile$.next(this.profilesService.getProfileByUuid('PROFILE_GUEST_UUID').getValue());
-      }
-    });
-  }
-
-  getPermissionByKey = (key: PermissionKey): Observable<boolean> => {
-    return this.currentProfile$.pipe(
-      map(profile => profile.permissions.find(permission => permission.key === key).access)
-    );
-  }
-
-  login = (uuid: string, password: string): Promise<Status> => {
+  login = (uuid: string, password: string): Promise<void> => {
+    this.currentUserUuid$.next(uuid);
     return this.api.login(uuid, password).then(() => {
-      this.subscription = this.usersService.getUserByUuid(uuid, { immortal: true }).subscribe(this.currentUser$);
-      return Promise.resolve(Status.SUCCESS);
+      this.resetPermissionCookie();
     });
   }
 
-  logout = () => {
-    const uuid = this.currentUser$.getValue().uuid;
-    this.api.logout(uuid).then(() => {
-      this.usersService.removeImmortal(uuid);  // set immortal user to normal user
-      this.subscription.unsubscribe();  // keep currentUser$ alive
-      this.currentUser$.next(null);
+  logout = (): Promise<void> => {
+    const uuid = this.currentUserUuid$.value;
+    this.currentUserUuid$.next(null);
+    return this.api.logout(uuid).then(() => {
+      this.cookieService.delete(environment.TAINAN_PUBLIC_WITNESSING_PERMISSION_TOKEN);
       this.router.navigate(['home']);
     });
+  }
+
+  private resetPermissionCookie = () => {
+    const expiresDate = new Date();
+    expiresDate.setMinutes(expiresDate.getMinutes() + 10);
+    this.cookieService.set(environment.TAINAN_PUBLIC_WITNESSING_PERMISSION_TOKEN, this.currentUserUuid$.value, {expires: expiresDate});
   }
 }

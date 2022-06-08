@@ -15,44 +15,44 @@ export class TagsService {
     private api: Api
   ) { }
 
-  getTags = (): BehaviorSubject<Tag[]> => {
-    if (!this.tags$.getValue()) {
-      this.api.readTags().subscribe(this.tags$);
-    }
-    return this.tags$;
-  }
+  // getTags = (): BehaviorSubject<Tag[]> => {
+  //   if (!this.tags$.getValue()) {
+  //     this.api.readTags().subscribe(this.tags$);
+  //   }
+  //   return this.tags$;
+  // }
 
-  sortTags = (tags: Tag[]): Promise<Status> => {
-    return this.api.updateTags(tags);
-  }
+  // sortTags = (tags: Tag[]): Promise<Status> => {
+  //   return this.api.updateTags(tags);
+  // }
 
-  createTag = (tag: Tag): Promise<Status> => {
-    const tags = this.tags$.getValue();
-    if (tags) {
-      if (!tags.find(c => c.name === tag.name)) {
-        return this.api.createTag(tag).then(() => Promise.resolve(Status.SUCCESS));
-      } else {
-        return Promise.reject(Status.EXISTED);
-      }
-    } else {
-      return Promise.reject(Status.NOT_LOADED);
-    }
-  }
+  // createTag = (tag: Tag): Promise<Status> => {
+  //   const tags = this.tags$.getValue();
+  //   if (tags) {
+  //     if (!tags.find(c => c.name === tag.name)) {
+  //       return this.api.createTag(tag).then(() => Promise.resolve(Status.SUCCESS));
+  //     } else {
+  //       return Promise.reject(Status.EXISTED);
+  //     }
+  //   } else {
+  //     return Promise.reject(Status.NOT_LOADED);
+  //   }
+  // }
 
-  updateTag = (tag: Tag): Promise<Status> => {
-    const tags = this.tags$.getValue();
-    if (tags) {
-      if (!tags.find(object => object.name === tag.name)) {
-        return this.api.updateTag(tag);
-      } else {
-        return Promise.reject(Status.EXISTED);
-      }
-    } else {
-      return Promise.reject(Status.NOT_LOADED);
-    }
-  }
+  // updateTag = (tag: Tag): Promise<Status> => {
+  //   const tags = this.tags$.getValue();
+  //   if (tags) {
+  //     if (!tags.find(object => object.name === tag.name)) {
+  //       return this.api.updateTag(tag);
+  //     } else {
+  //       return Promise.reject(Status.EXISTED);
+  //     }
+  //   } else {
+  //     return Promise.reject(Status.NOT_LOADED);
+  //   }
+  // }
 
-  deleteTag = (uuid: string): Promise<Status> => {
-    return this.api.deleteTag(uuid);
-  }
+  // deleteTag = (uuid: string): Promise<Status> => {
+  //   return this.api.deleteTag(uuid);
+  // }
 }

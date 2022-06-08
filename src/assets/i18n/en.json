@@ -26,7 +26,7 @@
       "USERNAME": "User name",
       "PASSWORD": "Password"
     },
-    "WRONG_PASSWORD_ERROR": "Wrong password!"
+    "PERMISSION_FAIL_ERROR": "User not exist of wrong password!"
   },
   "HOME": {
     "TITLE": "Home"

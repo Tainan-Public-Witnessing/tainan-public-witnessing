@@ -98,13 +98,7 @@
               "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
-              "namedChunks": true,
-              "fileReplacements": [
-                {
-                  "replace": "src/app/_modules/firebase/firebase.module.ts",
-                  "with": "src/app/_modules/firebase/firebase-development.module.ts"
-                }
-              ]
+              "namedChunks": true
             }
           },
           "defaultConfiguration": "development"

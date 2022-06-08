@@ -5,13 +5,13 @@
 
     <mat-form-field class="full-width">
       <mat-label>{{ "LOGIN.LABEL.USERNAME" | translate }}</mat-label>
-      <input matInput formControlName="username" [matAutocomplete]="auto" cdkFocusInitial cy="username-input">
+      <input matInput formControlName="username" [matAutocomplete]="auto" cy="username-input">
       <mat-autocomplete #auto="matAutocomplete">
         <mat-option
-          *ngFor="let userPrimaryKey of (usernameAutoComplete$ | async)"
-          [value]="userPrimaryKey.username"
+          *ngFor="let userKey of userKeys"
+          [value]="userKey.username"
           cy="username-autocomplete-options">
-          {{userPrimaryKey.username}}
+          {{userKey.username}}
         </mat-option>
       </mat-autocomplete>
       <mat-error *ngIf="loginForm.controls.username.hasError('notExist')" cy="username-not-exist-error-message">
@@ -22,10 +22,11 @@
     <mat-form-field class="full-width">
       <mat-label>{{ "LOGIN.LABEL.PASSWORD" | translate }}</mat-label>
       <input matInput formControlName="password" type="password" cy="password-input">
-      <mat-error *ngIf="loginForm.controls.password.hasError('wrongPassword')" cy="wrong-password-error-message">
-        {{ "LOGIN.WRONG_PASSWORD_ERROR" | translate }}
-      </mat-error>
     </mat-form-field>
+
+    <mat-error *ngIf="loginForm.hasError('permissionFail')" cy="permission-fail-error-message">
+      {{ "LOGIN.PERMISSION_FAIL_ERROR" | translate }}
+    </mat-error>
   </form>
 </div>
 
