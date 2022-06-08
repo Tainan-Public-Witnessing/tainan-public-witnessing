@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 // import { AuthorityGuardService } from 'src/app/_services/authority-guard.service';
 
 import { HomeComponent } from 'src/app/home/home.component';
+import { AuthorityService } from './_services/authority.service';
 // import { UsersComponent } from 'src/app/users/users.component';
 // import { CongregationsComponent } from 'src/app//congregations/congregations.component';
 // import { TagsComponent } from 'src/app/tags/tags.component';
@@ -11,7 +12,7 @@ import { HomeComponent } from 'src/app/home/home.component';
 // import { UserComponent } from 'src/app/users/user/user.component';
 
 const routes: Routes = [
-  { path: 'home', component: HomeComponent },
+  { path: 'home', component: HomeComponent, canActivate: [AuthorityService] },
   // {path: 'users', component: UsersComponent, canActivate: [AuthorityGuardService]},
   // {path: 'user/:mode', component: UserComponent, canActivate: [AuthorityGuardService]},
   // {path: 'congregations', component: CongregationsComponent, canActivate: [AuthorityGuardService]},

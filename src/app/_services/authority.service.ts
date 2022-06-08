@@ -23,11 +23,12 @@ export class AuthorityService implements CanActivate {
   ) { }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
+    console.log({route, state})
     if (this.cookieService.check(environment.TAINAN_PUBLIC_WITNESSING_PERMISSION_TOKEN)) {
       this.currentUserUuid$.next(this.cookieService.get(environment.TAINAN_PUBLIC_WITNESSING_PERMISSION_TOKEN));
       this.resetPermissionCookie();
       return true;
-    } else {
+    } else if (state.url !== '/home') {
       return this.matDialog.open(LoginDialogComponent, {
         disableClose: true,
         panelClass: 'dialog-panel',

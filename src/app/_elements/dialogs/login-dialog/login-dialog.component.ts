@@ -1,12 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { UsersService } from 'src/app/_services/users.service';
 import { UserKey } from 'src/app/_interfaces/user.interface';
-import { map, takeUntil, first, filter } from 'rxjs/operators';
+import { takeUntil, first, filter } from 'rxjs/operators';
 import { AuthorityService } from 'src/app/_services/authority.service';
-import { Status } from 'src/app/_enums/status.enum';
 
 @Component({
   selector: 'app-login-dialog',
