@@ -1,14 +1,14 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MAT_DATE_FORMATS } from '@angular/material/core';
 import { MatDatepicker } from '@angular/material/datepicker';
-import { MatDateRangePickerInput } from '@angular/material/datepicker/date-range-picker';
 import * as moment from 'moment';
 import { Moment } from 'moment';
-import { filter, map, Subject, take, takeUntil } from 'rxjs';
+import { combineLatest, filter, map, of, Subject, switchAll, takeUntil } from 'rxjs';
 import { Shift } from '../_interfaces/shift.interface';
 import { AuthorityService } from '../_services/authority.service';
 import { PersonalShiftsService } from '../_services/personal-shifts.service';
+import { ShiftsService } from '../_services/shifts.service';
 
 @Component({
   selector: 'app-personal-shift',
@@ -28,7 +28,7 @@ import { PersonalShiftsService } from '../_services/personal-shifts.service';
   },},
   ]
 })
-export class PersonalShiftComponent implements OnInit, OnDestroy {
+export class PersonalShiftComponent implements OnInit, AfterViewInit, OnDestroy {
 
   yearMonthControl = new FormControl(moment());
   shifts: Shift[] = [];
@@ -37,17 +37,32 @@ export class PersonalShiftComponent implements OnInit, OnDestroy {
   constructor(
     private authorityService: AuthorityService,
     private personalShiftsService: PersonalShiftsService,
+    private shiftsService: ShiftsService,
   ) { }
 
-  ngOnInit(): void {
+  ngOnInit(): void { }
+
+  ngAfterViewInit(): void {
     this.yearMonthControl.valueChanges.pipe(
       takeUntil(this.destroy$),
       filter(value => !!value),
       map(momentDate => momentDate.format('yyyy-MM')),
-      // map(yearMonth => this.personalShiftsService.getPersonalShift(this.authorityService.currentUserUuid$.value, yearMonth))
-    ).subscribe(value => {
-      console.log(value)
-    })
+      map(yearMonth => this.personalShiftsService.getPersonalShift(this.authorityService.currentUserUuid$.value, yearMonth)),
+      switchAll(),
+      filter(personalShift => personalShift !== null),
+      map(personalShift => personalShift !== undefined ? this.shiftsService.getShiftsByUuids(personalShift.shiftUuids) : undefined),
+      map(_shift$list => {
+        if (_shift$list !== undefined) {
+          return combineLatest(_shift$list.map(_shift$ => _shift$.pipe(filter(_shift => _shift !==null))));
+        } else {
+          return of(undefined);
+        }
+      }),
+      switchAll(),
+    ).subscribe(_shifts => {
+      this.shifts = _shifts;
+      console.log(this.shifts)
+    });
   }
 
   ngOnDestroy(): void {

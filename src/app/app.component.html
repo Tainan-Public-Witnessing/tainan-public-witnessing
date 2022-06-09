@@ -10,7 +10,7 @@
 
     <span class="spacer"></span>
 
-    <span *ngIf="currentUsername$ | async" class="welcome-message" cy="welcome-message">
+    <span *ngIf="(currentUsername$ | async) && (displayUsername$ | async)" class="welcome-message" cy="welcome-message">
       {{'GLOBAL.WELCOME_MESSAGE' | translate: {value: currentUsername$ | async} }}
     </span>
 

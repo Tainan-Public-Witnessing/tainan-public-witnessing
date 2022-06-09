@@ -20,9 +20,11 @@ export interface ApiInterface {
 
   readShiftHours: () => Promise<ShiftHours[]>;
 
-  readShiftKeys: (yearMonth: string) => Promise<ShiftKey[]>; // yyyy-MM
+  readShiftKeysByMonth: (yearMonth: string) => Promise<ShiftKey[]>; // yyyy-MM
+  readShiftKeysByDate: (date: string) => Promise<ShiftKey[]>; // yyyy-MM-dd
 
   readShift: (uuid: string) => Promise<Shift>;
+  readShifts: (uuids: string[]) => Promise<Shift[]>;
 
   readPersonalShift: (uuid: string) => Promise<PersonalShift>;
 }

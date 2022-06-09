@@ -2,8 +2,8 @@ import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular
 import { MatSidenav } from '@angular/material/sidenav';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { TranslateService } from '@ngx-translate/core';
-import { Subject, fromEvent, Observable, of, BehaviorSubject } from 'rxjs';
-import { takeUntil, map, switchAll } from 'rxjs/operators';
+import { Subject, fromEvent, Observable, of, BehaviorSubject, from } from 'rxjs';
+import { takeUntil, map, switchAll, filter, startWith } from 'rxjs/operators';
 import { GlobalEventService } from 'src/app/_services/global-event.service';
 import { Language, MomentLocale } from 'src/app/_enums/language.enum';
 import { AuthorityService } from 'src/app/_services/authority.service';
@@ -23,6 +23,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('menuButton') menuButton: MatButton;
   
   currentUsername$ = new BehaviorSubject<string|null>(null);
+  displayUsername$ = new BehaviorSubject<boolean>(true);
   languages: string[] = Object.values(Language);
   destroy$ = new Subject<void>();
 
@@ -36,6 +37,12 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    fromEvent(window, 'resize').pipe(
+      takeUntil(this.destroy$),
+      map(() => window.innerWidth),
+      startWith(window.innerWidth),
+      map(width => width > 475),
+    ).subscribe(displayUsername => this.displayUsername$.next(displayUsername));
 
     this.translateService.setDefaultLang(Language.ZH);
     this.dateAdapter.setLocale(MomentLocale[Language.ZH.toUpperCase()]);
@@ -44,7 +51,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       takeUntil(this.destroy$),
       map(uuid => {
         if (uuid) {
-          return this.usersService.getUserByUuid(uuid).pipe(map(user => user ? user.name : null));
+          return this.usersService.getUserByUuid(uuid).pipe(filter(user => user !== null), map(user => user ? user.name : null));
         } else {
           return of(null);
         }

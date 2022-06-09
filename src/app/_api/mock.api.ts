@@ -105,7 +105,7 @@ export class Api implements ApiInterface {
       address: '',
       note: '',
       tags: ['']
-    }, this.userKeys[2]),
+    }, this.userKeys[3]),
   ];
 
   private congregations: Congregation[] = [
@@ -156,34 +156,32 @@ export class Api implements ApiInterface {
     {
       uuid: '056f687d-2b0b-48ee-ba30-a4190a95cacb',
       date: '2019-04-27',
-      day: Day.SATURDAY,
-      shiftHoursUuid: '39cd7d33-ba5c-4967-8502-a1a57f557842',
-      siteUuid: '408941a1-3af4-4148-a822-baddd9fae407',
       activate: true,
     }, {
       uuid: 'c1c9b287-1f8b-4364-810d-6218c535fb77',
       date: '2019-04-27',
-      day: Day.SATURDAY,
-      shiftHoursUuid: 'bb406de4-d090-413b-a68b-ad790a332699',
-      siteUuid: '2ab1d2b4-e03b-47ba-991d-7ca801c79b0d',
       activate: true,
     },
   ];
 
   private shifts: Shift[] = [
     Object.assign({
+      shiftHoursUuid: '39cd7d33-ba5c-4967-8502-a1a57f557842',
+      siteUuid: '408941a1-3af4-4148-a822-baddd9fae407',
       crewUuids: [
         '73783509-ecf4-4522-924b-c782d41fb95c',
         '620a6781-1ef4-4ac6-b23f-8efe20348907',
       ]
     }, this.shiftKeys[0]),
     Object.assign({
+      shiftHoursUuid: 'bb406de4-d090-413b-a68b-ad790a332699',
+      siteUuid: '2ab1d2b4-e03b-47ba-991d-7ca801c79b0d',
       crewUuids: [
         '73783509-ecf4-4522-924b-c782d41fb95c',
         '9efe91be-3b71-40e7-8ea2-6e2768bb2ebd',
         'bdb0fd54-b203-4e87-b744-1867d7eb0932',
       ]
-    }, this.shiftKeys[0]),
+    }, this.shiftKeys[1]),
   ];
 
   private personalShifts: PersonalShift[] = [
@@ -264,12 +262,26 @@ export class Api implements ApiInterface {
     return Promise.resolve([...this.shiftHoursList]);
   };
 
-  readShiftKeys = (yearMonth: string): Promise<ShiftKey[]> => {
-    console.log('mock api readShiftKeys', {yearMonth});
+  readShiftKeysByMonth = (yearMonth: string): Promise<ShiftKey[]> => {
+    console.log('mock api readShiftKeysByMonth', {yearMonth});
     const startDate = yearMonth + '-00';
     const endDate = yearMonth + '-32';
     const filteredShiftKeys = this.shiftKeys.filter(shiftKey => startDate.localeCompare(shiftKey.date) < 0 && endDate.localeCompare(shiftKey.date) > 0);
-    return Promise.resolve([...filteredShiftKeys]);
+    if (filteredShiftKeys.length > 0) {
+      return Promise.resolve([...filteredShiftKeys]);
+    } else  {
+      return Promise.reject('NOT_EXIST');
+    }
+  };
+
+  readShiftKeysByDate = (date: string): Promise<ShiftKey[]> => {
+    console.log('mock api readShiftKeysByDate', {date});
+    const filteredShiftKeys = this.shiftKeys.filter(shiftKey => shiftKey.date === date);
+    if (filteredShiftKeys.length > 0) {
+      return Promise.resolve([...filteredShiftKeys]);
+    } else  {
+      return Promise.reject('NOT_EXIST');
+    }
   };
 
   readShift = (uuid: string): Promise<Shift> => {
@@ -278,8 +290,21 @@ export class Api implements ApiInterface {
     if (index > -1) {
       return Promise.resolve(Object.assign({}, this.shifts[index]));
     } else {
-      return Promise.reject('NOT_EXIST')
+      return Promise.reject('NOT_EXIST');
     }
+  };
+
+  readShifts = (uuids: string[]): Promise<Shift[]|undefined> => {
+    console.log('mock api readShifts', {uuids});
+    const _shifts = uuids.map(uuid => {
+      const index = this.shifts.findIndex(_shift => _shift.uuid === uuid);
+      if (index > -1) {
+        return this.shifts[index];
+      } else {
+        return undefined;
+      }
+    });
+    return Promise.resolve(_shifts);
   };
 
   readPersonalShift = (uuid: string): Promise<PersonalShift> => {
@@ -288,7 +313,7 @@ export class Api implements ApiInterface {
     if (index > -1) {
       return Promise.resolve(Object.assign({}, this.personalShifts[index]));
     } else {
-      return Promise.reject('NOT_EXIST')
+      return Promise.reject('NOT_EXIST');
     }
   };
 }
