@@ -9,7 +9,6 @@ import { ShiftHours } from '../_interfaces/shift-hours.interface';
 import { Shift, ShiftKey } from '../_interfaces/shift.interface';
 import { Gender } from '../_enums/gender.enum';
 import { Permission } from '../_enums/permission.enum';
-import { Day } from '../_enums/day.enum';
 import { PersonalShift } from '../_interfaces/personal-shift.interface';
 
 @Injectable({

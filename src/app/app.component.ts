@@ -11,6 +11,7 @@ import { Api } from 'src/app/_api/mock.api';
 import { DateAdapter } from '@angular/material/core';
 import { MatButton } from '@angular/material/button';
 import { UsersService } from './_services/users.service';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 
 @Component({
   selector: 'app-root',
@@ -33,7 +34,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     private globalEventService: GlobalEventService,
     private translateService: TranslateService,
     private dateAdapter: DateAdapter<any>,
-    private focusMonitor: FocusMonitor
+    private focusMonitor: FocusMonitor,
   ) {}
 
   ngOnInit(): void {

@@ -26,7 +26,7 @@
     "@ngx-translate/core": "^13.0.0",
     "@ngx-translate/http-loader": "^6.0.0",
     "ajv": "^6.12.6",
-    "firebase": "^8.7.1",
+    "firebase": "^9.8.2",
     "moment": "^2.29.1",
     "ngx-cookie-service": "^14.0.0",
     "rxjs": "^7.5.5",

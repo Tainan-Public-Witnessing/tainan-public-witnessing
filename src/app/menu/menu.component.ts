@@ -1,10 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
+import { BehaviorSubject, of, Subject } from 'rxjs';
 import { filter, first, map, switchAll, takeUntil } from 'rxjs/operators';
 import { MenuLink } from 'src/app/_interfaces/menu-link.interface';
 import { LoginDialogComponent } from 'src/app/_elements/dialogs/login-dialog/login-dialog.component';
-import { PermissionKey } from 'src/app/_enums/permission-key.enum';
 import { AuthorityService } from 'src/app/_services/authority.service';
 import { GlobalEventService } from 'src/app/_services/global-event.service';
 import { Permission } from '../_enums/permission.enum';
