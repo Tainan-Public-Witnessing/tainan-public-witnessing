@@ -1,17 +1,19 @@
 <mat-card class="shift-card">
   <mat-card-header>
     <mat-card-title>
-      {{shift?.date}}
-      {{shiftHours?.name}}
-      {{site?.name}}
+      <div>{{shift?.date}}</div>
+      <div><mat-icon>schedule</mat-icon>{{shiftHours?.name}}</div>
+      <div><mat-icon>pin_drop</mat-icon>{{site?.name}}</div>
     </mat-card-title>
     <mat-card-subtitle>
-      {{day}}
+      {{'GLOBAL.DAY.' + day | translate}}
       {{shiftHours?.startTime}} ~
       {{shiftHours?.endTime}}
     </mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
-    <div *ngFor="let user of crew">{{user.username}}</div>
+    <mat-chip-list>
+      <mat-chip *ngFor="let user of crew">{{user.username}}</mat-chip>
+    </mat-chip-list>
   </mat-card-content>
 </mat-card>

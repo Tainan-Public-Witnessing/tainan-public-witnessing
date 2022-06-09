@@ -1,0 +1,17 @@
+.shift-card {
+  width: 210px;
+
+  .mat-card-header {
+
+    .mat-card-title {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  .mat-card-content {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+}

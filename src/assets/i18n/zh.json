@@ -10,7 +10,16 @@
     "WELCOME_MESSAGE": "{{value}}，你好！",
     "DELETE_MESSAGE": "你確定要刪除{{value}}嗎？",
     "EXISTED_ERROR": "{{value}}已存在！",
-    "DONOT_EXIST_ERROR": "{{value}}不存在！"
+    "DONOT_EXIST_ERROR": "{{value}}不存在！",
+    "DAY": {
+      "SUNDAY": "週日",
+      "MONDAY": "週一",
+      "TUESDAY": "週二",
+      "WEDNESDAY": "週三",
+      "THURSDAY": "週四",
+      "FRIDAY": "週五",
+      "SATURDAY": "週六"
+    }
   },
   "GENDER": {
     "MALE": "男",
@@ -32,7 +41,10 @@
     "TITLE": "首頁"
   },
   "PERSONAL_SHIFT": {
-    "TITLE": "個人班表"
+    "TITLE": "個人班表",
+    "LABEL": {
+      "YEAR_MONTH": "年-月"
+    }
   },
   "USERS": {
     "TITLE": "使用者列表",

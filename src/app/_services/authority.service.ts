@@ -87,7 +87,8 @@ export class AuthorityService implements CanActivate {
 
   private resetPermissionCookie = () => {
     const expiresDate = new Date();
-    expiresDate.setMinutes(expiresDate.getMinutes() + 10);
-    this.cookieService.set(environment.TAINAN_PUBLIC_WITNESSING_PERMISSION_TOKEN, this.currentUserUuid$.value, {expires: expiresDate});
+    // expiresDate.setMinutes(expiresDate.getMinutes() + 10);
+    // this.cookieService.set(environment.TAINAN_PUBLIC_WITNESSING_PERMISSION_TOKEN, this.currentUserUuid$.value, {expires: expiresDate});
+    this.cookieService.set(environment.TAINAN_PUBLIC_WITNESSING_PERMISSION_TOKEN, this.currentUserUuid$.value);
   }
 }

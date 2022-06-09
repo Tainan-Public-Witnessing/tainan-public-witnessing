@@ -10,7 +10,16 @@
     "WELCOME_MESSAGE": "Hi! {{value}}",
     "DELETE_MESSAGE": "Are you sure to delete {{value}}?",
     "EXISTED_ERROR": "{{value}} already existed!",
-    "DONOT_EXIST_ERROR": "{{value}} do not exist!"
+    "DONOT_EXIST_ERROR": "{{value}} do not exist!",
+    "DAY": {
+      "SUNDAY": "Sunday",
+      "MONDAY": "Monday",
+      "TUESDAY": "Tuesday",
+      "WEDNESDAY": "Wednesday",
+      "THURSDAY": "Thursday",
+      "FRIDAY": "Friday",
+      "SATURDAY": "Saturday"
+    }
   },
   "GENDER": {
     "MALE": "Male",
@@ -32,7 +41,10 @@
     "TITLE": "Home"
   },
   "PERSONAL_SHIFT": {
-    "TITLE": "Personal Shift"
+    "TITLE": "Personal Shift",
+    "LABEL": {
+      "YEAR_MONTH": "Year and Month"
+    }
   },
   "USERS": {
     "TITLE": "Users",
