@@ -1,0 +1,17 @@
+<mat-card class="shift-card">
+  <mat-card-header>
+    <mat-card-title>
+      {{shift?.date}}
+      {{shiftHours?.name}}
+      {{site?.name}}
+    </mat-card-title>
+    <mat-card-subtitle>
+      {{day}}
+      {{shiftHours?.startTime}} ~
+      {{shiftHours?.endTime}}
+    </mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <div *ngFor="let user of crew">{{user.username}}</div>
+  </mat-card-content>
+</mat-card>

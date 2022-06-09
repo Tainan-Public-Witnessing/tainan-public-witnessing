@@ -18,7 +18,7 @@ export interface ApiInterface {
 
   readSites: () => Promise<Site[]>;
 
-  readShiftHours: () => Promise<ShiftHours[]>;
+  readShiftHoursList: () => Promise<ShiftHours[]>;
 
   readShiftKeysByMonth: (yearMonth: string) => Promise<ShiftKey[]>; // yyyy-MM
   readShiftKeysByDate: (date: string) => Promise<ShiftKey[]>; // yyyy-MM-dd

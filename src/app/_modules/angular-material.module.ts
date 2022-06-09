@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -26,6 +27,7 @@ import { A11yModule } from '@angular/cdk/a11y';
   exports: [
     MatAutocompleteModule,
     MatButtonModule,
+    MatCardModule,
     MatDatepickerModule,
     MatDialogModule,
     MatIconModule,

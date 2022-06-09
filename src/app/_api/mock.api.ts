@@ -257,8 +257,8 @@ export class Api implements ApiInterface {
     return Promise.resolve([...this.sites]);
   };
 
-  readShiftHours = (): Promise<ShiftHours[]> => {
-    console.log('mock api readShiftHours');
+  readShiftHoursList = (): Promise<ShiftHours[]> => {
+    console.log('mock api readShiftHoursList');
     return Promise.resolve([...this.shiftHoursList]);
   };
 
