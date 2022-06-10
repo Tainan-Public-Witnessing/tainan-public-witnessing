@@ -13,6 +13,7 @@ export interface User extends UserKey {
   baptizeDate: string; // yyyy-MM-DD
   birthDate: string; // yyyy-MM-DD
   cellphone: string;
+  email: string;
   phone: string;
   address: string;
   note: string;

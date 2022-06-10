@@ -2,12 +2,11 @@ import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular
 import { MatSidenav } from '@angular/material/sidenav';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { TranslateService } from '@ngx-translate/core';
-import { Subject, fromEvent, Observable, of, BehaviorSubject, from } from 'rxjs';
+import { Subject, fromEvent, of, BehaviorSubject } from 'rxjs';
 import { takeUntil, map, switchAll, filter, startWith } from 'rxjs/operators';
 import { GlobalEventService } from 'src/app/_services/global-event.service';
 import { Language } from 'src/app/_enums/language.enum';
 import { AuthorityService } from 'src/app/_services/authority.service';
-import { Api } from 'src/app/_api/mock.api';
 import { DateAdapter } from '@angular/material/core';
 import { MatButton } from '@angular/material/button';
 import { UsersService } from './_services/users.service';
@@ -36,6 +35,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     private translateService: TranslateService,
     private dateAdapter: DateAdapter<any>,
     private focusMonitor: FocusMonitor,
+    private angularFirestore: AngularFirestore,
   ) {}
 
   ngOnInit(): void {
@@ -60,6 +60,8 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       }),
       switchAll()
     ).subscribe(name => this.currentUsername$.next(name));
+
+
   }
 
   ngAfterViewInit(): void {
