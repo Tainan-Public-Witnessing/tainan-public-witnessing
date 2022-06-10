@@ -9,6 +9,7 @@ import { LoginDialogComponent } from '../_elements/dialogs/login-dialog/login-di
 import { environment } from 'src/environments/environment';
 import { Permission } from '../_enums/permission.enum';
 import { UsersService } from './users.service';
+import { User } from '../_interfaces/user.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -37,11 +38,12 @@ export class AuthorityService implements CanActivate {
       }
     }
 
-    const currentUrlPermission = this.urlPermissions.find(urlPermission => state.url.includes(urlPermission.url))?.permission;
+    const currentUrlPermission = this.urlPermissions.find(urlPermission => state.url.includes(urlPermission.url))?.permission as Permission;
     if (currentUrlPermission !== Permission.GUEST) {
       if (this.currentUserUuid$.value) {
         return this.usersService.getUserByUuid(this.currentUserUuid$.value).pipe(
           filter(user => !!user),
+          map(user => user as User),
           first(),
           map(user => user.permission),
           map(userPermission => userPermission <= currentUrlPermission),
@@ -77,7 +79,7 @@ export class AuthorityService implements CanActivate {
   }
 
   logout = (): Promise<void> => {
-    const uuid = this.currentUserUuid$.value;
+    const uuid = this.currentUserUuid$.value as string;
     this.currentUserUuid$.next(null);
     return this.api.logout(uuid).then(() => {
       this.cookieService.delete(environment.TAINAN_PUBLIC_WITNESSING_PERMISSION_TOKEN);
@@ -89,6 +91,6 @@ export class AuthorityService implements CanActivate {
     const expiresDate = new Date();
     // expiresDate.setMinutes(expiresDate.getMinutes() + 10);
     // this.cookieService.set(environment.TAINAN_PUBLIC_WITNESSING_PERMISSION_TOKEN, this.currentUserUuid$.value, {expires: expiresDate});
-    this.cookieService.set(environment.TAINAN_PUBLIC_WITNESSING_PERMISSION_TOKEN, this.currentUserUuid$.value);
+    this.cookieService.set(environment.TAINAN_PUBLIC_WITNESSING_PERMISSION_TOKEN, this.currentUserUuid$.value as string);
   }
 }

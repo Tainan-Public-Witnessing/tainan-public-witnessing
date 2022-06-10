@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
-import { v5 as uuidv5 } from 'uuid';
-import { environment } from 'src/environments/environment';
 import { ApiInterface } from 'src/app/_api/api.interface';
 import { User, UserKey } from '../_interfaces/user.interface';
 import { Congregation } from '../_interfaces/congregation.interface';
 import { Site } from '../_interfaces/site.interface';
 import { ShiftHours } from '../_interfaces/shift-hours.interface';
-import { Shift, ShiftKey } from '../_interfaces/shift.interface';
+import { Shift } from '../_interfaces/shift.interface';
 import { Gender } from '../_enums/gender.enum';
 import { Permission } from '../_enums/permission.enum';
 import { PersonalShift } from '../_interfaces/personal-shift.interface';
@@ -151,36 +149,29 @@ export class Api implements ApiInterface {
     },
   ];
 
-  private shiftKeys: ShiftKey[] = [
+  private shifts: Shift[] = [
     {
       uuid: '056f687d-2b0b-48ee-ba30-a4190a95cacb',
       date: '2019-04-27',
-      activate: true,
-    }, {
-      uuid: 'c1c9b287-1f8b-4364-810d-6218c535fb77',
-      date: '2019-04-27',
-      activate: true,
-    },
-  ];
-
-  private shifts: Shift[] = [
-    Object.assign({
       shiftHoursUuid: '39cd7d33-ba5c-4967-8502-a1a57f557842',
       siteUuid: '408941a1-3af4-4148-a822-baddd9fae407',
       crewUuids: [
         '73783509-ecf4-4522-924b-c782d41fb95c',
         '620a6781-1ef4-4ac6-b23f-8efe20348907',
-      ]
-    }, this.shiftKeys[0]),
-    Object.assign({
+      ],
+      activate: true,
+    }, {
+      uuid: 'c1c9b287-1f8b-4364-810d-6218c535fb77',
+      date: '2019-04-27',
       shiftHoursUuid: 'bb406de4-d090-413b-a68b-ad790a332699',
       siteUuid: '2ab1d2b4-e03b-47ba-991d-7ca801c79b0d',
       crewUuids: [
         '73783509-ecf4-4522-924b-c782d41fb95c',
         '9efe91be-3b71-40e7-8ea2-6e2768bb2ebd',
         'bdb0fd54-b203-4e87-b744-1867d7eb0932',
-      ]
-    }, this.shiftKeys[1]),
+      ],
+      activate: true,
+    },
   ];
 
   private personalShifts: PersonalShift[] = [
@@ -261,26 +252,39 @@ export class Api implements ApiInterface {
     return Promise.resolve([...this.shiftHoursList]);
   };
 
-  readShiftKeysByMonth = (yearMonth: string): Promise<ShiftKey[]> => {
-    console.log('mock api readShiftKeysByMonth', {yearMonth});
+  readShiftsByMonth = (yearMonth: string): Promise<Shift[]> => {
+    console.log('mock api readShiftsByMonth', {yearMonth});
     const startDate = yearMonth + '-00';
     const endDate = yearMonth + '-32';
-    const filteredShiftKeys = this.shiftKeys.filter(shiftKey => startDate.localeCompare(shiftKey.date) < 0 && endDate.localeCompare(shiftKey.date) > 0);
-    if (filteredShiftKeys.length > 0) {
-      return Promise.resolve([...filteredShiftKeys]);
+    const filteredShifts = this.shifts.filter(_shift => startDate.localeCompare(_shift.date) < 0 && endDate.localeCompare(_shift.date) > 0);
+    if (filteredShifts.length > 0) {
+      return Promise.resolve([...filteredShifts]);
     } else  {
       return Promise.reject('NOT_EXIST');
     }
   };
 
-  readShiftKeysByDate = (date: string): Promise<ShiftKey[]> => {
-    console.log('mock api readShiftKeysByDate', {date});
-    const filteredShiftKeys = this.shiftKeys.filter(shiftKey => shiftKey.date === date);
-    if (filteredShiftKeys.length > 0) {
-      return Promise.resolve([...filteredShiftKeys]);
+  readShiftsByDate = (date: string): Promise<Shift[]> => {
+    console.log('mock api readShiftsByDate', {date});
+    const filteredShifts = this.shifts.filter(_shift => _shift.date === date);
+    if (filteredShifts.length > 0) {
+      return Promise.resolve([...filteredShifts]);
     } else  {
       return Promise.reject('NOT_EXIST');
     }
+  };
+
+  readShifts = (uuids: string[]): Promise<(Shift)[]> => {
+    console.log('mock api readShifts', {uuids});
+    const shifts = uuids.map(uuid => {
+      const index = this.shifts.findIndex(_shift => _shift.uuid === uuid);
+      if (index > -1) {
+        return this.shifts[index];
+      } else {
+        return undefined;
+      }
+    }).filter(_shift => _shift !== undefined) as Shift[];
+    return Promise.resolve(shifts);
   };
 
   readShift = (uuid: string): Promise<Shift> => {
@@ -291,19 +295,6 @@ export class Api implements ApiInterface {
     } else {
       return Promise.reject('NOT_EXIST');
     }
-  };
-
-  readShifts = (uuids: string[]): Promise<Shift[]|undefined> => {
-    console.log('mock api readShifts', {uuids});
-    const _shifts = uuids.map(uuid => {
-      const index = this.shifts.findIndex(_shift => _shift.uuid === uuid);
-      if (index > -1) {
-        return this.shifts[index];
-      } else {
-        return undefined;
-      }
-    });
-    return Promise.resolve(_shifts);
   };
 
   readPersonalShift = (uuid: string): Promise<PersonalShift> => {

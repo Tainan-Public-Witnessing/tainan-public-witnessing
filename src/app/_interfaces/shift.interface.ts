@@ -1,11 +1,8 @@
-export interface ShiftKey {
+export interface Shift {
   uuid: string;
   date: string; // yyyy-MM-DD
-  activate: boolean;
-}
-
-export interface Shift extends ShiftKey {
   shiftHoursUuid: string;
   siteUuid: string;
   crewUuids: string[];
+  activate: boolean;
 }

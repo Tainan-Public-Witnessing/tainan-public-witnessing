@@ -4,7 +4,8 @@ import { MAT_DATE_FORMATS } from '@angular/material/core';
 import { MatDatepicker } from '@angular/material/datepicker';
 import * as moment from 'moment';
 import { Moment } from 'moment';
-import { combineLatest, filter, map, of, Subject, switchAll, takeUntil } from 'rxjs';
+import { combineLatest, Observable, of, Subject } from 'rxjs';
+import { filter, map, switchAll, takeUntil } from 'rxjs/operators';
 import { Shift } from '../_interfaces/shift.interface';
 import { AuthorityService } from '../_services/authority.service';
 import { PersonalShiftsService } from '../_services/personal-shifts.service';
@@ -46,22 +47,22 @@ export class PersonalShiftComponent implements OnInit, AfterViewInit, OnDestroy 
     this.yearMonthControl.valueChanges.pipe(
       takeUntil(this.destroy$),
       filter(value => !!value),
+      map(momentDate => momentDate as moment.Moment),
       map(momentDate => momentDate.format('yyyy-MM')),
-      map(yearMonth => this.personalShiftsService.getPersonalShift(this.authorityService.currentUserUuid$.value, yearMonth)),
+      map(yearMonth => this.personalShiftsService.getPersonalShift(this.authorityService.currentUserUuid$.value as string, yearMonth)),
       switchAll(),
       filter(personalShift => personalShift !== null),
-      map(personalShift => personalShift !== undefined ? this.shiftsService.getShiftsByUuids(personalShift.shiftUuids) : undefined),
+      map(personalShift => personalShift !== undefined ? this.shiftsService.getShiftsByUuids(personalShift?.shiftUuids as string[]) : []),
       map(_shift$list => {
-        if (_shift$list !== undefined) {
-          return combineLatest(_shift$list.map(_shift$ => _shift$.pipe(filter(_shift => _shift !==null))));
+        if (_shift$list.length > 0) {
+          return combineLatest(_shift$list.map(_shift$ => _shift$.pipe(filter(_shift => _shift !== null)))) as Observable<Shift[]>;
         } else {
-          return of(undefined);
+          return of([]) as Observable<Shift[]>;
         }
       }),
       switchAll(),
     ).subscribe(_shifts => {
-      this.shifts = _shifts;
-      console.log(this.shifts)
+      this.shifts = _shifts as Shift[];
     });
   }
 
@@ -72,9 +73,11 @@ export class PersonalShiftComponent implements OnInit, AfterViewInit, OnDestroy 
 
   setMonthAndYear(normalizedMonthAndYear: Moment, datepicker: MatDatepicker<Moment>) {
     const controlValue = this.yearMonthControl.value;
-    controlValue.month(normalizedMonthAndYear.month());
-    controlValue.year(normalizedMonthAndYear.year());
-    this.yearMonthControl.setValue(controlValue);
+    if (controlValue !== null) {
+      controlValue.year(normalizedMonthAndYear.year());
+      controlValue.month(normalizedMonthAndYear.month());
+      this.yearMonthControl.setValue(controlValue);
+    }
     datepicker.close();
   }
 

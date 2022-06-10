@@ -8,6 +8,7 @@ import { AuthorityService } from 'src/app/_services/authority.service';
 import { GlobalEventService } from 'src/app/_services/global-event.service';
 import { Permission } from '../_enums/permission.enum';
 import { UsersService } from '../_services/users.service';
+import { User } from '../_interfaces/user.interface';
 
 @Component({
   selector: 'app-menu',
@@ -50,6 +51,7 @@ export class MenuComponent implements OnInit, OnDestroy {
         } else {
            return this.usersService.getUserByUuid(uuid).pipe(
             filter(user => !!user),
+            map(user => user as User),
             first(),
             map(user => user.permission),
           );

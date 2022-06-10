@@ -8,7 +8,7 @@ import { Shift } from 'src/app/_interfaces/shift.interface';
 })
 export class ShiftTableComponent implements OnInit {
 
-  @Input() shifts: Shift[]|null;
+  @Input() shifts!: Shift[]|null;
 
   constructor() { }
 

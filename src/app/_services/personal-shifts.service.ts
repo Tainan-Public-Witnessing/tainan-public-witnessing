@@ -27,6 +27,6 @@ export class PersonalShiftsService {
         }
       });
     }
-    return this.personalShifts.get(uuid);
+    return this.personalShifts.get(uuid) as BehaviorSubject<PersonalShift|null|undefined>;
   }
 }

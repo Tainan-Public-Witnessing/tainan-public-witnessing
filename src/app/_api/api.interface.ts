@@ -2,7 +2,7 @@ import { User, UserKey } from 'src/app/_interfaces/user.interface';
 import { Congregation } from 'src/app/_interfaces/congregation.interface';
 import { Site } from 'src/app/_interfaces/site.interface';
 import { ShiftHours } from '../_interfaces/shift-hours.interface';
-import { Shift, ShiftKey } from '../_interfaces/shift.interface';
+import { Shift } from '../_interfaces/shift.interface';
 import { PersonalShift } from '../_interfaces/personal-shift.interface';
 
 export interface ApiInterface {
@@ -20,11 +20,10 @@ export interface ApiInterface {
 
   readShiftHoursList: () => Promise<ShiftHours[]>;
 
-  readShiftKeysByMonth: (yearMonth: string) => Promise<ShiftKey[]>; // yyyy-MM
-  readShiftKeysByDate: (date: string) => Promise<ShiftKey[]>; // yyyy-MM-dd
-
+  readShiftsByMonth: (yearMonth: string) => Promise<Shift[]>; // yyyy-MM
+  readShiftsByDate: (date: string) => Promise<Shift[]>; // yyyy-MM-dd
+  readShifts: (uuids: string[]) => Promise<(Shift|undefined)[]>;
   readShift: (uuid: string) => Promise<Shift>;
-  readShifts: (uuids: string[]) => Promise<Shift[]>;
 
   readPersonalShift: (uuid: string) => Promise<PersonalShift>;
 }

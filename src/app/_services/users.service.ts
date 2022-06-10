@@ -36,6 +36,6 @@ export class UsersService {
         }
       });
     }
-    return this.users.get(uuid);
+    return this.users.get(uuid) as BehaviorSubject<User|null|undefined>;
   }
 }

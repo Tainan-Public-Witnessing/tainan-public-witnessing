@@ -5,13 +5,14 @@ import { TranslateService } from '@ngx-translate/core';
 import { Subject, fromEvent, Observable, of, BehaviorSubject, from } from 'rxjs';
 import { takeUntil, map, switchAll, filter, startWith } from 'rxjs/operators';
 import { GlobalEventService } from 'src/app/_services/global-event.service';
-import { Language, MomentLocale } from 'src/app/_enums/language.enum';
+import { Language } from 'src/app/_enums/language.enum';
 import { AuthorityService } from 'src/app/_services/authority.service';
 import { Api } from 'src/app/_api/mock.api';
 import { DateAdapter } from '@angular/material/core';
 import { MatButton } from '@angular/material/button';
 import { UsersService } from './_services/users.service';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -20,8 +21,8 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 })
 export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  @ViewChild('sidenav') sidenav: MatSidenav;
-  @ViewChild('menuButton') menuButton: MatButton;
+  @ViewChild('sidenav') sidenav!: MatSidenav;
+  @ViewChild('menuButton') menuButton!: MatButton;
   
   currentUsername$ = new BehaviorSubject<string|null>(null);
   displayUsername$ = new BehaviorSubject<boolean>(true);
@@ -45,8 +46,8 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       map(width => width > 475),
     ).subscribe(displayUsername => this.displayUsername$.next(displayUsername));
 
-    this.translateService.setDefaultLang(Language.ZH);
-    this.dateAdapter.setLocale(MomentLocale[Language.ZH.toUpperCase()]);
+    this.translateService.setDefaultLang('zh');
+    this.dateAdapter.setLocale(environment.MOMENT_LOCALES['zh']);
 
     this.authorityService.currentUserUuid$.pipe(
       takeUntil(this.destroy$),
@@ -78,7 +79,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onLanguageButtonClick = (language: Language) => {
     this.translateService.use(language);
-    this.dateAdapter.setLocale(MomentLocale[language.toUpperCase()]);
+    this.dateAdapter.setLocale(environment.MOMENT_LOCALES['zh']);
   }
 
   onMenuButtonClick = () => {

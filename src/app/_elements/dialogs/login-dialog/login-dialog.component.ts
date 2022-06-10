@@ -4,7 +4,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { UsersService } from 'src/app/_services/users.service';
 import { UserKey } from 'src/app/_interfaces/user.interface';
-import { takeUntil, first, filter } from 'rxjs/operators';
+import { takeUntil, first, filter, map } from 'rxjs/operators';
 import { AuthorityService } from 'src/app/_services/authority.service';
 
 @Component({
@@ -32,7 +32,11 @@ export class LoginDialogComponent implements OnInit, OnDestroy {
       password: ['', Validators.required],
     });
 
-    this.usersService.getUserKeys().pipe(filter(userKeys => !!userKeys), first()).subscribe(userKeys => this.userKeys = userKeys);
+    this.usersService.getUserKeys().pipe(
+      filter(userKeys => userKeys !== null),
+      map(userKeys => userKeys as UserKey[]),
+      first(),
+    ).subscribe(userKeys => this.userKeys = userKeys);
 
     this.loginForm.get('username')?.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(value => {
       if (value === '') {
