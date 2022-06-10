@@ -32,6 +32,7 @@ import { MAT_DATE_FORMATS } from '@angular/material/core';
 import { PersonalShiftComponent } from './personal-shift/personal-shift.component';
 import { ShiftTableComponent } from './_elements/shift-table/shift-table.component';
 import { ShiftCardComponent } from './_elements/shift-table/shift-card/shift-card.component';
+import { DatePipe } from '@angular/common';
 
 // AoT requires an exported function for factories of translate module
 export function HttpLoaderFactory(http: HttpClient) {
@@ -85,7 +86,8 @@ export function HttpLoaderFactory(http: HttpClient) {
           dateInput: 'YYYY-MM-DD'
         },
       },
-    }
+    },
+    DatePipe
   ],
   bootstrap: [AppComponent]
 })

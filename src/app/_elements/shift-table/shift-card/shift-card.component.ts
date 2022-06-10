@@ -52,7 +52,8 @@ export class ShiftCardComponent implements OnInit {
     ).subscribe(userKeys => {
       this.crew = this.shift.crewUuids.map(_uuid => userKeys.find(_userKey => _userKey.uuid === _uuid) as UserKey);
     });
-    this.day = environment.DAY[new Date(this.shift.date).getDay()];
+    const n  = new Date(this.shift.date).getDay()
+    this.day = environment.DAY[n];
   }
 
 }

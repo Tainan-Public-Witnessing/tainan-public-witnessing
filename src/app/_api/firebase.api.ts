@@ -7,9 +7,10 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Congregation } from '../_interfaces/congregation.interface';
 import { PersonalShift } from '../_interfaces/personal-shift.interface';
 import { ShiftHours } from '../_interfaces/shift-hours.interface';
-import { ShiftKey, Shift } from '../_interfaces/shift.interface';
+import { Shift } from '../_interfaces/shift.interface';
 import { Site } from '../_interfaces/site.interface';
 import { UserKey, User } from '../_interfaces/user.interface';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -23,24 +24,135 @@ export class Api implements ApiInterface {
     private angularFireAuth: AngularFireAuth,
   ) {}
 
-  login: (uuid: string, password: string) => Promise<void>;
-  logout: (uuid: string) => Promise<void>;
+  login = (uuid: string, password: string): Promise<void> => {
+    return Promise.resolve();
+  };
 
-  readUserKeys: () => Promise<UserKey[]>;
+  logout = (uuid: string): Promise<void> => {
+    return Promise.resolve();
+  };
 
-  readUser: (uuid: string) => Promise<User>;
+  readUserKeys = (): Promise<UserKey[]> => {
+    return firstValueFrom(this.angularFirestore.collection<UserKey>('UserKeys').get()).then(query => {
+      if (query.docs.length > 0) {
+        return query.docs.map(doc => doc.data());
+      } else {
+        return Promise.reject('NOT_EXIST');
+      }
+    });
+  };
 
-  readCongregations: () => Promise<Congregation[]>;
+  readUser = (uuid: string): Promise<User> => {
+    return this.angularFirestore.collection<User>('Users').doc<User>(uuid).ref.get().then(doc => {
+      if (doc.exists) {
+        return doc.data() as User;
+      } else {
+        return Promise.reject('NOT_EXIST');
+      }
+    });
+  };
 
-  readSites: () => Promise<Site[]>;
+  readCongregations = (): Promise<Congregation[]> => {
+    return firstValueFrom(this.angularFirestore.collection<Congregation>('Congregations').get()).then(query => {
+      if (query.docs.length > 0) {
+        return query.docs.map(doc => doc.data());
+      } else {
+        return Promise.reject('NOT_EXIST');
+      }
+    });
+  };
 
-  readShiftHoursList: () => Promise<ShiftHours[]>;
+  readSites = (): Promise<Site[]> => {
+    return firstValueFrom(this.angularFirestore.collection<Site>('Sites').get()).then(query => {
+      if (query.docs.length > 0) {
+        return query.docs.map(doc => doc.data());
+      } else {
+        return Promise.reject('NOT_EXIST');
+      }
+    });
+  };
 
-  readShiftKeysByMonth: (yearMonth: string) => Promise<ShiftKey[]>; // yyyy-MM
-  readShiftKeysByDate: (date: string) => Promise<ShiftKey[]>; // yyyy-MM-dd
+  readShiftHoursList = (): Promise<ShiftHours[]> => {
+    return firstValueFrom(this.angularFirestore.collection<ShiftHours>('ShiftHours').get()).then(query => {
+      if (query.docs.length > 0) {
+        return query.docs.map(doc => doc.data());
+      } else {
+        return Promise.reject('NOT_EXIST');
+      }
+    });
+  };
 
-  readShift: (uuid: string) => Promise<Shift>;
-  readShifts: (uuids: string[]) => Promise<Shift[]>;
+  readShiftsByMonth = (yearMonth: string): Promise<Shift[]> => {
+    return firstValueFrom(this.angularFirestore.collection<Shift>(['MonthlyData', yearMonth, 'Shifts'].join('/')).get()).then(query => {
+      if (query.docs.length > 0) {
+        return query.docs.map(doc => doc.data());
+      } else {
+        return Promise.reject('NOT_EXIST');
+      }
+    });
+  };
 
-  readPersonalShift: (uuid: string) => Promise<PersonalShift>;
+  readShiftsByDate = (date: string): Promise<Shift[]> => {
+    const yearMonth = date.slice(0, 7);
+    return firstValueFrom(this.angularFirestore.collection<Shift>(
+      ['MonthlyData', yearMonth, 'Shifts'].join('/'),
+      document => document.where('date', '==', date)
+    ).get()).then(query => {
+      if (query.docs.length > 0) {
+        return query.docs.map(doc => doc.data());
+      } else {
+        return Promise.reject('NOT_EXIST');
+      }
+    });
+  };
+
+  readShifts = (yearMonth: string, uuids: string[]): Promise<Shift[]> => {
+    const setNumber = Math.ceil(uuids.length / 10);
+    const uuidSets = [];
+    for(let i = 0; i < setNumber; i++) {
+      uuidSets.push(uuids.slice(i * 10, i * 10 +10));
+    }
+    return Promise.all(
+      uuidSets.map(_uuids => {
+        return firstValueFrom(this.angularFirestore.collection<Shift>(
+          ['MonthlyData', yearMonth, 'Shifts'].join('/'),
+          document => document.where('uuid', 'in', _uuids)
+        ).get());
+      })
+    ).then(querys => {
+      let _shifts: Shift[] = [];
+      querys.map(query => query.docs.map(doc => doc.data())).forEach(_shiftSet => _shifts = _shifts.concat(_shiftSet));
+      if (_shifts.length > 0) {
+        return _shifts;
+      } else {
+        return Promise.reject('NOT_EXIST');
+      }
+    });
+  };
+
+  readShift = (yearMonth: string, uuid: string): Promise<Shift> => {
+    return firstValueFrom(this.angularFirestore.collection<Shift>(
+      ['MonthlyData', yearMonth, 'Shifts'].join('/'),
+      document => document.where('uuid', '==', uuid)
+    ).get()).then(query => {
+      if (query.docs.length > 0) {
+        return query.docs.map(doc => doc.data())[0];
+      } else {
+        return Promise.reject('NOT_EXIST');
+      }
+    });
+  };
+
+  readPersonalShift = (yearMonth: string, uuid: string): Promise<PersonalShift> => {
+    return firstValueFrom(this.angularFirestore.collection<PersonalShift>(
+      ['MonthlyData', yearMonth, 'PersonalShifts'].join('/'),
+      document => document.where('uuid', '==', uuid)
+    ).get()).then(query => {
+      if (query.docs.length > 0) {
+        return query.docs.map(doc => doc.data())[0];
+      } else {
+        return Promise.reject('NOT_EXIST');
+      }
+    });
+  };
 }

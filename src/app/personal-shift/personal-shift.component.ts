@@ -1,11 +1,12 @@
+import { DatePipe } from '@angular/common';
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MAT_DATE_FORMATS } from '@angular/material/core';
 import { MatDatepicker } from '@angular/material/datepicker';
 import * as moment from 'moment';
 import { Moment } from 'moment';
-import { combineLatest, Observable, of, Subject } from 'rxjs';
-import { filter, map, switchAll, takeUntil } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, Observable, of, Subject } from 'rxjs';
+import { filter, map, startWith, switchAll, takeUntil } from 'rxjs/operators';
 import { Shift } from '../_interfaces/shift.interface';
 import { AuthorityService } from '../_services/authority.service';
 import { PersonalShiftsService } from '../_services/personal-shifts.service';
@@ -39,6 +40,7 @@ export class PersonalShiftComponent implements OnInit, AfterViewInit, OnDestroy 
     private authorityService: AuthorityService,
     private personalShiftsService: PersonalShiftsService,
     private shiftsService: ShiftsService,
+    private datePipe: DatePipe
   ) { }
 
   ngOnInit(): void { }
@@ -49,11 +51,12 @@ export class PersonalShiftComponent implements OnInit, AfterViewInit, OnDestroy 
       filter(value => !!value),
       map(momentDate => momentDate as moment.Moment),
       map(momentDate => momentDate.format('yyyy-MM')),
+      startWith(this.datePipe.transform(new Date(), 'yyyy-MM') as string),
       map(yearMonth => this.personalShiftsService.getPersonalShift(yearMonth, this.authorityService.currentUserUuid$.value as string)),
       switchAll(),
       filter(personalShift => personalShift !== null),
       map(personalShift => personalShift !== undefined ? this.shiftsService.getShiftsByUuids((this.yearMonthControl.value as moment.Moment).format('yyyy-MM'), personalShift?.shiftUuids as string[]) : []),
-      map(_shift$list => {
+      map((_shift$list: BehaviorSubject<Shift | null | undefined>[]) => {
         if (_shift$list.length > 0) {
           return combineLatest(_shift$list.map(_shift$ => _shift$.pipe(filter(_shift => _shift !== null)))) as Observable<Shift[]>;
         } else {
