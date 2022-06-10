@@ -38,10 +38,12 @@
     "PERMISSION_FAIL_ERROR": "使用者不存在或密碼錯誤！"
   },
   "HOME": {
-    "TITLE": "首頁"
+    "TITLE": "首頁",
+    "SHIFTS_TODAY": "本日班表"
   },
   "PERSONAL_SHIFT": {
     "TITLE": "個人班表",
+    "NO_DATA_MESSAGE": "沒有資料",
     "LABEL": {
       "YEAR_MONTH": "年-月"
     }

@@ -38,10 +38,12 @@
     "PERMISSION_FAIL_ERROR": "User not exist of wrong password!"
   },
   "HOME": {
-    "TITLE": "Home"
+    "TITLE": "Home",
+    "SHIFTS_TODAY": "Today's shifts"
   },
   "PERSONAL_SHIFT": {
     "TITLE": "Personal Shift",
+    "NO_DATA_MESSAGE": "No data",
     "LABEL": {
       "YEAR_MONTH": "Year and Month"
     }

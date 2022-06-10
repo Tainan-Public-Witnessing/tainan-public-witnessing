@@ -68,9 +68,7 @@ export class LoginDialogComponent implements OnInit, OnDestroy {
         ).then(() => {
           this.dialogRef.close(true);
         }).catch(reason => {
-          if (reason === 'NOT_EXIST_OR_WRONG_PASSWORD') {
-            this.loginForm.setErrors({ permissionFail: true });
-          }
+          this.loginForm.setErrors({ permissionFail: true });
         });
       }  else { // username not exist
         this.loginForm.setErrors({ permissionFail: true });
