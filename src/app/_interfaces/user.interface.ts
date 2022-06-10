@@ -8,7 +8,7 @@ export interface UserKey {
 export interface User extends UserKey {
   name: string;
   gender: Gender;
-  congregation: string; // uuid
+  congregationUuid: string; // uuid
   permission: Permission;
   baptizeDate: string; // yyyy-MM-DD
   birthDate: string; // yyyy-MM-DD
@@ -17,5 +17,5 @@ export interface User extends UserKey {
   phone: string;
   address: string;
   note: string;
-  tags: string[]; // uuid
+  tagUuids: string[]; // uuid
 }

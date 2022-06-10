@@ -37,7 +37,7 @@ export class ShiftsService {
       const shifts$ = new BehaviorSubject<Shift[]|null|undefined>(null);
       this.shiftSets.set(date, shifts$);
 
-      const yearMonth = date.slice(0, 6); // yyyy-MM
+      const yearMonth = date.slice(0, 7); // yyyy-MM
       if (this.shiftSets.has(yearMonth)) {
         this.shiftSets.get(yearMonth)?.pipe(
           filter(_shiftSet => _shiftSet !== null),
@@ -65,14 +65,14 @@ export class ShiftsService {
     return this.shiftSets.get(date) as BehaviorSubject<Shift[]|null|undefined>;
   }
 
-  getShiftsByUuids = (uuids: string[]): BehaviorSubject<Shift|null|undefined>[] => {
+  getShiftsByUuids = (yearMonth: string, uuids: string[]): BehaviorSubject<Shift|null|undefined>[] => {
     const uuidsForApi = uuids.filter(uuid => !this.shifts.has(uuid));
     if (uuidsForApi.length > 0) {
       uuidsForApi.forEach(uuid => {
         const shift$ = new BehaviorSubject<Shift|null|undefined>(null);
         this.shifts.set(uuid, shift$);
       });
-      this.api.readShifts(uuidsForApi).then(shifts => {
+      this.api.readShifts(yearMonth, uuidsForApi).then(shifts => {
         uuidsForApi.forEach(uuid => {
           const index = shifts.findIndex(_shift => _shift.uuid === uuid);
           const shift$ = this.shifts.get(uuid);
@@ -87,11 +87,11 @@ export class ShiftsService {
     return uuids.map(uuid => this.shifts.get(uuid) as BehaviorSubject<Shift|null|undefined>);
   }
 
-  getShiftByUuid = (uuid: string): BehaviorSubject<Shift|null|undefined> => {
+  getShiftByUuid = (yearMonth: string, uuid: string): BehaviorSubject<Shift|null|undefined> => {
     if (!this.shifts.has(uuid)) {
       const shift$ = new BehaviorSubject<Shift|null|undefined>(null);
       this.shifts.set(uuid, shift$);
-      this.api.readShift(uuid).then(shift => {
+      this.api.readShift(yearMonth, uuid).then(shift => {
         shift$.next(shift);
       }).catch(reason => {
         if (reason === 'NOT_EXIST') {

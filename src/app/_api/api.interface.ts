@@ -22,8 +22,8 @@ export interface ApiInterface {
 
   readShiftsByMonth: (yearMonth: string) => Promise<Shift[]>; // yyyy-MM
   readShiftsByDate: (date: string) => Promise<Shift[]>; // yyyy-MM-dd
-  readShifts: (uuids: string[]) => Promise<(Shift|undefined)[]>;
-  readShift: (uuid: string) => Promise<Shift>;
+  readShifts: (yearMonth: string, uuids: string[]) => Promise<(Shift|undefined)[]>;
+  readShift: (yearMonth: string, uuid: string) => Promise<Shift>;
 
-  readPersonalShift: (uuid: string) => Promise<PersonalShift>;
+  readPersonalShift: (yearMonth: string, uuid: string) => Promise<PersonalShift>;
 }

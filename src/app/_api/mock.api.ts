@@ -54,7 +54,7 @@ export class Api implements ApiInterface {
     Object.assign({
       name: 'Phillip Tsai',
       gender: Gender.MALE,
-      congregation: '7e4fc670-12d9-483c-8fdc-2c0f1b6e889a',
+      congregationUuid: '7e4fc670-12d9-483c-8fdc-2c0f1b6e889a',
       permission: Permission.DEVELOPER,
       baptizeDate: '2000-01-01',
       birthDate: '2000-01-01',
@@ -63,12 +63,12 @@ export class Api implements ApiInterface {
       phone: '',
       address: '',
       note: '',
-      tags: ['']
+      tagUuids: ['']
     }, this.userKeys[0]),
     Object.assign({
       name: 'Amanda Tsai',
       gender: Gender.FEMALE,
-      congregation: '7e4fc670-12d9-483c-8fdc-2c0f1b6e889a',
+      congregationUuid: '7e4fc670-12d9-483c-8fdc-2c0f1b6e889a',
       permission: Permission.ADMINISTRATOR,
       baptizeDate: '2000-01-01',
       birthDate: '2000-01-01',
@@ -77,12 +77,12 @@ export class Api implements ApiInterface {
       phone: '',
       address: '',
       note: '',
-      tags: ['']
+      tagUuids: ['']
     }, this.userKeys[1]),
     Object.assign({
       name: 'Peter Tsai',
       gender: Gender.MALE,
-      congregation: '52a092bb-48b9-4a87-b269-c8774f844671',
+      congregationUuid: '52a092bb-48b9-4a87-b269-c8774f844671',
       permission: Permission.MANAGER,
       baptizeDate: '2000-01-01',
       birthDate: '2000-01-01',
@@ -91,12 +91,12 @@ export class Api implements ApiInterface {
       phone: '',
       address: '',
       note: '',
-      tags: ['']
+      tagUuids: ['']
     }, this.userKeys[2]),
     Object.assign({
       name: 'Rachel Tsai',
       gender: Gender.FEMALE,
-      congregation: '52a092bb-48b9-4a87-b269-c8774f844671',
+      congregationUuid: '52a092bb-48b9-4a87-b269-c8774f844671',
       permission: Permission.USER,
       baptizeDate: '2000-01-01',
       birthDate: '2000-01-01',
@@ -105,7 +105,7 @@ export class Api implements ApiInterface {
       phone: '',
       address: '',
       note: '',
-      tags: ['']
+      tagUuids: ['']
     }, this.userKeys[3]),
   ];
 
@@ -180,31 +180,23 @@ export class Api implements ApiInterface {
 
   private personalShifts: PersonalShift[] = [
     {
-      uuid: '4248559d-d3bb-50de-91c5-f00fa7a5e34e',
-      userUuid: '73783509-ecf4-4522-924b-c782d41fb95c',
-      yearMonth: '2019-04',
+      uuid: '73783509-ecf4-4522-924b-c782d41fb95c',
       shiftUuids: [
         '056f687d-2b0b-48ee-ba30-a4190a95cacb',
         'c1c9b287-1f8b-4364-810d-6218c535fb77',
       ],
     }, {
-      uuid: 'dee16a5c-b524-50f7-993c-a6cfcbfc156f',
-      userUuid: '620a6781-1ef4-4ac6-b23f-8efe20348907',
-      yearMonth: '2019-04',
+      uuid: '620a6781-1ef4-4ac6-b23f-8efe20348907',
       shiftUuids: [
         '056f687d-2b0b-48ee-ba30-a4190a95cacb',
       ],
     }, {
-      uuid: '9a41ff1a-d98c-53a4-b691-88c1307bed56',
-      userUuid: '9efe91be-3b71-40e7-8ea2-6e2768bb2ebd',
-      yearMonth: '2019-04',
+      uuid: '9efe91be-3b71-40e7-8ea2-6e2768bb2ebd',
       shiftUuids: [
         'c1c9b287-1f8b-4364-810d-6218c535fb77',
       ],
     }, {
-      uuid: '5e00b534-a49c-5584-9114-75799020eafd',
-      userUuid: 'bdb0fd54-b203-4e87-b744-1867d7eb0932',
-      yearMonth: '2019-04',
+      uuid: 'bdb0fd54-b203-4e87-b744-1867d7eb0932',
       shiftUuids: [
         'c1c9b287-1f8b-4364-810d-6218c535fb77',
       ],
@@ -278,7 +270,7 @@ export class Api implements ApiInterface {
     }
   };
 
-  readShifts = (uuids: string[]): Promise<(Shift)[]> => {
+  readShifts = (yearMonth: string, uuids: string[]): Promise<(Shift)[]> => {
     console.log('mock api readShifts', {uuids});
     const shifts = uuids.map(uuid => {
       const index = this.shifts.findIndex(_shift => _shift.uuid === uuid);
@@ -291,7 +283,7 @@ export class Api implements ApiInterface {
     return Promise.resolve(shifts);
   };
 
-  readShift = (uuid: string): Promise<Shift> => {
+  readShift = (yearMonth: string, uuid: string): Promise<Shift> => {
     console.log('mock api readShift', {uuid});
     const index = this.shifts.findIndex(shift => shift.uuid === uuid);
     if (index > -1) {
@@ -301,7 +293,7 @@ export class Api implements ApiInterface {
     }
   };
 
-  readPersonalShift = (uuid: string): Promise<PersonalShift> => {
+  readPersonalShift = (yearMonth: string ,uuid: string): Promise<PersonalShift> => {
     console.log('mock api readPersonalShift', {uuid});
     const index = this.personalShifts.findIndex(personalShift => personalShift.uuid === uuid);
     if (index > -1) {

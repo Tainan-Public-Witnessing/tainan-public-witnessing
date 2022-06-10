@@ -49,10 +49,10 @@ export class PersonalShiftComponent implements OnInit, AfterViewInit, OnDestroy 
       filter(value => !!value),
       map(momentDate => momentDate as moment.Moment),
       map(momentDate => momentDate.format('yyyy-MM')),
-      map(yearMonth => this.personalShiftsService.getPersonalShift(this.authorityService.currentUserUuid$.value as string, yearMonth)),
+      map(yearMonth => this.personalShiftsService.getPersonalShift(yearMonth, this.authorityService.currentUserUuid$.value as string)),
       switchAll(),
       filter(personalShift => personalShift !== null),
-      map(personalShift => personalShift !== undefined ? this.shiftsService.getShiftsByUuids(personalShift?.shiftUuids as string[]) : []),
+      map(personalShift => personalShift !== undefined ? this.shiftsService.getShiftsByUuids((this.yearMonthControl.value as moment.Moment).format('yyyy-MM'), personalShift?.shiftUuids as string[]) : []),
       map(_shift$list => {
         if (_shift$list.length > 0) {
           return combineLatest(_shift$list.map(_shift$ => _shift$.pipe(filter(_shift => _shift !== null)))) as Observable<Shift[]>;
