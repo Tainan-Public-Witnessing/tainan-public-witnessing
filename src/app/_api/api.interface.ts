@@ -8,7 +8,7 @@ import { PersonalShift } from '../_interfaces/personal-shift.interface';
 export interface ApiInterface {
 
   login: (uuid: string, password: string) => Promise<void>;
-  logout: (uuid: string) => Promise<void>;
+  logout: () => Promise<void>;
 
   readUserKeys: () => Promise<UserKey[]>;
 

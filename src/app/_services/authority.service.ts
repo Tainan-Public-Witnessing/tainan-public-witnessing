@@ -81,7 +81,7 @@ export class AuthorityService implements CanActivate {
   logout = (): Promise<void> => {
     const uuid = this.currentUserUuid$.value as string;
     this.currentUserUuid$.next(null);
-    return this.api.logout(uuid).then(() => {
+    return this.api.logout().then(() => {
       this.cookieService.delete(environment.TAINAN_PUBLIC_WITNESSING_PERMISSION_TOKEN);
       this.router.navigate(['home']);
     });

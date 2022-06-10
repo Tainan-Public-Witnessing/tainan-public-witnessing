@@ -213,8 +213,8 @@ export class Api implements ApiInterface {
     }
   };
 
-  logout = (uuid: string): Promise<void> => {
-    console.log('mock api logout', {uuid});
+  logout = (): Promise<void> => {
+    console.log('mock api logout');
     return Promise.resolve();
   };
 

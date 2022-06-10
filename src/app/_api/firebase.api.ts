@@ -11,6 +11,8 @@ import { Shift } from '../_interfaces/shift.interface';
 import { Site } from '../_interfaces/site.interface';
 import { UserKey, User } from '../_interfaces/user.interface';
 import { firstValueFrom } from 'rxjs';
+import { v5 as uuidv5 } from 'uuid';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -25,11 +27,15 @@ export class Api implements ApiInterface {
   ) {}
 
   login = (uuid: string, password: string): Promise<void> => {
-    return Promise.resolve();
+    const email = [uuid, this.mailSurfix].join('')
+    const pass = uuidv5(password, environment.UUID_NAMESPACE);
+    return this.angularFireAuth.signInWithEmailAndPassword(email, pass).then(() => {
+      return;
+    });
   };
 
-  logout = (uuid: string): Promise<void> => {
-    return Promise.resolve();
+  logout = (): Promise<void> => {
+    return this.angularFireAuth.signOut();
   };
 
   readUserKeys = (): Promise<UserKey[]> => {
