@@ -33,7 +33,7 @@ import { ShiftsService } from '../_services/shifts.service';
 export class PersonalShiftComponent implements OnInit, AfterViewInit, OnDestroy {
 
   yearMonthControl = new FormControl(moment());
-  shifts: Shift[] = [];
+  shifts$!: Observable<Shift[]>;
   destroy$ = new Subject<void>();
 
   constructor(
@@ -46,7 +46,7 @@ export class PersonalShiftComponent implements OnInit, AfterViewInit, OnDestroy 
   ngOnInit(): void { }
 
   ngAfterViewInit(): void {
-    this.yearMonthControl.valueChanges.pipe(
+    this.shifts$ =this.yearMonthControl.valueChanges.pipe(
       takeUntil(this.destroy$),
       filter(value => !!value),
       map(momentDate => momentDate as moment.Moment),
@@ -58,15 +58,13 @@ export class PersonalShiftComponent implements OnInit, AfterViewInit, OnDestroy 
       map(personalShift => personalShift !== undefined ? this.shiftsService.getShiftsByUuids((this.yearMonthControl.value as moment.Moment).format('yyyy-MM'), personalShift?.shiftUuids as string[]) : []),
       map((_shift$list: BehaviorSubject<Shift | null | undefined>[]) => {
         if (_shift$list.length > 0) {
-          return combineLatest(_shift$list.map(_shift$ => _shift$.pipe(filter(_shift => _shift !== null)))) as Observable<Shift[]>;
+          return combineLatest(_shift$list.map(_shift$ => _shift$.pipe(filter(_shift => _shift !== null))));
         } else {
-          return of([]) as Observable<Shift[]>;
+          return of([]);
         }
       }),
       switchAll(),
-    ).subscribe(_shifts => {
-      this.shifts = _shifts as Shift[];
-    });
+    ) as Observable<Shift[]>
   }
 
   ngOnDestroy(): void {

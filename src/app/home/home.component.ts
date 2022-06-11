@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { filter, first } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { filter, first, map } from 'rxjs/operators';
 import { Shift } from '../_interfaces/shift.interface';
 import { ShiftsService } from '../_services/shifts.service';
 
@@ -11,7 +12,7 @@ import { ShiftsService } from '../_services/shifts.service';
 })
 export class HomeComponent implements OnInit {
 
-  shiftsOfToday: Shift[]|null = null;
+  shiftsToday$!: Observable<Shift[]>;
 
   constructor(
     private shiftsService: ShiftsService,
@@ -19,10 +20,10 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.shiftsService.getShiftsByDate(this.datePipe.transform(new Date(), 'yyyy-MM-dd') as string).pipe(
+    this.shiftsToday$ = this.shiftsService.getShiftsByDate(this.datePipe.transform(new Date(), 'yyyy-MM-dd') as string).pipe(
       filter(shifts => shifts !== null),
-      first()
-    ).subscribe(shifts => this.shiftsOfToday = shifts as Shift[]|null)
+      first(),
+      map(shifts => !!shifts ? shifts : [])
+    )
   }
-
 }
