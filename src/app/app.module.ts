@@ -33,6 +33,8 @@ import { PersonalShiftComponent } from './personal-shift/personal-shift.componen
 import { ShiftTableComponent } from './_elements/shift-table/shift-table.component';
 import { ShiftCardComponent } from './_elements/shift-table/shift-card/shift-card.component';
 import { DatePipe } from '@angular/common';
+import { FIREBASE_OPTIONS } from '@angular/fire/compat';
+import { environment } from 'src/environments/environment.prod';
 
 // AoT requires an exported function for factories of translate module
 export function HttpLoaderFactory(http: HttpClient) {
@@ -87,7 +89,8 @@ export function HttpLoaderFactory(http: HttpClient) {
         },
       },
     },
-    DatePipe
+    DatePipe,
+    { provide: FIREBASE_OPTIONS, useValue: environment.firebase }
   ],
   bootstrap: [AppComponent]
 })
