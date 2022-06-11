@@ -1,14 +1,17 @@
 {
+  "projects": {
+    "default": "tainan-public-witnessing"
+  },
   "targets": {
     "tainan-public-witnessing": {
       "hosting": {
-        "TainanPublicWitnessing": [
+        "test": [
+          "tainan-public-witnessing-test"
+        ],
+        "release": [
           "tainan-public-witnessing"
         ]
       }
     }
-  },
-  "projects": {
-    "default": "tainan-public-witnessing"
   }
 }
