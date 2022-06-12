@@ -39,12 +39,12 @@ export class StatisticsService {
       )
     ).then(_shift => {
       if (_shift && !_shift.hasStatistic) {
-        return this.api.createStatistic(statistic).then(_statistic => {
-          if (!this.statistics.has(_statistic.uuid)) {
+        return this.api.createStatistic(statistic).then(() => {
+          if (!this.statistics.has(statistic.uuid)) {
             const statistic$ = new BehaviorSubject<Statistic|null|undefined>(null);
-            this.statistics.set(_statistic.uuid, statistic$);
+            this.statistics.set(statistic.uuid, statistic$);
           }
-          this.statistics.get(_statistic.uuid)?.next(_statistic);
+          this.statistics.get(statistic.uuid)?.next(statistic);
           _shift.hasStatistic = true;
           this.api.updateShift(_shift);
         });
@@ -63,12 +63,12 @@ export class StatisticsService {
       )
     ).then(_shift => {
       if (_shift && _shift.hasStatistic) {
-        return this.api.updateStatistic(statistic).then(_statistic => {
-          if (!this.statistics.has(_statistic.uuid)) {
+        return this.api.updateStatistic(statistic).then(() => {
+          if (!this.statistics.has(statistic.uuid)) {
             const statistic$ = new BehaviorSubject<Statistic|null|undefined>(null);
-            this.statistics.set(_statistic.uuid, statistic$);
+            this.statistics.set(statistic.uuid, statistic$);
           } else {
-            this.statistics.get(_statistic.uuid)?.next(_statistic);
+            this.statistics.get(statistic.uuid)?.next(statistic);
           }
         });
       } else {

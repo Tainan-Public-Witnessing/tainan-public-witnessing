@@ -312,12 +312,12 @@ export class Api implements ApiInterface {
     }
   };
 
-  updateShift = (shift: Shift): Promise<Shift> => {
+  updateShift = (shift: Shift): Promise<void> => {
     const index = this.shifts.findIndex(_shifts=> _shifts.uuid === shift.uuid);
     if (index > -1) {
       this.shifts.splice(index, 1);
       this.shifts.push(shift);
-      return Promise.resolve(Object.assign({}, shift));
+      return Promise.resolve();
     } else {
       return Promise.reject('NOT_EXIST');
     }
@@ -342,17 +342,17 @@ export class Api implements ApiInterface {
     }
   };
 
-  createStatistic = (statistic: Statistic): Promise<Statistic> => {
+  createStatistic = (statistic: Statistic): Promise<void> => {
     this.statistics.push(statistic);
-    return Promise.resolve(Object.assign({}, statistic));
+    return Promise.resolve();
   };
 
-  updateStatistic = (statistic: Statistic): Promise<Statistic> => {
+  updateStatistic = (statistic: Statistic): Promise<void> => {
     const index = this.statistics.findIndex(_statistic => _statistic.uuid === statistic.uuid);
     if (index > -1) {
       this.statistics.splice(index, 1);
       this.statistics.push(statistic);
-      return Promise.resolve(Object.assign({}, statistic));
+      return Promise.resolve();
     } else {
       return Promise.reject('NOT_EXIST');
     }

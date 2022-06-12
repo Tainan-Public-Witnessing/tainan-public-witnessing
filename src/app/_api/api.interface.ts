@@ -25,11 +25,11 @@ export interface ApiInterface {
   readShiftsByDate: (date: string) => Promise<Shift[]>; // yyyy-MM-dd
   readShifts: (yearMonth: string, uuids: string[]) => Promise<(Shift|undefined)[]>;
   readShift: (yearMonth: string, uuid: string) => Promise<Shift>;
-  updateShift: (shift: Shift) => Promise<Shift>;
+  updateShift: (shift: Shift) => Promise<void>;
 
   readPersonalShift: (yearMonth: string, uuid: string) => Promise<PersonalShift>;
 
   readStatistic: (yearMonth: string, uuid: string) => Promise<Statistic>;
-  createStatistic: (statistic: Statistic) => Promise<Statistic>;
-  updateStatistic: (statistic: Statistic) => Promise<Statistic>;
+  createStatistic: (statistic: Statistic) => Promise<void>;
+  updateStatistic: (statistic: Statistic) => Promise<void>;
 }

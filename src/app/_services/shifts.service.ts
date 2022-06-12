@@ -103,8 +103,8 @@ export class ShiftsService {
   }
 
   updateShift = (shift: Shift): Promise<void> => {
-    return this.api.updateShift(shift).then(_shift => {
-      this.shifts.get(_shift.uuid)?.next(_shift);
+    return this.api.updateShift(shift).then(() => {
+      this.shifts.get(shift.uuid)?.next(shift);
     });
   }
 

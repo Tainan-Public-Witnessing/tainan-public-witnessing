@@ -13,6 +13,7 @@ import { UserKey, User } from '../_interfaces/user.interface';
 import { firstValueFrom } from 'rxjs';
 import { v5 as uuidv5 } from 'uuid';
 import { environment } from 'src/environments/environment';
+import { Statistic } from '../_interfaces/statistic.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -149,6 +150,11 @@ export class Api implements ApiInterface {
     });
   };
 
+  updateShift = (shift: Shift): Promise<void> => {
+    const yearMonth = shift.date.slice(0, 7);
+    return this.angularFirestore.doc<Shift>(['MonthlyData', yearMonth, 'Shifts', shift.uuid].join('/')).update(shift);
+  };
+
   readPersonalShift = (yearMonth: string, uuid: string): Promise<PersonalShift> => {
     return firstValueFrom(this.angularFirestore.collection<PersonalShift>(
       ['MonthlyData', yearMonth, 'PersonalShifts'].join('/'),
@@ -160,5 +166,28 @@ export class Api implements ApiInterface {
         return Promise.reject('NOT_EXIST');
       }
     });
+  };
+
+  readStatistic = (yearMonth: string, uuid: string): Promise<Statistic> => {
+    return firstValueFrom(
+      this.angularFirestore.doc<Statistic>(['MonthlyData', yearMonth, 'Statistics', uuid].join('/')).get()
+    ).then(doc => {
+      const _statistic = doc.data();
+      if (_statistic) {
+        return _statistic;
+      } else {
+        return Promise.reject();
+      }
+    });
+  };
+
+  createStatistic = (statistic: Statistic): Promise<void> => {
+    const yearMonth = statistic.date.slice(0, 7);
+    return this.angularFirestore.doc<Statistic>(['MonthlyData', yearMonth, 'Statistics', statistic.uuid].join('/')).set(statistic);
+  };
+
+  updateStatistic = (statistic: Statistic): Promise<void> => {
+    const yearMonth = statistic.date.slice(0, 7);
+    return this.angularFirestore.doc<Statistic>(['MonthlyData', yearMonth, 'Statistics', statistic.uuid].join('/')).update(statistic);
   };
 }
