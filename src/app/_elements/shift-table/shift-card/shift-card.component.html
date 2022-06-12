@@ -16,4 +16,13 @@
       <mat-chip *ngFor="let user of crew">{{user.username}}</mat-chip>
     </mat-chip-list>
   </mat-card-content>
+  <mat-card-actions>
+    <button
+      mat-icon-button
+      *ngIf="canEditStatistic$ | async"
+      [ngClass]="{'has-statistic': shift?.hasStatistic}"
+      (click)="openStatisticEditor()">
+      <mat-icon>add_chart</mat-icon>
+    </button>
+  </mat-card-actions>
 </mat-card>

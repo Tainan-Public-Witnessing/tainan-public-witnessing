@@ -1,0 +1,14 @@
+@import 'src/app/_styles/_global.scss';
+
+.mat-dialog-content {
+  .mat-form-field {
+
+    ::ng-deep .mat-input-element:disabled {
+      color: rgba(0, 0, 0, 0.87);
+    }
+  }
+}
+
+.mat-dialog-actions {
+  justify-content: flex-end;
+}

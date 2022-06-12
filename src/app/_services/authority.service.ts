@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { filter, first, map, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { filter, first, map, switchAll, tap } from 'rxjs/operators';
 import { Api } from 'src/app/_api/mock.api';
 import { CookieService } from 'ngx-cookie-service';
 import { MatDialog } from '@angular/material/dialog';
@@ -85,6 +85,40 @@ export class AuthorityService implements CanActivate {
       this.cookieService.delete(environment.TAINAN_PUBLIC_WITNESSING_PERMISSION_TOKEN);
       this.router.navigate(['home']);
     });
+  }
+
+  canAccess = (accessPermission: Permission, userUuids?: string[]): Observable<boolean> => {
+    return this.currentUserUuid$.pipe(
+      map(userUuid => {
+        if (userUuid) {
+          return this.usersService.getUserByUuid(userUuid).pipe(
+            filter(_user => _user !== null),
+            first(),
+            map(_user => {
+              if ((_user as User).permission <= accessPermission) {
+                if (userUuids) {
+                  if (userUuids.includes(userUuid)) {
+                    return true;
+                  } else {
+                    return false;
+                  }
+                }
+                return true;
+              } else {
+                return false;
+              }
+            })
+          )
+        } else {
+          if (accessPermission === Permission.GUEST) {
+            return of(true);
+          } else {
+            return of(false);
+          }
+        }
+      }),
+      switchAll(),
+    );
   }
 
   private resetPermissionCookie = () => {

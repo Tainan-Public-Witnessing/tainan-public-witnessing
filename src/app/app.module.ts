@@ -35,6 +35,7 @@ import { ShiftCardComponent } from './_elements/shift-table/shift-card/shift-car
 import { DatePipe } from '@angular/common';
 import { FIREBASE_OPTIONS } from '@angular/fire/compat';
 import { environment } from 'src/environments/environment.prod';
+import { StatisticEditorComponent } from './_elements/dialogs/statistic-editor/statistic-editor.component';
 
 // AoT requires an exported function for factories of translate module
 export function HttpLoaderFactory(http: HttpClient) {
@@ -59,6 +60,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     PersonalShiftComponent,
     ShiftTableComponent,
     ShiftCardComponent,
+    StatisticEditorComponent,
   ],
   imports: [
     BrowserModule,

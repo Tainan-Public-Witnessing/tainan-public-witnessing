@@ -37,6 +37,18 @@
     },
     "PERMISSION_FAIL_ERROR": "User not exist of wrong password!"
   },
+  "STATISTIC_EDITOR": {
+    "TITLE": "Statistic",
+    "LABEL": {
+      "ATTENDANCE": "Attendance",
+      "TRACTS": "Tracts",
+      "SCRIPTURES": "Scriptures",
+      "VIDEOS": "Videos",
+      "ACCEPT_RETURN_VISIT": "Accept return visit",
+      "RETURN_VISIT": "Return visit",
+      "EXPERIENCE": "experience"
+    }
+  },
   "HOME": {
     "TITLE": "Home",
     "SHIFTS_TODAY": "Today's shifts"

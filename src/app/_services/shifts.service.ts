@@ -102,6 +102,12 @@ export class ShiftsService {
     return this.shifts.get(uuid) as BehaviorSubject<Shift|null|undefined>;
   }
 
+  updateShift = (shift: Shift): Promise<void> => {
+    return this.api.updateShift(shift).then(_shift => {
+      this.shifts.get(_shift.uuid)?.next(_shift);
+    });
+  }
+
   private addShiftToCache = (shift: Shift|undefined) => {
     if (shift !== undefined) {
       if (!this.shifts.has(shift.uuid)) {

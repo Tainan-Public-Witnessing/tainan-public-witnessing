@@ -20,7 +20,7 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.shiftsToday$ = this.shiftsService.getShiftsByDate(this.datePipe.transform(new Date(), 'yyyy-MM-dd') as string).pipe(
+    this.shiftsToday$ = this.shiftsService.getShiftsByDate('2019-04-27').pipe(
       filter(shifts => shifts !== null),
       first(),
       map(shifts => !!shifts ? shifts : [])

@@ -37,6 +37,18 @@
     },
     "PERMISSION_FAIL_ERROR": "使用者不存在或密碼錯誤！"
   },
+  "STATISTIC_EDITOR": {
+    "TITLE": "統計",
+    "LABEL": {
+      "ATTENDANCE": "參加人數",
+      "TRACTS": "分發資料",
+      "SCRIPTURES": "經文",
+      "VIDEOS": "影片",
+      "ACCEPT_RETURN_VISIT": "同意拜訪",
+      "RETURN_VISIT": "續訪",
+      "EXPERIENCE": "經驗"
+    }
+  },
   "HOME": {
     "TITLE": "首頁",
     "SHIFTS_TODAY": "本日班表"

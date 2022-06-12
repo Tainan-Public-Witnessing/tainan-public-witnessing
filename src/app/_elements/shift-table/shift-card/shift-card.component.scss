@@ -19,4 +19,15 @@
     gap: 4px;
     flex-wrap: wrap;
   }
+
+  .mat-card-actions {
+    display: flex;
+    justify-content: flex-end;
+
+    .has-statistic {
+      color: green;
+      border-bottom: 3px solid green;
+      border-radius: 3px;
+    }
+  }
 }

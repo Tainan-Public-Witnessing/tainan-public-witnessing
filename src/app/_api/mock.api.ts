@@ -8,6 +8,7 @@ import { Shift } from '../_interfaces/shift.interface';
 import { Gender } from '../_enums/gender.enum';
 import { Permission } from '../_enums/permission.enum';
 import { PersonalShift } from '../_interfaces/personal-shift.interface';
+import { Statistic } from '../_interfaces/statistic.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -164,6 +165,7 @@ export class Api implements ApiInterface {
         '620a6781-1ef4-4ac6-b23f-8efe20348907',
       ],
       activate: true,
+      hasStatistic: true,
     }, {
       uuid: 'c1c9b287-1f8b-4364-810d-6218c535fb77',
       date: '2019-04-27',
@@ -201,6 +203,23 @@ export class Api implements ApiInterface {
         'c1c9b287-1f8b-4364-810d-6218c535fb77',
       ],
     },
+  ];
+
+  private statistics: Statistic[] = [
+    {
+      uuid: '056f687d-2b0b-48ee-ba30-a4190a95cacb',
+      createdByUuid: '73783509-ecf4-4522-924b-c782d41fb95c',
+      createdOn: new Date('2019-04-27 19:00'),
+      date: '2019-04-27',
+      attendance: 2,
+      tracts: 3,
+      scriptures: 4,
+      videos: 5,
+      acceptReturnVisit: 6,
+      returnVisits: 7,
+      experience: 'Good',
+      activate: true,
+    }
   ];
 
   login = (uuid: string, password: string): Promise<void> => {
@@ -293,11 +312,47 @@ export class Api implements ApiInterface {
     }
   };
 
+  updateShift = (shift: Shift): Promise<Shift> => {
+    const index = this.shifts.findIndex(_shifts=> _shifts.uuid === shift.uuid);
+    if (index > -1) {
+      this.shifts.splice(index, 1);
+      this.shifts.push(shift);
+      return Promise.resolve(Object.assign({}, shift));
+    } else {
+      return Promise.reject('NOT_EXIST');
+    }
+  };
+
   readPersonalShift = (yearMonth: string ,uuid: string): Promise<PersonalShift> => {
     console.log('mock api readPersonalShift', {uuid});
     const index = this.personalShifts.findIndex(personalShift => personalShift.uuid === uuid);
     if (index > -1) {
       return Promise.resolve(Object.assign({}, this.personalShifts[index]));
+    } else {
+      return Promise.reject('NOT_EXIST');
+    }
+  };
+
+  readStatistic = (yearMonth: string, uuid: string): Promise<Statistic> => {
+    const index = this.statistics.findIndex(_statistic => _statistic.uuid === uuid);
+    if (index > -1) {
+      return Promise.resolve(this.statistics[index]);
+    } else {
+      return Promise.reject('NOT_EXIST');
+    }
+  };
+
+  createStatistic = (statistic: Statistic): Promise<Statistic> => {
+    this.statistics.push(statistic);
+    return Promise.resolve(Object.assign({}, statistic));
+  };
+
+  updateStatistic = (statistic: Statistic): Promise<Statistic> => {
+    const index = this.statistics.findIndex(_statistic => _statistic.uuid === statistic.uuid);
+    if (index > -1) {
+      this.statistics.splice(index, 1);
+      this.statistics.push(statistic);
+      return Promise.resolve(Object.assign({}, statistic));
     } else {
       return Promise.reject('NOT_EXIST');
     }

@@ -4,6 +4,7 @@ import { Site } from 'src/app/_interfaces/site.interface';
 import { ShiftHours } from '../_interfaces/shift-hours.interface';
 import { Shift } from '../_interfaces/shift.interface';
 import { PersonalShift } from '../_interfaces/personal-shift.interface';
+import { Statistic } from '../_interfaces/statistic.interface';
 
 export interface ApiInterface {
 
@@ -24,6 +25,11 @@ export interface ApiInterface {
   readShiftsByDate: (date: string) => Promise<Shift[]>; // yyyy-MM-dd
   readShifts: (yearMonth: string, uuids: string[]) => Promise<(Shift|undefined)[]>;
   readShift: (yearMonth: string, uuid: string) => Promise<Shift>;
+  updateShift: (shift: Shift) => Promise<Shift>;
 
   readPersonalShift: (yearMonth: string, uuid: string) => Promise<PersonalShift>;
+
+  readStatistic: (yearMonth: string, uuid: string) => Promise<Statistic>;
+  createStatistic: (statistic: Statistic) => Promise<Statistic>;
+  updateStatistic: (statistic: Statistic) => Promise<Statistic>;
 }

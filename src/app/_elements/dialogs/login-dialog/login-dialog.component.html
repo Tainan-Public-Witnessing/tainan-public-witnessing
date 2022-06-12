@@ -3,7 +3,7 @@
 <div mat-dialog-content>
   <form [formGroup]="loginForm">
 
-    <mat-form-field class="full-width">
+    <mat-form-field class="full-width" appearance="outline">
       <mat-label>{{ "LOGIN.LABEL.USERNAME" | translate }}</mat-label>
       <input matInput formControlName="username" [matAutocomplete]="auto" cy="username-input">
       <mat-autocomplete #auto="matAutocomplete">
@@ -16,7 +16,7 @@
       </mat-autocomplete>
     </mat-form-field>
 
-    <mat-form-field class="full-width">
+    <mat-form-field class="full-width" appearance="outline">
       <mat-label>{{ "LOGIN.LABEL.PASSWORD" | translate }}</mat-label>
       <input matInput formControlName="password" type="password" cy="password-input">
     </mat-form-field>
