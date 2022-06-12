@@ -157,7 +157,7 @@ export class Api implements ApiInterface {
   private shifts: Shift[] = [
     {
       uuid: '056f687d-2b0b-48ee-ba30-a4190a95cacb',
-      date: '2019-04-27',
+      date: '2022-06-13',
       shiftHoursUuid: '39cd7d33-ba5c-4967-8502-a1a57f557842',
       siteUuid: '408941a1-3af4-4148-a822-baddd9fae407',
       crewUuids: [
@@ -168,7 +168,7 @@ export class Api implements ApiInterface {
       hasStatistic: true,
     }, {
       uuid: 'c1c9b287-1f8b-4364-810d-6218c535fb77',
-      date: '2019-04-27',
+      date: '2022-06-12',
       shiftHoursUuid: 'bb406de4-d090-413b-a68b-ad790a332699',
       siteUuid: '2ab1d2b4-e03b-47ba-991d-7ca801c79b0d',
       crewUuids: [

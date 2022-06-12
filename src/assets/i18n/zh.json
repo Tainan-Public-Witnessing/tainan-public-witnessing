@@ -51,7 +51,8 @@
   },
   "HOME": {
     "TITLE": "首頁",
-    "SHIFTS_TODAY": "本日班表"
+    "SHIFTS_TODAY": "本日班表",
+    "SHIFTS_TOMORROW": "明日班表"
   },
   "PERSONAL_SHIFT": {
     "TITLE": "個人班表",

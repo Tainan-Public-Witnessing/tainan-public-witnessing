@@ -13,6 +13,7 @@ import { ShiftsService } from '../_services/shifts.service';
 export class HomeComponent implements OnInit {
 
   shiftsToday$!: Observable<Shift[]>;
+  shiftsTomorrow$!: Observable<Shift[]>;
 
   constructor(
     private shiftsService: ShiftsService,
@@ -20,10 +21,18 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.shiftsToday$ = this.shiftsService.getShiftsByDate('2019-04-27').pipe(
+    const today = new Date();
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    this.shiftsToday$ = this.shiftsService.getShiftsByDate(this.datePipe.transform(today, 'yyyy-MM-dd') as string).pipe(
       filter(shifts => shifts !== null),
       first(),
       map(shifts => !!shifts ? shifts : [])
-    )
+    );
+    this.shiftsTomorrow$ = this.shiftsService.getShiftsByDate(this.datePipe.transform(tomorrow, 'yyyy-MM-dd') as string).pipe(
+      filter(shifts => shifts !== null),
+      first(),
+      map(shifts => !!shifts ? shifts : [])
+    );
   }
 }

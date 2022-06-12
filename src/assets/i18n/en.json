@@ -51,7 +51,8 @@
   },
   "HOME": {
     "TITLE": "Home",
-    "SHIFTS_TODAY": "Today's shifts"
+    "SHIFTS_TODAY": "Today's shifts",
+    "SHIFTS_TOMORROW": "Tomorrow's shifts"
   },
   "PERSONAL_SHIFT": {
     "TITLE": "Personal Shift",

@@ -1,7 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { filter, first, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { combineLatest, filter, first, Observable, of, Subject, timer } from 'rxjs';
+import { map, switchAll, takeUntil } from 'rxjs/operators';
 import { ShiftHours } from 'src/app/_interfaces/shift-hours.interface';
 import { Shift } from 'src/app/_interfaces/shift.interface';
 import { Site } from 'src/app/_interfaces/site.interface';
@@ -19,7 +19,7 @@ import { Permission } from 'src/app/_enums/permission.enum';
   templateUrl: './shift-card.component.html',
   styleUrls: ['./shift-card.component.scss']
 })
-export class ShiftCardComponent implements OnInit {
+export class ShiftCardComponent implements OnInit, OnDestroy {
 
   @Input() shift!: Shift;
 
@@ -27,7 +27,8 @@ export class ShiftCardComponent implements OnInit {
   site: Site|null = null;
   crew: UserKey[] = [];
   day: string|null = null;
-  canEditStatistic$!: Observable<boolean>
+  canEditStatistic$!: Observable<boolean>;
+  destroy$ = new Subject<void>();
 
   constructor(
     private shiftHoursService: ShiftHoursService,
@@ -62,7 +63,38 @@ export class ShiftCardComponent implements OnInit {
     const n  = new Date(this.shift.date).getDay()
     this.day = environment.DAY[n];
 
-    this.canEditStatistic$ = this.authorityService.canAccess(Permission.USER, this.shift.crewUuids)
+    const shiftEndTime = new Date([this.shift.date, this.shiftHours?.endTime].join(' ')).getTime();
+    const shiftEndDate = new Date(this.shift.date);
+    shiftEndDate.setDate(shiftEndDate.getDate() + 1);
+    const shiftEndDateTime = shiftEndDate.getTime();
+    this.canEditStatistic$ = combineLatest([
+      this.authorityService.canAccess(Permission.USER, this.shift.crewUuids).pipe(
+        map(_canAccess => {
+          if (_canAccess) {
+            return timer(0, 10000).pipe(
+              takeUntil(this.destroy$),
+              map(() => {
+                const nowTime = new Date().getTime();
+                return shiftEndTime < nowTime && nowTime < shiftEndDateTime;
+              })
+            )
+          } else {
+            return of(false);
+          }
+        }),
+        switchAll()
+      ),
+      this.authorityService.canAccess(Permission.MANAGER)
+    ]).pipe(
+      map(([userAccess, managerAccess]) => {
+        return userAccess || managerAccess;
+      })
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   openStatisticEditor = () => {
