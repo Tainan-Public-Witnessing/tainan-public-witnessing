@@ -15,6 +15,7 @@ Run `ng generate component component-name` to generate a new component. You can 
 ## Build
 
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+ng build --configuration firebase
 
 ## Running unit tests
 
@@ -31,4 +32,4 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 ## Deploy on firebase
 
 firebase deploy --only hosting:test
-firebase deploy --only hosting:production
+firebase deploy --only hosting:release
