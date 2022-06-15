@@ -21,9 +21,7 @@ export class PersonalShiftsService {
       this.api.readPersonalShift(yearMonth, uuid).then(personalShift => {
         personalShift$.next(personalShift);
       }).catch(reason => {
-        if (reason === 'NOT_EXIST') {
-          personalShift$.next(undefined);
-        }
+        personalShift$.next(undefined);
       });
     }
     return this.personalShifts.get(uuid) as BehaviorSubject<PersonalShift|null|undefined>;

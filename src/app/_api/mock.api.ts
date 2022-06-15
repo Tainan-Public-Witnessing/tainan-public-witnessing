@@ -9,6 +9,8 @@ import { Gender } from '../_enums/gender.enum';
 import { Permission } from '../_enums/permission.enum';
 import { PersonalShift } from '../_interfaces/personal-shift.interface';
 import { Statistic } from '../_interfaces/statistic.interface';
+import { firstValueFrom, timer } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -210,7 +212,7 @@ export class Api implements ApiInterface {
       uuid: '056f687d-2b0b-48ee-ba30-a4190a95cacb',
       createdByUuid: '73783509-ecf4-4522-924b-c782d41fb95c',
       createdOn: new Date('2019-04-27 19:00'),
-      date: '2019-04-27',
+      date: '2022-06-13',
       attendance: 2,
       tracts: 3,
       scriptures: 4,
@@ -226,125 +228,131 @@ export class Api implements ApiInterface {
     console.log('mock api login', {uuid, password});
     const index = this.accounts.findIndex(account => account.uuid === uuid);
     if (index > -1 && this.accounts[index].password === password) {
-      return Promise.resolve();
+      return this.delayReturn();
     } else {
-      return Promise.reject('NOT_EXIST_OR_WRONG_PASSWORD');
+      return this.delayReturn().then(() => Promise.reject());
     }
   };
 
   logout = (): Promise<void> => {
     console.log('mock api logout');
-    return Promise.resolve();
+    return this.delayReturn();
   };
 
   readUserKeys = (): Promise<UserKey[]> => {
-    console.log('mock api logreadUserKeysout');
-    return Promise.resolve([...this.userKeys]);
+    console.log('mock api readUserKeys');
+    return this.delayReturn().then(() => [...this.userKeys]);
   };
 
   readUser = (uuid: string): Promise<User> => {
     console.log('mock api readUser', {uuid});
     const index = this.users.findIndex(user => user.uuid === uuid);
     if (index > -1) {
-      return Promise.resolve(Object.assign({}, this.users[index]));
+      return this.delayReturn().then(() => Object.assign({}, this.users[index]));
     } else {
-      return Promise.reject('NOT_EXIST')
+      return this.delayReturn().then(() => Promise.reject());
     }
   };
 
   readCongregations = (): Promise<Congregation[]> => {
     console.log('mock api readCongregations');
-    return Promise.resolve([...this.congregations]);
+    return this.delayReturn().then(() => [...this.congregations]);
   };
 
   readSites = (): Promise<Site[]> => {
     console.log('mock api readSites');
-    return Promise.resolve([...this.sites]);
+    return this.delayReturn().then(() => [...this.sites]);
   };
 
   readShiftHoursList = (): Promise<ShiftHours[]> => {
     console.log('mock api readShiftHoursList');
-    return Promise.resolve([...this.shiftHoursList]);
+    return this.delayReturn().then(() => [...this.shiftHoursList]);
   };
 
   readShiftsByMonth = (yearMonth: string): Promise<Shift[]> => {
     console.log('mock api readShiftsByMonth', {yearMonth});
-    const startDate = yearMonth + '-00';
-    const endDate = yearMonth + '-32';
-    const filteredShifts = this.shifts.filter(_shift => startDate.localeCompare(_shift.date) < 0 && endDate.localeCompare(_shift.date) > 0);
-    if (filteredShifts.length > 0) {
-      return Promise.resolve([...filteredShifts]);
+    const _shifts = this.shifts.filter(_shift => _shift.date.includes(yearMonth));
+    if (_shifts.length > 0) {
+      return this.delayReturn().then(() => [..._shifts]);
     } else  {
-      return Promise.reject('NOT_EXIST');
+      return this.delayReturn().then(() => Promise.reject());
     }
   };
 
   readShiftsByDate = (date: string): Promise<Shift[]> => {
     console.log('mock api readShiftsByDate', {date});
-    const filteredShifts = this.shifts.filter(_shift => _shift.date === date);
-    if (filteredShifts.length > 0) {
-      return Promise.resolve([...filteredShifts]);
+    const _shifts = this.shifts.filter(_shift => _shift.date === date);
+    if (_shifts.length > 0) {
+      return this.delayReturn().then(() => [..._shifts]);
     } else  {
-      return Promise.reject('NOT_EXIST');
+      return this.delayReturn().then(() => Promise.reject());
     }
   };
 
-  readShifts = (yearMonth: string, uuids: string[]): Promise<(Shift)[]> => {
-    console.log('mock api readShifts', {uuids});
-    const shifts = uuids.map(uuid => {
-      const index = this.shifts.findIndex(_shift => _shift.uuid === uuid);
+  readShifts = (yearMonth: string, uuids: string[]): Promise<Shift[]> => {
+    console.log('mock api readShifts', {yearMonth, uuids});
+    const shiftsInYearMonth = this.shifts.filter(_shift => _shift.date.includes(yearMonth));
+    const _shifts = uuids.map(uuid => {
+      const index = shiftsInYearMonth.findIndex(_shift => _shift.uuid === uuid);
       if (index > -1) {
-        return this.shifts[index];
+        return shiftsInYearMonth[index];
       } else {
         return undefined;
       }
     }).filter(_shift => _shift !== undefined) as Shift[];
-    return Promise.resolve(shifts);
+    if (_shifts.length > 0) {
+      return this.delayReturn().then(() => [..._shifts]);
+    } else {
+      return this.delayReturn().then(() => Promise.reject());
+    }
   };
 
   readShift = (yearMonth: string, uuid: string): Promise<Shift> => {
-    console.log('mock api readShift', {uuid});
-    const index = this.shifts.findIndex(shift => shift.uuid === uuid);
+    console.log('mock api readShift', {yearMonth, uuid});
+    const shiftsInYearMonth = this.shifts.filter(_shift => _shift.date.includes(yearMonth));
+    const index = shiftsInYearMonth.findIndex(_shift => _shift.uuid === uuid);
     if (index > -1) {
-      return Promise.resolve(Object.assign({}, this.shifts[index]));
+      return this.delayReturn().then(() => Object.assign({}, shiftsInYearMonth[index]));
     } else {
-      return Promise.reject('NOT_EXIST');
+      return this.delayReturn().then(() => Promise.reject());
     }
   };
 
   updateShift = (shift: Shift): Promise<void> => {
+    console.log('mock api updateShift', {shift});
     const index = this.shifts.findIndex(_shifts=> _shifts.uuid === shift.uuid);
     if (index > -1) {
       this.shifts.splice(index, 1);
       this.shifts.push(shift);
-      return Promise.resolve();
+      return this.delayReturn();
     } else {
-      return Promise.reject('NOT_EXIST');
+      return this.delayReturn().then(() => Promise.reject());
     }
   };
 
   readPersonalShift = (yearMonth: string ,uuid: string): Promise<PersonalShift> => {
-    console.log('mock api readPersonalShift', {uuid});
+    console.log('mock api readPersonalShift', {yearMonth, uuid});
     const index = this.personalShifts.findIndex(personalShift => personalShift.uuid === uuid);
     if (index > -1) {
-      return Promise.resolve(Object.assign({}, this.personalShifts[index]));
+      return this.delayReturn().then(() => Object.assign({}, this.personalShifts[index]));
     } else {
-      return Promise.reject('NOT_EXIST');
+      return this.delayReturn().then(() => Promise.reject());
     }
   };
 
   readStatistic = (yearMonth: string, uuid: string): Promise<Statistic> => {
-    const index = this.statistics.findIndex(_statistic => _statistic.uuid === uuid);
+    const statisticsInYearMonth = this.statistics.filter(_statistic => _statistic.date.includes(yearMonth));
+    const index = statisticsInYearMonth.findIndex(_statistic => _statistic.uuid === uuid);
     if (index > -1) {
-      return Promise.resolve(this.statistics[index]);
+      return this.delayReturn().then(() => Object.assign({}, statisticsInYearMonth[index]));
     } else {
-      return Promise.reject('NOT_EXIST');
+      return this.delayReturn().then(() => Promise.reject());
     }
   };
 
   createStatistic = (statistic: Statistic): Promise<void> => {
     this.statistics.push(statistic);
-    return Promise.resolve();
+    return this.delayReturn();
   };
 
   updateStatistic = (statistic: Statistic): Promise<void> => {
@@ -352,9 +360,13 @@ export class Api implements ApiInterface {
     if (index > -1) {
       this.statistics.splice(index, 1);
       this.statistics.push(statistic);
-      return Promise.resolve();
+      return this.delayReturn();
     } else {
-      return Promise.reject('NOT_EXIST');
+      return this.delayReturn().then(() => Promise.reject());
     }
   };
+
+  private delayReturn = (): Promise<void> => {
+    return firstValueFrom(timer(1000).pipe(map(() => {})));
+  }
 }

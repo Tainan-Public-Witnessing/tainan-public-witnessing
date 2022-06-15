@@ -23,14 +23,15 @@ export class StatisticEditorComponent implements OnInit, AfterViewInit {
   ) { }
 
   ngOnInit(): void {
+    const disabled = this.data.mode === 'view';
     this.statisticForm = this.formBuilder.group({
-      attendance: [{ value: '', disabled: this.data.mode === 'view'}, [Validators.required, Validators.pattern(/[0-9]+/)]],
-      tracts: [{ value: '', disabled: this.data.mode === 'view'}, [Validators.required, Validators.pattern(/[0-9]+/)]],
-      scriptures: [{ value: '', disabled: this.data.mode === 'view'}, [Validators.required, Validators.pattern(/[0-9]+/)]],
-      videos: [{ value: '', disabled: this.data.mode === 'view'}, [Validators.required, Validators.pattern(/[0-9]+/)]],
-      acceptReturnVisit: [{ value: '', disabled: this.data.mode === 'view'}, [Validators.required, Validators.pattern(/[0-9]+/)]],
-      returnVisits: [{ value: '', disabled: this.data.mode === 'view'}, [Validators.required, Validators.pattern(/[0-9]+/)]],
-      experience: [{ value: '', disabled: this.data.mode === 'view'}],
+      attendance: [{ value: '', disabled}, [Validators.required, Validators.pattern(/[0-9]+/)]],
+      tracts: [{ value: '', disabled}, [Validators.required, Validators.pattern(/[0-9]+/)]],
+      scriptures: [{ value: '', disabled}, [Validators.required, Validators.pattern(/[0-9]+/)]],
+      videos: [{ value: '', disabled}, [Validators.required, Validators.pattern(/[0-9]+/)]],
+      acceptReturnVisit: [{ value: '', disabled}, [Validators.required, Validators.pattern(/[0-9]+/)]],
+      returnVisits: [{ value: '', disabled}, [Validators.required, Validators.pattern(/[0-9]+/)]],
+      experience: [{ value: '', disabled}],
     });
   }
 

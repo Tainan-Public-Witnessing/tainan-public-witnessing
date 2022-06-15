@@ -8,16 +8,17 @@ import { ShiftHours } from '../_interfaces/shift-hours.interface';
 })
 export class ShiftHoursService {
 
-  private shiftHours$ = new BehaviorSubject<ShiftHours[]|null>(null);
+  private shiftHours$: BehaviorSubject<ShiftHours[]|null> | undefined = undefined;
 
   constructor(
     private api: Api,
   ) { }
 
   getShiftHoursList = (): BehaviorSubject<ShiftHours[]|null> => {
-    if (!this.shiftHours$.value) {
+    if (this.shiftHours$ === undefined) {
+      this.shiftHours$ = new BehaviorSubject<ShiftHours[]|null>(null);
       this.api.readShiftHoursList().then(shiftHours => {
-        this.shiftHours$.next(shiftHours);
+        this.shiftHours$?.next(shiftHours);
       });
     }
     return this.shiftHours$;

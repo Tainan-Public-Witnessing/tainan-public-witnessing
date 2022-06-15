@@ -24,9 +24,7 @@ export class ShiftsService {
         shifts$.next(shifts);
         shifts.forEach(_shift => this.addShiftToCache(_shift));
       }).catch(reason => {
-        if (reason === 'NOT_EXIST') {
-          shifts$.next(undefined);
-        }
+        shifts$.next(undefined);
       });
     }
     return this.shiftSets.get(yearMonth) as BehaviorSubject<Shift[]|null|undefined>;
@@ -56,9 +54,7 @@ export class ShiftsService {
           shifts$.next(shifts);
           shifts.forEach(_shift => this.addShiftToCache(_shift));
         }).catch(reason => {
-          if (reason === 'NOT_EXIST') {
-            shifts$.next(undefined);
-          }
+          shifts$.next(undefined);
         });
       }
     }
@@ -94,9 +90,7 @@ export class ShiftsService {
       this.api.readShift(yearMonth, uuid).then(shift => {
         shift$.next(shift);
       }).catch(reason => {
-        if (reason === 'NOT_EXIST') {
-          shift$.next(undefined);
-        }
+        shift$.next(undefined);
       });
     }
     return this.shifts.get(uuid) as BehaviorSubject<Shift|null|undefined>;

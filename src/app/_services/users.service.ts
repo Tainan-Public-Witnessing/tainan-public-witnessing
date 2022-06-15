@@ -8,7 +8,7 @@ import { Api } from 'src/app/_api/mock.api';
 })
 export class UsersService {
 
-  private userKeys$ = new BehaviorSubject<UserKey[]|null>(null);
+  private userKeys$: BehaviorSubject<UserKey[]|null> | undefined = undefined;
   private users = new Map<string, BehaviorSubject<User|null|undefined>>();
 
   constructor(
@@ -16,9 +16,10 @@ export class UsersService {
   ) { }
 
   getUserKeys = (): BehaviorSubject<UserKey[]|null> => {
-    if (this.userKeys$.value === null) {
+    if (this.userKeys$ === undefined) {
+      this.userKeys$ = new BehaviorSubject<UserKey[]|null>(null);
       this.api.readUserKeys().then(userKeys => {
-        this.userKeys$.next(userKeys);
+        this.userKeys$?.next(userKeys);
       });
     }
     return this.userKeys$;
@@ -31,9 +32,7 @@ export class UsersService {
       this.api.readUser(uuid).then(user => {
         user$.next(user);
       }).catch(reason => {
-        if (reason === 'NOT_EXIST') {
-          user$.next(undefined);
-        }
+        user$.next(undefined);
       });
     }
     return this.users.get(uuid) as BehaviorSubject<User|null|undefined>;
