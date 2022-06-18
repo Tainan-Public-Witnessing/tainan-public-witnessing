@@ -1,28 +1,41 @@
 <mat-card class="shift-card">
+
   <mat-card-header>
+
     <mat-card-title>
       <div>{{shift?.date}}</div>
       <div><mat-icon>schedule</mat-icon>{{shiftHours?.name}}</div>
       <div><mat-icon>pin_drop</mat-icon>{{site?.name}}</div>
     </mat-card-title>
+
     <mat-card-subtitle>
       {{'GLOBAL.DAY.' + day | translate}}
       {{shiftHours?.startTime}} ~
       {{shiftHours?.endTime}}
     </mat-card-subtitle>
   </mat-card-header>
+
   <mat-card-content>
     <mat-chip-list>
       <mat-chip *ngFor="let user of crew">{{user.username}}</mat-chip>
     </mat-chip-list>
   </mat-card-content>
+
   <mat-card-actions>
+
     <button
       mat-icon-button
       *ngIf="canEditStatistic$ | async"
       [ngClass]="{'has-statistic': shift?.hasStatistic}"
       (click)="openStatisticEditor()">
       <mat-icon>add_chart</mat-icon>
+    </button>
+
+    <button
+      mat-icon-button
+      *ngIf="canEditCrew$ | async"
+      (click)="openCrewEditor()">
+      <mat-icon>groups</mat-icon>
     </button>
   </mat-card-actions>
 </mat-card>

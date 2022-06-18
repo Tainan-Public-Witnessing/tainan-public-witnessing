@@ -13,6 +13,7 @@ import { environment } from 'src/environments/environment';
 import { StatisticEditorComponent } from 'src/app/_elements/dialogs/statistic-editor/statistic-editor.component';
 import { AuthorityService } from 'src/app/_services/authority.service';
 import { Permission } from 'src/app/_enums/permission.enum';
+import { CrewEditorComponent } from '../../dialogs/crew-editor/crew-editor.component';
 
 @Component({
   selector: 'app-shift-card',
@@ -28,6 +29,7 @@ export class ShiftCardComponent implements OnInit, OnDestroy {
   crew: UserKey[] = [];
   day: string|null = null;
   canEditStatistic$!: Observable<boolean>;
+  canEditCrew$!: Observable<boolean>;
   destroy$ = new Subject<void>();
 
   constructor(
@@ -39,30 +41,48 @@ export class ShiftCardComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.shiftHoursService.getShiftHoursList().pipe(
-      filter(shiftHoursList => shiftHoursList !== null),
-      map(shiftHoursList => shiftHoursList as ShiftHours[]),
-      first()
-    ).subscribe(shiftHoursList => {
-      this.shiftHours = shiftHoursList.find(_shiftHours => this.shift.shiftHoursUuid === _shiftHours.uuid) as ShiftHours;
-    });
-    this.sitesService.getSites().pipe(
-      filter(sites => sites !== null),
-      map(sites => sites as Site[]),
-      first()
-    ).subscribe(sites => {
-      this.site = sites.find(_site => this.shift.siteUuid === _site.uuid) as Site;
-    });
-    this.usersService.getUserKeys().pipe(
-      filter(userKeys => userKeys !== null),
-      map(userKeys => userKeys as UserKey[]),
-      first()
-    ).subscribe(userKeys => {
-      this.crew = this.shift.crewUuids.map(_uuid => userKeys.find(_userKey => _userKey.uuid === _uuid) as UserKey);
-    });
-    const n  = new Date(this.shift.date).getDay()
-    this.day = environment.DAY[n];
+    this.getShiftHours();
+    this.getSite();
+    this.getCrew();
+    this.day = environment.DAY[new Date(this.shift.date).getDay()];
+    this.pipeCanEditStatistic();
+    this.pipeCanEditCrew();
+  }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  openStatisticEditor = () => {
+    let mode = '';
+    if (this.shift.hasStatistic) {
+      mode = 'view';
+    } else {
+      mode = 'create';
+    }
+    this.matDialog.open(StatisticEditorComponent, {
+      disableClose: mode !== 'view',
+      panelClass: 'dialog-panel',
+      data: {
+        mode,
+        uuid: this.shift.uuid,
+        date: this.shift.date,
+      }
+    });
+  }
+
+  openCrewEditor = () => {
+    this.matDialog.open(CrewEditorComponent, {
+      disableClose: true,
+      panelClass: 'dialog-panel',
+      data: {
+        crew: this.crew
+      }
+    });
+  }
+
+  private pipeCanEditStatistic = () => {
     const shiftEndTime = new Date([this.shift.date, this.shiftHours?.endTime].join(' ')).getTime();
     const shiftEndDate = new Date(this.shift.date);
     shiftEndDate.setDate(shiftEndDate.getDate() + 1);
@@ -92,26 +112,37 @@ export class ShiftCardComponent implements OnInit, OnDestroy {
     );
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+  private getShiftHours = () => {
+    this.shiftHoursService.getShiftHoursList().pipe(
+      filter(shiftHoursList => shiftHoursList !== null),
+      map(shiftHoursList => shiftHoursList as ShiftHours[]),
+      first()
+    ).subscribe(shiftHoursList => {
+      this.shiftHours = shiftHoursList.find(_shiftHours => this.shift.shiftHoursUuid === _shiftHours.uuid) as ShiftHours;
+    });
   }
 
-  openStatisticEditor = () => {
-    let mode = '';
-    if (this.shift.hasStatistic) {
-      mode = 'view';
-    } else {
-      mode = 'create';
-    }
-    this.matDialog.open(StatisticEditorComponent, {
-      disableClose: mode !== 'view',
-      panelClass: 'dialog-panel',
-      data: {
-        mode,
-        uuid: this.shift.uuid,
-        date: this.shift.date,
-      }
+  private getSite = () => {
+    this.sitesService.getSites().pipe(
+      filter(sites => sites !== null),
+      map(sites => sites as Site[]),
+      first()
+    ).subscribe(sites => {
+      this.site = sites.find(_site => this.shift.siteUuid === _site.uuid) as Site;
     });
+  }
+
+  private getCrew = () => {
+    this.usersService.getUserKeys().pipe(
+      filter(userKeys => userKeys !== null),
+      map(userKeys => userKeys as UserKey[]),
+      first()
+    ).subscribe(userKeys => {
+      this.crew = this.shift.crewUuids.map(_uuid => userKeys.find(_userKey => _userKey.uuid === _uuid) as UserKey);
+    });
+  }
+
+  private pipeCanEditCrew = () => {
+    this.canEditCrew$ = this.authorityService.canAccess(Permission.MANAGER);
   }
 }
