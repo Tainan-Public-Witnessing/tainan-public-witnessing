@@ -103,5 +103,11 @@
     "READ_TITLE": "Profile",
     "DELETE_TITLE": "Delete profile",
     "NAME_LABEL": "Profile name"
+  },
+  "CREEW_EDITOR": {
+    "MEMBER_ERROR_MESSAGE": "Member not exist!",
+    "LABEL": {
+      "MEMBER": "Member"
+    }
   }
 }

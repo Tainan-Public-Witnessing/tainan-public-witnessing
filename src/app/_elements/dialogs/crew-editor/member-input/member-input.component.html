@@ -1,0 +1,11 @@
+<mat-form-field appearance="outline">
+  <mat-label>{{'CREEW_EDITOR.LABEL.MEMBER' | translate}}</mat-label>
+  <input matInput [formControl]="control" [matAutocomplete]="auto">
+  <mat-autocomplete #auto="matAutocomplete">
+    <mat-option
+      *ngFor="let username of (autoCompleteUserKeys$ | async)"
+      [value]="username">
+      {{username}}
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>

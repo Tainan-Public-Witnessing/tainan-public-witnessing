@@ -37,6 +37,7 @@ import { FIREBASE_OPTIONS } from '@angular/fire/compat';
 import { environment } from 'src/environments/environment.prod';
 import { StatisticEditorComponent } from './_elements/dialogs/statistic-editor/statistic-editor.component';
 import { CrewEditorComponent } from './_elements/dialogs/crew-editor/crew-editor.component';
+import { MemberInputComponent } from './_elements/dialogs/crew-editor/member-input/member-input.component';
 
 // AoT requires an exported function for factories of translate module
 export function HttpLoaderFactory(http: HttpClient) {
@@ -63,6 +64,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     ShiftCardComponent,
     StatisticEditorComponent,
     CrewEditorComponent,
+    MemberInputComponent,
   ],
   imports: [
     BrowserModule,

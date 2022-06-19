@@ -103,5 +103,11 @@
     "READ_TITLE": "權限配置文件",
     "DELETE_TITLE": "刪除權限配置文件",
     "NAME_LABEL": "權限配置文件名稱"
+  },
+  "CREEW_EDITOR": {
+    "MEMBER_ERROR_MESSAGE": "成員不存在！",
+    "LABEL": {
+      "MEMBER": "成員"
+    }
   }
 }

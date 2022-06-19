@@ -169,6 +169,6 @@ export class Api implements ApiInterface {
   };
 
   private delayReturn = (): Promise<void> => {
-    return firstValueFrom(timer(1000).pipe(map(() => {})));
+    return firstValueFrom(timer(500).pipe(map(() => {})));
   }
 }

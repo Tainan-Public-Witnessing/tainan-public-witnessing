@@ -1,12 +1,21 @@
 <div mat-dialog-content [formGroup]="crewFormGroup">
-  <div formArrayName="crew" class="crew-container">
+  <div formArrayName="crew" class="crew-container" cdkDropList (cdkDropListDropped)="drop($event)">
 
-    <mat-form-field *ngFor="let control of getCrewControls(); let controlName=index;" appearance="outline">
-      <mat-label>{{'ADMIN.PRODUCT_EDITOR.INPUT_LABEL.NAME' | translate}}</mat-label>
-      <input matInput [formControlName]="controlName">
-    </mat-form-field>
+    <div class="member-row" *ngFor="let control of getCrewControls(); let controlName=index;" cdkDrag cdkDragPreviewContainer="parent">
 
-    <button mat-icon-button><mat-icon>add</mat-icon></button>
+      <mat-icon cdkDragHandle>drag_handle</mat-icon>
+
+      <app-member-input
+        class="member-input"
+        [control]="control">
+      </app-member-input>
+
+      <button mat-icon-button (click)="removeMember(controlName)"><mat-icon>delete</mat-icon></button>
+    </div>
+
+    <div class="add-button-row">
+      <button mat-icon-button (click)="addMember()"><mat-icon>add</mat-icon></button>
+    </div>
   </div>
 </div>
 
