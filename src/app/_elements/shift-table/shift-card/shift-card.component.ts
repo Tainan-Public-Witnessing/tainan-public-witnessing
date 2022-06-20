@@ -77,7 +77,8 @@ export class ShiftCardComponent implements OnInit, OnDestroy {
       disableClose: true,
       panelClass: 'dialog-panel',
       data: {
-        crew: this.crew
+        crew: this.crew,
+        shift: this.shift,
       }
     });
   }

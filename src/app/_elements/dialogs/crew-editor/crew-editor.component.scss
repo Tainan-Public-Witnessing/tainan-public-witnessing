@@ -11,9 +11,7 @@
       align-items: center;
 
       &:first-child {
-        border-top: 5px solid $background-color-toolbar;
         border-bottom: 5px solid $background-color-toolbar;
-        border-radius: 3px;
       }
 
       .member-input {

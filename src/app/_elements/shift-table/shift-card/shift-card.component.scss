@@ -1,3 +1,5 @@
+@import 'src/app/_styles/global';
+
 .shift-card {
   width: 210px;
 
@@ -18,6 +20,10 @@
     display: flex;
     gap: 4px;
     flex-wrap: wrap;
+
+    .mat-chip-list .mat-chip:first-child {
+      background-color: $background-color-toolbar;
+    }
   }
 
   .mat-card-actions {

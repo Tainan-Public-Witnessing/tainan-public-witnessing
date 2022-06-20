@@ -52,7 +52,7 @@ export class ShiftTableComponent implements OnInit, OnDestroy {
           return dateCompare;
         }
       }) 
-    })
+    });
   }
 
   ngOnDestroy(): void {

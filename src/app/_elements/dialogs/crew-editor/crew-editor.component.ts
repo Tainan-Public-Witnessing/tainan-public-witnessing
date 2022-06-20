@@ -2,7 +2,11 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, Inject, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { filter, first } from 'rxjs/operators';
+import { Shift } from 'src/app/_interfaces/shift.interface';
 import { UserKey } from 'src/app/_interfaces/user.interface';
+import { ShiftsService } from 'src/app/_services/shifts.service';
+import { UsersService } from 'src/app/_services/users.service';
 
 @Component({
   selector: 'app-crew-editor',
@@ -12,17 +16,25 @@ import { UserKey } from 'src/app/_interfaces/user.interface';
 export class CrewEditorComponent implements OnInit {
 
   crewFormGroup!: FormGroup;
+  userKeys: UserKey[] = [];
 
   constructor(
     private dialogRef: MatDialogRef<CrewEditorComponent>,
     private formBuilder: FormBuilder,
-    @Inject(MAT_DIALOG_DATA) public data: {crew: UserKey[]},
+    @Inject(MAT_DIALOG_DATA) public data: {crew: UserKey[], shift: Shift},
+    private usersService: UsersService,
+    private shiftsService: ShiftsService,
   ) { }
 
   ngOnInit(): void {
     this.crewFormGroup = this.formBuilder.group({
       crew: this.formBuilder.array(this.data.crew.map(member => this.formBuilder.control({value: member.username, disabled: false})))
-    })
+    });
+
+    this.usersService.getUserKeys().pipe(
+      filter(_userKeys => _userKeys !== null),
+      first(),
+    ).subscribe(_userKeys => this.userKeys = _userKeys as UserKey[]);
   }
 
   onCancelClick = () => {
@@ -30,7 +42,15 @@ export class CrewEditorComponent implements OnInit {
   }
 
   onSubmitClick = () => {
-    this.dialogRef.close(true);
+    this.memberValidator();
+    if (this.crewFormGroup.valid) {
+      this.data.shift.crewUuids = this.getCrewControls().map(_control => {
+        const index = this.userKeys.findIndex(_userKey => _userKey.username ===  _control.value);
+        return this.userKeys[index].uuid;
+      });
+      this.shiftsService.updateShift(this.data.shift)
+      this.dialogRef.close(true);
+    }
   }
 
   getCrewControls = () => {
@@ -50,5 +70,14 @@ export class CrewEditorComponent implements OnInit {
   drop = (event: CdkDragDrop<AbstractControl[]>) => {
     const controls = this.getCrewControls();
     moveItemInArray(controls, event.previousIndex, event.currentIndex);
+  }
+
+  private memberValidator = () => {
+    this.getCrewControls().forEach(_control => {
+      const index = this.userKeys.findIndex(_userKey => _userKey.username === _control.value);
+      if (index === -1) {
+        _control.setErrors({required: true});
+      }
+    });
   }
 }
