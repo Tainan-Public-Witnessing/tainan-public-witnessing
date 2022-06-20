@@ -161,7 +161,7 @@ export const SHIFTS: Shift[] = [
     hasStatistic: true,
   }, {
     uuid: 'c1c9b287-1f8b-4364-810d-6218c535fb77',
-    date: '2022-06-12',
+    date: '2022-06-21',
     shiftHoursUuid: 'bb406de4-d090-413b-a68b-ad790a332699',
     siteUuid: '2ab1d2b4-e03b-47ba-991d-7ca801c79b0d',
     crewUuids: [

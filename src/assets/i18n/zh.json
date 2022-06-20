@@ -37,6 +37,12 @@
     },
     "PERMISSION_FAIL_ERROR": "使用者不存在或密碼錯誤！"
   },
+  "SHIFT_CARD": {
+    "MESSAGE": {
+      "NOT_YET": "尚未到填寫時間！",
+      "OVER_TIME": "已超過時間！"
+    }
+  },
   "STATISTIC_EDITOR": {
     "TITLE": "統計",
     "LABEL": {

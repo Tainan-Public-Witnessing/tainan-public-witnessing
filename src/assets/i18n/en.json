@@ -37,6 +37,12 @@
     },
     "PERMISSION_FAIL_ERROR": "User not exist of wrong password!"
   },
+  "SHIFT_CARD": {
+    "MESSAGE": {
+      "NOT_YET": "It is not time to fill in yet!",
+      "OVER_TIME": "It is timed out!"
+    }
+  },
   "STATISTIC_EDITOR": {
     "TITLE": "Statistic",
     "LABEL": {
