@@ -12,6 +12,6 @@
     </mat-datepicker>
   </mat-form-field>
 
-  <app-shift-table *ngIf="(shifts$ | async)?.length > 0" [shifts$]="shifts$"></app-shift-table>
-  <p *ngIf="!((shifts$ | async)?.length > 0)">{{'PERSONAL_SHIFT.NO_DATA_MESSAGE' | translate}}</p>
+  <app-shift-table *ngIf="shiftsLength > 0" [shifts$]="shifts$"></app-shift-table>
+  <p *ngIf="!(shiftsLength > 0)">{{'PERSONAL_SHIFT.NO_DATA_MESSAGE' | translate}}</p>
 </div>

@@ -135,8 +135,12 @@ export class Api implements ApiInterface {
   readPersonalShift = (yearMonth: string ,uuid: string): Promise<PersonalShift> => {
     console.log('mock api readPersonalShift', {yearMonth, uuid});
     const index = this.personalShifts.findIndex(personalShift => personalShift.uuid === uuid);
+    const returnObject = Object.assign({}, this.personalShifts[index]);
+    returnObject.shiftUuids = returnObject.shiftUuids.filter(_shiftUuid => {
+      return this.shifts.find(_shift => _shift.uuid === _shiftUuid)?.date.includes(yearMonth);
+    });
     if (index > -1) {
-      return this.delayReturn().then(() => Object.assign({}, this.personalShifts[index]));
+      return this.delayReturn().then(() => returnObject);
     } else {
       return this.delayReturn().then(() => Promise.reject());
     }

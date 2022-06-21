@@ -150,7 +150,7 @@ export const SHIFT_HOURS_LIST: ShiftHours[] = [
 export const SHIFTS: Shift[] = [
   {
     uuid: '056f687d-2b0b-48ee-ba30-a4190a95cacb',
-    date: '2022-06-13',
+    date: '2022-07-13',
     shiftHoursUuid: '39cd7d33-ba5c-4967-8502-a1a57f557842',
     siteUuid: '408941a1-3af4-4148-a822-baddd9fae407',
     crewUuids: [

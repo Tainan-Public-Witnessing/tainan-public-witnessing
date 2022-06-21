@@ -33,7 +33,8 @@ import { ShiftsService } from '../_services/shifts.service';
 export class PersonalShiftComponent implements OnInit, AfterViewInit, OnDestroy {
 
   yearMonthControl = new FormControl(moment());
-  shifts$!: Observable<Shift[]>;
+  shifts$ = new BehaviorSubject<Shift[]|null>(null);
+  shiftsLength = 0;
   destroy$ = new Subject<void>();
 
   constructor(
@@ -46,15 +47,20 @@ export class PersonalShiftComponent implements OnInit, AfterViewInit, OnDestroy 
   ngOnInit(): void { }
 
   ngAfterViewInit(): void {
-    this.shifts$ =this.yearMonthControl.valueChanges.pipe(
-      takeUntil(this.destroy$),
+    const yearMonth$ = this.yearMonthControl.valueChanges.pipe(
       filter(value => !!value),
       map(momentDate => momentDate as moment.Moment),
       map(momentDate => momentDate.format('yyyy-MM')),
       startWith(this.datePipe.transform(new Date(), 'yyyy-MM') as string),
+    );
+
+    const personalShifts$ = yearMonth$.pipe(
       map(yearMonth => this.personalShiftsService.getPersonalShift(yearMonth, this.authorityService.currentUserUuid$.value as string)),
       switchAll(),
       filter(personalShift => personalShift !== null),
+    );
+
+    personalShifts$.pipe(
       map(personalShift => personalShift !== undefined ? this.shiftsService.getShiftsByUuids((this.yearMonthControl.value as moment.Moment).format('yyyy-MM'), personalShift?.shiftUuids as string[]) : []),
       map((_shift$list: BehaviorSubject<Shift | null | undefined>[]) => {
         if (_shift$list.length > 0) {
@@ -64,7 +70,14 @@ export class PersonalShiftComponent implements OnInit, AfterViewInit, OnDestroy 
         }
       }),
       switchAll(),
-    ) as Observable<Shift[]>
+      takeUntil(this.destroy$),
+    ).subscribe(_shifts => this.shifts$.next(_shifts as Shift[]));
+
+    this.shifts$.pipe(
+      filter(_shifts => _shifts !== null),
+      map(_shifts => _shifts as Shift[]),
+      takeUntil(this.destroy$)
+    ).subscribe(_shifts => this.shiftsLength = _shifts.length);
   }
 
   ngOnDestroy(): void {
