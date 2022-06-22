@@ -16,9 +16,10 @@
   </mat-card-header>
 
   <mat-card-content>
-    <mat-chip-list>
+    <mat-chip-list *ngIf="!!crew">
       <mat-chip *ngFor="let user of crew">{{user.username}}</mat-chip>
     </mat-chip-list>
+    <mat-spinner *ngIf="crew === null"></mat-spinner>
   </mat-card-content>
 
   <mat-card-actions>

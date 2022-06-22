@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { combineLatest, filter, first, Observable, of, Subject, timer } from 'rxjs';
-import { map, switchAll, takeUntil } from 'rxjs/operators';
+import { combineLatest, Observable, of, Subject, timer } from 'rxjs';
+import { filter, map, switchAll, takeUntil } from 'rxjs/operators';
 import { ShiftHours } from 'src/app/_interfaces/shift-hours.interface';
 import { Shift } from 'src/app/_interfaces/shift.interface';
 import { Site } from 'src/app/_interfaces/site.interface';
@@ -22,14 +22,16 @@ import { CrewEditorComponent } from '../../dialogs/crew-editor/crew-editor.compo
 })
 export class ShiftCardComponent implements OnInit, OnDestroy {
 
-  @Input() shift!: Shift;
+  @Input() shift$!: Observable<Shift>;
 
+  shift: Shift|null = null;
   shiftHours: ShiftHours|null = null;
   site: Site|null = null;
-  crew: UserKey[] = [];
+  crew: UserKey[]|null = null;
   day: string|null = null;
   canEditStatistic$!: Observable<boolean>;
   canEditCrew$!: Observable<boolean>;
+  changes$ = new Subject<void>();
   destroy$ = new Subject<void>();
 
   constructor(
@@ -41,10 +43,22 @@ export class ShiftCardComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.getShiftHours();
-    this.getSite();
-    this.getCrew();
-    this.day = environment.DAY[new Date(this.shift.date).getDay()];
+
+    combineLatest([
+      this.shift$,
+      this.shiftHoursService.getShiftHoursList().pipe(filter(_shiftHoursList => _shiftHoursList !== null)),
+      this.sitesService.getSites().pipe(filter(_sites => _sites !== null)),
+      this.usersService.getUserKeys().pipe(filter(_userKeys => _userKeys !== null)),
+    ]).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(([_shift, _shiftHoursList, _sites, _userKeys]) => {
+      this.shift = _shift;
+      this.shiftHours = _shiftHoursList?.find(_shiftHours => _shift.shiftHoursUuid === _shiftHours.uuid) as ShiftHours;
+      this.site = _sites?.find(_site => _shift.siteUuid === _site.uuid) as Site;
+      this.crew = _shift.crewUuids.map(_memberUuid => _userKeys?.find(_userKey => _userKey.uuid === _memberUuid)) as UserKey[];
+      this.day = environment.DAY[new Date(_shift.date).getDay()];
+    });
+
     this.pipeCanEditStatistic();
     this.pipeCanEditCrew();
   }
@@ -55,91 +69,69 @@ export class ShiftCardComponent implements OnInit, OnDestroy {
   }
 
   openStatisticEditor = () => {
-    let mode = '';
-    if (this.shift.hasStatistic) {
-      mode = 'view';
-    } else {
-      mode = 'create';
-    }
-    this.matDialog.open(StatisticEditorComponent, {
-      disableClose: mode !== 'view',
-      panelClass: 'dialog-panel',
-      data: {
-        mode,
-        uuid: this.shift.uuid,
-        date: this.shift.date,
+    if (this.shift !== null) {
+      let mode = '';
+      if (this.shift.hasStatistic) {
+        mode = 'view';
+      } else {
+        mode = 'create';
       }
-    });
+      this.matDialog.open(StatisticEditorComponent, {
+        disableClose: mode !== 'view',
+        panelClass: 'dialog-panel',
+        data: {
+          mode,
+          uuid: this.shift.uuid,
+          date: this.shift.date,
+        }
+      });
+    }
   }
 
   openCrewEditor = () => {
-    this.matDialog.open(CrewEditorComponent, {
-      disableClose: true,
-      panelClass: 'dialog-panel',
-      data: {
-        crew: this.crew,
-        shift: this.shift,
-      }
-    });
+    if (this.shift !== null) {
+      this.matDialog.open(CrewEditorComponent, {
+        disableClose: true,
+        panelClass: 'dialog-panel',
+        data: {
+          crew: this.crew,
+          shift: this.shift,
+        }
+      });
+    }
   }
 
   private pipeCanEditStatistic = () => {
-    const shiftEndTime = new Date([this.shift.date, this.shiftHours?.endTime].join(' ')).getTime();
-    const shiftEndDate = new Date(this.shift.date);
-    shiftEndDate.setDate(shiftEndDate.getDate() + 1);
-    const shiftEndDateTime = shiftEndDate.getTime();
-    this.canEditStatistic$ = combineLatest([
-      this.authorityService.canAccess(Permission.USER, this.shift.crewUuids).pipe(
-        map(_canAccess => {
-          if (_canAccess) {
-            return timer(0, 10000).pipe(
-              takeUntil(this.destroy$),
-              map(() => {
-                const nowTime = new Date().getTime();
-                return shiftEndTime < nowTime && nowTime < shiftEndDateTime;
-              })
-            )
-          } else {
-            return of(false);
-          }
-        }),
-        switchAll()
-      ),
-      this.authorityService.canAccess(Permission.MANAGER)
-    ]).pipe(
-      map(([userAccess, managerAccess]) => {
-        return userAccess || managerAccess;
-      })
-    );
-  }
-
-  private getShiftHours = () => {
-    this.shiftHoursService.getShiftHoursList().pipe(
-      filter(shiftHoursList => shiftHoursList !== null),
-      map(shiftHoursList => shiftHoursList as ShiftHours[]),
-      first()
-    ).subscribe(shiftHoursList => {
-      this.shiftHours = shiftHoursList.find(_shiftHours => this.shift.shiftHoursUuid === _shiftHours.uuid) as ShiftHours;
-    });
-  }
-
-  private getSite = () => {
-    this.sitesService.getSites().pipe(
-      filter(sites => sites !== null),
-      map(sites => sites as Site[]),
-      first()
-    ).subscribe(sites => {
-      this.site = sites.find(_site => this.shift.siteUuid === _site.uuid) as Site;
-    });
-  }
-
-  private getCrew = () => {
-    this.usersService.getUserKeys().pipe(
-      filter(userKeys => userKeys !== null),
-      map(userKeys => userKeys as UserKey[]),
-      first()
-    ).subscribe(userKeys => {
-      this.crew = this.shift.crewUuids.map(_uuid => userKeys.find(_userKey => _userKey.uuid === _uuid) as UserKey);
+    this.shift$.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(_shift => {
+      const shiftEndTime = new Date([_shift.date, this.shiftHours?.endTime].join(' ')).getTime();
+      const shiftEndDate = new Date(_shift.date);
+      shiftEndDate.setDate(shiftEndDate.getDate() + 1);
+      const shiftEndDateTime = shiftEndDate.getTime();
+      this.canEditStatistic$ = combineLatest([
+        this.authorityService.canAccess(Permission.USER, _shift.crewUuids).pipe(
+          map(_canAccess => {
+            if (_canAccess) {
+              return timer(0, 10000).pipe(
+                takeUntil(this.destroy$),
+                map(() => {
+                  const nowTime = new Date().getTime();
+                  return shiftEndTime < nowTime && nowTime < shiftEndDateTime;
+                })
+              )
+            } else {
+              return of(false);
+            }
+          }),
+          switchAll()
+        ),
+        this.authorityService.canAccess(Permission.MANAGER)
+      ]).pipe(
+        map(([userAccess, managerAccess]) => {
+          return userAccess || managerAccess;
+        })
+      );
     });
   }
 

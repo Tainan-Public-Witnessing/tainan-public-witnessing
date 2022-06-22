@@ -1,3 +1,5 @@
-<div class="container">
-  <app-shift-card *ngFor="let shift of sortedShifts" [shift]="shift"></app-shift-card>
+<div *ngIf="!!sortedShift$s" class="container">
+  <app-shift-card *ngFor="let shift$ of sortedShift$s" [shift$]="shift$"></app-shift-card>
 </div>
+<p *ngIf="sortedShift$s === undefined">{{'PERSONAL_SHIFT.NO_DATA_MESSAGE' | translate}}</p>
+<mat-spinner *ngIf="sortedShift$s === null"></mat-spinner>

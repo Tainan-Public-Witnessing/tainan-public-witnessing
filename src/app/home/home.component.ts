@@ -1,7 +1,6 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { filter, first, map } from 'rxjs/operators';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
 import { Shift } from '../_interfaces/shift.interface';
 import { ShiftsService } from '../_services/shifts.service';
 
@@ -10,10 +9,11 @@ import { ShiftsService } from '../_services/shifts.service';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
 
-  shiftsToday$!: Observable<Shift[]>;
-  shiftsTomorrow$!: Observable<Shift[]>;
+  shiftsToday$!: Observable<Shift[]|null|undefined>;
+  shiftsTomorrow$!: Observable<Shift[]|null|undefined>;
+  destroy$ = new Subject<void>();
 
   constructor(
     private shiftsService: ShiftsService,
@@ -22,17 +22,17 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     const today = new Date();
+    const todayString = this.datePipe.transform(today, 'yyyy-MM-dd') as string;
+    this.shiftsToday$ = this.shiftsService.getShiftsByDate(todayString);
+
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
-    this.shiftsToday$ = this.shiftsService.getShiftsByDate(this.datePipe.transform(today, 'yyyy-MM-dd') as string).pipe(
-      filter(shifts => shifts !== null),
-      first(),
-      map(shifts => !!shifts ? shifts : [])
-    );
-    this.shiftsTomorrow$ = this.shiftsService.getShiftsByDate(this.datePipe.transform(tomorrow, 'yyyy-MM-dd') as string).pipe(
-      filter(shifts => shifts !== null),
-      first(),
-      map(shifts => !!shifts ? shifts : [])
-    );
+    const tomorrowString = this.datePipe.transform(tomorrow, 'yyyy-MM-dd') as string;
+    this.shiftsTomorrow$ = this.shiftsService.getShiftsByDate(tomorrowString);
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

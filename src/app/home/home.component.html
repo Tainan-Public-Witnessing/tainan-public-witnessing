@@ -1,7 +1,5 @@
 <h3>{{'HOME.SHIFTS_TODAY' | translate}}</h3>
-<app-shift-table *ngIf="(shiftsToday$ | async)?.length > 0" [shifts$]="shiftsToday$"></app-shift-table>
-<p *ngIf="!((shiftsToday$ | async)?.length > 0)">{{'PERSONAL_SHIFT.NO_DATA_MESSAGE' | translate}}</p>
+<app-shift-table [shifts$]="shiftsToday$"></app-shift-table>
 
 <h3>{{'HOME.SHIFTS_TOMORROW' | translate}}</h3>
-<app-shift-table *ngIf="(shiftsTomorrow$ | async)?.length > 0" [shifts$]="shiftsTomorrow$"></app-shift-table>
-<p *ngIf="!((shiftsTomorrow$ | async)?.length > 0)">{{'PERSONAL_SHIFT.NO_DATA_MESSAGE' | translate}}</p>
+<app-shift-table [shifts$]="shiftsTomorrow$"></app-shift-table>
