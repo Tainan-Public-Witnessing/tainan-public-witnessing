@@ -13,6 +13,7 @@ export class MemberInputComponent implements OnInit, OnDestroy {
 
   @Input() control!: AbstractControl;
   @Input() userKeys!: UserKey[];
+  @Input() isGroupLeader!: boolean;
 
   autoCompleteUserKeys$ = new BehaviorSubject<string[]>([]);
   destroy$ = new Subject<void>();
