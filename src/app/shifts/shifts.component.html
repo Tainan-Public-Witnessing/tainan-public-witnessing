@@ -1,0 +1,10 @@
+<div class="container">
+  <mat-form-field appearance="outline">
+    <mat-label>{{'SHIFTS.LABEL.DATE' | translate}}</mat-label>
+    <input matInput [matDatepicker]="datePicker" [formControl]="dateControl">
+    <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+    <mat-datepicker #datePicker></mat-datepicker>
+  </mat-form-field>
+
+  <app-shift-table [shifts$]="shifts$"></app-shift-table>
+</div>

@@ -1,6 +1,6 @@
 <mat-card class="shift-card">
 
-  <mat-card-header>
+  <mat-card-header *ngIf="crew !== null">
 
     <mat-card-title>
       <div>{{shift?.date}}</div>
@@ -19,10 +19,11 @@
     <mat-chip-list *ngIf="!!crew">
       <mat-chip *ngFor="let user of crew">{{user.username}}</mat-chip>
     </mat-chip-list>
+
     <mat-spinner *ngIf="crew === null"></mat-spinner>
   </mat-card-content>
 
-  <mat-card-actions>
+  <mat-card-actions *ngIf="crew !== null">
 
     <button
       mat-icon-button

@@ -58,7 +58,7 @@
     "TITLE": "個人班表",
     "NO_DATA_MESSAGE": "沒有資料",
     "LABEL": {
-      "YEAR_MONTH": "年-月"
+      "YEAR_MONTH": "年份-月份"
     }
   },
   "USERS": {
@@ -109,6 +109,12 @@
     "LABEL": {
       "GROUP_LEADER": "組長",
       "MEMBER": "成員"
+    }
+  },
+  "SHIFTS": {
+    "TITLE": "查詢班表",
+    "LABEL": {
+      "DATE": "年份-月份-日期"
     }
   }
 }

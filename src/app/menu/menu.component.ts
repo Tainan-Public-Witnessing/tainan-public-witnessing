@@ -20,10 +20,7 @@ export class MenuComponent implements OnInit, OnDestroy {
   MENU_LINKS: MenuLink[] = [
     { display: 'HOME.TITLE', url: 'home', permission: Permission.GUEST },
     { display: 'PERSONAL_SHIFT.TITLE', url: 'personal-shift', permission: Permission.USER },
-    // { display: 'USERS.TITLE', url: 'users', permissionKey: PermissionKey.USERS_READ},
-    // { display: 'CONGREGATIONS.TITLE', url: 'congregations', permissionKey: PermissionKey.CONGREGATIONS_READ},
-    // { display: 'TAGS.TITLE', url: 'tags', permissionKey: PermissionKey.TAGS_READ},
-    // { display: 'PROFILES.TITLE', url: 'profiles', permissionKey: PermissionKey.PROFILES_READ},
+    { display: 'SHIFTS.TITLE', url: 'shifts', permission: Permission.MANAGER },
   ];
 
   currentMenuLinks$ = new BehaviorSubject<MenuLink[]>([]);

@@ -58,7 +58,7 @@
     "TITLE": "Personal Shift",
     "NO_DATA_MESSAGE": "No data",
     "LABEL": {
-      "YEAR_MONTH": "Year and Month"
+      "YEAR_MONTH": "Year-Month"
     }
   },
   "USERS": {
@@ -109,6 +109,12 @@
     "LABEL": {
       "GROUP_LEADER": "Group leader",
       "MEMBER": "Member"
+    }
+  },
+  "SHIFTS": {
+    "TITLE": "Search shifts",
+    "LABEL": {
+      "DATE": "Year-Month-Date"
     }
   }
 }

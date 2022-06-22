@@ -20,6 +20,7 @@ export class AuthorityService implements CanActivate {
   private urlPermissions: {url: string, permission: Permission}[] = [
     { url: 'home', permission: Permission.GUEST},
     { url: 'personal-shift', permission: Permission.USER},
+    { url: 'shifts', permission: Permission.MANAGER},
   ];
 
   constructor(

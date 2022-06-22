@@ -51,8 +51,8 @@ export class ShiftsService {
         });
       } else {
         this.api.readShiftsByDate(date).then(shifts => {
-          shifts$.next(shifts);
           shifts.forEach(_shift => this.addShiftToCache(_shift));
+          shifts$.next(shifts);
         }).catch(reason => {
           shifts$.next(undefined);
         });
