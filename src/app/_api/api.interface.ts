@@ -3,7 +3,7 @@ import { Congregation } from 'src/app/_interfaces/congregation.interface';
 import { Site } from 'src/app/_interfaces/site.interface';
 import { ShiftHours } from '../_interfaces/shift-hours.interface';
 import { Shift } from '../_interfaces/shift.interface';
-import { PersonalShift } from '../_interfaces/personal-shift.interface';
+import { PersonalShifts } from '../_interfaces/personal-shifts.interface';
 import { Statistic } from '../_interfaces/statistic.interface';
 
 export interface ApiInterface {
@@ -27,7 +27,9 @@ export interface ApiInterface {
   readShift: (yearMonth: string, uuid: string) => Promise<Shift>;
   updateShift: (shift: Shift) => Promise<void>;
 
-  readPersonalShift: (yearMonth: string, uuid: string) => Promise<PersonalShift>;
+  readPersonalShifts: (yearMonth: string, uuid: string) => Promise<PersonalShifts>;
+  createPersonalShifts: (yearMonth: string, personalShift: PersonalShifts) => Promise<void>;
+  updatePersonalShifts: (yearMonth: string, personalShift: PersonalShifts) => Promise<void>;
 
   readStatistic: (yearMonth: string, uuid: string) => Promise<Statistic>;
   createStatistic: (statistic: Statistic) => Promise<void>;

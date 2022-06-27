@@ -5,7 +5,7 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 
 import { Congregation } from '../_interfaces/congregation.interface';
-import { PersonalShift } from '../_interfaces/personal-shift.interface';
+import { PersonalShifts } from '../_interfaces/personal-shifts.interface';
 import { ShiftHours } from '../_interfaces/shift-hours.interface';
 import { Shift } from '../_interfaces/shift.interface';
 import { Site } from '../_interfaces/site.interface';
@@ -155,8 +155,8 @@ export class Api implements ApiInterface {
     return this.angularFirestore.doc<Shift>(['MonthlyData', yearMonth, 'Shifts', shift.uuid].join('/')).update(shift);
   };
 
-  readPersonalShift = (yearMonth: string, uuid: string): Promise<PersonalShift> => {
-    return firstValueFrom(this.angularFirestore.collection<PersonalShift>(
+  readPersonalShift = (yearMonth: string, uuid: string): Promise<PersonalShifts> => {
+    return firstValueFrom(this.angularFirestore.collection<PersonalShifts>(
       ['MonthlyData', yearMonth, 'PersonalShifts'].join('/'),
       document => document.where('uuid', '==', uuid)
     ).get()).then(query => {

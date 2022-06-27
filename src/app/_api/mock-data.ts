@@ -1,7 +1,7 @@
 import { Gender } from "src/app/_enums/gender.enum";
 import { Permission } from "src/app/_enums/permission.enum";
 import { Congregation } from "src/app/_interfaces/congregation.interface";
-import { PersonalShift } from "src/app/_interfaces/personal-shift.interface";
+import { PersonalShifts } from "src/app/_interfaces/personal-shifts.interface";
 import { ShiftHours } from "src/app/_interfaces/shift-hours.interface";
 import { Shift } from "src/app/_interfaces/shift.interface";
 import { Site } from "src/app/_interfaces/site.interface";
@@ -173,7 +173,7 @@ export const SHIFTS: Shift[] = [
   },
 ];
 
-export const PERSONAL_SHIFTS: PersonalShift[] = [
+export const PERSONAL_SHIFTS_LIST: PersonalShifts[] = [
   {
     uuid: '73783509-ecf4-4522-924b-c782d41fb95c',
     shiftUuids: [

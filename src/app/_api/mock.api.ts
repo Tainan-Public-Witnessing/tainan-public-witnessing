@@ -5,11 +5,11 @@ import { Congregation } from '../_interfaces/congregation.interface';
 import { Site } from '../_interfaces/site.interface';
 import { ShiftHours } from '../_interfaces/shift-hours.interface';
 import { Shift } from '../_interfaces/shift.interface';
-import { PersonalShift } from '../_interfaces/personal-shift.interface';
+import { PersonalShifts } from '../_interfaces/personal-shifts.interface';
 import { Statistic } from '../_interfaces/statistic.interface';
 import { firstValueFrom, timer } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ACCOUNTS, CONGREGATIONS, PERSONAL_SHIFTS, SHIFTS, SHIFT_HOURS_LIST, SITES, STATISTICS, USERS, USER_KEYS } from './mock-data';
+import { ACCOUNTS, CONGREGATIONS, PERSONAL_SHIFTS_LIST, SHIFTS, SHIFT_HOURS_LIST, SITES, STATISTICS, USERS, USER_KEYS } from './mock-data';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +23,7 @@ export class Api implements ApiInterface {
   private sites: Site[] = SITES;
   private shiftHoursList: ShiftHours[] = SHIFT_HOURS_LIST;
   private shifts: Shift[] = SHIFTS;
-  private personalShifts: PersonalShift[] = PERSONAL_SHIFTS;
+  private personalShiftsList: PersonalShifts[] = PERSONAL_SHIFTS_LIST;
   private statistics: Statistic[] = STATISTICS;
 
   login = (uuid: string, password: string): Promise<void> => {
@@ -132,17 +132,36 @@ export class Api implements ApiInterface {
     }
   };
 
-  readPersonalShift = (yearMonth: string ,uuid: string): Promise<PersonalShift> => {
+  readPersonalShifts = (yearMonth: string ,uuid: string): Promise<PersonalShifts> => {
     console.log('mock api readPersonalShift', {yearMonth, uuid});
-    const index = this.personalShifts.findIndex(personalShift => personalShift.uuid === uuid);
+    const index = this.personalShiftsList.findIndex(personalShift => personalShift.uuid === uuid);
     if (index > -1) {
-      return this.delayReturn().then(() => Object.assign({}, this.personalShifts[index]));
+      return this.delayReturn().then(() => Object.assign({}, this.personalShiftsList[index]));
     } else {
       return this.delayReturn().then(() => Promise.reject());
     }
   };
 
+  createPersonalShifts = (yearMonth: string, personalShift: PersonalShifts): Promise<void> => {
+    console.log('mock api createPersonalShifts', {yearMonth, personalShift});
+    this.personalShiftsList.push(personalShift);
+    return this.delayReturn();
+  }
+
+  updatePersonalShifts = (yearMonth: string, personalShift: PersonalShifts): Promise<void> => {
+    console.log('mock api updatePersonalShift', {yearMonth, personalShift});
+    const index = this.personalShiftsList.findIndex(_personalShift => _personalShift.uuid === personalShift.uuid);
+    if (index > -1) {
+      this.personalShiftsList.splice(index, 1);
+      this.personalShiftsList.push(personalShift);
+      return this.delayReturn();
+    } else {
+      return this.delayReturn().then(() => Promise.reject());
+    }
+  }
+
   readStatistic = (yearMonth: string, uuid: string): Promise<Statistic> => {
+    console.log('mock api readStatistic', {yearMonth, uuid});
     const statisticsInYearMonth = this.statistics.filter(_statistic => _statistic.date.includes(yearMonth));
     const index = statisticsInYearMonth.findIndex(_statistic => _statistic.uuid === uuid);
     if (index > -1) {
@@ -153,11 +172,13 @@ export class Api implements ApiInterface {
   };
 
   createStatistic = (statistic: Statistic): Promise<void> => {
+    console.log('mock api createStatistic', {statistic});
     this.statistics.push(statistic);
     return this.delayReturn();
   };
 
   updateStatistic = (statistic: Statistic): Promise<void> => {
+    console.log('mock api updateStatistic', {statistic});
     const index = this.statistics.findIndex(_statistic => _statistic.uuid === statistic.uuid);
     if (index > -1) {
       this.statistics.splice(index, 1);

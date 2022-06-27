@@ -44,11 +44,14 @@ export class CrewEditorComponent implements OnInit {
   onSubmitClick = () => {
     this.memberValidator();
     if (this.crewFormGroup.valid) {
-      this.data.shift.crewUuids = this.getCrewControls().map(_control => {
+      const changedCrewUuids = this.getCrewControls().map(_control => {
         const index = this.userKeys.findIndex(_userKey => _userKey.username ===  _control.value);
         return this.userKeys[index].uuid;
       });
-      this.shiftsService.updateShift(this.data.shift)
+      
+      console.log(this.data.shift.crewUuids, changedCrewUuids)
+      this.data.shift.crewUuids = changedCrewUuids;
+      this.shiftsService.updateShift(this.data.shift);
       this.dialogRef.close(true);
     }
   }
@@ -73,10 +76,16 @@ export class CrewEditorComponent implements OnInit {
   }
 
   private memberValidator = () => {
+    const uniqueUsernames: string[] = [];
     this.getCrewControls().forEach(_control => {
       const index = this.userKeys.findIndex(_userKey => _userKey.username === _control.value);
       if (index === -1) {
         _control.setErrors({required: true});
+      }
+      if (uniqueUsernames.includes(_control.value)) {
+        _control.setErrors({notUnique: true});
+      } else {
+        uniqueUsernames.push(_control.value);
       }
     });
   }
