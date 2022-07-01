@@ -105,7 +105,7 @@ export class ShiftCardComponent implements OnInit, OnDestroy {
     this.shift$.pipe(
       takeUntil(this.destroy$)
     ).subscribe(_shift => {
-      const shiftEndTime = new Date([_shift.date, this.shiftHours?.endTime].join(' ')).getTime();
+      const shiftEndTime = new Date([_shift.date.replace(/\-/g, '/'), this.shiftHours?.endTime].join(' ')).getTime();
       const shiftEndDate = new Date(_shift.date);
       shiftEndDate.setDate(shiftEndDate.getDate() + 1);
       const shiftEndDateTime = shiftEndDate.getTime();
