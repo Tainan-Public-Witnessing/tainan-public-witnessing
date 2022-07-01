@@ -87,7 +87,7 @@ export class ShiftCardComponent implements OnInit, OnDestroy {
   }
 
   openStatisticEditor = () => {
-    const shiftEndTime = new Date([this.shift.date, this.shiftHours?.endTime].join(' ')).getTime();
+    const shiftEndTime = new Date([this.shift.date.replace(/\-/g, "/"), this.shiftHours?.endTime].join(' ')).getTime();
     const shiftEndDate = new Date(this.shift.date);
     shiftEndDate.setDate(shiftEndDate.getDate() + 1);
     const shiftEndDateTime = shiftEndDate.getTime();
