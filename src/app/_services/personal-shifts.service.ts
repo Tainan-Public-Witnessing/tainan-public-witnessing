@@ -14,7 +14,7 @@ export class PersonalShiftsService {
     private api: Api,
   ) { }
 
-  getPersonalShift = (yearMonth: string, uuid: string): BehaviorSubject<PersonalShifts|null|undefined> => {
+  getPersonalShifts = (yearMonth: string, uuid: string): BehaviorSubject<PersonalShifts|null|undefined> => {
     if (!this.personalShifts.has(uuid)) {
       const personalShift$ = new BehaviorSubject<PersonalShifts|null|undefined>(null);
       this.personalShifts.set(uuid, personalShift$);
@@ -25,5 +25,9 @@ export class PersonalShiftsService {
       });
     }
     return this.personalShifts.get(uuid) as BehaviorSubject<PersonalShifts|null|undefined>;
+  }
+
+  createPersonalShifts = (yearMonth: string, personalShifts: PersonalShifts): Promise<void> => {
+    if (this.personalShifts.has(personalShifts.uuid))
   }
 }
