@@ -51,7 +51,7 @@ export class PersonalShiftComponent implements OnInit {
       filter(_value => !!_value),
       map(_momentDate => _momentDate?.format('yyyy-MM') as string),
       startWith(this.datePipe.transform(new Date(), 'yyyy-MM') as string),
-      map(_yearMonth => this.personalShiftsService.getPersonalShift(_yearMonth, this.authorityService.currentUserUuid$.value as string)),
+      map(_yearMonth => this.personalShiftsService.getPersonalShifts(_yearMonth, this.authorityService.currentUserUuid$.value as string)),
       switchAll(),
       filter(_personalShift => _personalShift !== null),
       map(_personalShift => {
