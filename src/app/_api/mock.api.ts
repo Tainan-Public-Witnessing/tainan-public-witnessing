@@ -134,7 +134,7 @@ export class Api implements ApiInterface {
 
   readPersonalShifts = (yearMonth: string ,uuid: string): Promise<PersonalShifts> => {
     console.log('mock api readPersonalShift', {yearMonth, uuid});
-    const index = this.personalShiftsList.findIndex(personalShift => personalShift.uuid === uuid);
+    const index = this.personalShiftsList.findIndex(personalShift => personalShift.uuid === uuid && personalShift.yearMonth === yearMonth);
     if (index > -1) {
       return this.delayReturn().then(() => Object.assign({}, this.personalShiftsList[index]));
     } else {
@@ -144,6 +144,7 @@ export class Api implements ApiInterface {
 
   createPersonalShifts = (yearMonth: string, personalShift: PersonalShifts): Promise<void> => {
     console.log('mock api createPersonalShifts', {yearMonth, personalShift});
+    personalShift.yearMonth = yearMonth;
     this.personalShiftsList.push(personalShift);
     return this.delayReturn();
   }

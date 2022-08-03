@@ -183,21 +183,25 @@ export const PERSONAL_SHIFTS_LIST: PersonalShifts[] = [
       '056f687d-2b0b-48ee-ba30-a4190a95cacb',
       'c1c9b287-1f8b-4364-810d-6218c535fb77',
     ],
+    yearMonth: nowDate.format('yyyy-MM'),
   }, {
     uuid: '620a6781-1ef4-4ac6-b23f-8efe20348907',
     shiftUuids: [
       '056f687d-2b0b-48ee-ba30-a4190a95cacb',
     ],
+    yearMonth: nowDate.format('yyyy-MM'),
   }, {
     uuid: '9efe91be-3b71-40e7-8ea2-6e2768bb2ebd',
     shiftUuids: [
       'c1c9b287-1f8b-4364-810d-6218c535fb77',
     ],
+    yearMonth: nowDate.format('yyyy-MM'),
   }, {
     uuid: 'bdb0fd54-b203-4e87-b744-1867d7eb0932',
     shiftUuids: [
       'c1c9b287-1f8b-4364-810d-6218c535fb77',
     ],
+    yearMonth: nowDate.format('yyyy-MM'),
   },
 ];
 

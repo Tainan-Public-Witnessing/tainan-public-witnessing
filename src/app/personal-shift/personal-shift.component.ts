@@ -58,6 +58,7 @@ export class PersonalShiftComponent implements OnInit {
         if (!!_personalShift) {
           const _yearMonth = this.yearMonthControl.value?.format('yyyy-MM') as string;
           const _shiftUuids = _personalShift?.shiftUuids as string[];
+          if (_shiftUuids.length === 0) return undefined;
           return this.shiftsService.getShiftsByUuids(_yearMonth, _shiftUuids);
         } else {
           return undefined;

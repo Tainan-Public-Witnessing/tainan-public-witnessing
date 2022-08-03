@@ -68,22 +68,42 @@ export class CrewEditorComponent implements OnInit {
         }
       });
       console.log({toAdd, toRemove});
+      const toChange = [
+        ...toAdd.map(_uuid => {
+          return { action: 'add', uuid: _uuid };
+        }),
+        ...toRemove.map(_uuid => {
+          return { action: 'remove', uuid: _uuid };
+        }),
+      ];
 
       // modify personal shift
-      // toAdd.forEach(_uuid => {
-      //   this.personalShiftsService.getPersonalShifts(this.yearMonth, _uuid).pipe(
-      //     filter(_personalShifts => _personalShifts !== null),
-      //     map(_personalShifts => _personalShifts as PersonalShifts|undefined),
-      //     first(),
-      //   ).subscribe(_personalShifts => {
-      //     if (_personalShifts === undefined) {
-            
-      //     } else {
-
-      //     }
-      //   })
-
-      // })
+      toChange.forEach(_change => {
+        this.personalShiftsService.getPersonalShifts(this.yearMonth, _change.uuid).pipe(
+          filter(_personalShifts => _personalShifts !== null),
+          map(_personalShifts => _personalShifts as PersonalShifts|undefined),
+          first(),
+        ).subscribe(_personalShifts => {
+          if (_personalShifts === undefined) { // create
+            this.personalShiftsService.createPersonalShifts(
+              this.yearMonth,
+              {
+                uuid: _change.uuid,
+                shiftUuids: [this.data.shift.uuid],
+              }
+            )
+          } else { // edit
+            const shiftUuids = _personalShifts.shiftUuids;
+            if (_change.action === 'add') {
+              _personalShifts.shiftUuids.push(this.data.shift.uuid);
+            } else { // action === remove
+              const index = _personalShifts.shiftUuids.findIndex(_uuid => _uuid === this.data.shift.uuid);
+              _personalShifts.shiftUuids.splice(index, 1);
+            }
+            this.personalShiftsService.updatePersonalShifts(this.yearMonth, _personalShifts);
+          }
+        });
+      });
 
       this.data.shift.crewUuids = editedCrewUuids;
       this.shiftsService.updateShift(this.data.shift);

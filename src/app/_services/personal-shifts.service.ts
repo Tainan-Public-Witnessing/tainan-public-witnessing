@@ -15,19 +15,36 @@ export class PersonalShiftsService {
   ) { }
 
   getPersonalShifts = (yearMonth: string, uuid: string): BehaviorSubject<PersonalShifts|null|undefined> => {
-    if (!this.personalShifts.has(uuid)) {
-      const personalShift$ = new BehaviorSubject<PersonalShifts|null|undefined>(null);
-      this.personalShifts.set(uuid, personalShift$);
+    const key = [uuid, yearMonth].join('_');
+    if (!this.personalShifts.has(key)) {
+      const personalShifts$ = new BehaviorSubject<PersonalShifts|null|undefined>(null);
+      this.personalShifts.set(key, personalShifts$);
       this.api.readPersonalShifts(yearMonth, uuid).then(personalShift => {
-        personalShift$.next(personalShift);
+        personalShifts$.next(personalShift);
       }).catch(reason => {
-        personalShift$.next(undefined);
+        personalShifts$.next(undefined);
       });
     }
-    return this.personalShifts.get(uuid) as BehaviorSubject<PersonalShifts|null|undefined>;
+    return this.personalShifts.get(key) as BehaviorSubject<PersonalShifts|null|undefined>;
   }
 
   createPersonalShifts = (yearMonth: string, personalShifts: PersonalShifts): Promise<void> => {
-    if (this.personalShifts.has(personalShifts.uuid))
+    const key = [personalShifts.uuid, yearMonth].join('_');
+    if (!this.personalShifts.has(key)) {
+      const personalShifts$ = new BehaviorSubject<PersonalShifts|null|undefined>(null);
+      this.personalShifts.set(key, personalShifts$);
+    }
+    this.personalShifts.get(key)?.next(personalShifts);
+    return this.api.createPersonalShifts(yearMonth, personalShifts);
+  }
+
+  updatePersonalShifts = (yearMonth: string, personalShifts: PersonalShifts): Promise<void> => {
+    const key = [personalShifts.uuid, yearMonth].join('_');
+    if (!this.personalShifts.has(key)) {
+      const personalShifts$ = new BehaviorSubject<PersonalShifts|null|undefined>(null);
+      this.personalShifts.set(key, personalShifts$);
+    }
+    this.personalShifts.get(key)?.next(personalShifts);
+    return this.api.updatePersonalShifts(yearMonth, personalShifts);
   }
 }
