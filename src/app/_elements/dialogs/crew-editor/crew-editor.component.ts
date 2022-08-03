@@ -67,7 +67,6 @@ export class CrewEditorComponent implements OnInit {
           toRemove.push(_memberUuid);
         }
       });
-      console.log({toAdd, toRemove});
       const toChange = [
         ...toAdd.map(_uuid => {
           return { action: 'add', uuid: _uuid };

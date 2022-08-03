@@ -155,7 +155,7 @@ export class Api implements ApiInterface {
     return this.angularFirestore.doc<Shift>(['MonthlyData', yearMonth, 'Shifts', shift.uuid].join('/')).update(shift);
   };
 
-  readPersonalShift = (yearMonth: string, uuid: string): Promise<PersonalShifts> => {
+  readPersonalShifts = (yearMonth: string, uuid: string): Promise<PersonalShifts> => {
     return firstValueFrom(this.angularFirestore.collection<PersonalShifts>(
       ['MonthlyData', yearMonth, 'PersonalShifts'].join('/'),
       document => document.where('uuid', '==', uuid)
@@ -167,6 +167,14 @@ export class Api implements ApiInterface {
       }
     });
   };
+
+  createPersonalShifts = (yearMonth: string, personalShift: PersonalShifts): Promise<void> => {
+    return this.angularFirestore.doc<PersonalShifts>(['MonthlyData', yearMonth, 'PersonalShifts', personalShift.uuid].join('/')).set(personalShift);
+  }
+
+  updatePersonalShifts = (yearMonth: string, personalShift: PersonalShifts): Promise<void> => {
+    return this.angularFirestore.doc<PersonalShifts>(['MonthlyData', yearMonth, 'PersonalShifts', personalShift.uuid].join('/')).update(personalShift);
+  }
 
   readStatistic = (yearMonth: string, uuid: string): Promise<Statistic> => {
     return firstValueFrom(
