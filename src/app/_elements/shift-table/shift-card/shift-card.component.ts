@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { combineLatest, Observable, Subject } from 'rxjs';
-import { filter, first, takeUntil } from 'rxjs/operators';
+import { filter, first, map, takeUntil } from 'rxjs/operators';
 import { ShiftHours } from 'src/app/_interfaces/shift-hours.interface';
 import { Shift } from 'src/app/_interfaces/shift.interface';
 import { Site } from 'src/app/_interfaces/site.interface';
@@ -64,6 +64,7 @@ export class ShiftCardComponent implements OnInit, OnDestroy {
       this.day = environment.DAY[new Date(_shift.date).getDay()];
     });
 
+    this.pipeCanEditStatistic();
     this.pipeCanEditCrew();
   }
 
@@ -120,5 +121,22 @@ export class ShiftCardComponent implements OnInit, OnDestroy {
 
   private pipeCanEditCrew = () => {
     this.canEditCrew$ = this.authorityService.canAccess(Permission.MANAGER);
+  }
+
+  private pipeCanEditStatistic = () => {
+    this.shift$.pipe(
+      filter(_shift => !!_shift),
+      first(),
+    ).subscribe(_shift => {
+      this.canEditStatistic$ = combineLatest([
+        this.authorityService.canAccess(Permission.USER, _shift.crewUuids),
+        this.authorityService.canAccess(Permission.MANAGER),
+      ]).pipe(
+        takeUntil(this.destroy$),
+        map(([_userAccess, _managerAccess]) => {
+          return _userAccess || _managerAccess;
+        })
+      );
+    });
   }
 }
