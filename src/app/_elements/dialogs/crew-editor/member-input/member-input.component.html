@@ -1,7 +1,6 @@
 <mat-form-field appearance="outline">
 
-  <mat-label *ngIf="isGroupLeader">{{'CREEW_EDITOR.LABEL.GROUP_LEADER' | translate}}</mat-label>
-  <mat-label *ngIf="!isGroupLeader">{{'CREEW_EDITOR.LABEL.MEMBER' | translate}}</mat-label>
+  <mat-label>{{'CREEW_EDITOR.LABEL.MEMBER' | translate}}</mat-label>
 
   <input matInput [formControl]="control" [matAutocomplete]="auto">
 

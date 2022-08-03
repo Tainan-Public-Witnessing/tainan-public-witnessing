@@ -107,7 +107,6 @@
   "CREEW_EDITOR": {
     "MEMBER_ERROR_MESSAGE": "Member not exist!",
     "LABEL": {
-      "GROUP_LEADER": "Group leader",
       "MEMBER": "Member"
     }
   },
