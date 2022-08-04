@@ -20,6 +20,10 @@
     display: flex;
     gap: 4px;
     flex-wrap: wrap;
+
+    .deliver{
+      background-color: bisque;
+    }
   }
 
   .mat-card-actions {

@@ -4,4 +4,5 @@ export interface ShiftHours {
   startTime: string; // HH:mm
   endTime: string; // HH:mm
   activate: boolean;
+  deliver:boolean;
 }

@@ -141,12 +141,14 @@ export const SHIFT_HOURS_LIST: ShiftHours[] = [
     startTime: '09:00',
     endTime: '12:00',
     activate: true,
+    deliver: true,
   }, {
     uuid: 'bb406de4-d090-413b-a68b-ad790a332699',
     name: 'Afternoon',
     startTime: '12:00',
     endTime: '15:00',
     activate: true,
+    deliver:false,
   },
 ];
 
