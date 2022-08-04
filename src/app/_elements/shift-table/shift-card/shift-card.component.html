@@ -21,14 +21,9 @@
 
   <mat-card-content>
     <mat-chip-list *ngIf="!!crew">
-      <ng-container *ngFor="let user of crew;let i=index">
-        <mat-chip *ngIf="(i==0 ||i==1) && shiftHours?.deliver;else noDeliver" class="deliver">{{user.username}}
-        </mat-chip>
-        <ng-template #noDeliver>
-          <mat-chip>{{user.username}}</mat-chip>
-        </ng-template>
-      </ng-container>
-
+      <mat-chip *ngFor="let user of crew;let i=index" [ngClass]="{'deliver':(i==0 ||i==1) && shiftHours?.deliver}">
+        {{user.username}}
+      </mat-chip>
     </mat-chip-list>
 
     <mat-spinner *ngIf="crew === null"></mat-spinner>
