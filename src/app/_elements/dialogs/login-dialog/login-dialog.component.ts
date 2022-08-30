@@ -36,7 +36,7 @@ export class LoginDialogComponent implements OnInit, OnDestroy {
       filter(userKeys => userKeys !== null),
       map(userKeys => userKeys as UserKey[]),
       first(),
-    ).subscribe(userKeys => this.userKeys = userKeys);
+    ).subscribe(userKeys => this.userKeys = userKeys.filter(user=>user.activate==true));
 
     this.loginForm.get('username')?.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(value => {
       if (value === '') {

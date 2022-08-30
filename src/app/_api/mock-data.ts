@@ -43,7 +43,7 @@ export const USER_KEYS: UserKey[] = [
   }, {
     uuid: 'bdb0fd54-b203-4e87-b744-1867d7eb0932',
     username: 'Rachel Tsai',
-    activate: true,
+    activate: false,
   },
 ];
 
