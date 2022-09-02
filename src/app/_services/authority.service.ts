@@ -26,8 +26,8 @@ export class AuthorityService implements CanActivate {
     { url: "home", permission: Permission.GUEST },
     { url: "personal-shift", permission: Permission.USER },
     { url: "shifts", permission: Permission.MANAGER },
-    { url: "users", permission: Permission.USER },
-    { url: "users/:mode/:uuid", permission: Permission.USER },
+    { url: "users", permission: Permission.MANAGER },
+    { url: "users/:mode/:uuid", permission: Permission.MANAGER },
   ];
 
   constructor(
