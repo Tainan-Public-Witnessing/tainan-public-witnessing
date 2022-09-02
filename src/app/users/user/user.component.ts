@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import {
+  FormBuilder,
   FormGroup,
-  UntypedFormBuilder,
-  UntypedFormGroup,
   Validators,
+  UntypedFormBuilder,
 } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { BehaviorSubject, Subject } from "rxjs";
@@ -11,7 +11,6 @@ import { filter, takeUntil } from "rxjs/operators";
 import { Gender } from "src/app/_enums/gender.enum";
 import { Mode } from "src/app/_enums/mode.enum";
 import { Congregation } from "src/app/_interfaces/congregation.interface";
-import { Tag } from "src/app/_interfaces/tag.interface";
 import { CongregationsService } from "src/app/_services/congregations.service";
 import { TagsService } from "src/app/_services/tags.service";
 import { UsersService } from "src/app/_services/users.service";
@@ -28,7 +27,7 @@ export class UserComponent implements OnInit, OnDestroy {
   cancelButtonText: string;
   userForm: FormGroup;
   genders = Object.values(Gender);
-  // congregations$ = new BehaviorSubject<Congregation[]>(null);
+  congregations$ = new BehaviorSubject<Congregation[] | undefined | null>(null);
   // profilePrimarykeys$ = new BehaviorSubject<Profile[]>(null);
   // tags$ = new BehaviorSubject<Tag[]>(null);
   unsubscribe$ = new Subject<void>();
@@ -38,27 +37,34 @@ export class UserComponent implements OnInit, OnDestroy {
     private router: Router,
     private formBuilder: UntypedFormBuilder,
     private congregationsService: CongregationsService,
-    private tagService: TagsService,
+    // private tagService: TagsService,
     public usersService: UsersService
   ) {}
 
   ngOnInit(): void {
-    // this.congregationsService().pipe(takeUntil(this.unsubscribe$)).subscribe(this.congregations$);
+    this.congregationsService
+      .getCongregationList()
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        filter((congs) => !!congs)
+      )
+      .subscribe(this.congregations$);
     // this.profilesService.getProfilePrimarykeys().pipe(takeUntil(this.unsubscribe$)).subscribe(this.profilePrimarykeys$);
 
     this.userForm = this.formBuilder.group({
       username: ["", Validators.required],
       name: ["", Validators.required],
       gender: ["", Validators.required],
-      congregation: ["", Validators.required],
-      profile: ["", Validators.required],
+      congregationUuid: ["", Validators.required],
+      // profile: ["", Validators.required],
       baptizeDate: ["", Validators.required],
       birthDate: [""],
       cellphone: [""],
       phone: [""],
       address: [""],
       note: [""],
-      tags: [""],
+      email: [""],
+      // tags: [""],
     });
 
     this.activatedRoute.params.subscribe((params) => {
@@ -155,8 +161,7 @@ export class UserComponent implements OnInit, OnDestroy {
       )
       .subscribe((user) => {
         const values = { ...user };
-        delete values.uuid;
-        this.userForm.setValue(values);
+        this.userForm.patchValue(values);
       });
   };
 }

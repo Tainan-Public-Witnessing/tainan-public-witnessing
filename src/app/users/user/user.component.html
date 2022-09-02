@@ -1,8 +1,8 @@
 <div class="title-bar">
-  <h1>{{ 'USERS.READ_TITLE' | translate }}</h1>
+  <h1>{{ title | translate }}</h1>
   <span class="spacer"></span>
   <button mat-button color="accent" (click)="onCancelClick()">
-    {{ 'GLOBAL.CANCEL' | translate }}
+    {{ "GLOBAL.CANCEL" | translate }}
   </button>
   <!-- <button
     mat-button
@@ -43,10 +43,10 @@
       </mat-select>
     </mat-form-field>
 
-    <!-- <mat-form-field class="full-width">
+    <mat-form-field class="full-width">
       <mat-label>{{ "USERS.LABEL.CONGREGATION" | translate }}</mat-label>
       <mat-select
-        formControlName="congregation"
+        formControlName="congregationUuid"
         required
         id="congregation-select"
       >
@@ -58,7 +58,7 @@
           {{ congregation.name }}
         </mat-option>
       </mat-select>
-    </mat-form-field> -->
+    </mat-form-field>
 
     <!-- <mat-form-field class="full-width">
       <mat-label>{{ "USERS.LABEL.PROFILE" | translate }}</mat-label>
@@ -90,7 +90,7 @@
       <mat-datepicker touchUi #baptizeDatePicker></mat-datepicker>
     </mat-form-field>
 
-    <mat-form-field class="full-width">
+    <!-- <mat-form-field class="full-width">
       <mat-label>{{ "USERS.LABEL.BIRTH_DATE" | translate }}</mat-label>
       <input
         matInput
@@ -104,7 +104,7 @@
         id="birth-date-picker"
       ></mat-datepicker-toggle>
       <mat-datepicker touchUi #birthDatePicker></mat-datepicker>
-    </mat-form-field>
+    </mat-form-field> -->
 
     <!-- <mat-form-field class="full-width">
       <mat-label>{{ "USERS.LABEL.TAGS" | translate }}</mat-label>
