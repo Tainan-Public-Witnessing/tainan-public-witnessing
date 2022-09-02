@@ -10,42 +10,51 @@
     <mat-icon>add</mat-icon>
   </button> -->
 </div>
-
-<mat-form-field>
-
+<mat-form-field class="full-width" style="position: sticky; top: 0px">
+  <mat-icon matPrefix>search</mat-icon>
+  <input
+    matInput
+    [ngModel]="filterValue$ | async"
+    (ngModelChange)="filterValue$.next($event)"
+  />
+  <button mat-icon-button matSuffix (click)="filterValue$.next('')">
+    <mat-icon>close</mat-icon>
+  </button>
 </mat-form-field>
-<div class="overflow">
-  <mat-nav-list id="users-list">
-    <a
-      mat-list-item
-      *ngFor="let userPrimarykey of userPrimarykeys$ | async"
-      [id]="userPrimarykey.uuid"
-      [routerLink]="['/users', 'read', { uuid: userPrimarykey.uuid }]"
-    >
-      {{ userPrimarykey.username }}
+<div class="full-height">
+  <mat-nav-list id="users-list" class="full-height" style="padding: 0">
+    <cdk-virtual-scroll-viewport [itemSize]="48" class="full-height">
+      <a
+        mat-list-item
+        *cdkVirtualFor="let userPrimarykey of userPrimarykeys$ | async"
+        [id]="userPrimarykey.uuid"
+        [routerLink]="['/users', 'read', userPrimarykey.uuid]"
+      >
+        {{ userPrimarykey.username }}
 
-      <span class="spacer"></span>
+        <!-- <span class="spacer"></span> -->
 
-      <!-- <button mat-icon-button
+        <!-- <button mat-icon-button
         *ngIf="(userDeleteAccess$ | async) && !usersService.isImmortalUser(userPrimarykey.uuid)"
         (click)="onDeleteButtonClick(userPrimarykey)"
         id="delete-button">
         <mat-icon>delete</mat-icon>
       </button> -->
 
-      <!-- <button mat-icon-button
+        <!-- <button mat-icon-button
         *ngIf="(userUpdateAccess$ | async) && !usersService.isImmortalUser(userPrimarykey.uuid)"
         (click)="onEditButtonClick(userPrimarykey)"
         id="edit-button">
         <mat-icon>edit</mat-icon>
       </button> -->
 
-      <!-- <button
+        <!-- <button
         mat-icon-button
         class="info-button"
       >
         <mat-icon>info</mat-icon>
       </button> -->
-    </a>
+      </a>
+    </cdk-virtual-scroll-viewport>
   </mat-nav-list>
 </div>
