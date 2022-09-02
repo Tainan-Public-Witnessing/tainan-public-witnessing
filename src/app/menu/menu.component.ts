@@ -11,16 +11,20 @@ import { UsersService } from '../_services/users.service';
 import { User } from '../_interfaces/user.interface';
 
 @Component({
-  selector: 'app-menu',
-  templateUrl: './menu.component.html',
-  styleUrls: ['./menu.component.scss']
+  selector: "app-menu",
+  templateUrl: "./menu.component.html",
+  styleUrls: ["./menu.component.scss"],
 })
 export class MenuComponent implements OnInit, OnDestroy {
-
   MENU_LINKS: MenuLink[] = [
-    { display: 'HOME.TITLE', url: 'home', permission: Permission.GUEST },
-    { display: 'PERSONAL_SHIFT.TITLE', url: 'personal-shift', permission: Permission.USER },
-    { display: 'SHIFTS.TITLE', url: 'shifts', permission: Permission.MANAGER },
+    { display: "HOME.TITLE", url: "home", permission: Permission.GUEST },
+    {
+      display: "PERSONAL_SHIFT.TITLE",
+      url: "personal-shift",
+      permission: Permission.USER,
+    },
+    { display: "SHIFTS.TITLE", url: "shifts", permission: Permission.MANAGER },
+    { display: "USERS.TITLE", url: "users", permission: Permission.MANAGER },
   ];
 
   currentMenuLinks$ = new BehaviorSubject<MenuLink[]>([]);
@@ -31,61 +35,69 @@ export class MenuComponent implements OnInit, OnDestroy {
     private authorityService: AuthorityService,
     private globalEventService: GlobalEventService,
     private matDiolog: MatDialog,
-    private usersService: UsersService,
-  ) { }
+    private usersService: UsersService
+  ) {}
 
   ngOnInit(): void {
-    this.authorityService.currentUserUuid$.pipe(
-      takeUntil(this.destroy$),
-      map(uuid => !!uuid)
-    ).subscribe(isLoggedIn => this.isLoggedIn$.next(isLoggedIn));
+    this.authorityService.currentUserUuid$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((uuid) => !!uuid)
+      )
+      .subscribe((isLoggedIn) => this.isLoggedIn$.next(isLoggedIn));
 
-    this.authorityService.currentUserUuid$.pipe(
-      takeUntil(this.destroy$),
-      map(uuid => {
-        if (uuid === null) {
-          return of(Permission.GUEST);
-        } else {
-           return this.usersService.getUserByUuid(uuid).pipe(
-            filter(user => !!user),
-            map(user => user as User),
-            first(),
-            map(user => user.permission),
-          );
-        }
-      }),
-      switchAll(),
-      map(permission => this.MENU_LINKS.filter(menuLink => menuLink.permission >= permission)),
-    ).subscribe(menuLink => this.currentMenuLinks$.next(menuLink));
+    this.authorityService.currentUserUuid$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((uuid) => {
+          if (uuid === null) {
+            return of(Permission.GUEST);
+          } else {
+            return this.usersService.getUserByUuid(uuid).pipe(
+              filter((user) => !!user),
+              map((user) => user as User),
+              first(),
+              map((user) => user.permission)
+            );
+          }
+        }),
+        switchAll(),
+        map((permission) =>
+          this.MENU_LINKS.filter(
+            (menuLink) => menuLink.permission >= permission
+          )
+        )
+      )
+      .subscribe((menuLink) => this.currentMenuLinks$.next(menuLink));
   }
 
   ngOnDestroy(): void {
-   this.destroy$.next();
-   this.destroy$.complete(); 
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   onMenuLinkClick = () => {
     this.globalEventService.emitGlobalEvent({
-      id: 'ON_MENU_LINK_CLICK'
+      id: "ON_MENU_LINK_CLICK",
     });
-  }
+  };
 
   onLoginClick = () => {
     this.globalEventService.emitGlobalEvent({
-      id: 'ON_MENU_LINK_CLICK'
+      id: "ON_MENU_LINK_CLICK",
     });
 
     this.matDiolog.open(LoginDialogComponent, {
       disableClose: true,
-      panelClass: 'dialog-panel',
+      panelClass: "dialog-panel",
     });
-  }
+  };
 
   onLogoutClick = () => {
     this.globalEventService.emitGlobalEvent({
-      id: 'ON_MENU_LINK_CLICK'
+      id: "ON_MENU_LINK_CLICK",
     });
 
     this.authorityService.logout();
-  }
+  };
 }

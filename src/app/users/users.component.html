@@ -1,48 +1,51 @@
 <div class="title-bar">
-
   <h1>{{ "USERS.TITLE" | translate }}</h1>
 
   <span class="spacer"></span>
 
-  <button mat-icon-button 
+  <!-- <button mat-icon-button
     *ngIf="userCreateAccess$ | async"
     (click)="onAddButtonClick()"
     id="create-user-button">
     <mat-icon>add</mat-icon>
-  </button>
+  </button> -->
 </div>
 
-<div class="overflow">
-  <mat-list id="users-list">
+<mat-form-field>
 
-    <mat-list-item
-      *ngFor="let userPrimarykey of (userPrimarykeys$ | async)"
-      [id]="userPrimarykey.uuid">
-  
-      {{userPrimarykey.username}}
+</mat-form-field>
+<div class="overflow">
+  <mat-nav-list id="users-list">
+    <a
+      mat-list-item
+      *ngFor="let userPrimarykey of userPrimarykeys$ | async"
+      [id]="userPrimarykey.uuid"
+      [routerLink]="['/users', 'read', { uuid: userPrimarykey.uuid }]"
+    >
+      {{ userPrimarykey.username }}
 
       <span class="spacer"></span>
 
-      <button mat-icon-button
+      <!-- <button mat-icon-button
         *ngIf="(userDeleteAccess$ | async) && !usersService.isImmortalUser(userPrimarykey.uuid)"
         (click)="onDeleteButtonClick(userPrimarykey)"
         id="delete-button">
         <mat-icon>delete</mat-icon>
-      </button>
+      </button> -->
 
-      <button mat-icon-button
+      <!-- <button mat-icon-button
         *ngIf="(userUpdateAccess$ | async) && !usersService.isImmortalUser(userPrimarykey.uuid)"
         (click)="onEditButtonClick(userPrimarykey)"
         id="edit-button">
         <mat-icon>edit</mat-icon>
-      </button>
+      </button> -->
 
-      <button mat-icon-button
-        *ngIf="userReadAccess$ | async"
-        (click)="onInfoButtonClick(userPrimarykey)"
-        id="info-button">
+      <!-- <button
+        mat-icon-button
+        class="info-button"
+      >
         <mat-icon>info</mat-icon>
-      </button>
-    </mat-list-item>
-  </mat-list>
+      </button> -->
+    </a>
+  </mat-nav-list>
 </div>
