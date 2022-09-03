@@ -24,6 +24,8 @@ import { StatisticEditorComponent } from './_elements/dialogs/statistic-editor/s
 import { CrewEditorComponent } from './_elements/dialogs/crew-editor/crew-editor.component';
 import { MemberInputComponent } from './_elements/dialogs/crew-editor/member-input/member-input.component';
 import { ShiftsComponent } from './shifts/shifts.component';
+import { UsersComponent } from './users/users.component';
+import { UserComponent } from './users/user/user.component';
 
 // AoT requires an exported function for factories of translate module
 export function HttpLoaderFactory(http: HttpClient) {
@@ -43,6 +45,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     CrewEditorComponent,
     MemberInputComponent,
     ShiftsComponent,
+    UsersComponent,
+    UserComponent,
   ],
   imports: [
     BrowserModule,
@@ -57,8 +61,8 @@ export function HttpLoaderFactory(http: HttpClient) {
       loader: {
         provide: TranslateLoader,
         useFactory: HttpLoaderFactory,
-        deps: [HttpClient]
-      }
+        deps: [HttpClient],
+      },
     }),
   ],
   providers: [
@@ -69,13 +73,13 @@ export function HttpLoaderFactory(http: HttpClient) {
           dateInput: ['YYYY-MM-DD'],
         },
         display: {
-          dateInput: 'YYYY-MM-DD'
+          dateInput: 'YYYY-MM-DD',
         },
       },
     },
     DatePipe,
-    { provide: FIREBASE_OPTIONS, useValue: environment.firebase }
+    { provide: FIREBASE_OPTIONS, useValue: environment.firebase },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

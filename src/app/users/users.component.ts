@@ -1,47 +1,49 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { UsersService } from 'src/app/_services/users.service';
-import { UserPrimarykey } from 'src/app/_interfaces/user.interface';
-import { takeUntil } from 'rxjs/operators';
-import { Router } from '@angular/router';
-import { Mode } from 'src/app/_enums/mode.enum';
 import { MatDialog } from '@angular/material/dialog';
-import { ConfirmDialogComponent } from 'src/app/_elements/dialogs/confirm-dialog/confirm-dialog.component';
-import { ConfirmDialogData } from 'src/app/_elements/dialogs/confirm-dialog/confirm-dialog-data.interface';
-import { AuthorityService } from 'src/app/_services/authority.service';
-import { Permission } from 'src/app/_interfaces/profile.interface';
-import { PermissionKey } from '../_enums/permission-key.enum';
+import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { BehaviorSubject, combineLatest, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
+import { Mode } from 'src/app/_enums/mode.enum';
+import { UserKey } from 'src/app/_interfaces/user.interface';
+import { AuthorityService } from 'src/app/_services/authority.service';
+import { UsersService } from 'src/app/_services/users.service';
 
 @Component({
   selector: 'app-users',
   templateUrl: './users.component.html',
-  styleUrls: ['./users.component.scss']
+  styleUrls: ['./users.component.scss'],
 })
 export class UsersComponent implements OnInit, OnDestroy {
+  userPrimarykeys$ = new BehaviorSubject<UserKey[] | null>(null);
+  unsubscribe$ = new Subject<void>();
 
-  userPrimarykeys$ = new BehaviorSubject<UserPrimarykey[]>(null);
-  userCreateAccess$: Observable<boolean>;
-  userUpdateAccess$: Observable<boolean>;
-  userDeleteAccess$: Observable<boolean>;
-  userReadAccess$: Observable<boolean>;
-  unsubscribe$ = new Subject();
+  filterValue$ = new BehaviorSubject<string>('');
 
   constructor(
     private authorityService: AuthorityService,
     private translateService: TranslateService,
     private router: Router,
     private matDialog: MatDialog,
-    public usersService: UsersService, // public for checking immortal user
-  ) { }
+    public usersService: UsersService // public for checking immortal user
+  ) {}
 
   ngOnInit(): void {
-    this.usersService.getUserPrimarykeys().pipe(takeUntil(this.unsubscribe$)).subscribe(this.userPrimarykeys$);
+    combineLatest([
+      this.usersService.getUserKeys().pipe(takeUntil(this.unsubscribe$)),
+      this.filterValue$.pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        takeUntil(this.unsubscribe$)
+      ),
+    ]).subscribe(([users, filter]) => {
+      if (!users) return [];
 
-    this.userCreateAccess$ = this.authorityService.getPermissionByKey(PermissionKey.USER_CREATE);
-    this.userUpdateAccess$ = this.authorityService.getPermissionByKey(PermissionKey.USER_UPDATE);
-    this.userDeleteAccess$ = this.authorityService.getPermissionByKey(PermissionKey.USER_DELETE);
-    this.userReadAccess$ = this.authorityService.getPermissionByKey(PermissionKey.USER_READ);
+      const filterReg = new RegExp(filter, 'i');
+      this.userPrimarykeys$.next(
+        users.filter((user) => filterReg.test(user.username))
+      );
+    });
   }
 
   ngOnDestroy(): void {
@@ -49,30 +51,11 @@ export class UsersComponent implements OnInit, OnDestroy {
     this.unsubscribe$.complete();
   }
 
-  onAddButtonClick = () => {
-    this.router.navigate(['user', Mode.CREATE]);
-  }
+  // onAddButtonClick = () => {
+  //   this.router.navigate(["user", Mode.CREATE]);
+  // };
 
-  onEditButtonClick = (userPrimarykey: UserPrimarykey) => {
-    this.router.navigate(['user', Mode.UPDATE, {uuid: userPrimarykey.uuid}]);
-  }
-
-  onInfoButtonClick = (userPrimarykey: UserPrimarykey) => {
-    this.router.navigate(['user', Mode.READ, {uuid: userPrimarykey.uuid}]);
-  }
-
-  onDeleteButtonClick = (userPrimarykey: UserPrimarykey) => {
-    this.matDialog.open(ConfirmDialogComponent, {
-      disableClose: true,
-      panelClass: 'dialog-panel',
-      data: {
-        title: 'USERS.DELETE_TITLE',
-        message: this.translateService.instant('GLOBAL.DELETE_MESSAGE', {value: userPrimarykey.username})
-      } as ConfirmDialogData
-    }).afterClosed().subscribe(result => {
-      if (result) {
-        this.usersService.deleteUser(userPrimarykey.uuid);
-      }
-    });
-  }
+  onInfoButtonClick = (userKey: UserKey) => {
+    this.router.navigate(['user', Mode.READ, { uuid: userKey.uuid }]);
+  };
 }

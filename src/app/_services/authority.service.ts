@@ -1,5 +1,11 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
+import {
+  ActivatedRouteSnapshot,
+  CanActivate,
+  Router,
+  RouterStateSnapshot,
+  UrlTree,
+} from '@angular/router';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { filter, first, map, switchAll, tap } from 'rxjs/operators';
 import { Api } from 'src/app/_api/mock.api';
@@ -12,15 +18,16 @@ import { UsersService } from './users.service';
 import { User } from '../_interfaces/user.interface';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthorityService implements CanActivate {
-
-  currentUserUuid$ = new BehaviorSubject<string|null>(null); // uuid
-  private urlPermissions: {url: string, permission: Permission}[] = [
-    { url: 'home', permission: Permission.GUEST},
-    { url: 'personal-shift', permission: Permission.USER},
-    { url: 'shifts', permission: Permission.MANAGER},
+  currentUserUuid$ = new BehaviorSubject<string | null>(null); // uuid
+  private urlPermissions: { url: string; permission: Permission }[] = [
+    { url: 'home', permission: Permission.GUEST },
+    { url: 'personal-shift', permission: Permission.USER },
+    { url: 'shifts', permission: Permission.MANAGER },
+    { url: 'users', permission: Permission.MANAGER },
+    { url: 'users/:mode/:uuid', permission: Permission.MANAGER },
   ];
 
   constructor(
@@ -29,43 +36,66 @@ export class AuthorityService implements CanActivate {
     private api: Api,
     private cookieService: CookieService,
     private usersService: UsersService
-  ) { }
+  ) {}
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
+  canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ):
+    | boolean
+    | UrlTree
+    | Observable<boolean | UrlTree>
+    | Promise<boolean | UrlTree> {
     // get uuid from cookie if uuid is null
     if (!this.currentUserUuid$.value) {
-      if (this.cookieService.check(environment.TAINAN_PUBLIC_WITNESSING_PERMISSION_TOKEN)) {
-        this.currentUserUuid$.next(this.cookieService.get(environment.TAINAN_PUBLIC_WITNESSING_PERMISSION_TOKEN));
+      if (
+        this.cookieService.check(
+          environment.TAINAN_PUBLIC_WITNESSING_PERMISSION_TOKEN
+        )
+      ) {
+        this.currentUserUuid$.next(
+          this.cookieService.get(
+            environment.TAINAN_PUBLIC_WITNESSING_PERMISSION_TOKEN
+          )
+        );
       }
     }
 
-    const currentUrlPermission = this.urlPermissions.find(urlPermission => state.url.includes(urlPermission.url))?.permission as Permission;
+    const currentUrlPermission = this.urlPermissions.find((urlPermission) =>
+      state.url.includes(urlPermission.url)
+    )?.permission as Permission;
     if (currentUrlPermission !== Permission.GUEST) {
       if (this.currentUserUuid$.value) {
-        return this.usersService.getUserByUuid(this.currentUserUuid$.value).pipe(
-          filter(user => !!user),
-          map(user => user as User),
-          first(),
-          map(user => user.permission),
-          map(userPermission => userPermission <= currentUrlPermission),
-          tap(hasPermission => {
-            if (!hasPermission) {
-              this.router.navigate(['home']);
-            }
+        return this.usersService
+          .getUserByUuid(this.currentUserUuid$.value)
+          .pipe(
+            filter((user) => !!user),
+            map((user) => user as User),
+            first(),
+            map((user) => user.permission),
+            map((userPermission) => userPermission <= currentUrlPermission),
+            tap((hasPermission) => {
+              if (!hasPermission) {
+                this.router.navigate(['home']);
+              }
+            })
+          );
+      } else {
+        // should login
+        return this.matDialog
+          .open(LoginDialogComponent, {
+            disableClose: true,
+            panelClass: 'dialog-panel',
           })
-        );
-      } else { // should login 
-        return this.matDialog.open(LoginDialogComponent, {
-          disableClose: true,
-          panelClass: 'dialog-panel',
-        }).afterClosed().pipe(
-          first(),
-          tap(result => {
-            if (!result) {
-              this.router.navigate(['home']);
-            }
-          })
-        );
+          .afterClosed()
+          .pipe(
+            first(),
+            tap((result) => {
+              if (!result) {
+                this.router.navigate(['home']);
+              }
+            })
+          );
       }
     } else {
       return true;
@@ -77,25 +107,30 @@ export class AuthorityService implements CanActivate {
       this.currentUserUuid$.next(uuid);
       this.resetPermissionCookie();
     });
-  }
+  };
 
   logout = (): Promise<void> => {
     const uuid = this.currentUserUuid$.value as string;
     this.currentUserUuid$.next(null);
     return this.api.logout().then(() => {
-      this.cookieService.delete(environment.TAINAN_PUBLIC_WITNESSING_PERMISSION_TOKEN);
+      this.cookieService.delete(
+        environment.TAINAN_PUBLIC_WITNESSING_PERMISSION_TOKEN
+      );
       this.router.navigate(['home']);
     });
-  }
+  };
 
-  canAccess = (accessPermission: Permission, userUuids?: string[]): Observable<boolean> => {
+  canAccess = (
+    accessPermission: Permission,
+    userUuids?: string[]
+  ): Observable<boolean> => {
     return this.currentUserUuid$.pipe(
-      map(userUuid => {
+      map((userUuid) => {
         if (userUuid) {
           return this.usersService.getUserByUuid(userUuid).pipe(
-            filter(_user => _user !== null),
+            filter((_user) => _user !== null),
             first(),
-            map(_user => {
+            map((_user) => {
               if ((_user as User).permission <= accessPermission) {
                 if (userUuids) {
                   if (userUuids.includes(userUuid)) {
@@ -109,7 +144,7 @@ export class AuthorityService implements CanActivate {
                 return false;
               }
             })
-          )
+          );
         } else {
           if (accessPermission === Permission.GUEST) {
             return of(true);
@@ -118,14 +153,17 @@ export class AuthorityService implements CanActivate {
           }
         }
       }),
-      switchAll(),
+      switchAll()
     );
-  }
+  };
 
   private resetPermissionCookie = () => {
     const expiresDate = new Date();
     // expiresDate.setMinutes(expiresDate.getMinutes() + 10);
     // this.cookieService.set(environment.TAINAN_PUBLIC_WITNESSING_PERMISSION_TOKEN, this.currentUserUuid$.value, {expires: expiresDate});
-    this.cookieService.set(environment.TAINAN_PUBLIC_WITNESSING_PERMISSION_TOKEN, this.currentUserUuid$.value as string);
-  }
+    this.cookieService.set(
+      environment.TAINAN_PUBLIC_WITNESSING_PERMISSION_TOKEN,
+      this.currentUserUuid$.value as string
+    );
+  };
 }
