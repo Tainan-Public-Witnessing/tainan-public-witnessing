@@ -21,12 +21,11 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { A11yModule } from '@angular/cdk/a11y';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 @NgModule({
   declarations: [],
-  imports: [
-    CommonModule
-  ],
+  imports: [CommonModule],
   exports: [
     MatAutocompleteModule,
     MatButtonModule,
@@ -46,7 +45,8 @@ import { A11yModule } from '@angular/cdk/a11y';
     MatToolbarModule,
     MatMomentDateModule,
     DragDropModule,
+    ScrollingModule,
     A11yModule,
-  ]
+  ],
 })
-export class AngularMaterialModule { }
+export class AngularMaterialModule {}
