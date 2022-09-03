@@ -58,12 +58,11 @@ export class UserComponent implements OnInit, OnDestroy {
       congregationUuid: ["", Validators.required],
       // profile: ["", Validators.required],
       baptizeDate: ["", Validators.required],
-      birthDate: [""],
+      // birthDate: [""],
       cellphone: [""],
       phone: [""],
-      address: [""],
-      note: [""],
-      email: [""],
+      // note: [""],
+      // email: [""],
       // tags: [""],
     });
 
