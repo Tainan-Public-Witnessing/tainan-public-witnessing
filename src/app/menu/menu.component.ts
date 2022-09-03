@@ -11,20 +11,20 @@ import { UsersService } from '../_services/users.service';
 import { User } from '../_interfaces/user.interface';
 
 @Component({
-  selector: "app-menu",
-  templateUrl: "./menu.component.html",
-  styleUrls: ["./menu.component.scss"],
+  selector: 'app-menu',
+  templateUrl: './menu.component.html',
+  styleUrls: ['./menu.component.scss'],
 })
 export class MenuComponent implements OnInit, OnDestroy {
   MENU_LINKS: MenuLink[] = [
-    { display: "HOME.TITLE", url: "home", permission: Permission.GUEST },
+    { display: 'HOME.TITLE', url: 'home', permission: Permission.GUEST },
     {
-      display: "PERSONAL_SHIFT.TITLE",
-      url: "personal-shift",
+      display: 'PERSONAL_SHIFT.TITLE',
+      url: 'personal-shift',
       permission: Permission.USER,
     },
-    { display: "SHIFTS.TITLE", url: "shifts", permission: Permission.MANAGER },
-    { display: "USERS.TITLE", url: "users", permission: Permission.MANAGER },
+    { display: 'SHIFTS.TITLE', url: 'shifts', permission: Permission.MANAGER },
+    { display: 'USERS.TITLE', url: 'users', permission: Permission.MANAGER },
   ];
 
   currentMenuLinks$ = new BehaviorSubject<MenuLink[]>([]);
@@ -78,24 +78,24 @@ export class MenuComponent implements OnInit, OnDestroy {
 
   onMenuLinkClick = () => {
     this.globalEventService.emitGlobalEvent({
-      id: "ON_MENU_LINK_CLICK",
+      id: 'ON_MENU_LINK_CLICK',
     });
   };
 
   onLoginClick = () => {
     this.globalEventService.emitGlobalEvent({
-      id: "ON_MENU_LINK_CLICK",
+      id: 'ON_MENU_LINK_CLICK',
     });
 
     this.matDiolog.open(LoginDialogComponent, {
       disableClose: true,
-      panelClass: "dialog-panel",
+      panelClass: 'dialog-panel',
     });
   };
 
   onLogoutClick = () => {
     this.globalEventService.emitGlobalEvent({
-      id: "ON_MENU_LINK_CLICK",
+      id: 'ON_MENU_LINK_CLICK',
     });
 
     this.authorityService.logout();

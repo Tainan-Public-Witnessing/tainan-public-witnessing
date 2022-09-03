@@ -1,24 +1,20 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  UntypedFormBuilder,
-} from "@angular/forms";
-import { ActivatedRoute, Router } from "@angular/router";
-import { BehaviorSubject, Subject } from "rxjs";
-import { filter, takeUntil } from "rxjs/operators";
-import { Gender } from "src/app/_enums/gender.enum";
-import { Mode } from "src/app/_enums/mode.enum";
-import { Congregation } from "src/app/_interfaces/congregation.interface";
-import { CongregationsService } from "src/app/_services/congregations.service";
-import { TagsService } from "src/app/_services/tags.service";
-import { UsersService } from "src/app/_services/users.service";
+  FormGroup, UntypedFormBuilder, Validators
+} from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { filter, takeUntil } from 'rxjs/operators';
+import { Gender } from 'src/app/_enums/gender.enum';
+import { Mode } from 'src/app/_enums/mode.enum';
+import { Congregation } from 'src/app/_interfaces/congregation.interface';
+import { CongregationsService } from 'src/app/_services/congregations.service';
+import { UsersService } from 'src/app/_services/users.service';
 
 @Component({
-  selector: "app-user",
-  templateUrl: "./user.component.html",
-  styleUrls: ["./user.component.scss"],
+  selector: 'app-user',
+  templateUrl: './user.component.html',
+  styleUrls: ['./user.component.scss'],
 })
 export class UserComponent implements OnInit, OnDestroy {
   mode: string;
@@ -52,15 +48,15 @@ export class UserComponent implements OnInit, OnDestroy {
     // this.profilesService.getProfilePrimarykeys().pipe(takeUntil(this.unsubscribe$)).subscribe(this.profilePrimarykeys$);
 
     this.userForm = this.formBuilder.group({
-      username: ["", Validators.required],
-      name: ["", Validators.required],
-      gender: ["", Validators.required],
-      congregationUuid: ["", Validators.required],
+      username: ['', Validators.required],
+      name: ['', Validators.required],
+      gender: ['', Validators.required],
+      congregationUuid: ['', Validators.required],
       // profile: ["", Validators.required],
-      baptizeDate: ["", Validators.required],
+      baptizeDate: ['', Validators.required],
       // birthDate: [""],
-      cellphone: [""],
-      phone: [""],
+      cellphone: [''],
+      phone: [''],
       // note: [""],
       // email: [""],
       // tags: [""],
@@ -72,19 +68,19 @@ export class UserComponent implements OnInit, OnDestroy {
 
       switch (params.mode) {
         case Mode.CREATE:
-          this.title = "USERS.CREATE_TITLE";
-          this.cancelButtonText = "GLOBAL.CANCEL";
+          this.title = 'USERS.CREATE_TITLE';
+          this.cancelButtonText = 'GLOBAL.CANCEL';
           break;
 
         case Mode.UPDATE:
-          this.title = "USERS.EDIT_TITLE";
-          this.cancelButtonText = "GLOBAL.CANCEL";
+          this.title = 'USERS.EDIT_TITLE';
+          this.cancelButtonText = 'GLOBAL.CANCEL';
           this.setFormGroupValueByUuid(params.uuid);
           break;
 
         case Mode.READ:
-          this.title = "USERS.READ_TITLE";
-          this.cancelButtonText = "GLOBAL.BACK";
+          this.title = 'USERS.READ_TITLE';
+          this.cancelButtonText = 'GLOBAL.BACK';
           this.setFormGroupValueByUuid(params.uuid);
           this.userForm.disable();
           break;
@@ -97,7 +93,7 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   onCancelClick = () => {
-    this.router.navigate(["users"]);
+    this.router.navigate(['users']);
   };
 
   // onSubmitClick = () => {

@@ -1,33 +1,33 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 import {
   ActivatedRouteSnapshot,
   CanActivate,
   Router,
   RouterStateSnapshot,
   UrlTree,
-} from "@angular/router";
-import { BehaviorSubject, Observable, of } from "rxjs";
-import { filter, first, map, switchAll, tap } from "rxjs/operators";
-import { Api } from "src/app/_api/mock.api";
-import { CookieService } from "ngx-cookie-service";
-import { MatDialog } from "@angular/material/dialog";
-import { LoginDialogComponent } from "../_elements/dialogs/login-dialog/login-dialog.component";
-import { environment } from "src/environments/environment";
-import { Permission } from "../_enums/permission.enum";
-import { UsersService } from "./users.service";
-import { User } from "../_interfaces/user.interface";
+} from '@angular/router';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { filter, first, map, switchAll, tap } from 'rxjs/operators';
+import { Api } from 'src/app/_api/mock.api';
+import { CookieService } from 'ngx-cookie-service';
+import { MatDialog } from '@angular/material/dialog';
+import { LoginDialogComponent } from '../_elements/dialogs/login-dialog/login-dialog.component';
+import { environment } from 'src/environments/environment';
+import { Permission } from '../_enums/permission.enum';
+import { UsersService } from './users.service';
+import { User } from '../_interfaces/user.interface';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class AuthorityService implements CanActivate {
   currentUserUuid$ = new BehaviorSubject<string | null>(null); // uuid
   private urlPermissions: { url: string; permission: Permission }[] = [
-    { url: "home", permission: Permission.GUEST },
-    { url: "personal-shift", permission: Permission.USER },
-    { url: "shifts", permission: Permission.MANAGER },
-    { url: "users", permission: Permission.MANAGER },
-    { url: "users/:mode/:uuid", permission: Permission.MANAGER },
+    { url: 'home', permission: Permission.GUEST },
+    { url: 'personal-shift', permission: Permission.USER },
+    { url: 'shifts', permission: Permission.MANAGER },
+    { url: 'users', permission: Permission.MANAGER },
+    { url: 'users/:mode/:uuid', permission: Permission.MANAGER },
   ];
 
   constructor(
@@ -76,7 +76,7 @@ export class AuthorityService implements CanActivate {
             map((userPermission) => userPermission <= currentUrlPermission),
             tap((hasPermission) => {
               if (!hasPermission) {
-                this.router.navigate(["home"]);
+                this.router.navigate(['home']);
               }
             })
           );
@@ -85,14 +85,14 @@ export class AuthorityService implements CanActivate {
         return this.matDialog
           .open(LoginDialogComponent, {
             disableClose: true,
-            panelClass: "dialog-panel",
+            panelClass: 'dialog-panel',
           })
           .afterClosed()
           .pipe(
             first(),
             tap((result) => {
               if (!result) {
-                this.router.navigate(["home"]);
+                this.router.navigate(['home']);
               }
             })
           );
@@ -116,7 +116,7 @@ export class AuthorityService implements CanActivate {
       this.cookieService.delete(
         environment.TAINAN_PUBLIC_WITNESSING_PERMISSION_TOKEN
       );
-      this.router.navigate(["home"]);
+      this.router.navigate(['home']);
     });
   };
 
