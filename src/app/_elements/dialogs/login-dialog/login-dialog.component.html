@@ -1,46 +1,58 @@
-<h1 mat-dialog-title>{{ "LOGIN.TITLE" | translate }}</h1>
+<form (submit)="onConfirmClick()" [formGroup]="loginForm">
+  <h1 mat-dialog-title>{{ "LOGIN.TITLE" | translate }}</h1>
 
-<div mat-dialog-content>
-  <form [formGroup]="loginForm">
-
+  <div mat-dialog-content>
     <mat-form-field class="full-width" appearance="outline">
       <mat-label>{{ "LOGIN.LABEL.USERNAME" | translate }}</mat-label>
-      <input matInput formControlName="username" [matAutocomplete]="auto" cy="username-input">
+      <input
+        matInput
+        formControlName="username"
+        [matAutocomplete]="auto"
+        cy="username-input"
+      />
       <mat-autocomplete #auto="matAutocomplete">
         <mat-option
-          *ngFor="let username of (autoCompleteUserKeys$ | async)"
+          *ngFor="let username of autoCompleteUserKeys$ | async"
           [value]="username"
-          cy="username-autocomplete-options">
-          {{username}}
+          cy="username-autocomplete-options"
+        >
+          {{ username }}
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
 
     <mat-form-field class="full-width" appearance="outline">
       <mat-label>{{ "LOGIN.LABEL.PASSWORD" | translate }}</mat-label>
-      <input matInput formControlName="password" type="password" cy="password-input">
+      <input
+        matInput
+        formControlName="password"
+        type="password"
+        cy="password-input"
+      />
     </mat-form-field>
 
-    <mat-error *ngIf="loginForm.hasError('permissionFail')" cy="permission-fail-error-message">
+    <mat-error
+      *ngIf="loginForm.hasError('permissionFail')"
+      cy="permission-fail-error-message"
+    >
       {{ "LOGIN.PERMISSION_FAIL_ERROR" | translate }}
     </mat-error>
-  </form>
-</div>
+  </div>
 
-<div mat-dialog-actions>
+  <div mat-dialog-actions>
+    <button
+      mat-button
+      color="accent"
+      type="button"
+      (click)="onCancelClick()"
+      cdkFocusInitial
+      cy="login-cancel-button"
+    >
+      {{ "GLOBAL.CANCEL" | translate }}
+    </button>
 
-  <button mat-button
-    color="accent"
-    (click)="onCancelClick()"
-    cdkFocusInitial
-    cy="login-cancel-button">
-    {{ "GLOBAL.CANCEL" | translate }}
-  </button>
-
-  <button mat-button
-    color="primary"
-    (click)="onConfirmClick()"
-    cy="login-submit-button">
-    {{ "GLOBAL.LOG_IN" | translate }}
-  </button>
-</div>
+    <button mat-button color="primary" type="submit" cy="login-submit-button">
+      {{ "GLOBAL.LOG_IN" | translate }}
+    </button>
+  </div>
+</form>
