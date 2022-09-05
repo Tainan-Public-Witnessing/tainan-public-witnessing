@@ -1,3 +1,4 @@
+import { ViewEncapsulation } from '@angular/core';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -17,6 +18,7 @@ import { UsersService } from 'src/app/_services/users.service';
   selector: 'app-user',
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class UserComponent implements OnInit, OnDestroy {
   mode: string;
