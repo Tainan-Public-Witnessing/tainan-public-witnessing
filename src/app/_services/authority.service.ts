@@ -16,6 +16,7 @@ import { environment } from 'src/environments/environment';
 import { Permission } from '../_enums/permission.enum';
 import { UsersService } from './users.service';
 import { User } from '../_interfaces/user.interface';
+import { Mode } from '../_enums/mode.enum';
 
 @Injectable({
   providedIn: 'root',
@@ -26,8 +27,9 @@ export class AuthorityService implements CanActivate {
     { url: 'home', permission: Permission.GUEST },
     { url: 'personal-shift', permission: Permission.USER },
     { url: 'shifts', permission: Permission.MANAGER },
+    { url: 'users/:mode/:uuid?', permission: Permission.MANAGER },
+    { url: `users/${Mode.CREATE}`, permission: Permission.ADMINISTRATOR },
     { url: 'users', permission: Permission.MANAGER },
-    { url: 'users/:mode/:uuid', permission: Permission.MANAGER },
   ];
 
   constructor(

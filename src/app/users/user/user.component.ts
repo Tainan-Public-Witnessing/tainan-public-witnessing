@@ -1,13 +1,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  FormGroup, UntypedFormBuilder, Validators
-} from '@angular/forms';
+import { FormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
+import { EXISTED_ERROR } from 'src/app/_classes/errors/EXISTED_ERROR';
 import { Gender } from 'src/app/_enums/gender.enum';
 import { Mode } from 'src/app/_enums/mode.enum';
+import { Permission } from 'src/app/_enums/permission.enum';
 import { Congregation } from 'src/app/_interfaces/congregation.interface';
+import { User } from 'src/app/_interfaces/user.interface';
+import { AuthorityService } from 'src/app/_services/authority.service';
 import { CongregationsService } from 'src/app/_services/congregations.service';
 import { UsersService } from 'src/app/_services/users.service';
 
@@ -23,6 +25,9 @@ export class UserComponent implements OnInit, OnDestroy {
   cancelButtonText: string;
   userForm: FormGroup;
   genders = Object.values(Gender);
+  permissions = Object.values(Permission).filter(
+    (p) => /\d+/.test(p.toString()) && p < Permission.GUEST
+  );
   congregations$ = new BehaviorSubject<Congregation[] | undefined | null>(null);
   // profilePrimarykeys$ = new BehaviorSubject<Profile[]>(null);
   // tags$ = new BehaviorSubject<Tag[]>(null);
@@ -52,11 +57,12 @@ export class UserComponent implements OnInit, OnDestroy {
       name: ['', Validators.required],
       gender: ['', Validators.required],
       congregationUuid: ['', Validators.required],
-      // profile: ["", Validators.required],
       baptizeDate: ['', Validators.required],
       // birthDate: [""],
       cellphone: [''],
       phone: [''],
+      permission: [Permission.USER, Validators.required],
+      activate: [true],
       // note: [""],
       // email: [""],
       // tags: [""],
@@ -67,9 +73,15 @@ export class UserComponent implements OnInit, OnDestroy {
       this.uuid = params.uuid;
 
       switch (params.mode) {
-        case Mode.CREATE:
-          this.title = 'USERS.CREATE_TITLE';
-          this.cancelButtonText = 'GLOBAL.CANCEL';
+        case undefined:
+          if (!this.uuid) {
+            this.title = 'USERS.CREATE_TITLE';
+            this.cancelButtonText = 'GLOBAL.CANCEL';
+            this.mode = Mode.CREATE;
+          } else {
+            this.router.navigate(['users']);
+          }
+
           break;
 
         case Mode.UPDATE:
@@ -96,56 +108,47 @@ export class UserComponent implements OnInit, OnDestroy {
     this.router.navigate(['users']);
   };
 
-  // onSubmitClick = () => {
-  //   if (this.userForm.status === 'VALID') {
+  onSubmit = async () => {
+    if (this.userForm.status === 'VALID') {
+      const baptizeDateValue = this.userForm.value.baptizeDate;
+      const baptizeDate =
+        typeof baptizeDateValue === 'string'
+          ? baptizeDateValue
+          : baptizeDateValue.format('YYYY-MM-DD');
 
-  //     const baptizeDateValue = this.userForm.value.baptizeDate;
-  //     const birthDateValue = this.userForm.value.birthDate;
-  //     const baptizeDate = typeof(baptizeDateValue) === 'string' ? baptizeDateValue : baptizeDateValue.format('YYYY-MM-DD');
-  //     const birthDate = typeof(birthDateValue) === 'string' ? birthDateValue : birthDateValue.format('YYYY-MM-DD');
-
-  //     const user: User = {
-  //       uuid: null,
-  //       username: this.userForm.value.username.trim(),
-  //       name: this.userForm.value.name.trim(),
-  //       gender: this.userForm.value.gender,
-  //       congregation: this.userForm.value.congregation,
-  //       profile: this.userForm.value.profile,
-  //       baptizeDate,
-  //       birthDate,
-  //       cellphone: this.userForm.value.cellphone.trim(),
-  //       phone: this.userForm.value.phone.trim(),
-  //       address: this.userForm.value.address.trim(),
-  //       note: this.userForm.value.note.trim(),
-  //       tags: this.userForm.value.tags,
-  //     };
-
-  //     let response: Promise<Status>;
-
-  //     if (this.mode === Mode.CREATE) {
-  //       response = this.usersService.createUser(user);
-  //     } else { // update mode
-  //       user.uuid = this.uuid;
-  //       if (this.userForm.dirty) {
-  //         response = this.usersService.updateUser(user);
-  //       } else {
-  //         response = Promise.resolve(Status.NO_CHANGES);
-  //       }
-  //     }
-
-  //     response.then(() => {
-  //       this.router.navigate(['users']);
-  //     }).catch(reason => {
-  //       console.log('reason', reason);
-  //       if (reason === Status.EXISTED) {
-  //         this.userForm.controls.username.setErrors({existed: true});
-  //       }
-  //     });
-  //   } else {
-  //     this.userForm.markAllAsTouched();
-  //   }
-
-  // }
+      const user: Omit<User, 'uuid' | 'activate'> = {
+        username: this.userForm.value.username.trim(),
+        name: this.userForm.value.name.trim(),
+        gender: this.userForm.value.gender,
+        congregationUuid: this.userForm.value.congregationUuid,
+        baptizeDate,
+        cellphone: this.userForm.value.cellphone.trim(),
+        phone: this.userForm.value.phone.trim(),
+        permission: this.userForm.value.permission,
+      };
+      try {
+        if (this.mode === Mode.CREATE) {
+          await this.usersService.createUser(user);
+        } else {
+          // update mode
+          if (this.userForm.dirty) {
+            await this.usersService.patchUser({
+              ...user,
+              uuid: this.uuid,
+            });
+          }
+        }
+        this.router.navigate(['users']);
+      } catch (err) {
+        console.log('reason', err);
+        if (err instanceof EXISTED_ERROR) {
+          this.userForm.controls[err.field].setErrors({ existed: true });
+        }
+      }
+    } else {
+      this.userForm.markAllAsTouched();
+    }
+  };
 
   private setFormGroupValueByUuid = (uuid: string): void => {
     this.usersService

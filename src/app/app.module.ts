@@ -26,6 +26,7 @@ import { MemberInputComponent } from './_elements/dialogs/crew-editor/member-inp
 import { ShiftsComponent } from './shifts/shifts.component';
 import { UsersComponent } from './users/users.component';
 import { UserComponent } from './users/user/user.component';
+import { ConfirmDialogComponent } from './_elements/dialogs/confirm-dialog/confirm-dialog.component';
 
 // AoT requires an exported function for factories of translate module
 export function HttpLoaderFactory(http: HttpClient) {
@@ -47,6 +48,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     ShiftsComponent,
     UsersComponent,
     UserComponent,
+    ConfirmDialogComponent,
   ],
   imports: [
     BrowserModule,

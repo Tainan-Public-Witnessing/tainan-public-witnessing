@@ -7,13 +7,15 @@ import { PersonalShifts } from '../_interfaces/personal-shifts.interface';
 import { Statistic } from '../_interfaces/statistic.interface';
 
 export interface ApiInterface {
-
   login: (uuid: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
 
   readUserKeys: () => Promise<UserKey[]>;
 
   readUser: (uuid: string) => Promise<User>;
+  createUser: (user: Omit<User, 'uuid' | 'activate'>) => Promise<void>;
+  patchUser: (user: Omit<User, 'activate'>) => Promise<void>;
+  updateUserActivation: (uuid: string, activate: boolean) => Promise<void>;
 
   readCongregations: () => Promise<Congregation[]>;
 
@@ -23,13 +25,25 @@ export interface ApiInterface {
 
   readShiftsByMonth: (yearMonth: string) => Promise<Shift[]>; // yyyy-MM
   readShiftsByDate: (date: string) => Promise<Shift[]>; // yyyy-MM-dd
-  readShifts: (yearMonth: string, uuids: string[]) => Promise<(Shift|undefined)[]>;
+  readShifts: (
+    yearMonth: string,
+    uuids: string[]
+  ) => Promise<(Shift | undefined)[]>;
   readShift: (yearMonth: string, uuid: string) => Promise<Shift>;
   updateShift: (shift: Shift) => Promise<void>;
 
-  readPersonalShifts: (yearMonth: string, uuid: string) => Promise<PersonalShifts>;
-  createPersonalShifts: (yearMonth: string, personalShift: PersonalShifts) => Promise<void>;
-  updatePersonalShifts: (yearMonth: string, personalShift: PersonalShifts) => Promise<void>;
+  readPersonalShifts: (
+    yearMonth: string,
+    uuid: string
+  ) => Promise<PersonalShifts>;
+  createPersonalShifts: (
+    yearMonth: string,
+    personalShift: PersonalShifts
+  ) => Promise<void>;
+  updatePersonalShifts: (
+    yearMonth: string,
+    personalShift: PersonalShifts
+  ) => Promise<void>;
 
   readStatistic: (yearMonth: string, uuid: string) => Promise<Statistic>;
   createStatistic: (statistic: Statistic) => Promise<void>;

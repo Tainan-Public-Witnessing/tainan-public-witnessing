@@ -7,6 +7,8 @@
     "CONFIRM": "Confirm",
     "CANCEL": "Cancel",
     "BACK": "Back",
+    "ACTIVATE": "Activate",
+    "DEACTIVATE": "Deactivate",
     "WELCOME_MESSAGE": "Hi! {{value}}",
     "DELETE_MESSAGE": "Are you sure to delete {{value}}?",
     "EXISTED_ERROR": "{{value}} already existed!",
@@ -72,7 +74,14 @@
     "CREATE_TITLE": "Create user",
     "EDIT_TITLE": "Edit user",
     "READ_TITLE": "User",
-    "DELETE_TITLE": "Delete user",
+    "DEACTIVATED": "User has been deactivated",
+    "DEACTIVATE_TITLE": "Deactivate user",
+    "DEACTIVATE_MESSAGE": "Are you sure to deactivate user {{value}}",
+    "ACTIVATE_TITLE": "Activate user",
+    "ACTIVATE_MESSAGE": "Are you sure to activate user {{value}}",
+    "VALIDATION": {
+      "USERNAME_EXISTED": "User name already existed!"
+    },
     "LABEL": {
       "USERNAME": "User name",
       "NAME": "Name",
@@ -85,7 +94,8 @@
       "CELLPHONE": "Cellphone",
       "PHONE": "Phone",
       "ADDRESS": "Address",
-      "NOTE": "Note"
+      "NOTE": "Note",
+      "PERMISSION": "Permission"
     }
   },
   "CONGREGATIONS": {
@@ -121,5 +131,12 @@
     "LABEL": {
       "DATE": "Year-Month-Date"
     }
+  },
+  "PERMISSIONS": {
+    "0": "Developer",
+    "1": "Administrator",
+    "2": "Manager",
+    "3": "User",
+    "4": "Guest"
   }
 }

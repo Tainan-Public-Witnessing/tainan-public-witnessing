@@ -7,6 +7,8 @@
     "CONFIRM": "確認",
     "CANCEL": "取消",
     "BACK": "返回",
+    "ACTIVATE": "啟用",
+    "DEACTIVATE": "停用",
     "WELCOME_MESSAGE": "{{value}}，你好！",
     "DELETE_MESSAGE": "你確定要刪除{{value}}嗎？",
     "EXISTED_ERROR": "{{value}}已存在！",
@@ -72,7 +74,14 @@
     "CREATE_TITLE": "新增使用者",
     "EDIT_TITLE": "編輯使用者",
     "READ_TITLE": "使用者",
-    "DELETE_TITLE": "刪除使用者",
+    "DEACTIVATED": "使用者已被停用",
+    "DEACTIVATE_TITLE": "停用使用者",
+    "DEACTIVATE_MESSAGE": "你確定要停用{{value}}嗎？",
+    "ACTIVATE_TITLE": "啟用使用者",
+    "ACTIVATE_MESSAGE": "你確定要啟用{{value}}嗎？",
+    "VALIDATION": {
+      "USERNAME_EXISTED": "使用者名稱已存在"
+    },
     "LABEL": {
       "USERNAME": "使用者名稱",
       "NAME": "姓名",
@@ -85,7 +94,8 @@
       "CELLPHONE": "手機",
       "PHONE": "電話",
       "ADDRESS": "地址",
-      "NOTE": "備註"
+      "NOTE": "備註",
+      "PERMISSION": "權限"
     }
   },
   "CONGREGATIONS": {
@@ -121,5 +131,12 @@
     "LABEL": {
       "DATE": "年份-月份-日期"
     }
+  },
+  "PERMISSIONS": {
+    "0": "開發者",
+    "1": "系統管理員",
+    "2": "管理員",
+    "3": "傳道員",
+    "4": "遊客"
   }
 }

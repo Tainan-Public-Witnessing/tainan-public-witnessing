@@ -3,14 +3,16 @@
 
   <span class="spacer"></span>
 
-  <!-- <button mat-icon-button
+  <button
+    mat-icon-button
     *ngIf="userCreateAccess$ | async"
     (click)="onAddButtonClick()"
-    id="create-user-button">
+    id="create-user-button"
+  >
     <mat-icon>add</mat-icon>
-  </button> -->
+  </button>
 </div>
-<mat-form-field class="full-width" style="position: sticky; top: 0px">
+<mat-form-field class="full-width" appearance="outline">
   <mat-icon matPrefix>search</mat-icon>
   <input
     matInput
@@ -22,31 +24,19 @@
   </button>
 </mat-form-field>
 <div class="full-height">
-  <mat-nav-list id="users-list" class="full-height" style="padding: 0">
+  <mat-action-list id="users-list" class="full-height" style="padding: 0">
     <cdk-virtual-scroll-viewport [itemSize]="48" class="full-height">
       <a
         mat-list-item
         *cdkVirtualFor="let userPrimarykey of userPrimarykeys$ | async"
         [id]="userPrimarykey.uuid"
-        [routerLink]="['/users', 'read', userPrimarykey.uuid]"
+        (click)="onInfoButtonClick(userPrimarykey)"
       >
-        {{ userPrimarykey.username }}
+        <span [class.deativated]="!userPrimarykey.activate">{{
+          userPrimarykey.username
+        }}</span>
 
-        <!-- <span class="spacer"></span> -->
-
-        <!-- <button mat-icon-button
-        *ngIf="(userDeleteAccess$ | async) && !usersService.isImmortalUser(userPrimarykey.uuid)"
-        (click)="onDeleteButtonClick(userPrimarykey)"
-        id="delete-button">
-        <mat-icon>delete</mat-icon>
-      </button> -->
-
-        <!-- <button mat-icon-button
-        *ngIf="(userUpdateAccess$ | async) && !usersService.isImmortalUser(userPrimarykey.uuid)"
-        (click)="onEditButtonClick(userPrimarykey)"
-        id="edit-button">
-        <mat-icon>edit</mat-icon>
-      </button> -->
+        <span class="spacer"></span>
 
         <!-- <button
         mat-icon-button
@@ -54,7 +44,26 @@
       >
         <mat-icon>info</mat-icon>
       </button> -->
+
+        <button
+          mat-icon-button
+          *ngIf="userUpdateAccess$ | async"
+          (click)="onEditButtonClick($event, userPrimarykey)"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+
+        <button
+          mat-icon-button
+          [color]="!userPrimarykey.activate ? 'default' : 'warn'"
+          *ngIf="userDeleteAccess$ | async"
+          (click)="onDeactivateButtonClick($event, userPrimarykey)"
+        >
+          <mat-icon>{{
+            !userPrimarykey.activate ? "person" : "person_off"
+          }}</mat-icon>
+        </button>
       </a>
     </cdk-virtual-scroll-viewport>
-  </mat-nav-list>
+  </mat-action-list>
 </div>

@@ -2,12 +2,24 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, combineLatest, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, firstValueFrom, Subject } from 'rxjs';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  take,
+  takeUntil,
+  startWith,
+  tap,
+  map,
+  switchMap,
+} from 'rxjs/operators';
 import { Mode } from 'src/app/_enums/mode.enum';
 import { UserKey } from 'src/app/_interfaces/user.interface';
 import { AuthorityService } from 'src/app/_services/authority.service';
 import { UsersService } from 'src/app/_services/users.service';
+import { ConfirmDialogComponent } from '../_elements/dialogs/confirm-dialog/confirm-dialog.component';
+import { Permission } from 'src/app/_enums/permission.enum';
+import { ConfirmDialogData } from 'src/app/_elements/dialogs/confirm-dialog/confirm-dialog-data.interface';
 
 @Component({
   selector: 'app-users',
@@ -15,7 +27,11 @@ import { UsersService } from 'src/app/_services/users.service';
   styleUrls: ['./users.component.scss'],
 })
 export class UsersComponent implements OnInit, OnDestroy {
+  reloadList$ = new BehaviorSubject<void>(undefined);
   userPrimarykeys$ = new BehaviorSubject<UserKey[] | null>(null);
+  userCreateAccess$ = new BehaviorSubject<boolean>(false);
+  userUpdateAccess$ = new BehaviorSubject<boolean>(false);
+  userDeleteAccess$ = new BehaviorSubject<boolean>(false);
   unsubscribe$ = new Subject<void>();
 
   filterValue$ = new BehaviorSubject<string>('');
@@ -30,7 +46,14 @@ export class UsersComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     combineLatest([
-      this.usersService.getUserKeys().pipe(takeUntil(this.unsubscribe$)),
+      this.reloadList$.pipe(
+        startWith(undefined),
+        switchMap(() => {
+          return this.usersService
+            .getUserKeys()
+            .pipe(takeUntil(this.unsubscribe$));
+        })
+      ),
       this.filterValue$.pipe(
         debounceTime(300),
         distinctUntilChanged(),
@@ -38,12 +61,20 @@ export class UsersComponent implements OnInit, OnDestroy {
       ),
     ]).subscribe(([users, filter]) => {
       if (!users) return [];
-
-      const filterReg = new RegExp(filter, 'i');
-      this.userPrimarykeys$.next(
-        users.filter((user) => filterReg.test(user.username))
-      );
+      try {
+        const filterReg = new RegExp(filter, 'i');
+        this.userPrimarykeys$.next(
+          users.filter((user) => filterReg.test(user.username))
+        );
+      } catch {}
     });
+
+    const admin = this.authorityService
+      .canAccess(Permission.ADMINISTRATOR)
+      .pipe(takeUntil(this.unsubscribe$));
+    admin.subscribe(this.userCreateAccess$);
+    admin.subscribe(this.userUpdateAccess$);
+    admin.subscribe(this.userDeleteAccess$);
   }
 
   ngOnDestroy(): void {
@@ -51,11 +82,47 @@ export class UsersComponent implements OnInit, OnDestroy {
     this.unsubscribe$.complete();
   }
 
-  // onAddButtonClick = () => {
-  //   this.router.navigate(["user", Mode.CREATE]);
-  // };
+  onAddButtonClick = () => {
+    this.router.navigate(['users', Mode.CREATE]);
+  };
+
+  onEditButtonClick = (evt: Event, userKey: UserKey) => {
+    evt.stopPropagation();
+    this.router.navigate(['users', Mode.UPDATE, userKey.uuid]);
+  };
+
+  onDeactivateButtonClick = (evt: Event, userKey: UserKey) => {
+    evt.stopPropagation();
+
+    const action = !userKey.activate ? 'ACTIVATE' : 'DEACTIVATE';
+    this.matDialog
+      .open<ConfirmDialogComponent, ConfirmDialogData, boolean>(
+        ConfirmDialogComponent,
+        {
+          data: {
+            title: this.translateService.instant(`USERS.${action}_TITLE`, {
+              value: userKey.username,
+            }),
+            message: this.translateService.instant(`USERS.${action}_MESSAGE`, {
+              value: userKey.username,
+            }),
+          },
+        }
+      )
+      .afterClosed()
+      .pipe(take(1))
+      .subscribe(async (result) => {
+        if (result) {
+          await this.usersService.updateUserActivation(
+            userKey.uuid,
+            !userKey.activate
+          );
+          this.reloadList$.next(undefined);
+        }
+      });
+  };
 
   onInfoButtonClick = (userKey: UserKey) => {
-    this.router.navigate(['user', Mode.READ, { uuid: userKey.uuid }]);
+    this.router.navigate(['users', Mode.READ, userKey.uuid]);
   };
 }

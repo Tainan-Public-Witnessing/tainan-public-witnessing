@@ -1,4 +1,9 @@
+@use '@angular/material' as mat;
+@import 'src/styles.scss';
 @import 'src/app/_styles/global';
+
+$palettes: mat.get-color-config($TainanPublicWitnessing-theme);
+$warn-palette: map-get($palettes, 'warn');
 
 :host {
   display: flex;
@@ -6,16 +11,7 @@
   width: 100%;
   height: 100%;
 
-  .overflow {
-    height: 100%;
-    overflow: auto;
-
-    .mat-list {
-      width: 100%;
-      
-      .mat-list-item {
-        height: $list-item-height;
-      }
-    }
+  .deativated {
+    color: map-get($warn-palette, 'text');
   }
 }

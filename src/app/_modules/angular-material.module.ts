@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
@@ -17,11 +17,12 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
-import { MatMomentDateModule } from '@angular/material-moment-adapter';
-import { DragDropModule } from '@angular/cdk/drag-drop';
 import { A11yModule } from '@angular/cdk/a11y';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { MatMomentDateModule } from '@angular/material-moment-adapter';
 
 @NgModule({
   declarations: [],
@@ -43,6 +44,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
     MatSlideToggleModule,
     MatSnackBarModule,
     MatToolbarModule,
+    MatTooltipModule,
     MatMomentDateModule,
     DragDropModule,
     ScrollingModule,
