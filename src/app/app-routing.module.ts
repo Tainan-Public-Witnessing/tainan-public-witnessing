@@ -5,6 +5,7 @@ import { PersonalShiftComponent } from './personal-shift/personal-shift.componen
 import { ShiftsComponent } from './shifts/shifts.component';
 import { UserComponent } from './users/user/user.component';
 import { UsersComponent } from './users/users.component';
+import { Mode } from './_enums/mode.enum';
 import { AuthorityService } from './_services/authority.service';
 
 const routes: Routes = [
@@ -20,6 +21,11 @@ const routes: Routes = [
     canActivate: [AuthorityService],
   },
   { path: 'users', component: UsersComponent, canActivate: [AuthorityService] },
+  {
+    path: `users/${Mode.CREATE}`,
+    component: UserComponent,
+    canActivate: [AuthorityService],
+  },
   {
     path: 'users/:mode/:uuid',
     component: UserComponent,

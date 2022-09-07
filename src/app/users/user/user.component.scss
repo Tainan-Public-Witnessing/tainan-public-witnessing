@@ -1,19 +1,26 @@
 @import 'src/app/_styles/global.scss';
 
-:host {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  
+$disabled-color: rgba(0, 0, 0, 0.5);
+
+app-user {
   .overflow {
     flex: 1 1 auto;
     overflow: auto;
-  
-    form {
-      display: flex;
-      flex-direction: column;
-      padding: 16px;
+    padding: 32px;
+    box-sizing: border-box;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    input.mat-input-element:disabled {
+      color: $disabled-color;
+    }
+
+    .mat-select-disabled .mat-select-value {
+      color: $disabled-color;
     }
   }
 }
-

@@ -1,23 +1,26 @@
-<div class="title-bar">
-  <h1>{{ title | translate }}</h1>
-  <span class="spacer"></span>
-  <button mat-button color="accent" (click)="onCancelClick()">
-    {{ cancelButtonText | translate }}
-  </button>
-  <!-- <button
-    mat-button
-    color="primary"
-    *ngIf="mode !== 'read'"
-    (click)="onSubmitClick()"
-    id="create-user-submit-button"
-  >
-    {{ "GLOBAL.SUBMIT" | translate }}
-  </button> -->
-</div>
+<form (submit)="onSubmit()">
+  <div class="title-bar">
+    <h1>{{ title | translate }}</h1>
+    <span class="spacer"></span>
+    <button mat-button color="accent" type="button" (click)="onCancelClick()">
+      {{ cancelButtonText | translate }}
+    </button>
+    <button
+      mat-button
+      color="primary"
+      *ngIf="mode !== 'read'"
+      type="submit"
+      id="create-user-submit-button"
+    >
+      {{ "GLOBAL.SUBMIT" | translate }}
+    </button>
+  </div>
 
-<div class="overflow">
-  <mat-card>
+  <mat-card class="overflow">
     <form [formGroup]="userForm">
+      <mat-error *ngIf="!userForm.value.activate" style="text-align: center">
+        {{ "USERS.DEACTIVATED" | translate }}
+      </mat-error>
       <mat-form-field class="full-width">
         <mat-label>{{ "USERS.LABEL.USERNAME" | translate }}</mat-label>
         <input
@@ -26,9 +29,9 @@
           required
           id="username-input"
         />
-        <mat-error *ngIf="userForm.controls.username.hasError('existed')"
-          >User name already existed!</mat-error
-        >
+        <mat-error *ngIf="userForm.controls.username.hasError('existed')">{{
+          "USERS.VALIDATION.USERNAME_EXISTED" | translate
+        }}</mat-error>
       </mat-form-field>
 
       <mat-form-field class="full-width">
@@ -146,6 +149,18 @@
       >
       </textarea>
     </mat-form-field> -->
+
+      <mat-form-field class="full-width">
+        <mat-label>{{ "USERS.LABEL.PERMISSION" | translate }}</mat-label>
+        <mat-select formControlName="permission" required>
+          <mat-option
+            *ngFor="let permission of permissions"
+            [value]="permission"
+          >
+            {{ "PERMISSIONS." + permission | translate }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
     </form>
   </mat-card>
-</div>
+</form>
