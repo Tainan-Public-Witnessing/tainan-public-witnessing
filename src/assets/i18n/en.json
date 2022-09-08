@@ -134,9 +134,9 @@
   },
   "PERMISSIONS": {
     "0": "Developer",
-    "1": "Administrator",
-    "2": "Manager",
-    "3": "User",
+    "1": "Committee Member",
+    "2": "Overseer",
+    "3": "Publisher",
     "4": "Guest"
   }
 }
