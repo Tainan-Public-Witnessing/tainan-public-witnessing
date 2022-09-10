@@ -34,7 +34,7 @@ export class UserComponent implements OnInit, OnDestroy {
   // profilePrimarykeys$ = new BehaviorSubject<Profile[]>(null);
   // tags$ = new BehaviorSubject<Tag[]>(null);
   unsubscribe$ = new Subject<void>();
-  readNote$ = new BehaviorSubject<boolean>(false);
+  AdminOnly$ = new BehaviorSubject<boolean>(false);
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -102,11 +102,11 @@ export class UserComponent implements OnInit, OnDestroy {
           break;
       }
     });
-    const readNote = this.authorityService
+    const admin = this.authorityService
       .canAccess(Permission.ADMINISTRATOR)
       .pipe(takeUntil(this.unsubscribe$));
   
-    readNote.subscribe(this.readNote$);
+    admin.subscribe(this.AdminOnly$);
   }
 
   ngOnDestroy(): void {
