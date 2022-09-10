@@ -17,6 +17,6 @@ export interface User extends UserKey {
   // email: string;
   phone: string;
   // address: string;
-  // note: string;
+  note: string;
   // tagUuids: string[]; // uuid
 }

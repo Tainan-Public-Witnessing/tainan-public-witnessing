@@ -34,14 +34,16 @@ export class UserComponent implements OnInit, OnDestroy {
   // profilePrimarykeys$ = new BehaviorSubject<Profile[]>(null);
   // tags$ = new BehaviorSubject<Tag[]>(null);
   unsubscribe$ = new Subject<void>();
-
+  readNote$ = new BehaviorSubject<boolean>(false);
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private formBuilder: UntypedFormBuilder,
     private congregationsService: CongregationsService,
+    private authorityService: AuthorityService,
     // private tagService: TagsService,
     public usersService: UsersService
+    
   ) {}
 
   ngOnInit(): void {
@@ -65,7 +67,7 @@ export class UserComponent implements OnInit, OnDestroy {
       phone: [''],
       permission: [Permission.USER, Validators.required],
       activate: [true],
-      // note: [""],
+      note: [""],
       // email: [""],
       // tags: [""],
     });
@@ -73,7 +75,7 @@ export class UserComponent implements OnInit, OnDestroy {
     this.activatedRoute.params.subscribe((params) => {
       this.mode = params.mode;
       this.uuid = params.uuid;
-
+      
       switch (params.mode) {
         case undefined:
           if (!this.uuid) {
@@ -100,6 +102,11 @@ export class UserComponent implements OnInit, OnDestroy {
           break;
       }
     });
+    const readNote = this.authorityService
+      .canAccess(Permission.ADMINISTRATOR)
+      .pipe(takeUntil(this.unsubscribe$));
+  
+    readNote.subscribe(this.readNote$);
   }
 
   ngOnDestroy(): void {
@@ -124,6 +131,7 @@ export class UserComponent implements OnInit, OnDestroy {
         gender: this.userForm.value.gender,
         congregationUuid: this.userForm.value.congregationUuid,
         baptizeDate,
+        note:this.userForm.value.note,
         cellphone: this.userForm.value.cellphone.trim(),
         phone: this.userForm.value.phone.trim(),
         permission: this.userForm.value.permission,

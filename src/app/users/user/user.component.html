@@ -138,7 +138,7 @@
         <input matInput formControlName="phone" id="phone-input" />
       </mat-form-field>
 
-      <!-- <mat-form-field class="full-width">
+      <mat-form-field class="full-width" *ngIf="readNote$.value">
       <mat-label>{{ "USERS.LABEL.NOTE" | translate }}</mat-label>
       <textarea
         matInput
@@ -148,7 +148,7 @@
         id="note-input"
       >
       </textarea>
-    </mat-form-field> -->
+    </mat-form-field>
 
       <mat-form-field class="full-width">
         <mat-label>{{ "USERS.LABEL.PERMISSION" | translate }}</mat-label>
