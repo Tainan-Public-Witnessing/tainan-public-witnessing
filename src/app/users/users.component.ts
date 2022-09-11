@@ -64,7 +64,11 @@ export class UsersComponent implements OnInit, OnDestroy {
       try {
         const filterReg = new RegExp(filter, 'i');
         this.userPrimarykeys$.next(
-          users.filter((user) => filterReg.test(user.username))
+          users
+            .filter((user) => filterReg.test(user.username))
+            .sort((a, b) =>
+              a.username > b.username ? 1 : b.username > a.username ? -1 : 0
+            )
         );
       } catch {}
     });
