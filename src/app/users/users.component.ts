@@ -117,11 +117,35 @@ export class UsersComponent implements OnInit, OnDestroy {
       .pipe(take(1))
       .subscribe(async (result) => {
         if (result) {
-          await this.usersService.updateUserActivation(
+          const futureShifts = await this.usersService.updateUserActivation(
             userKey.uuid,
             !userKey.activate
           );
-          this.reloadList$.next(undefined);
+          if (futureShifts.length) {
+            this.matDialog.open<
+              ConfirmDialogComponent,
+              ConfirmDialogData,
+              boolean
+            >(ConfirmDialogComponent, {
+              data: {
+                title: this.translateService.instant('GLOBAL.ERROR'),
+                message: this.translateService.instant(
+                  'USERS.PERSONAL_SHIFTS_EXIST_ERROR',
+                  {
+                    value: futureShifts
+                      .map(
+                        (shift) =>
+                          `${shift.date}\t${shift.site.name}\t${shift.hour.name}`
+                      )
+                      .join('\n'),
+                  }
+                ),
+                hideCancelButton: true,
+              },
+            });
+          } else {
+            this.reloadList$.next(undefined);
+          }
         }
       });
   };

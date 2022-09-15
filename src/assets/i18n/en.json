@@ -21,7 +21,8 @@
       "THURSDAY": "Thursday",
       "FRIDAY": "Friday",
       "SATURDAY": "Saturday"
-    }
+    },
+    "ERROR": "Error"
   },
   "GENDER": {
     "MALE": "Male",
@@ -95,8 +96,10 @@
       "PHONE": "Phone",
       "ADDRESS": "Address",
       "NOTE": "Note",
-      "PERMISSION": "Permission"
-    }
+      "PERMISSION": "Permission",
+      "ASSIGN": "Assign"
+    },
+    "PERSONAL_SHIFTS_EXIST_ERROR": "Can not deactivate user! Please cancel the following assignments first:\n\n{{value}}"
   },
   "CONGREGATIONS": {
     "TITLE": "Congregations",
