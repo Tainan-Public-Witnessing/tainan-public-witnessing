@@ -15,7 +15,10 @@ export interface ApiInterface {
   readUser: (uuid: string) => Promise<User>;
   createUser: (user: Omit<User, 'uuid' | 'activate'>) => Promise<void>;
   patchUser: (user: Omit<User, 'activate'>) => Promise<void>;
-  updateUserActivation: (uuid: string, activate: boolean) => Promise<void>;
+  updateUserActivation: (
+    uuid: string,
+    activate: boolean
+  ) => Promise<{ date: string; hour: ShiftHours; site: Site }[]>;
 
   readCongregations: () => Promise<Congregation[]>;
 

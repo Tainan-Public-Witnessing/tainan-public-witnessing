@@ -97,6 +97,32 @@ export class Api implements ApiInterface {
 
   updateUserActivation = (uuid: string, activate: boolean) => {
     console.log('mock api updateUserActivation', { uuid, activate });
+    if (!activate) {
+      const userShifts = PERSONAL_SHIFTS_LIST.find(
+        (userShift) => userShift.uuid === uuid
+      );
+      if (userShifts && Array.isArray(userShifts.shiftUuids)) {
+        return this.delayReturn().then(() =>
+          userShifts.shiftUuids
+            .map(
+              (shiftUuid) => SHIFTS.find((shift) => shift.uuid === shiftUuid)!
+            )
+            .map((shift) => ({
+              date: shift.date,
+              hour: SHIFT_HOURS_LIST.find(
+                (hour) => hour.uuid === shift.shiftHoursUuid
+              )!,
+              site: SITES.find((site) => site.uuid === shift.siteUuid)!,
+            }))
+            .filter(
+              (shift) =>
+                new Date(`${shift.date}T${shift.hour.startTime}:00.000`) >
+                new Date()
+            )
+        );
+      }
+    }
+
     const user = USERS.find((u) => u.uuid === uuid)!;
     user.activate = activate;
     this.users = [...USERS];
@@ -105,7 +131,7 @@ export class Api implements ApiInterface {
     userKey.activate = activate;
     this.userKeys = [...USER_KEYS];
 
-    return this.delayReturn();
+    return this.delayReturn().then(() => []);
   };
 
   readCongregations = (): Promise<Congregation[]> => {

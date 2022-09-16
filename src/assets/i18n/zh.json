@@ -11,6 +11,7 @@
     "DEACTIVATE": "停用",
     "WELCOME_MESSAGE": "{{value}}，你好！",
     "DELETE_MESSAGE": "你確定要刪除{{value}}嗎？",
+    "ERROR": "錯誤",
     "EXISTED_ERROR": "{{value}}已存在！",
     "DONOT_EXIST_ERROR": "{{value}}不存在！",
     "DAY": {
@@ -79,6 +80,7 @@
     "DEACTIVATE_MESSAGE": "你確定要停用{{value}}嗎？",
     "ACTIVATE_TITLE": "啟用使用者",
     "ACTIVATE_MESSAGE": "你確定要啟用{{value}}嗎？",
+    "PERSONAL_SHIFTS_EXIST_ERROR": "使用者無法停用，請先解除以下的委派：\n\n{{value}}",
     "VALIDATION": {
       "USERNAME_EXISTED": "使用者名稱已存在"
     },
@@ -95,7 +97,8 @@
       "PHONE": "電話",
       "ADDRESS": "地址",
       "NOTE": "備註",
-      "PERMISSION": "權限"
+      "PERMISSION": "權限",
+      "ASSIGN": "委派"
     }
   },
   "CONGREGATIONS": {

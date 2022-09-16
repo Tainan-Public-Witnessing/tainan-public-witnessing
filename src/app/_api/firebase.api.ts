@@ -1,21 +1,21 @@
 import { Injectable } from '@angular/core';
 import { ApiInterface } from 'src/app/_api/api.interface';
 
-import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 
+import { firstValueFrom } from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { v4 as uuidv4, v5 as uuidv5 } from 'uuid';
+import { EXISTED_ERROR } from '../_classes/errors/EXISTED_ERROR';
 import { Congregation } from '../_interfaces/congregation.interface';
 import { PersonalShifts } from '../_interfaces/personal-shifts.interface';
 import { ShiftHours } from '../_interfaces/shift-hours.interface';
 import { Shift } from '../_interfaces/shift.interface';
 import { Site } from '../_interfaces/site.interface';
-import { UserKey, User } from '../_interfaces/user.interface';
-import { firstValueFrom } from 'rxjs';
-import { v5 as uuidv5, v4 as uuidv4 } from 'uuid';
-import { environment } from 'src/environments/environment';
 import { Statistic } from '../_interfaces/statistic.interface';
+import { User, UserKey } from '../_interfaces/user.interface';
 import { docExists as isDocExists, docsExists } from './firebase-helper';
-import { EXISTED_ERROR } from '../_classes/errors/EXISTED_ERROR';
 
 @Injectable({
   providedIn: 'root',
@@ -118,12 +118,85 @@ export class Api implements ApiInterface {
   };
 
   updateUserActivation = async (uuid: string, activate: boolean) => {
-    await Promise.all([
-      this.angularFirestore
-        .doc<UserKey>(`UserKeys/${uuid}`)
-        .update({ activate }),
-      this.angularFirestore.doc<User>(`Users/${uuid}`).update({ activate }),
-    ]);
+    const db = this.angularFirestore;
+    if (!activate) {
+      const userShifts = await fetchFutureShifts();
+      if (userShifts.length) return userShifts;
+    }
+
+    writeDatabase();
+    return [];
+
+    async function fetchFutureShifts() {
+      let userShifts: Shift[] = [];
+      let monthBeingChecked = new Date();
+
+      while (true) {
+        const currentYm = monthBeingChecked.toJSON().slice(0, 7);
+        monthBeingChecked.setMonth(monthBeingChecked.getMonth() + 1);
+
+        const userMontlyShifts = await fetchMontlyShift(currentYm);
+        if (!userMontlyShifts) break;
+
+        userShifts = userShifts.concat(userMontlyShifts);
+      }
+
+      if (userShifts.length === 0) return [];
+
+      const [sites, shiftHours] = (
+        await Promise.all([
+          db.collection<Site>('Sites').ref.get(),
+          db.collection<ShiftHours>('ShiftHours').ref.get(),
+        ])
+      ).map((snapshot) => snapshot.docs.map((doc) => doc.data())) as [
+        Site[],
+        ShiftHours[]
+      ];
+
+      return userShifts
+        .map((shift) => ({
+          date: shift.date,
+          hour: shiftHours.find((hour) => hour.uuid === shift.shiftHoursUuid)!,
+          site: sites.find((site) => site.uuid === shift.siteUuid)!,
+        }))
+        .filter(
+          (shift) =>
+            new Date(`${shift.date}T${shift.hour.startTime}:00.000`) >
+            new Date()
+        );
+    }
+
+    async function fetchMontlyShift(ym: string) {
+      const allShifts = db.doc(`/MonthlyData/${ym}`).collection('Shifts');
+      if (!(await docsExists(allShifts))) return undefined;
+
+      const userShifts = await db
+        .doc<PersonalShifts>(`MonthlyData/${ym}/PersonalShifts/${uuid}`)
+        .ref.get();
+
+      if (!userShifts.exists) return [];
+
+      const { shiftUuids } = userShifts.data()!;
+      if (!Array.isArray(shiftUuids) || shiftUuids.length === 0) return [];
+
+      return await Promise.all(
+        shiftUuids.map(
+          async (shiftUuid) =>
+            (
+              await db
+                .doc<Shift>(`/MonthlyData/${ym}/Shifts/${shiftUuid}`)
+                .ref.get()
+            ).data()!
+        )
+      );
+    }
+
+    function writeDatabase() {
+      return Promise.all([
+        db.doc<UserKey>(`UserKeys/${uuid}`).update({ activate }),
+        db.doc<User>(`Users/${uuid}`).update({ activate }),
+      ]);
+    }
   };
 
   readCongregations = (): Promise<Congregation[]> => {
