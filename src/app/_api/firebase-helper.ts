@@ -12,8 +12,8 @@ export async function docExists(
 }
 
 export async function docsExists(
-  ref: AngularFirestoreCollection<any>
+  collection: AngularFirestoreCollection<any>
 ): Promise<boolean> {
-  const snapshot = await ref.ref.get();
+  const snapshot = await firstValueFrom(collection.get());
   return !snapshot.empty;
 }
