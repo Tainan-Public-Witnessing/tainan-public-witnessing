@@ -60,7 +60,8 @@ export const USERS: User[] = [
     phone: '',
     address: '',
     note: '',
-    tagUuids: ['']
+    tagUuids: [''],
+    assign:true
   }, USER_KEYS[0]),
   Object.assign({
     name: 'Amanda Tsai',
@@ -74,7 +75,8 @@ export const USERS: User[] = [
     phone: '',
     address: '',
     note: '',
-    tagUuids: ['']
+    tagUuids: [''],
+    assign:true
   }, USER_KEYS[1]),
   Object.assign({
     name: 'Peter Tsai',
@@ -88,7 +90,8 @@ export const USERS: User[] = [
     phone: '',
     address: '',
     note: '',
-    tagUuids: ['']
+    tagUuids: [''],
+    assign:true
   }, USER_KEYS[2]),
   Object.assign({
     name: 'Rachel Tsai',
@@ -102,7 +105,8 @@ export const USERS: User[] = [
     phone: '',
     address: '',
     note: '',
-    tagUuids: ['']
+    tagUuids: [''],
+    assign:true
   }, USER_KEYS[3]),
 ];
 
