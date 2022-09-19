@@ -30,6 +30,7 @@ export class AuthorityService implements CanActivate {
     { url: 'users/:mode/:uuid?', permission: Permission.MANAGER },
     { url: `users/${Mode.CREATE}`, permission: Permission.ADMINISTRATOR },
     { url: 'users', permission: Permission.MANAGER },
+    { url: 'profile', permission: Permission.USER },
   ];
 
   constructor(

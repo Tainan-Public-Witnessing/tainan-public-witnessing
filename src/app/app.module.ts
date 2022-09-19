@@ -27,6 +27,7 @@ import { ShiftsComponent } from './shifts/shifts.component';
 import { UsersComponent } from './users/users.component';
 import { UserComponent } from './users/user/user.component';
 import { ConfirmDialogComponent } from './_elements/dialogs/confirm-dialog/confirm-dialog.component';
+import { ProfileComponent } from './profile/profile.component';
 
 // AoT requires an exported function for factories of translate module
 export function HttpLoaderFactory(http: HttpClient) {
@@ -49,6 +50,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     UsersComponent,
     UserComponent,
     ConfirmDialogComponent,
+    ProfileComponent,
   ],
   imports: [
     BrowserModule,

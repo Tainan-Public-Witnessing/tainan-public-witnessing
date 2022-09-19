@@ -115,6 +115,10 @@
     "DELETE_TITLE": "刪除標簽",
     "NAME_LABEL": "標簽名稱"
   },
+  "PROFILE": {
+    "TITLE": "個人檔案",
+    "SCHEDULE": "排班時間"
+  },
   "PROFILES": {
     "TITLE": "權限配置文件列表",
     "CREATE_TITLE": "新增權限配置文件",
