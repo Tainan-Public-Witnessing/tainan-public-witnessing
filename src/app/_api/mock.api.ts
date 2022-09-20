@@ -125,6 +125,7 @@ export class Api implements ApiInterface {
 
     const user = USERS.find((u) => u.uuid === uuid)!;
     user.activate = activate;
+    user.assign = activate;
     this.users = [...USERS];
 
     const userKey = USER_KEYS.find((uk) => uk.uuid === uuid)!;
