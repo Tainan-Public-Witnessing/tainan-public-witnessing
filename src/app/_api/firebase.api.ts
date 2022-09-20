@@ -194,7 +194,7 @@ export class Api implements ApiInterface {
     function writeDatabase() {
       return Promise.all([
         db.doc<UserKey>(`UserKeys/${uuid}`).update({ activate }),
-        db.doc<User>(`Users/${uuid}`).update({ activate }),
+        db.doc<User>(`Users/${uuid}`).update({ activate, assign: activate }),
       ]);
     }
   };
