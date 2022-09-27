@@ -75,12 +75,14 @@
     "CREATE_TITLE": "新增使用者",
     "EDIT_TITLE": "編輯使用者",
     "READ_TITLE": "使用者",
+    "PROFILE_TITLE": "個人檔案",
     "DEACTIVATED": "使用者已被停用",
     "DEACTIVATE_TITLE": "停用使用者",
     "DEACTIVATE_MESSAGE": "你確定要停用{{value}}嗎？",
     "ACTIVATE_TITLE": "啟用使用者",
     "ACTIVATE_MESSAGE": "你確定要啟用{{value}}嗎？",
     "PERSONAL_SHIFTS_EXIST_ERROR": "使用者無法停用，請先解除以下的委派：\n\n{{value}}",
+    "SCHEDULE_TITLE": "排班時間",
     "VALIDATION": {
       "USERNAME_EXISTED": "使用者名稱已存在"
     },
@@ -114,10 +116,6 @@
     "EDIT_TITLE": "編輯標簽",
     "DELETE_TITLE": "刪除標簽",
     "NAME_LABEL": "標簽名稱"
-  },
-  "PROFILE": {
-    "TITLE": "個人檔案",
-    "SCHEDULE": "排班時間"
   },
   "PROFILES": {
     "TITLE": "權限配置文件列表",

@@ -26,10 +26,13 @@
     "@ngx-translate/core": "^13.0.0",
     "@ngx-translate/http-loader": "^6.0.0",
     "ajv": "^6.12.6",
+    "autoprefixer": "^10.4.12",
     "firebase": "^9.8.2",
     "moment": "^2.29.1",
     "ngx-cookie-service": "^14.0.0",
+    "postcss": "^8.4.16",
     "rxjs": "^7.5.5",
+    "tailwindcss": "^3.1.8",
     "tslib": "^2.0.0",
     "uuid": "^8.3.2",
     "zone.js": "~0.11.4"

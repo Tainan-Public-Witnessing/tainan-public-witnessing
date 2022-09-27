@@ -99,7 +99,9 @@
       "PERMISSION": "Permission",
       "ASSIGN": "Assign"
     },
-    "PERSONAL_SHIFTS_EXIST_ERROR": "Can not deactivate user! Please cancel the following assignments first:\n\n{{value}}"
+    "PERSONAL_SHIFTS_EXIST_ERROR": "Can not deactivate user! Please cancel the following assignments first:\n\n{{value}}",
+    "PROFILE_TITLE": "Profile",
+    "SCHEDULE": "Schedule"
   },
   "CONGREGATIONS": {
     "TITLE": "Congregations",

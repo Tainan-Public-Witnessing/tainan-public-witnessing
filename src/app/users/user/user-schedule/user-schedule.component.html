@@ -1,0 +1,18 @@
+<div class="title-bar">
+  <h1>{{ "USERS.SCHEDULE_TITLE" | translate }}</h1>
+</div>
+<mat-card>
+  <form (submit)="onSave()">
+    <app-user-schedule-hours-table
+      [data]="hoursData"
+      [hours]="shiftHours"
+      (change)="hoursData = $event"
+    ></app-user-schedule-hours-table>
+
+    <div class="text-right mt-4">
+      <button mat-raised-button color="primary" type="submit">
+        {{ "GLOBAL.SUBMIT" | translate }}
+      </button>
+    </div>
+  </form>
+</mat-card>

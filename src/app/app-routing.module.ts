@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from 'src/app/home/home.component';
 import { PersonalShiftComponent } from './personal-shift/personal-shift.component';
-import { ProfileComponent } from './profile/profile.component';
 import { ShiftsComponent } from './shifts/shifts.component';
 import { UserComponent } from './users/user/user.component';
 import { UsersComponent } from './users/users.component';
@@ -34,8 +33,8 @@ const routes: Routes = [
   },
   {
     path: 'profile',
-    component: ProfileComponent,
-    canActivate: [AuthorityService]
+    component: UserComponent,
+    canActivate: [AuthorityService],
   },
   { path: '**', redirectTo: 'home' },
 ];

@@ -16,6 +16,7 @@ import { Site } from '../_interfaces/site.interface';
 import { Statistic } from '../_interfaces/statistic.interface';
 import { User, UserKey } from '../_interfaces/user.interface';
 import { docExists as isDocExists, docsExists } from './firebase-helper';
+import { SiteShifts } from '../_interfaces/site-shifts.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -101,6 +102,8 @@ export class Api implements ApiInterface {
       uuid + this.mailSuffix,
       uuidv5(user.baptizeDate.replace(/-/g, ''), environment.UUID_NAMESPACE)
     );
+
+    return uuid;
   };
 
   patchUser = async (user: Omit<User, 'activate'>) => {
@@ -400,5 +403,12 @@ export class Api implements ApiInterface {
         ['MonthlyData', yearMonth, 'Statistics', statistic.uuid].join('/')
       )
       .update(statistic);
+  };
+
+  readSiteShifts = async () => {
+    const snapshots = await this.angularFirestore
+      .collection<SiteShifts>('SiteShifts')
+      .ref.get();
+    return snapshots.docs.map((snapshot) => snapshot.data());
   };
 }

@@ -5,6 +5,7 @@ import { ShiftHours } from '../_interfaces/shift-hours.interface';
 import { Shift } from '../_interfaces/shift.interface';
 import { PersonalShifts } from '../_interfaces/personal-shifts.interface';
 import { Statistic } from '../_interfaces/statistic.interface';
+import { SiteShifts } from '../_interfaces/site-shifts.interface';
 
 export interface ApiInterface {
   login: (uuid: string, password: string) => Promise<void>;
@@ -13,7 +14,11 @@ export interface ApiInterface {
   readUserKeys: () => Promise<UserKey[]>;
 
   readUser: (uuid: string) => Promise<User>;
-  createUser: (user: Omit<User, 'uuid' | 'activate'>) => Promise<void>;
+  /**
+   * create new user and return its uuid
+   * @return {string} new user uuid
+   */
+  createUser: (user: Omit<User, 'uuid' | 'activate'>) => Promise<string>;
   patchUser: (user: Omit<User, 'activate'>) => Promise<void>;
   updateUserActivation: (
     uuid: string,
@@ -51,4 +56,6 @@ export interface ApiInterface {
   readStatistic: (yearMonth: string, uuid: string) => Promise<Statistic>;
   createStatistic: (statistic: Statistic) => Promise<void>;
   updateStatistic: (statistic: Statistic) => Promise<void>;
+
+  readSiteShifts: () => Promise<SiteShifts[]>;
 }

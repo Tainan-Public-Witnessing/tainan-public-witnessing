@@ -18,6 +18,7 @@ import {
   SHIFTS,
   SHIFT_HOURS_LIST,
   SITES,
+  SITE_SHIFTS,
   STATISTICS,
   USERS,
   USER_KEYS,
@@ -78,7 +79,7 @@ export class Api implements ApiInterface {
     const uuid = uuidv4();
     USERS.push({ ...user, activate: true, uuid });
     USER_KEYS.push({ uuid, activate: true, username: user.username });
-    return this.delayReturn();
+    return this.delayReturn().then(() => uuid);
   };
 
   patchUser = (user: Omit<User, 'activate'>) => {
@@ -304,6 +305,10 @@ export class Api implements ApiInterface {
     } else {
       return this.delayReturn().then(() => Promise.reject());
     }
+  };
+
+  readSiteShifts = () => {
+    return this.delayReturn().then(() => SITE_SHIFTS);
   };
 
   private delayReturn = (): Promise<void> => {
