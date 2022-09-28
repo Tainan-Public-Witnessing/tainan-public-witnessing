@@ -13,7 +13,7 @@
       [disabled]="disabled || !(requireAdmin$ | async)"
       [checked]="schedulingConfig.assign"
       (change)="schedulingConfig.assign = !schedulingConfig.assign"
-      >委派</mat-slide-toggle
+      >{{ "USERS.LABEL.ASSIGN" | translate }}</mat-slide-toggle
     >
     <mat-icon
       *ngIf="!(requireAdmin$ | async)"
@@ -25,7 +25,7 @@
   </div>
   <div *ngIf="requireAdmin$ | async">
     <mat-form-field class="w-full">
-      <mat-label>同伴</mat-label>
+      <mat-label>{{ "USERS.LABEL.PARTNER" | translate }}</mat-label>
       <input
         matInput
         [ngModel]="partnerInput$ | async"
