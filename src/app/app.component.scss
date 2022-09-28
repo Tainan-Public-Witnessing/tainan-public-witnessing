@@ -34,10 +34,10 @@
 
       div {
         width: 100%;
-        max-width: $page-max-width;
         min-width: $page-min-width;
         height: calc(100% - 32px);
-        padding: 16px 16px 0 16px;
+        padding: 0 calc((100% - $page-max-width) / 2);
+        padding-bottom: 16px;
         overflow: auto;
       }
     }
