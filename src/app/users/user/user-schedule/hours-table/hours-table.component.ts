@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { ShiftHours } from 'src/app/_interfaces/shift-hours.interface';
-import { UserScheduleDayData } from 'src/app/_interfaces/user-schedule-hours.interface';
+import { UserScheduleDayData } from 'src/app/_interfaces/user-schedule.interface';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -33,7 +33,12 @@ export class HoursTableComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.hours && changes.hours.currentValue) {
-      this.displayedCols = ['day', ...this.hours.map((h) => h.uuid)];
+      this.displayedCols = [
+        'day',
+        ...this.hours
+          .sort((a, b) => a.startTime.localeCompare(b.startTime))
+          .map((h) => h.uuid),
+      ];
     }
   }
 

@@ -10,6 +10,7 @@ import { ShiftHours } from '../_interfaces/shift-hours.interface';
 import { Shift } from '../_interfaces/shift.interface';
 import { Site } from '../_interfaces/site.interface';
 import { Statistic } from '../_interfaces/statistic.interface';
+import { UserSchedule } from '../_interfaces/user-schedule.interface';
 import { User, UserKey } from '../_interfaces/user.interface';
 import {
   ACCOUNTS,
@@ -22,6 +23,7 @@ import {
   STATISTICS,
   USERS,
   USER_KEYS,
+  USER_SCHEDULE_CONFIGS,
 } from './mock-data';
 
 @Injectable({
@@ -308,7 +310,26 @@ export class Api implements ApiInterface {
   };
 
   readSiteShifts = () => {
+    console.log('mock api readSiteShifts');
     return this.delayReturn().then(() => SITE_SHIFTS);
+  };
+
+  readUserSchedule = async (userUuid: string) => {
+    console.log('mock api readUserSchedule', { userUuid });
+    await this.delayReturn();
+    return USER_SCHEDULE_CONFIGS[userUuid];
+  };
+
+  patchUserSchedule = async (
+    userUuid: string,
+    data: Partial<UserSchedule>
+  ) => {
+    console.log('mock api patchUserSchedule', { userUuid, data });
+    USER_SCHEDULE_CONFIGS[userUuid] = {
+      ...USER_SCHEDULE_CONFIGS[userUuid],
+      ...data,
+    };
+    await this.delayReturn();
   };
 
   private delayReturn = (): Promise<void> => {

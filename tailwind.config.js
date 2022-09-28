@@ -8,6 +8,11 @@ module.exports = {
       md: '960px',
       lg: '1280px',
       xl: '1920px',
+    },
+    colors: {
+      primary: '#3f51b5',
+      accent: '#9e9e9e',
+      warn: '#f44336'
     }
   },
   plugins: [],

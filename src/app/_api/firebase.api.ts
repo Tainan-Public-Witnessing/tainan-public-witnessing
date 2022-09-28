@@ -17,6 +17,7 @@ import { Statistic } from '../_interfaces/statistic.interface';
 import { User, UserKey } from '../_interfaces/user.interface';
 import { docExists as isDocExists, docsExists } from './firebase-helper';
 import { SiteShifts } from '../_interfaces/site-shifts.interface';
+import { UserSchedule } from '../_interfaces/user-schedule.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -410,5 +411,28 @@ export class Api implements ApiInterface {
       .collection<SiteShifts>('SiteShifts')
       .ref.get();
     return snapshots.docs.map((snapshot) => snapshot.data());
+  };
+
+  readUserSchedule = async (userUuid: string) => {
+    const snapshot = await this.angularFirestore
+      .doc<UserSchedule>(`Users/${userUuid}/Schedule/config`)
+      .ref.get();
+
+    return (
+      snapshot.data() || {
+        availableHours: {},
+        unavailableDates: [],
+        partnerUuid: '',
+        assign: true,
+      }
+    );
+  };
+  patchUserSchedule = async (
+    userUuid: string,
+    data: Partial<UserSchedule>
+  ) => {
+    await this.angularFirestore
+      .doc(`Users/${userUuid}/Schedule/config`)
+      .update(data);
   };
 }

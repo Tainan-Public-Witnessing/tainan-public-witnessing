@@ -1,6 +1,8 @@
 <table mat-table [dataSource]="data" class="w-full">
   <ng-container matColumnDef="day">
-    <th mat-header-cell *matHeaderCellDef></th>
+    <th mat-header-cell *matHeaderCellDef>
+      <h4 class="text-sm">可參與時段與次數</h4>
+    </th>
     <td mat-cell *matCellDef="let row">
       {{ "GLOBAL.DAY." + weekdayNames[row.day] | translate }}
     </td>

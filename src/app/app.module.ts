@@ -30,6 +30,9 @@ import { ShiftTableComponent } from './_elements/shift-table/shift-table.compone
 import { UserDataComponent } from './users/user/user-data/user-data.component';
 import { UserScheduleComponent } from './users/user/user-schedule/user-schedule.component';
 import { HoursTableComponent } from './users/user/user-schedule/hours-table/hours-table.component';
+import { CalendarHeaderComponent } from './users/user/user-schedule/calendar-header/calendar-header.component';
+import { ForceRefreshDirective } from './_directives/force-refresh.directive';
+import { ArrayFilterPipe } from './_pipes/array-filter.pipe';
 
 // AoT requires an exported function for factories of translate module
 export function HttpLoaderFactory(http: HttpClient) {
@@ -55,6 +58,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     UserDataComponent,
     UserScheduleComponent,
     HoursTableComponent,
+    CalendarHeaderComponent,
+    ForceRefreshDirective,
+    ArrayFilterPipe,
   ],
   imports: [
     BrowserModule,

@@ -6,6 +6,7 @@ import { Shift } from '../_interfaces/shift.interface';
 import { PersonalShifts } from '../_interfaces/personal-shifts.interface';
 import { Statistic } from '../_interfaces/statistic.interface';
 import { SiteShifts } from '../_interfaces/site-shifts.interface';
+import { UserSchedule } from '../_interfaces/user-schedule.interface';
 
 export interface ApiInterface {
   login: (uuid: string, password: string) => Promise<void>;
@@ -58,4 +59,10 @@ export interface ApiInterface {
   updateStatistic: (statistic: Statistic) => Promise<void>;
 
   readSiteShifts: () => Promise<SiteShifts[]>;
+
+  readUserSchedule: (userUuid: string) => Promise<UserSchedule>;
+  patchUserSchedule: (
+    userUuid: string,
+    data: Partial<UserSchedule>
+  ) => Promise<void>;
 }

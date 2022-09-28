@@ -9,6 +9,7 @@ import { Statistic } from 'src/app/_interfaces/statistic.interface';
 import { User, UserKey } from 'src/app/_interfaces/user.interface';
 import * as moment from 'moment';
 import { SiteShifts } from '../_interfaces/site-shifts.interface';
+import { UserSchedule } from '../_interfaces/user-schedule.interface';
 
 const nowDate = moment();
 
@@ -69,7 +70,6 @@ export const USERS: User[] = [
       address: '',
       note: '',
       tagUuids: [''],
-      assign: true,
     },
     USER_KEYS[0]
   ),
@@ -87,7 +87,6 @@ export const USERS: User[] = [
       address: '',
       note: '',
       tagUuids: [''],
-      assign: true,
     },
     USER_KEYS[1]
   ),
@@ -105,7 +104,6 @@ export const USERS: User[] = [
       address: '',
       note: '',
       tagUuids: [''],
-      assign: true,
     },
     USER_KEYS[2]
   ),
@@ -123,7 +121,6 @@ export const USERS: User[] = [
       address: '',
       note: '',
       tagUuids: [''],
-      assign: true,
     },
     USER_KEYS[3]
   ),
@@ -274,3 +271,39 @@ export const SITE_SHIFTS: SiteShifts[] = [
     weekday: 2,
   },
 ];
+
+export const USER_SCHEDULE_CONFIGS: { [userUuid: string]: UserSchedule } = {
+  [USERS[0].uuid]: {
+    unavailableDates: [],
+    assign: true,
+    partnerUuid: '',
+    availableHours: {
+      '0': {
+        [SHIFT_HOURS_LIST[0].uuid]: 3,
+      },
+    },
+  },
+  [USERS[1].uuid]: {
+    unavailableDates: [],
+    assign: true,
+    partnerUuid: '',
+    availableHours: {
+      '3': {
+        [SHIFT_HOURS_LIST[0].uuid]: 3,
+      },
+      '1': {
+        [SHIFT_HOURS_LIST[1].uuid]: 1,
+      },
+    },
+  },
+  [USERS[2].uuid]: {
+    unavailableDates: [],
+    assign: true,
+    partnerUuid: '',
+    availableHours: {
+      '4': {
+        [SHIFT_HOURS_LIST[0].uuid]: 3,
+      },
+    },
+  },
+};
