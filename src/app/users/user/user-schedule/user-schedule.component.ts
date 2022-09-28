@@ -1,3 +1,4 @@
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import {
   Component,
   Input,
@@ -63,15 +64,18 @@ export class UserScheduleComponent implements OnInit, OnDestroy, OnChanges {
   userKeys$ = new BehaviorSubject<UserKey[]>([]);
   partnerInput$ = new BehaviorSubject<string>('');
   partnerOptions$ = new BehaviorSubject<UserKey[]>([]);
+  isXsScreen$ = new BehaviorSubject<boolean>(false);
   schedulingRange = this.getNextSchedulingRange();
   calendarHeader = CalendarHeaderComponent;
+
   constructor(
     private siteShiftsService: SiteShiftService,
     private shiftHoursService: ShiftHoursService,
     private authorityService: AuthorityService,
     private userScheduleService: UserScheduleService,
     private userService: UsersService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private breakPointObserver: BreakpointObserver
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -93,6 +97,14 @@ export class UserScheduleComponent implements OnInit, OnDestroy, OnChanges {
         map((data) => data || [])
       )
       .subscribe(this.userKeys$);
+
+    const targetSize = Breakpoints.XSmall;
+    this.breakPointObserver
+      .observe(targetSize)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((state) =>
+        this.isXsScreen$.next(state.matches)
+      );
 
     combineLatest([
       this.userKeys$.pipe(

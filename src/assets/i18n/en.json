@@ -82,8 +82,8 @@
     "ACTIVATE_MESSAGE": "Are you sure to activate user {{value}}",
     "VALIDATION": {
       "USERNAME_EXISTED": "User name already existed!",
-      "UNAVAILABLE_DATES_ALL_SELECTED": "Can not select all the dates. If you are unavailable for next month please contact the committee",
-      "AVAILABLE_HOURS_EMPTY": "Pleast select at least one shift hour. If you are unavailable for next month please contact the committee",
+      "UNAVAILABLE_DATES_ALL_SELECTED": "Cannot select entire month. If you are unavailable please contact the committee.",
+      "AVAILABLE_HOURS_EMPTY": "Please select at least one shift. If you are unavailable please contact the committee.",
       "PARTNER_NOT_FOUND": "User does not exist"
     },
     "LABEL": {

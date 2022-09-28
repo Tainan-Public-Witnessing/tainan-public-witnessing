@@ -48,12 +48,22 @@
   </div>
 
   <div class="mt-4">
-    <app-user-schedule-hours-table
+    <app-user-schedule-hours-list
+      *ngIf="isXsScreen$ | async; else table"
       [disabled]="disabled || !schedulingConfig.assign"
       [data]="schedulingConfig.availableHours"
       [hours]="shiftHours"
       (change)="schedulingConfig.availableHours = $event"
-    ></app-user-schedule-hours-table>
+    >
+    </app-user-schedule-hours-list>
+    <ng-template #table>
+      <app-user-schedule-hours-table
+        [disabled]="disabled || !schedulingConfig.assign"
+        [data]="schedulingConfig.availableHours"
+        [hours]="shiftHours"
+        (change)="schedulingConfig.availableHours = $event"
+      ></app-user-schedule-hours-table>
+    </ng-template>
     <mat-hint class="text-warn" *ngIf="validationErrors">{{
       validationErrors.availableHours
     }}</mat-hint>
