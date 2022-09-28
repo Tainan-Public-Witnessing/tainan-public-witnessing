@@ -15,6 +15,13 @@
       (change)="schedulingConfig.assign = !schedulingConfig.assign"
       >委派</mat-slide-toggle
     >
+    <mat-icon
+      *ngIf="!(requireAdmin$ | async)"
+      class="align-bottom ml-2"
+      color="accent"
+      [matTooltip]="'USERS.ASSIGN_MESSAGE' | translate"
+      >lock</mat-icon
+    >
   </div>
   <div *ngIf="requireAdmin$ | async">
     <mat-form-field class="w-full">
