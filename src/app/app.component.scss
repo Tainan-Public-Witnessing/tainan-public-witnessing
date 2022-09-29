@@ -33,11 +33,13 @@
       justify-content: center;
 
       div {
+        $padding: 16px;
+
         width: 100%;
         min-width: $page-min-width;
         height: calc(100% - 32px);
-        padding: 0 calc((100% - $page-max-width) / 2);
-        padding-bottom: 16px;
+        padding: 0 calc(max($padding, (100% - $page-max-width) / 2));
+        padding-bottom: $padding;
         overflow: auto;
       }
     }
