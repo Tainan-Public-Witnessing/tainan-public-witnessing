@@ -8,6 +8,7 @@ import {
   SimpleChanges,
   ViewEncapsulation,
 } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import * as moment from 'moment';
 import { Moment } from 'moment';
@@ -75,7 +76,8 @@ export class UserScheduleComponent implements OnInit, OnDestroy, OnChanges {
     private userScheduleService: UserScheduleService,
     private userService: UsersService,
     private translateService: TranslateService,
-    private breakPointObserver: BreakpointObserver
+    private breakPointObserver: BreakpointObserver,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -200,7 +202,7 @@ export class UserScheduleComponent implements OnInit, OnDestroy, OnChanges {
     this.partnerInput$.next(this.schedulingConfig.partnerUuid);
   }
 
-  onSave = () => {
+  onSave = async () => {
     this.validationErrors = this.validateData();
     if (!this.validationErrors) {
       const saveData: UserSchedule = {
@@ -228,7 +230,8 @@ export class UserScheduleComponent implements OnInit, OnDestroy, OnChanges {
         saveData.availableHours[day as any as '0'] = data;
       }
 
-      this.userScheduleService.patchUserSchedule(this.uuid, saveData);
+      await this.userScheduleService.patchUserSchedule(this.uuid, saveData);
+      this.snackBar.open(this.translateService.instant('GLOBAL.SAVED'));
     }
   };
 

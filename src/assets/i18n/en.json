@@ -22,7 +22,8 @@
       "FRIDAY": "Friday",
       "SATURDAY": "Saturday"
     },
-    "ERROR": "Error"
+    "ERROR": "Error",
+    "SAVED": "Saved!"
   },
   "GENDER": {
     "MALE": "Male",

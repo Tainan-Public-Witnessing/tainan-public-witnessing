@@ -7,7 +7,9 @@ import {
 } from '@angular/core';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { EXISTED_ERROR } from 'src/app/_classes/errors/EXISTED_ERROR';
@@ -47,6 +49,8 @@ export class UserDataComponent implements OnInit, OnDestroy, OnChanges {
     private congregationsService: CongregationsService,
     private authorityService: AuthorityService,
     // private tagService: TagsService,
+    private translateService: TranslateService,
+    private snackBar: MatSnackBar,
     public usersService: UsersService
   ) {
     this.userForm = formBuilder.group({
@@ -132,6 +136,7 @@ export class UserDataComponent implements OnInit, OnDestroy, OnChanges {
           });
           this.router.navigate(['/users']);
         }
+        this.snackBar.open(this.translateService.instant('GLOBAL.SAVED'));
       } catch (err) {
         console.log('reason', err);
         if (err instanceof EXISTED_ERROR) {
