@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { User, UserKey } from 'src/app/_interfaces/user.interface';
 import { Api } from 'src/app/_api/mock.api';
+import { User, UserKey } from 'src/app/_interfaces/user.interface';
 
 @Injectable({
   providedIn: 'root',

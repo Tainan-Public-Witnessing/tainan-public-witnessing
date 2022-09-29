@@ -16,14 +16,16 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { A11yModule } from '@angular/cdk/a11y';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { LayoutModule } from '@angular/cdk/layout';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { CdkTableModule } from '@angular/cdk/table';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
-
 @NgModule({
   declarations: [],
   imports: [CommonModule],
@@ -43,12 +45,15 @@ import { MatMomentDateModule } from '@angular/material-moment-adapter';
     MatSidenavModule,
     MatSlideToggleModule,
     MatSnackBarModule,
+    MatTableModule,
+    CdkTableModule,
     MatToolbarModule,
     MatTooltipModule,
     MatMomentDateModule,
     DragDropModule,
     ScrollingModule,
     A11yModule,
+    LayoutModule,
   ],
 })
 export class AngularMaterialModule {}

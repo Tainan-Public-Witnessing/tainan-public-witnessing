@@ -1,0 +1,20 @@
+@use '@angular/material' as mat;
+@import 'src/styles.scss';
+@import 'src/app/_styles/global';
+
+$palettes: mat.get-color-config($TainanPublicWitnessing-theme);
+$warn-palette: map-get($palettes, 'warn');
+
+app-user-schedule {
+  mat-calendar {
+    td.mat-calendar-body-cell-container
+      > button.mat-calendar-body-cell.selected {
+      &,
+      &:hover {
+        div.mat-calendar-body-cell-content.mat-focus-indicator {
+          background-color: map-get($warn-palette, 'text');
+        }
+      }
+    }
+  }
+}
