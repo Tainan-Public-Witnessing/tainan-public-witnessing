@@ -105,24 +105,23 @@ export class Api implements ApiInterface {
         (userShift) => userShift.uuid === uuid
       );
       if (userShifts && Array.isArray(userShifts.shiftUuids)) {
-        return this.delayReturn().then(() =>
-          userShifts.shiftUuids
-            .map(
-              (shiftUuid) => SHIFTS.find((shift) => shift.uuid === shiftUuid)!
-            )
-            .map((shift) => ({
-              date: shift.date,
-              hour: SHIFT_HOURS_LIST.find(
-                (hour) => hour.uuid === shift.shiftHoursUuid
-              )!,
-              site: SITES.find((site) => site.uuid === shift.siteUuid)!,
-            }))
-            .filter(
-              (shift) =>
-                new Date(`${shift.date}T${shift.hour.startTime}:00.000`) >
-                new Date()
-            )
-        );
+        const futureShifts = userShifts.shiftUuids
+          .map((shiftUuid) => SHIFTS.find((shift) => shift.uuid === shiftUuid)!)
+          .map((shift) => ({
+            date: shift.date,
+            hour: SHIFT_HOURS_LIST.find(
+              (hour) => hour.uuid === shift.shiftHoursUuid
+            )!,
+            site: SITES.find((site) => site.uuid === shift.siteUuid)!,
+          }))
+          .filter(
+            (shift) =>
+              new Date(`${shift.date}T${shift.hour.startTime}:00.000`) >
+              new Date()
+          );
+        if (futureShifts.length > 0) {
+          return this.delayReturn().then(() => futureShifts);
+        }
       }
     }
 
@@ -133,6 +132,10 @@ export class Api implements ApiInterface {
     const userKey = USER_KEYS.find((uk) => uk.uuid === uuid)!;
     userKey.activate = activate;
     this.userKeys = [...USER_KEYS];
+
+    if (USER_SCHEDULE_CONFIGS[uuid]) {
+      USER_SCHEDULE_CONFIGS[uuid].assign = activate;
+    }
 
     return this.delayReturn().then(() => []);
   };
@@ -320,10 +323,7 @@ export class Api implements ApiInterface {
     return USER_SCHEDULE_CONFIGS[userUuid];
   };
 
-  patchUserSchedule = async (
-    userUuid: string,
-    data: Partial<UserSchedule>
-  ) => {
+  patchUserSchedule = async (userUuid: string, data: Partial<UserSchedule>) => {
     console.log('mock api patchUserSchedule', { userUuid, data });
     USER_SCHEDULE_CONFIGS[userUuid] = {
       ...USER_SCHEDULE_CONFIGS[userUuid],

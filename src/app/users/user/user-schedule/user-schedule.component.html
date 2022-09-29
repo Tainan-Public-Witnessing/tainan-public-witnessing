@@ -1,10 +1,19 @@
 <div class="title-bar">
-  <h1>
+  <div>
+    <h1>
+      {{
+        "USERS.SCHEDULE_TITLE"
+          | translate
+            : { value: schedulingRange.start.toDate() | date: "YYYY-MM" }
+      }}
+    </h1>
+    <h4 class="-mt-7">
     {{
-      "USERS.SCHEDULE_TITLE"
-        | translate: { value: schedulingRange.start.toDate() | date: "YYYY-MM" }
+      "USERS.SCHEDULE_UPDATE_DEADLINE"
+        | translate: { value: schedulingRange.adjustEnd.toDate() | date: 'YYYY-MM-dd hh:mm aa' }
     }}
-  </h1>
+    </h4>
+  </div>
 </div>
 <mat-card>
   <div>

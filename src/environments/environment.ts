@@ -5,12 +5,21 @@
 export const environment = {
   production: false,
   UUID_NAMESPACE: '7b921192-c856-5152-8444-bb08b1efac9b',
-  TAINAN_PUBLIC_WITNESSING_PERMISSION_TOKEN: '3c8ec6c4-7a3b-43a6-82af-0d243d6a7fc7',
-  DAY: ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY','SUNDAY'],
+  TAINAN_PUBLIC_WITNESSING_PERMISSION_TOKEN:
+    '3c8ec6c4-7a3b-43a6-82af-0d243d6a7fc7',
+  DAY: [
+    'SUNDAY',
+    'MONDAY',
+    'TUESDAY',
+    'WEDNESDAY',
+    'THURSDAY',
+    'FRIDAY',
+    'SATURDAY',
+  ],
   MOMENT_LOCALES: {
     ['en']: 'en',
     ['zh']: 'zh-tw',
-  }
+  },
 };
 
 /*

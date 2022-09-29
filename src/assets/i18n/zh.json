@@ -84,6 +84,7 @@
     "PERSONAL_SHIFTS_EXIST_ERROR": "使用者無法停用，請先解除以下的委派：\n\n{{value}}",
     "SCHEDULE_TITLE": "{{value}} 排班時間",
     "ASSIGN_MESSAGE": "此欄位由委員會管理，如果您無法參與排班，請與委員會連絡",
+    "SCHEDULE_UPDATE_DEADLINE": "調整截止日期：{{value}}",
     "VALIDATION": {
       "USERNAME_EXISTED": "使用者名稱已存在",
       "UNAVAILABLE_DATES_ALL_SELECTED": "請不要全部選取，如果您無法參與排班，請與委員會連絡",
