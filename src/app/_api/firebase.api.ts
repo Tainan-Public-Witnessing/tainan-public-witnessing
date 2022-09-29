@@ -199,6 +199,9 @@ export class Api implements ApiInterface {
       return Promise.all([
         db.doc<UserKey>(`UserKeys/${uuid}`).update({ activate }),
         db.doc<User>(`Users/${uuid}`).update({ activate }),
+        db
+          .doc<UserSchedule>(`Users/${uuid}/Schedule/config`)
+          .update({ assign: activate }),
       ]);
     }
   };
@@ -427,10 +430,7 @@ export class Api implements ApiInterface {
       }
     );
   };
-  patchUserSchedule = async (
-    userUuid: string,
-    data: Partial<UserSchedule>
-  ) => {
+  patchUserSchedule = async (userUuid: string, data: Partial<UserSchedule>) => {
     await this.angularFirestore
       .doc(`Users/${userUuid}/Schedule/config`)
       .update(data);

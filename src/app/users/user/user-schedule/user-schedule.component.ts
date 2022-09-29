@@ -102,9 +102,7 @@ export class UserScheduleComponent implements OnInit, OnDestroy, OnChanges {
     this.breakPointObserver
       .observe(targetSize)
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((state) =>
-        this.isXsScreen$.next(state.matches)
-      );
+      .subscribe((state) => this.isXsScreen$.next(state.matches));
 
     combineLatest([
       this.userKeys$.pipe(
@@ -149,7 +147,10 @@ export class UserScheduleComponent implements OnInit, OnDestroy, OnChanges {
     end.add(1, 'month');
     end.subtract(1, 'day');
 
-    return { start, end };
+    const adjustEnd = moment(start);
+    adjustEnd.subtract(1, 'month');
+    adjustEnd.set({ date: 16, hour: 0, minute: 0, second: 0, millisecond: 0 });
+    return { start, end, adjustEnd };
   }
 
   async loadEditingData(userUuid: string) {
@@ -226,11 +227,6 @@ export class UserScheduleComponent implements OnInit, OnDestroy, OnChanges {
         }
         saveData.availableHours[day as any as '0'] = data;
       }
-
-      const now = moment();
-      saveData.unavailableDates = saveData.unavailableDates.filter((date) =>
-        moment(date).isBefore(now)
-      );
 
       this.userScheduleService.patchUserSchedule(this.uuid, saveData);
     }
