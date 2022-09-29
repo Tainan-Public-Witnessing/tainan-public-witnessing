@@ -97,6 +97,9 @@ export class Api implements ApiInterface {
         activate: true,
         username: user.username,
       }),
+      this.angularFirestore
+        .doc<UserSchedule>(`Users/${uuid}/Schedule/config`)
+        .set(this.#EMPTY_USER_SCHEDULE),
     ]);
 
     await this.angularFireAuth.createUserWithEmailAndPassword(
@@ -416,19 +419,19 @@ export class Api implements ApiInterface {
     return snapshots.docs.map((snapshot) => snapshot.data());
   };
 
+  readonly #EMPTY_USER_SCHEDULE: UserSchedule = {
+    availableHours: {},
+    unavailableDates: [],
+    partnerUuid: '',
+    assign: true,
+  };
+
   readUserSchedule = async (userUuid: string) => {
     const snapshot = await this.angularFirestore
       .doc<UserSchedule>(`Users/${userUuid}/Schedule/config`)
       .ref.get();
 
-    return (
-      snapshot.data() || {
-        availableHours: {},
-        unavailableDates: [],
-        partnerUuid: '',
-        assign: true,
-      }
-    );
+    return snapshot.data() || this.#EMPTY_USER_SCHEDULE;
   };
   patchUserSchedule = async (userUuid: string, data: Partial<UserSchedule>) => {
     await this.angularFirestore
