@@ -81,6 +81,12 @@ export class Api implements ApiInterface {
     const uuid = uuidv4();
     USERS.push({ ...user, activate: true, uuid });
     USER_KEYS.push({ uuid, activate: true, username: user.username });
+    USER_SCHEDULE_CONFIGS[uuid] = {
+      availableHours: {},
+      unavailableDates: [],
+      partnerUuid: '',
+      assign: true,
+    };
     return this.delayReturn().then(() => uuid);
   };
 

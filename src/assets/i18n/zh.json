@@ -14,6 +14,7 @@
     "ERROR": "錯誤",
     "EXISTED_ERROR": "{{value}}已存在！",
     "DONOT_EXIST_ERROR": "{{value}}不存在！",
+    "SAVED": "儲存成功！",
     "DAY": {
       "SUNDAY": "週日",
       "MONDAY": "週一",
