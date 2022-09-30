@@ -299,7 +299,7 @@ export const USER_SCHEDULE_CONFIGS: { [userUuid: string]: UserSchedule } = {
   [USERS[2].uuid]: {
     unavailableDates: [],
     assign: true,
-    partnerUuid: '',
+    partnerUuid: '73783509-ecf4-4522-924b-c782d41fb95c',
     availableHours: {
       '4': {
         [SHIFT_HOURS_LIST[0].uuid]: 3,
