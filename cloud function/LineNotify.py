@@ -5,23 +5,22 @@ from firebase_admin import credentials
 from firebase_admin import firestore
 import os
 
+def LineNotify(text):
+    token=os.getenv('token')
+    url='https://notify-api.line.me/api/notify'
+    headers={
+        'Authorization':f'Bearer {token}'
+    }
+    data={
+        'message':text
+    }
+    return requests.post(url,headers=headers,data=data)
+
 def vacancyNotify(event, context):
     cred = credentials.ApplicationDefault()
     firebase_admin.initialize_app(cred)
     db = firestore.client()
     
-
-    def LineNotify(text):
-        token=os.getenv('token')
-        url='https://notify-api.line.me/api/notify'
-        headers={
-            'Authorization':f'Bearer {token}'
-        }
-        data={
-            'message':text
-        }
-        return requests.post(url,headers=headers,data=data)
-
     tomorrow=datetime.today()+timedelta(days=1)
     tomorrow_str=tomorrow.strftime('%Y-%m-%d')
     if tomorrow.isoweekday()==7:
@@ -30,13 +29,13 @@ def vacancyNotify(event, context):
         weekday=tomorrow.isoweekday()
     todaySiteShifts=db.collection('SiteShifts').where('weekday','==',weekday).stream()
     weekdayToChi={
-        0:'一',
-        1:'二',
-        2:'三',
-        3:'四',
-        4:'五',
-        5:'六',
-        6:'日',
+        0:'日',
+        1:'一',
+        2:'二',
+        3:'三',
+        4:'四',
+        5:'五',
+        6:'六',
     }
     hours={}
     for hour in todaySiteShifts:
