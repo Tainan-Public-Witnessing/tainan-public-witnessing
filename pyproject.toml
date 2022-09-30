@@ -8,9 +8,10 @@ authors = ["xellosiris <xellosiris@gmail.com>"]
 python = "^3.10"
 firebase-admin = "^5.4.0"
 pandas = "^1.5.0"
-line-bot-sdk = "^2.3.0"
+requests = "^2.28.1"
 
 [tool.poetry.dev-dependencies]
+ipykernel = "^6.16.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
