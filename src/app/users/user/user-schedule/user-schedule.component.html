@@ -1,0 +1,108 @@
+<div class="title-bar">
+  <div>
+    <h1>
+      {{
+        "USERS.SCHEDULE_TITLE"
+          | translate
+            : { value: schedulingRange.start.toDate() | date: "YYYY-MM" }
+      }}
+    </h1>
+    <h4 class="-mt-7">
+    {{
+      "USERS.SCHEDULE_UPDATE_DEADLINE"
+        | translate: { value: schedulingRange.adjustEnd.toDate() | date: 'YYYY-MM-dd hh:mm aa' }
+    }}
+    </h4>
+  </div>
+</div>
+<mat-card>
+  <div class="text-right">
+    <mat-slide-toggle
+      color="primary"
+      [disabled]="disabled || !(requireAdmin$ | async)"
+      [checked]="schedulingConfig.assign"
+      (change)="schedulingConfig.assign = !schedulingConfig.assign"
+      >{{ "USERS.LABEL.ASSIGN" | translate }}</mat-slide-toggle
+    >
+    <mat-icon
+      *ngIf="!(requireAdmin$ | async)"
+      class="align-bottom ml-2"
+      color="accent"
+      [matTooltip]="'USERS.ASSIGN_MESSAGE' | translate"
+      >lock</mat-icon
+    >
+  </div>
+  <div *ngIf="requireAdmin$ | async">
+    <mat-form-field class="w-full">
+      <mat-label>{{ "USERS.LABEL.PARTNER" | translate }}</mat-label>
+      <input
+        matInput
+        [ngModel]="partnerInput$ | async"
+        (ngModelChange)="partnerInput$.next($event)"
+        [matAutocomplete]="auto"
+        [disabled]="disabled || !schedulingConfig.assign"
+      />
+      <mat-hint class="text-warn" *ngIf="validationErrors">{{
+        validationErrors.partnerUuid
+      }}</mat-hint>
+      <mat-autocomplete #auto="matAutocomplete">
+        <mat-option
+          *ngFor="let userKey of partnerOptions$ | async"
+          [value]="userKey.username"
+        >
+          {{ userKey.username }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </div>
+
+  <div class="mt-4">
+    <app-user-schedule-hours-list
+      *ngIf="isXsScreen$ | async; else table"
+      [disabled]="disabled || !schedulingConfig.assign"
+      [data]="schedulingConfig.availableHours"
+      [hours]="shiftHours"
+      (change)="schedulingConfig.availableHours = $event"
+    >
+    </app-user-schedule-hours-list>
+    <ng-template #table>
+      <app-user-schedule-hours-table
+        [disabled]="disabled || !schedulingConfig.assign"
+        [data]="schedulingConfig.availableHours"
+        [hours]="shiftHours"
+        (change)="schedulingConfig.availableHours = $event"
+      ></app-user-schedule-hours-table>
+    </ng-template>
+    <mat-hint class="text-warn" *ngIf="validationErrors">{{
+      validationErrors.availableHours
+    }}</mat-hint>
+  </div>
+
+  <div class="max-w-md mt-4">
+    <mat-card class="relative">
+      <mat-calendar
+        *forceRefresh="schedulingConfig.unavailableDates"
+        [dateClass]="showSelectedDate"
+        [minDate]="schedulingRange.start"
+        [maxDate]="schedulingRange.end"
+        [headerComponent]="calendarHeader"
+        (selectedChange)="onUnavailableDateSelect($event)"
+      ></mat-calendar>
+      <div
+        class="bg-[#fff] opacity-25 inset-0 absolute z-50"
+        *ngIf="disabled || !schedulingConfig.assign"
+      ></div>
+    </mat-card>
+    <mat-hint class="text-warn" *ngIf="validationErrors">{{
+      validationErrors.unavailableDates
+    }}</mat-hint>
+  </div>
+  <div
+    class="mt-4 w-full flex justify-center"
+    *ngIf="!disabled && ((requireAdmin$ | async) || schedulingConfig.assign)"
+  >
+    <button class="w-1/2" mat-raised-button color="primary" (click)="onSave()">
+      {{ "GLOBAL.SUBMIT" | translate }}
+    </button>
+  </div>
+</mat-card>
