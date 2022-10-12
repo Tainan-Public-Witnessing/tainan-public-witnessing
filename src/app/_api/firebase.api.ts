@@ -16,6 +16,8 @@ import { Site } from '../_interfaces/site.interface';
 import { Statistic } from '../_interfaces/statistic.interface';
 import { User, UserKey } from '../_interfaces/user.interface';
 import { docExists as isDocExists, docsExists } from './firebase-helper';
+import { SiteShifts } from '../_interfaces/site-shifts.interface';
+import { UserSchedule } from '../_interfaces/user-schedule.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -95,12 +97,17 @@ export class Api implements ApiInterface {
         activate: true,
         username: user.username,
       }),
+      this.angularFirestore
+        .doc<UserSchedule>(`Users/${uuid}/Schedule/config`)
+        .set(this.#EMPTY_USER_SCHEDULE),
     ]);
 
     await this.angularFireAuth.createUserWithEmailAndPassword(
       uuid + this.mailSuffix,
       uuidv5(user.baptizeDate.replace(/-/g, ''), environment.UUID_NAMESPACE)
     );
+
+    return uuid;
   };
 
   patchUser = async (user: Omit<User, 'activate'>) => {
@@ -194,7 +201,10 @@ export class Api implements ApiInterface {
     function writeDatabase() {
       return Promise.all([
         db.doc<UserKey>(`UserKeys/${uuid}`).update({ activate }),
-        db.doc<User>(`Users/${uuid}`).update({ activate, assign: activate }),
+        db.doc<User>(`Users/${uuid}`).update({ activate }),
+        db
+          .doc<UserSchedule>(`Users/${uuid}/Schedule/config`)
+          .update({ assign: activate }),
       ]);
     }
   };
@@ -400,5 +410,32 @@ export class Api implements ApiInterface {
         ['MonthlyData', yearMonth, 'Statistics', statistic.uuid].join('/')
       )
       .update(statistic);
+  };
+
+  readSiteShifts = async () => {
+    const snapshots = await this.angularFirestore
+      .collection<SiteShifts>('SiteShifts')
+      .ref.get();
+    return snapshots.docs.map((snapshot) => snapshot.data());
+  };
+
+  readonly #EMPTY_USER_SCHEDULE: UserSchedule = {
+    availableHours: {},
+    unavailableDates: [],
+    partnerUuid: '',
+    assign: true,
+  };
+
+  readUserSchedule = async (userUuid: string) => {
+    const snapshot = await this.angularFirestore
+      .doc<UserSchedule>(`Users/${userUuid}/Schedule/config`)
+      .ref.get();
+
+    return snapshot.data() || this.#EMPTY_USER_SCHEDULE;
+  };
+  patchUserSchedule = async (userUuid: string, data: Partial<UserSchedule>) => {
+    await this.angularFirestore
+      .doc(`Users/${userUuid}/Schedule/config`)
+      .update(data);
   };
 }
