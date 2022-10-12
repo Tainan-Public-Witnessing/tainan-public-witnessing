@@ -25,11 +25,6 @@ export class MenuComponent implements OnInit, OnDestroy {
     },
     { display: 'SHIFTS.TITLE', url: 'shifts', permission: Permission.MANAGER },
     { display: 'USERS.TITLE', url: 'users', permission: Permission.MANAGER },
-    {
-      display: 'USERS.PROFILE_TITLE',
-      url: 'profile',
-      permission: Permission.USER,
-    },
   ];
 
   currentMenuLinks$ = new BehaviorSubject<MenuLink[]>([]);

@@ -31,11 +31,6 @@ const routes: Routes = [
     component: UserComponent,
     canActivate: [AuthorityService],
   },
-  {
-    path: 'profile',
-    component: UserComponent,
-    canActivate: [AuthorityService],
-  },
   { path: '**', redirectTo: 'home' },
 ];
 

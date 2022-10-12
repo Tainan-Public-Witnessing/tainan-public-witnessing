@@ -48,6 +48,3 @@ Thumbs.db
 
 # firebase
 /.firebase
-
-# python dev
-*.ipynb
