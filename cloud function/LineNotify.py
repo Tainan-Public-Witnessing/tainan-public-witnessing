@@ -38,6 +38,7 @@ def vacancyNotify(event, context):
         6:'六',
     }
     hours={}
+    hour_order={'早上':0,'中午':1,'下午':2,'黃昏':3}
     for hour in todaySiteShifts:
         info=hour.to_dict()
         if info['siteUuid'] in hours:
@@ -55,11 +56,13 @@ def vacancyNotify(event, context):
         if attendence>crew:
             hour=db.collection('ShiftHours').document(shiftHourUuid).get().to_dict()['name']
             site=db.collection('Sites').document(siteUuid).get().to_dict()['name']
-            vacancy.append(f'{site} {hour}：{attendence-crew}名')
+            vacancy.append({'site':site,'hour':hour,'vacancy':attendence-crew})
 
     if vacancy:
-        content='\n  '.join(vacancy)
-        reminder=f'\n【部門公告】  緊急徵求支援人員\n\n{tomorrow_str}({weekdayToChi[weekday]})\n  {content}\n\n請耐心等待。申請的時候請你再次確保那一天自己可以服務，這樣會大大減少弟兄們的負擔。謝謝你的合作！\n\n有意者，請聯繫管理者（http://nav.cx/54fnY0o） 謝謝！'
+        vacancy=sorted(vacancy, key=lambda v: hour_order[v['hour']]) 
+        vacancy_str=[f"{v['site']} {v['hour']}：{v['vacancy']}名" for v in vacancy]
+        content='\n  '.join(vacancy_str)
+        reminder=f'\n【緊急徵求支援人員】\n\n{tomorrow_str}({weekdayToChi[weekday]})\n  {content}\n\n請耐心等待。申請的時候請你再次確保那一天自己可以服務，這樣會大大減少弟兄們的負擔。謝謝你的合作！\n\n有意者，請聯繫管理者（http://nav.cx/54fnY0o） 謝謝！'
         LineNotify(text=reminder)
     
     if datetime.now().day==15 and datetime.now().hour==8:

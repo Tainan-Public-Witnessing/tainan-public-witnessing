@@ -5,12 +5,15 @@ import pandas as pd
 import uuid
 from calendar import monthrange
 from datetime import datetime,timedelta
+from dateutil import tz
 
 def Schedule(event,context):
     cred = credentials.ApplicationDefault()
-    firebase_admin.initialize_app(cred, {"projectId": "tainan-public-witnessing"})
+    firebase_admin.initialize_app(cred)
     db = firestore.client()
 
+    tpe=tz.gettz('Asia/Taipei') 
+    expired=datetime(datetime.today().year+2,1,1,tzinfo=tpe)
     month=(datetime.today()+timedelta(days=32)).month
     year=(datetime.today()+timedelta(days=32)).year
     days = monthrange(year, month)[1]
@@ -74,7 +77,6 @@ def Schedule(event,context):
                             df.loc[signup[signup['name']==participant].index,"attendence"] += 1
                             df.loc[choosed.index,"attendence"] -= 1
                             df.loc[signup[signup['name']==partner].index,"attendence"] -= 1
-                            
                             break
                 elif len(choosen) < attendence-1:
                     choosen.extend([choosed['name'].values[0],partner])
@@ -126,9 +128,10 @@ def Schedule(event,context):
                     "activate": True,
                     "crewUuids": result,
                     "date": f"{year}-{month:02d}-{day:02d}",
-                    "shiftHoursUuid": shiftHoursUuid[1:].replace("_", "-"),
+                    "shiftHoursUuid": shiftHoursUuid,
                     "siteUuid": siteUuid,
                     "uuid": uuid_,
+                    "expiredAt":expired,
                 },
             )
 
@@ -136,8 +139,9 @@ def Schedule(event,context):
     batch.commit()
     ref_person = ref.collection("PersonalShifts")
     for person in personalShifts:
-        data = {"shiftUuids": personalShifts[person], "uuid": person}
+        data = {"shiftUuids": personalShifts[person], "uuid": person, "expiredAt":expired,}
         batch.set(ref_person.document(person), data)
+    batch.set(ref,{"expiredAt":expired})
     batch.commit()
 
     #刪除前一個月的unavailableDates
