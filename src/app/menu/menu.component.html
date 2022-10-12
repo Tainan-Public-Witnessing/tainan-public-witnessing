@@ -9,17 +9,17 @@
   </mat-list-option>
 
   <mat-list-option
-    *ngIf="!(this.isLoggedIn$ | async)"
+    *ngIf="!(isLoggedIn$ | async)"
     (click)="onLoginClick()"
     cy="login-button">
     {{ "GLOBAL.LOG_IN" | translate }}
   </mat-list-option>
 
   <mat-list-option
-    *ngIf="this.isLoggedIn$ | async"
+    *ngIf="isLoggedIn$ | async"
     (click)="onLogoutClick()"
     cy="logout-button">
     {{ "GLOBAL.LOG_OUT" | translate }}
   </mat-list-option>
-  
+
 </mat-selection-list>

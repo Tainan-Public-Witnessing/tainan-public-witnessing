@@ -10,9 +10,11 @@
 
     <span class="spacer"></span>
 
-    <span *ngIf="(currentUsername$ | async) && (displayUsername$ | async)" class="welcome-message" cy="welcome-message">
+    <button mat-button *ngIf="(currentUsername$ | async) && (displayUsername$ | async)" class="welcome-message" cy="welcome-message"
+    routerLink="/profile"
+    >
       {{'GLOBAL.WELCOME_MESSAGE' | translate: {value: currentUsername$ | async} }}
-    </span>
+    </button>
 
     <button mat-icon-button
       [matMenuTriggerFor]="languageMenu" cy="translate-button">

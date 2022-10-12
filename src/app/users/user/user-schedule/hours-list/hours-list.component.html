@@ -1,0 +1,24 @@
+<h4>{{ "USERS.LABEL.AVAILABLE_HOURS" | translate }}</h4>
+<div *ngFor="let dayName of weekdayNames; index as day">
+  <h5 class="text-sm">{{ "GLOBAL.DAY." + dayName | translate }}</h5>
+  <div class="flex flex-wrap">
+    <ng-template ngFor let-hour [ngForOf]="hours">
+      <ng-template [ngIf]="data[day][hour.uuid] !== undefined">
+        <div class="w-1/2 items-center flex">
+          {{ hour.startTime }} ~ {{ hour.endTime }}
+        </div>
+        <div class="w-1/2">
+          <button
+            mat-icon-button
+            [disabled]="disabled"
+            (click)="onHourClick(data[day], hour)"
+            type="button"
+          >
+            {{ data[day][hour.uuid] }}
+          </button>
+        </div>
+      </ng-template>
+    </ng-template>
+  </div>
+  <mat-divider></mat-divider>
+</div>
