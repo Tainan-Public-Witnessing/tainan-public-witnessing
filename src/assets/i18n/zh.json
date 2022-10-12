@@ -14,7 +14,6 @@
     "ERROR": "錯誤",
     "EXISTED_ERROR": "{{value}}已存在！",
     "DONOT_EXIST_ERROR": "{{value}}不存在！",
-    "SAVED": "儲存成功！",
     "DAY": {
       "SUNDAY": "週日",
       "MONDAY": "週一",
@@ -76,21 +75,14 @@
     "CREATE_TITLE": "新增使用者",
     "EDIT_TITLE": "編輯使用者",
     "READ_TITLE": "使用者",
-    "PROFILE_TITLE": "個人檔案",
     "DEACTIVATED": "使用者已被停用",
     "DEACTIVATE_TITLE": "停用使用者",
-    "DEACTIVATE_MESSAGE": "你確定要停用 {{value}} 嗎？",
+    "DEACTIVATE_MESSAGE": "你確定要停用{{value}}嗎？",
     "ACTIVATE_TITLE": "啟用使用者",
-    "ACTIVATE_MESSAGE": "你確定要啟用 {{value}} 嗎？",
+    "ACTIVATE_MESSAGE": "你確定要啟用{{value}}嗎？",
     "PERSONAL_SHIFTS_EXIST_ERROR": "使用者無法停用，請先解除以下的委派：\n\n{{value}}",
-    "SCHEDULE_TITLE": "{{value}} 排班時間",
-    "ASSIGN_MESSAGE": "此欄位由委員會管理，如果您無法參與排班，請與委員會連絡",
-    "SCHEDULE_UPDATE_DEADLINE": "調整截止日期：{{value}}",
     "VALIDATION": {
-      "USERNAME_EXISTED": "使用者名稱已存在",
-      "UNAVAILABLE_DATES_ALL_SELECTED": "請不要全部選取，如果您無法參與排班，請與委員會連絡",
-      "AVAILABLE_HOURS_EMPTY": "請至少選取一個時段，如果您無法參與排班，請與委員會連絡",
-      "PARTNER_NOT_FOUND": "使用者不存在"
+      "USERNAME_EXISTED": "使用者名稱已存在"
     },
     "LABEL": {
       "USERNAME": "使用者名稱",
@@ -106,10 +98,7 @@
       "ADDRESS": "地址",
       "NOTE": "備註",
       "PERMISSION": "權限",
-      "ASSIGN": "參與排班",
-      "AVAILABLE_HOURS": "可參與時段和次數",
-      "UNAVILABLE_DATES": "無法參與日期",
-      "PARTNER": "同伴"
+      "ASSIGN": "委派"
     }
   },
   "CONGREGATIONS": {

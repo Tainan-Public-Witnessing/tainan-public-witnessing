@@ -10,7 +10,6 @@ import { ShiftHours } from '../_interfaces/shift-hours.interface';
 import { Shift } from '../_interfaces/shift.interface';
 import { Site } from '../_interfaces/site.interface';
 import { Statistic } from '../_interfaces/statistic.interface';
-import { UserSchedule } from '../_interfaces/user-schedule.interface';
 import { User, UserKey } from '../_interfaces/user.interface';
 import {
   ACCOUNTS,
@@ -19,11 +18,9 @@ import {
   SHIFTS,
   SHIFT_HOURS_LIST,
   SITES,
-  SITE_SHIFTS,
   STATISTICS,
   USERS,
   USER_KEYS,
-  USER_SCHEDULE_CONFIGS,
 } from './mock-data';
 
 @Injectable({
@@ -81,13 +78,7 @@ export class Api implements ApiInterface {
     const uuid = uuidv4();
     USERS.push({ ...user, activate: true, uuid });
     USER_KEYS.push({ uuid, activate: true, username: user.username });
-    USER_SCHEDULE_CONFIGS[uuid] = {
-      availableHours: {},
-      unavailableDates: [],
-      partnerUuid: '',
-      assign: true,
-    };
-    return this.delayReturn().then(() => uuid);
+    return this.delayReturn();
   };
 
   patchUser = (user: Omit<User, 'activate'>) => {
@@ -111,37 +102,35 @@ export class Api implements ApiInterface {
         (userShift) => userShift.uuid === uuid
       );
       if (userShifts && Array.isArray(userShifts.shiftUuids)) {
-        const futureShifts = userShifts.shiftUuids
-          .map((shiftUuid) => SHIFTS.find((shift) => shift.uuid === shiftUuid)!)
-          .map((shift) => ({
-            date: shift.date,
-            hour: SHIFT_HOURS_LIST.find(
-              (hour) => hour.uuid === shift.shiftHoursUuid
-            )!,
-            site: SITES.find((site) => site.uuid === shift.siteUuid)!,
-          }))
-          .filter(
-            (shift) =>
-              new Date(`${shift.date}T${shift.hour.startTime}:00.000`) >
-              new Date()
-          );
-        if (futureShifts.length > 0) {
-          return this.delayReturn().then(() => futureShifts);
-        }
+        return this.delayReturn().then(() =>
+          userShifts.shiftUuids
+            .map(
+              (shiftUuid) => SHIFTS.find((shift) => shift.uuid === shiftUuid)!
+            )
+            .map((shift) => ({
+              date: shift.date,
+              hour: SHIFT_HOURS_LIST.find(
+                (hour) => hour.uuid === shift.shiftHoursUuid
+              )!,
+              site: SITES.find((site) => site.uuid === shift.siteUuid)!,
+            }))
+            .filter(
+              (shift) =>
+                new Date(`${shift.date}T${shift.hour.startTime}:00.000`) >
+                new Date()
+            )
+        );
       }
     }
 
     const user = USERS.find((u) => u.uuid === uuid)!;
     user.activate = activate;
+    user.assign = activate;
     this.users = [...USERS];
 
     const userKey = USER_KEYS.find((uk) => uk.uuid === uuid)!;
     userKey.activate = activate;
     this.userKeys = [...USER_KEYS];
-
-    if (USER_SCHEDULE_CONFIGS[uuid]) {
-      USER_SCHEDULE_CONFIGS[uuid].assign = activate;
-    }
 
     return this.delayReturn().then(() => []);
   };
@@ -316,26 +305,6 @@ export class Api implements ApiInterface {
     } else {
       return this.delayReturn().then(() => Promise.reject());
     }
-  };
-
-  readSiteShifts = () => {
-    console.log('mock api readSiteShifts');
-    return this.delayReturn().then(() => SITE_SHIFTS);
-  };
-
-  readUserSchedule = async (userUuid: string) => {
-    console.log('mock api readUserSchedule', { userUuid });
-    await this.delayReturn();
-    return USER_SCHEDULE_CONFIGS[userUuid];
-  };
-
-  patchUserSchedule = async (userUuid: string, data: Partial<UserSchedule>) => {
-    console.log('mock api patchUserSchedule', { userUuid, data });
-    USER_SCHEDULE_CONFIGS[userUuid] = {
-      ...USER_SCHEDULE_CONFIGS[userUuid],
-      ...data,
-    };
-    await this.delayReturn();
   };
 
   private delayReturn = (): Promise<void> => {

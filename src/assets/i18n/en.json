@@ -22,8 +22,7 @@
       "FRIDAY": "Friday",
       "SATURDAY": "Saturday"
     },
-    "ERROR": "Error",
-    "SAVED": "Saved!"
+    "ERROR": "Error"
   },
   "GENDER": {
     "MALE": "Male",
@@ -82,10 +81,7 @@
     "ACTIVATE_TITLE": "Activate user",
     "ACTIVATE_MESSAGE": "Are you sure to activate user {{value}}",
     "VALIDATION": {
-      "USERNAME_EXISTED": "User name already existed!",
-      "UNAVAILABLE_DATES_ALL_SELECTED": "Cannot select entire month. If you are unavailable please contact the committee.",
-      "AVAILABLE_HOURS_EMPTY": "Please select at least one shift. If you are unavailable please contact the committee.",
-      "PARTNER_NOT_FOUND": "User does not exist"
+      "USERNAME_EXISTED": "User name already existed!"
     },
     "LABEL": {
       "USERNAME": "User name",
@@ -101,17 +97,9 @@
       "ADDRESS": "Address",
       "NOTE": "Note",
       "PERMISSION": "Permission",
-      "ASSIGN": "Assign",
-      "AVAILABLE_HOURS": "Available Shift Hours / Times",
-      "UNAVILABLE_DATES": "Unavailable Dates",
-      "PARTNER": "Partner"
+      "ASSIGN": "Assign"
     },
-    "PERSONAL_SHIFTS_EXIST_ERROR": "Can not deactivate user! Please cancel the following assignments first:\n\n{{value}}",
-    "PROFILE_TITLE": "Profile",
-    "SCHEDULE": "Schedule",
-    "SCHEDULE_TITLE": "Schedule for {{value}}",
-    "ASSIGN_MESSAGE": "This field is managed by the committee. If you are unavailable for next month please contact the committee",
-    "SCHEDULE_UPDATE_DEADLINE": "You can update this until {{value}}"
+    "PERSONAL_SHIFTS_EXIST_ERROR": "Can not deactivate user! Please cancel the following assignments first:\n\n{{value}}"
   },
   "CONGREGATIONS": {
     "TITLE": "Congregations",

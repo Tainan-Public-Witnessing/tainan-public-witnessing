@@ -1,4 +1,3 @@
-import { TypeofExpr } from '@angular/compiler';
 import { ViewEncapsulation } from '@angular/core';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
@@ -15,45 +14,6 @@ import { AuthorityService } from 'src/app/_services/authority.service';
 import { CongregationsService } from 'src/app/_services/congregations.service';
 import { UsersService } from 'src/app/_services/users.service';
 
-type FormMode = {
-  mode: string;
-  title: string;
-  cancelText: string;
-  userDataForm: boolean | null;
-  scheduleForm: boolean | null;
-};
-
-const FORM_MODES: { [mode: string]: FormMode } = {
-  [Mode.READ]: {
-    mode: Mode.READ,
-    title: 'USERS.READ_TITLE',
-    cancelText: 'GLOBAL.BACK',
-    userDataForm: false,
-    scheduleForm: false,
-  },
-  [Mode.CREATE]: {
-    mode: Mode.CREATE,
-    title: 'USERS.CREATE_TITLE',
-    cancelText: 'GLOBAL.CANCEL',
-    userDataForm: true,
-    scheduleForm: null,
-  },
-  [Mode.UPDATE]: {
-    mode: Mode.UPDATE,
-    title: 'USERS.EDIT_TITLE',
-    cancelText: 'GLOBAL.CANCEL',
-    userDataForm: true,
-    scheduleForm: true,
-  },
-  profile: {
-    mode: 'profile',
-    title: 'USERS.PROFILE_TITLE',
-    cancelText: 'GLOBAL.CANCEL',
-    userDataForm: false,
-    scheduleForm: true,
-  },
-};
-
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
@@ -61,42 +21,156 @@ const FORM_MODES: { [mode: string]: FormMode } = {
   encapsulation: ViewEncapsulation.None,
 })
 export class UserComponent implements OnInit, OnDestroy {
-  mode: FormMode;
+  mode: string;
   uuid: string;
+  title: string;
+  cancelButtonText: string;
+  userForm: FormGroup;
+  genders = Object.values(Gender);
+  permissions = Object.values(Permission).filter(
+    (p) => /\d+/.test(p.toString()) && p < Permission.GUEST
+  );
+  congregations$ = new BehaviorSubject<Congregation[] | undefined | null>(null);
+  // profilePrimarykeys$ = new BehaviorSubject<Profile[]>(null);
+  // tags$ = new BehaviorSubject<Tag[]>(null);
   unsubscribe$ = new Subject<void>();
-
+  AdminOnly$ = new BehaviorSubject<boolean>(false);
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
+    private formBuilder: UntypedFormBuilder,
+    private congregationsService: CongregationsService,
     private authorityService: AuthorityService,
     // private tagService: TagsService,
     public usersService: UsersService
   ) {}
 
   ngOnInit(): void {
-    this.activatedRoute.params
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((params) => {
-        this.uuid = params.uuid;
-        switch (true) {
-          case !!params.mode:
-            this.mode = FORM_MODES[params.mode];
-            break;
-          case this.router.url === '/profile':
-            this.mode = FORM_MODES.profile;
-            this.uuid = this.authorityService.currentUserUuid$.value!;
-            break;
-          case this.router.url === '/users/create':
-            this.mode = FORM_MODES.create;
-            break;
-          default:
-            this.router.navigate(['/home']);
-            break;
-        }
-      });
+    this.congregationsService
+      .getCongregationList()
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        filter((congs) => !!congs)
+      )
+      .subscribe(this.congregations$);
+    // this.profilesService.getProfilePrimarykeys().pipe(takeUntil(this.unsubscribe$)).subscribe(this.profilePrimarykeys$);
+
+    this.userForm = this.formBuilder.group({
+      username: ['', Validators.required],
+      name: ['', Validators.required],
+      gender: ['', Validators.required],
+      congregationUuid: ['', Validators.required],
+      baptizeDate: ['', Validators.required],
+      // birthDate: [""],
+      cellphone: [''],
+      phone: [''],
+      permission: [Permission.USER, Validators.required],
+      activate: [true],
+      note: [''],
+      assign: [true],
+      // email: [""],
+      // tags: [""],
+    });
+
+    this.activatedRoute.params.subscribe((params) => {
+      this.mode = params.mode;
+      this.uuid = params.uuid;
+
+      switch (params.mode) {
+        case undefined:
+          if (!this.uuid) {
+            this.title = 'USERS.CREATE_TITLE';
+            this.cancelButtonText = 'GLOBAL.CANCEL';
+            this.mode = Mode.CREATE;
+          } else {
+            this.router.navigate(['users']);
+          }
+
+          break;
+
+        case Mode.UPDATE:
+          this.title = 'USERS.EDIT_TITLE';
+          this.cancelButtonText = 'GLOBAL.CANCEL';
+          this.setFormGroupValueByUuid(params.uuid);
+          break;
+
+        case Mode.READ:
+          this.title = 'USERS.READ_TITLE';
+          this.cancelButtonText = 'GLOBAL.BACK';
+          this.setFormGroupValueByUuid(params.uuid);
+          this.userForm.disable();
+          break;
+      }
+    });
+    const admin = this.authorityService
+      .canAccess(Permission.ADMINISTRATOR)
+      .pipe(takeUntil(this.unsubscribe$));
+
+    admin.subscribe(this.AdminOnly$);
   }
 
   ngOnDestroy(): void {
     this.unsubscribe$.next();
   }
+
+  onCancelClick = () => {
+    this.router.navigate(['users']);
+  };
+
+  onSubmit = async () => {
+    if (this.userForm.status === 'VALID') {
+      const baptizeDateValue = this.userForm.value.baptizeDate;
+      const baptizeDate =
+        typeof baptizeDateValue === 'string'
+          ? baptizeDateValue
+          : baptizeDateValue.format('YYYY-MM-DD');
+
+      const user: Omit<User, 'uuid' | 'activate'> = {
+        username: this.userForm.value.username.trim(),
+        name: this.userForm.value.name.trim(),
+        gender: this.userForm.value.gender,
+        congregationUuid: this.userForm.value.congregationUuid,
+        baptizeDate,
+        note: this.userForm.value.note,
+        cellphone: this.userForm.value.cellphone.trim(),
+        phone: this.userForm.value.phone.trim(),
+        permission: this.userForm.value.permission,
+        assign: this.userForm.value.assign
+      };
+      try {
+        if (this.mode === Mode.CREATE) {
+          await this.usersService.createUser(user);
+        } else {
+          // update mode
+          if (this.userForm.dirty) {
+            await this.usersService.patchUser({
+              ...user,
+              uuid: this.uuid,
+            });
+          }
+        }
+        this.router.navigate(['users']);
+      } catch (err) {
+        console.log('reason', err);
+        if (err instanceof EXISTED_ERROR) {
+          this.userForm.controls[err.field].setErrors({ existed: true });
+        }
+      }
+    } else {
+      this.userForm.markAllAsTouched();
+    }
+  };
+
+  private setFormGroupValueByUuid = (uuid: string): void => {
+    this.usersService
+      .getUserByUuid(uuid)
+      .pipe(
+        filter((user) => !!user),
+        takeUntil(this.unsubscribe$)
+      )
+      .subscribe((user) => {
+        const values = { ...user };
+        this.userForm.patchValue(values);
+      });
+  };
 }

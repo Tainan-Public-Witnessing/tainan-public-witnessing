@@ -3,16 +3,24 @@
 $disabled-color: rgba(0, 0, 0, 0.5);
 
 app-user {
-  mat-form-field {
-    padding: 8px;
+  .overflow {
+    flex: 1 1 auto;
+    overflow: auto;
+    padding: 32px;
     box-sizing: border-box;
   }
 
-  input.mat-input-element:disabled {
-    color: $disabled-color;
-  }
+  form {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 
-  .mat-select-disabled .mat-select-value {
-    color: $disabled-color;
+    input.mat-input-element:disabled {
+      color: $disabled-color;
+    }
+
+    .mat-select-disabled .mat-select-value {
+      color: $disabled-color;
+    }
   }
 }

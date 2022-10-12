@@ -1,12 +1,10 @@
 @import 'src/app/_styles/global';
 
 .shift-card {
-  width: 242px;
-  position: relative;
-  display: flex;
-  flex-direction: column;
+  width: 210px;
 
   .mat-card-header {
+
     .mat-card-title {
       display: flex;
       flex-direction: column;
@@ -23,16 +21,14 @@
     gap: 4px;
     flex-wrap: wrap;
 
-    .deliver {
+    .deliver{
       background-color: bisque;
     }
   }
 
   .mat-card-actions {
     display: flex;
-    flex-grow: 1;
     justify-content: flex-end;
-    align-items: flex-end;
 
     .has-statistic {
       color: green;

@@ -19,4 +19,5 @@ export interface User extends UserKey {
   // address: string;
   note: string;
   // tagUuids: string[]; // uuid
+  assign: boolean;
 }

@@ -32,7 +32,6 @@
             ],
             "styles": [
               "src/styles.scss",
-              "src/tailwind.css",
               "src/app/_styles/angular-material.scss"
             ],
             "scripts": [],
@@ -76,8 +75,8 @@
               ]
             },
             "firebase": {
-              "buildOptimizer": true,
-              "optimization": true,
+              "buildOptimizer": false,
+              "optimization": false,
               "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
