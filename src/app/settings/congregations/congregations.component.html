@@ -17,7 +17,7 @@
                 <button mat-icon-button>
                     <mat-icon>edit</mat-icon>
                 </button>
-                <button mat-icon-button [color]="congregation.activate ? 'default' : 'warn'">
+                <button mat-icon-button [color]="congregation.activate ? 'default' : 'warn'" (click)="changeCongregationActivation(congregation)">
                     <mat-icon>{{congregation.activate? "work" : "work_off"}}</mat-icon>
                 </button>
             </mat-card-actions>

@@ -18,4 +18,14 @@ export class ShfithoursComponent implements OnInit {
   createShiftHours=()=>{
     this.shifthoursService.createShiftHours({name:'新時段',startTime:'09:00',endTime:'12:00',deliver:false}).then(shifthour=>this.shifthours$?.push(shifthour))
   }
+
+  changeShiftHourActivation=(shifthour:ShiftHours)=>{
+    let index=this.shifthours$?.indexOf(shifthour)
+    this.shifthoursService.changeShiftHourActivation(shifthour).then(activation=>this.shifthours$![index!].activate=activation)
+  }
+
+  changeShiftHourDelivery=(shifthour:ShiftHours)=>{
+    let index=this.shifthours$?.indexOf(shifthour)
+    this.shifthoursService.changeShiftHourDelivery(shifthour).then(activation=>this.shifthours$![index!].deliver=activation)
+  }
 }

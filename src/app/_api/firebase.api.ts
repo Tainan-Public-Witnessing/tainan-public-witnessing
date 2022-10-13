@@ -235,6 +235,17 @@ export class Api implements ApiInterface {
     return {...cong,uuid,activate: true}
   };
 
+  changeCongregationActivation = async (
+    cong: Congregation
+  ): Promise<boolean> => {
+    await Promise.all([
+      this.angularFirestore.doc<ShiftHours>(`Congregations/${cong.uuid}`).update({
+        activate: !cong.activate,
+      }),
+    ]);
+    return !cong.activate
+  };
+
   readSites = (): Promise<Site[]> => {
     return firstValueFrom(
       this.angularFirestore.collection<Site>('Sites').get()
@@ -271,6 +282,18 @@ export class Api implements ApiInterface {
     ]);
     return !site.activate
   };
+
+  changeShiftHourDelivery = async (
+    shifthour: ShiftHours
+  ): Promise<boolean> => {
+    await Promise.all([
+      this.angularFirestore.doc<ShiftHours>(`ShiftHours/${shifthour.uuid}`).update({
+        deliver: !shifthour.deliver,
+      }),
+    ]);
+    return !shifthour.deliver
+  };
+
   readShiftHoursList = (): Promise<ShiftHours[]> => {
     return firstValueFrom(
       this.angularFirestore.collection<ShiftHours>('ShiftHours').get()
@@ -295,6 +318,17 @@ export class Api implements ApiInterface {
       }),
     ]);
     return {...shifthours,uuid,activate: true}
+  };
+
+  changeShiftHourActivation = async (
+    shifthour: ShiftHours
+  ): Promise<boolean> => {
+    await Promise.all([
+      this.angularFirestore.doc<ShiftHours>(`ShiftHours/${shifthour.uuid}`).update({
+        activate: !shifthour.activate,
+      }),
+    ]);
+    return !shifthour.activate
   };
 
   readShiftsByMonth = (yearMonth: string): Promise<Shift[]> => {

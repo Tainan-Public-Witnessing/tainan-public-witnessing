@@ -28,14 +28,18 @@ export interface ApiInterface {
 
   readCongregations: () => Promise<Congregation[]>;
   createCongregation:(cong:Omit<Congregation, 'uuid' | 'activate'>)=> Promise<Congregation>
+  changeCongregationActivation:(cong:Congregation)=>Promise<boolean>
 
   readSites: () => Promise<Site[]>;
   // patchSites:()=> Promise<void>
   createSites:(site:Omit<Site, 'uuid' | 'activate'>)=> Promise<Site>;
   changeSiteActivation:(site:Site)=>Promise<boolean>
+  
 
   readShiftHoursList: () => Promise<ShiftHours[]>;
   createShiftHours:(shifthours:Omit<ShiftHours, 'uuid' | 'activate'>)=> Promise<ShiftHours>
+  changeShiftHourActivation:(shifthour:ShiftHours)=>Promise<boolean>
+  changeShiftHourDelivery:(shifthour:ShiftHours)=>Promise<boolean>
 
   readShiftsByMonth: (yearMonth: string) => Promise<Shift[]>; // yyyy-MM
   readShiftsByDate: (date: string) => Promise<Shift[]>; // yyyy-MM-dd

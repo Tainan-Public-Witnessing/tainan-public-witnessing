@@ -28,5 +28,4 @@ export class SitesService {
   changeSiteActivation = (site:Site) => {
     return this.api.changeSiteActivation(site);
   };
-
 }

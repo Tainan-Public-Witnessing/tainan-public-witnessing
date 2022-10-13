@@ -24,4 +24,7 @@ export class CongregationsService {
   createCongregation = (cong: Omit<Congregation, 'uuid' | 'activate'>) => {
     return this.api.createCongregation(cong);
   }
+  changeCongregationsActivation = (cong:Congregation) => {
+    return this.api.changeCongregationActivation(cong);
+  };
 }

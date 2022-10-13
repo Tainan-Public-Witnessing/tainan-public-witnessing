@@ -19,4 +19,8 @@ export class CongregationsComponent implements OnInit {
   createCongregation=()=>{
     this.congregationService.createCongregation({name:'新會眾',order:this.congregations$!.length}).then(cong=>this.congregations$?.push(cong))
   }
+  changeCongregationActivation=(cong:Congregation)=>{
+    let index=this.congregations$?.indexOf(cong)
+    this.congregationService.changeCongregationsActivation(cong).then(activation=>this.congregations$![index!].activate=activation)
+  }
 }

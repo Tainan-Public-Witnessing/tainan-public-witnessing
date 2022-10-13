@@ -20,10 +20,10 @@
             <button mat-icon-button>
                 <mat-icon>edit</mat-icon>
             </button>
-            <button mat-icon-button [color]="shifthour.activate ? 'default' : 'warn'">
+            <button mat-icon-button [color]="shifthour.activate ? 'default' : 'warn'" (click)="changeShiftHourActivation(shifthour)">
                 <mat-icon>{{shifthour.activate? "work" : "work_off"}}</mat-icon>
             </button>
-            <button mat-icon-button [color]="shifthour.deliver ? 'default' : 'warn'">
+            <button mat-icon-button [color]="shifthour.deliver ? 'default' : 'warn'" (click)="changeShiftHourDelivery(shifthour)">
                 <mat-icon>local_shipping</mat-icon>
             </button>
         </mat-card-actions>

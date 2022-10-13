@@ -151,11 +151,16 @@ export class Api implements ApiInterface {
     return this.delayReturn().then(() => [...this.congregations]);
   };
   createCongregation=async (
-    cong: Omit<Site, 'uuid' | 'activate'>
+    cong: Omit<Congregation, 'uuid' | 'activate'>
   ): Promise<Congregation> => {
     let uuid: string = uuidv4();
     console.log('mock api createCongregations');
     return this.delayReturn().then(() => ({ uuid, ...cong, activate: true }));
+  };
+
+  changeCongregationActivation = async (cong:Congregation): Promise<boolean> => {
+    console.log('mock api Cong status changed',cong.name);
+    return this.delayReturn().then(()=>!cong.activate);
   };
 
   readSites = (): Promise<Site[]> => {
@@ -172,9 +177,11 @@ export class Api implements ApiInterface {
   };
 
   changeSiteActivation = async (site:Site): Promise<boolean> => {
-    console.log('mock api Sites status changed');
+    console.log('mock api Sites status changed',site.name);
     return this.delayReturn().then(()=>!site.activate);
   };
+
+
 
   readShiftHoursList = (): Promise<ShiftHours[]> => {
     console.log('mock api readShiftHoursList');
@@ -187,6 +194,16 @@ export class Api implements ApiInterface {
     let uuid: string = uuidv4();
     console.log('mock api createShiftHours');
     return this.delayReturn().then(() => ({ uuid, ...shifthours, activate: true }));
+  };
+
+  changeShiftHourActivation = async (shifthour:ShiftHours): Promise<boolean> => {
+    console.log('mock api ShiftHour status changed',shifthour.name);
+    return this.delayReturn().then(()=>!shifthour.activate);
+  };
+
+  changeShiftHourDelivery = async (shifthour:ShiftHours): Promise<boolean> => {
+    console.log('mock api Sites delivery status changed',shifthour.name);
+    return this.delayReturn().then(()=>!shifthour.deliver);
   };
   
   readShiftsByMonth = (yearMonth: string): Promise<Shift[]> => {

@@ -175,12 +175,14 @@ export const SITES: Site[] = [
   {
     uuid: '408941a1-3af4-4148-a822-baddd9fae407',
     name: 'Park',
+    position:'中正路與中山路交叉口',
     order: 0,
     activate: true,
   },
   {
     uuid: '2ab1d2b4-e03b-47ba-991d-7ca801c79b0d',
     name: 'Station',
+    position:'育平路與中山路交叉口',
     order: 1,
     activate: false,
   },
