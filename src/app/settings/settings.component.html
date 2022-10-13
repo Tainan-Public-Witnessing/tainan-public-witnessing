@@ -11,59 +11,6 @@
     </form>
 </mat-card>
 
-<div class="title-bar flex items-center">
-    <h1>{{'SETTINGS.SITE' | translate}}</h1>
-    <span class="spacer"></span>
-    <button mat-icon-button (click)="createSite()">
-        <mat-icon>add</mat-icon>
-    </button>
-</div>
-
-<div *ngFor="let site of sites$" class="my-2">
-    <mat-card class="shift-card h-full box-border">
-        <mat-card-header>
-            <mat-card-title>
-                {{site.name}}
-            </mat-card-title>
-        </mat-card-header>
-        <mat-card-actions class="text-right">
-            <button mat-icon-button>
-                <mat-icon>edit</mat-icon>
-            </button>
-            <button mat-icon-button [color]="site.activate ? 'default' : 'warn'">
-                <mat-icon>{{site.activate? "work" : "work_off"}}</mat-icon>
-            </button>
-        </mat-card-actions>
-    </mat-card>
-</div>
-<div class="title-bar flex items-center">
-    <h1>{{'SETTINGS.SHIFTHOURS' | translate}}</h1>
-    <span class="spacer"></span>
-    <button mat-icon-button (click)="createShiftHours()">
-        <mat-icon>add</mat-icon>
-    </button>
-</div>
-<div *ngFor="let shifthour of shifthours$" class="my-2">
-    <mat-card class="shift-card h-full box-border">
-        <mat-card-header>
-            <mat-card-title>
-                {{shifthour.name}}
-            </mat-card-title>
-            <mat-card-subtitle>
-                {{'SETTINGS.START' | translate}}:{{shifthour.startTime}} ～ {{'SETTINGS.END' |
-                translate}}:{{shifthour.endTime}}
-            </mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-actions class="text-right">
-            <button mat-icon-button>
-                <mat-icon>edit</mat-icon>
-            </button>
-            <button mat-icon-button [color]="shifthour.activate ? 'default' : 'warn'">
-                <mat-icon>{{shifthour.activate? "work" : "work_off"}}</mat-icon>
-            </button>
-            <button mat-icon-button [color]="shifthour.deliver ? 'default' : 'warn'">
-                <mat-icon>local_shipping</mat-icon>
-            </button>
-        </mat-card-actions>
-    </mat-card>
-</div>
+<app-site></app-site>
+<app-shfithours></app-shfithours>
+<app-congregations></app-congregations>

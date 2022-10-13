@@ -155,8 +155,8 @@
   },
   "SETTINGS":{
     "TITLE":"基本設定",
-    "SITE":"地點",
-    "SHIFTHOURS":"時段",
+    "SITE":"地點列表",
+    "SHIFTHOURS":"時段列表",
     "START":"開始",
     "END":"結束"
   }

@@ -35,6 +35,9 @@ import { ForceRefreshDirective } from './_directives/force-refresh.directive';
 import { ArrayFilterPipe } from './_pipes/array-filter.pipe';
 import { HoursListComponent } from './users/user/user-schedule/hours-list/hours-list.component';
 import { SettingsComponent } from './settings/settings.component';
+import { SiteComponent } from './settings/site/site.component';
+import { ShfithoursComponent } from './settings/shfithours/shfithours.component';
+import { CongregationsComponent } from './settings/congregations/congregations.component';
 
 
 // AoT requires an exported function for factories of translate module
@@ -66,6 +69,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     ArrayFilterPipe,
     HoursListComponent,
     SettingsComponent,
+    SiteComponent,
+    ShfithoursComponent,
+    CongregationsComponent,
   ],
   imports: [
     BrowserModule,

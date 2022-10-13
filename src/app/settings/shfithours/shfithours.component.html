@@ -1,0 +1,31 @@
+<div class="title-bar flex items-center">
+    <h1>{{'SETTINGS.SHIFTHOURS' | translate}}</h1>
+    <span class="spacer"></span>
+    <button mat-icon-button (click)="createShiftHours()">
+        <mat-icon>add</mat-icon>
+    </button>
+</div>
+<div *ngFor="let shifthour of shifthours$" class="my-2">
+    <mat-card class="shift-card h-full box-border">
+        <mat-card-header>
+            <mat-card-title>
+                {{shifthour.name}}
+            </mat-card-title>
+            <mat-card-subtitle>
+                {{'SETTINGS.START' | translate}}:{{shifthour.startTime}} ～ {{'SETTINGS.END' |
+                translate}}:{{shifthour.endTime}}
+            </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-actions class="text-right">
+            <button mat-icon-button>
+                <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button [color]="shifthour.activate ? 'default' : 'warn'">
+                <mat-icon>{{shifthour.activate? "work" : "work_off"}}</mat-icon>
+            </button>
+            <button mat-icon-button [color]="shifthour.deliver ? 'default' : 'warn'">
+                <mat-icon>local_shipping</mat-icon>
+            </button>
+        </mat-card-actions>
+    </mat-card>
+</div>
