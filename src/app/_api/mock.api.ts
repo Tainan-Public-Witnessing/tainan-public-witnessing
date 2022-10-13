@@ -156,11 +156,27 @@ export class Api implements ApiInterface {
     return this.delayReturn().then(() => [...this.sites]);
   };
 
+  createSites = async (
+    site: Omit<Site, 'uuid' | 'activate'>
+  ): Promise<Site> => {
+    let uuid: string = uuidv4();
+    console.log('mock api createSites');
+    return this.delayReturn().then(() => ({ uuid, ...site, activate: true }));
+  };
+
   readShiftHoursList = (): Promise<ShiftHours[]> => {
     console.log('mock api readShiftHoursList');
     return this.delayReturn().then(() => [...this.shiftHoursList]);
   };
 
+  createShiftHours = async (
+    shifthours: Omit<ShiftHours, 'uuid' | 'activate'>
+  ): Promise<ShiftHours> => {
+    let uuid: string = uuidv4();
+    console.log('mock api createShiftHours');
+    return this.delayReturn().then(() => ({ uuid, ...shifthours, activate: true }));
+  };
+  
   readShiftsByMonth = (yearMonth: string): Promise<Shift[]> => {
     console.log('mock api readShiftsByMonth', { yearMonth });
     const _shifts = this.shifts.filter((_shift) =>

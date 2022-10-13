@@ -19,6 +19,11 @@ export class MenuComponent implements OnInit, OnDestroy {
   MENU_LINKS: MenuLink[] = [
     { display: 'HOME.TITLE', url: 'home', permission: Permission.GUEST },
     {
+      display: 'SETTINGS.TITLE',
+      url: 'settings',
+      permission: Permission.ADMINISTRATOR,
+    },
+    {
       display: 'PERSONAL_SHIFT.TITLE',
       url: 'personal-shift',
       permission: Permission.USER,

@@ -152,7 +152,7 @@ export const SITES: Site[] = [
     uuid: '2ab1d2b4-e03b-47ba-991d-7ca801c79b0d',
     name: 'Station',
     order: 1,
-    activate: true,
+    activate: false,
   },
 ];
 
@@ -170,7 +170,7 @@ export const SHIFT_HOURS_LIST: ShiftHours[] = [
     name: 'Afternoon',
     startTime: '12:00',
     endTime: '15:00',
-    activate: true,
+    activate: false,
     deliver: false,
   },
 ];

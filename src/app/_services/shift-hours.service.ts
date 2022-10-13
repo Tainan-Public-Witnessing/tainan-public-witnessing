@@ -23,4 +23,8 @@ export class ShiftHoursService {
     }
     return this.shiftHours$;
   }
+
+  createShiftHours = (shifthours: Omit<ShiftHours, 'uuid' | 'activate'>) => {
+    return this.api.createShiftHours(shifthours);
+  }
 }

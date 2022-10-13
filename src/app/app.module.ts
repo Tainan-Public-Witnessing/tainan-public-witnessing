@@ -34,6 +34,8 @@ import { CalendarHeaderComponent } from './users/user/user-schedule/calendar-hea
 import { ForceRefreshDirective } from './_directives/force-refresh.directive';
 import { ArrayFilterPipe } from './_pipes/array-filter.pipe';
 import { HoursListComponent } from './users/user/user-schedule/hours-list/hours-list.component';
+import { SettingsComponent } from './settings/settings.component';
+
 
 // AoT requires an exported function for factories of translate module
 export function HttpLoaderFactory(http: HttpClient) {
@@ -63,6 +65,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     ForceRefreshDirective,
     ArrayFilterPipe,
     HoursListComponent,
+    SettingsComponent,
   ],
   imports: [
     BrowserModule,

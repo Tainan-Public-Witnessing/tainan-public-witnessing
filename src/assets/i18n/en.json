@@ -153,5 +153,8 @@
     "2": "Overseer",
     "3": "Publisher",
     "4": "Guest"
+  },
+  "SITES":{
+    "SITE":"Site"
   }
 }

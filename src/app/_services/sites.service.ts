@@ -23,4 +23,9 @@ export class SitesService {
     }
     return this.sites$;
   }
+
+  createSites = (site: Omit<Site, 'uuid' | 'activate'>) => {
+    return this.api.createSites(site);
+  }
+
 }

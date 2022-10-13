@@ -29,8 +29,11 @@ export interface ApiInterface {
   readCongregations: () => Promise<Congregation[]>;
 
   readSites: () => Promise<Site[]>;
+  // patchSites:()=> Promise<void>
+  createSites:(site:Omit<Site, 'uuid' | 'activate'>)=> Promise<Site>;
 
   readShiftHoursList: () => Promise<ShiftHours[]>;
+  createShiftHours:(shifthours:Omit<ShiftHours, 'uuid' | 'activate'>)=> Promise<ShiftHours>
 
   readShiftsByMonth: (yearMonth: string) => Promise<Shift[]>; // yyyy-MM
   readShiftsByDate: (date: string) => Promise<Shift[]>; // yyyy-MM-dd

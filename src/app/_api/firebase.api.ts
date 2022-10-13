@@ -233,6 +233,20 @@ export class Api implements ApiInterface {
     });
   };
 
+  createSites = async (
+    site: Omit<Site, 'uuid' | 'activate'>
+  ): Promise<Site> => {
+    let uuid: string = uuidv4();
+    await Promise.all([
+      this.angularFirestore.doc<Site>(`Sites/${uuid}`).set({
+        ...site,
+        uuid,
+        activate: true,
+      }),
+    ]);
+    return {...site,uuid,activate: true}
+  };
+
   readShiftHoursList = (): Promise<ShiftHours[]> => {
     return firstValueFrom(
       this.angularFirestore.collection<ShiftHours>('ShiftHours').get()
@@ -243,6 +257,20 @@ export class Api implements ApiInterface {
         return Promise.reject('NOT_EXIST');
       }
     });
+  };
+
+  createShiftHours = async (
+    shifthours: Omit<ShiftHours, 'uuid' | 'activate'>
+  ): Promise<ShiftHours> => {
+    let uuid: string = uuidv4();
+    await Promise.all([
+      this.angularFirestore.doc<ShiftHours>(`ShiftHours/${uuid}`).set({
+        ...shifthours,
+        uuid,
+        activate: true,
+      }),
+    ]);
+    return {...shifthours,uuid,activate: true}
   };
 
   readShiftsByMonth = (yearMonth: string): Promise<Shift[]> => {
