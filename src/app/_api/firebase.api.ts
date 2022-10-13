@@ -261,6 +261,16 @@ export class Api implements ApiInterface {
     return {...site,uuid,activate: true}
   };
 
+  changeSiteActivation = async (
+    site: Site
+  ): Promise<boolean> => {
+    await Promise.all([
+      this.angularFirestore.doc<Site>(`Sites/${site.uuid}`).update({
+        activate: !site.activate,
+      }),
+    ]);
+    return !site.activate
+  };
   readShiftHoursList = (): Promise<ShiftHours[]> => {
     return firstValueFrom(
       this.angularFirestore.collection<ShiftHours>('ShiftHours').get()

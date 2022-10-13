@@ -17,7 +17,7 @@
             <button mat-icon-button>
                 <mat-icon>edit</mat-icon>
             </button>
-            <button mat-icon-button [color]="site.activate ? 'default' : 'warn'">
+            <button mat-icon-button [color]="site.activate ? 'default' : 'warn'" (click)="changeSiteActivation(site)">
                 <mat-icon>{{site.activate? "work" : "work_off"}}</mat-icon>
             </button>
         </mat-card-actions>

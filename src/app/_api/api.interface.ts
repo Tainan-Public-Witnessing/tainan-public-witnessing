@@ -32,6 +32,7 @@ export interface ApiInterface {
   readSites: () => Promise<Site[]>;
   // patchSites:()=> Promise<void>
   createSites:(site:Omit<Site, 'uuid' | 'activate'>)=> Promise<Site>;
+  changeSiteActivation:(site:Site)=>Promise<boolean>
 
   readShiftHoursList: () => Promise<ShiftHours[]>;
   createShiftHours:(shifthours:Omit<ShiftHours, 'uuid' | 'activate'>)=> Promise<ShiftHours>

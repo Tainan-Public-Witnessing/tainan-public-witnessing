@@ -171,6 +171,11 @@ export class Api implements ApiInterface {
     return this.delayReturn().then(() => ({ uuid, ...site, activate: true }));
   };
 
+  changeSiteActivation = async (site:Site): Promise<boolean> => {
+    console.log('mock api Sites status changed');
+    return this.delayReturn().then(()=>!site.activate);
+  };
+
   readShiftHoursList = (): Promise<ShiftHours[]> => {
     console.log('mock api readShiftHoursList');
     return this.delayReturn().then(() => [...this.shiftHoursList]);

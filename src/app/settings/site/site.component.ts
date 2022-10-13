@@ -13,11 +13,16 @@ export class SiteComponent implements OnInit {
   ) { }
   
   sites$: Site[] | null = [];
-
+  
   ngOnInit(): void {
     this.sitesService.getSites().subscribe((sites) => (this.sites$ = sites));
   }
   createSite=()=>{
     this.sitesService.createSites({name:'新地點',order:this.sites$!.length}).then(site=>this.sites$?.push(site))
+  }
+
+  changeSiteActivation=(site:Site)=>{
+    let index=this.sites$?.indexOf(site)
+    this.sitesService.changeSiteActivation(site).then(activation=>this.sites$![index!].activate=activation)
   }
 }
