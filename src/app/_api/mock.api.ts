@@ -150,6 +150,13 @@ export class Api implements ApiInterface {
     console.log('mock api readCongregations');
     return this.delayReturn().then(() => [...this.congregations]);
   };
+  createCongregation=async (
+    cong: Omit<Site, 'uuid' | 'activate'>
+  ): Promise<Congregation> => {
+    let uuid: string = uuidv4();
+    console.log('mock api createCongregations');
+    return this.delayReturn().then(() => ({ uuid, ...cong, activate: true }));
+  };
 
   readSites = (): Promise<Site[]> => {
     console.log('mock api readSites');

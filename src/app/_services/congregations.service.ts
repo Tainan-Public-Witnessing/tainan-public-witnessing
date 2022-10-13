@@ -20,4 +20,8 @@ export class CongregationsService {
       .catch(() => $.next(undefined));
     return $;
   };
+
+  createCongregation = (cong: Omit<Congregation, 'uuid' | 'activate'>) => {
+    return this.api.createCongregation(cong);
+  }
 }

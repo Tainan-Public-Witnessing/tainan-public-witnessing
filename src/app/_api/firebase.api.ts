@@ -221,6 +221,20 @@ export class Api implements ApiInterface {
     });
   };
 
+  createCongregation = async (
+    cong: Omit<Congregation, 'uuid' | 'activate'>
+  ): Promise<Congregation> => {
+    let uuid: string = uuidv4();
+    await Promise.all([
+      this.angularFirestore.doc<Congregation>(`Congregations/${uuid}`).set({
+        ...cong,
+        uuid,
+        activate: true,
+      }),
+    ]);
+    return {...cong,uuid,activate: true}
+  };
+
   readSites = (): Promise<Site[]> => {
     return firstValueFrom(
       this.angularFirestore.collection<Site>('Sites').get()

@@ -139,6 +139,36 @@ export const CONGREGATIONS: Congregation[] = [
     order: 1,
     activate: true,
   },
+  {
+    uuid: '62a092bb-48b9-4a87-b269-c8774f844671',
+    name: 'Tainan North',
+    order: 2,
+    activate: true,
+  },
+  {
+    uuid: '72a092bb-48b9-4a87-b269-c8774f844671',
+    name: 'Tainan South',
+    order: 3,
+    activate: true,
+  },
+  {
+    uuid: '82a092bb-48b9-4a87-b269-c8774f844671',
+    name: 'Luzhu',
+    order: 4,
+    activate: true,
+  },
+  {
+    uuid: '92a092bb-48b9-4a87-b269-c8774f844671',
+    name: 'GangShan',
+    order: 5,
+    activate: true,
+  },
+  {
+    uuid: '02a092bb-48b9-4a87-b269-c8774f844671',
+    name: 'Tainan ShiGang',
+    order: 6,
+    activate: true,
+  },
 ];
 
 export const SITES: Site[] = [

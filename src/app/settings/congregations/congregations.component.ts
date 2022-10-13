@@ -16,5 +16,7 @@ export class CongregationsComponent implements OnInit {
   ngOnInit(): void {
     this.congregationService.getCongregationList().subscribe((congs) => (this.congregations$ = congs));
   }
-
+  createCongregation=()=>{
+    this.congregationService.createCongregation({name:'新會眾',order:this.congregations$!.length}).then(cong=>this.congregations$?.push(cong))
+  }
 }

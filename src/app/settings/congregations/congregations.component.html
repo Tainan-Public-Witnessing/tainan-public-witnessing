@@ -1,16 +1,26 @@
 <div class="title-bar flex items-center">
     <h1>{{'CONGREGATIONS.TITLE' | translate}}</h1>
     <span class="spacer"></span>
-    <button mat-icon-button>
+    <button mat-icon-button (click)="createCongregation()">
         <mat-icon>add</mat-icon>
     </button>
 </div>
-<div class="h-hull">
-    <mat-list id="congregations-list" class="full-height" style="padding: 0">
-        <cdk-virtual-scroll-viewport [itemSize]="48" class="full-height">
-            <mat-list-item *cdkVirtualFor="let congregation of congregations$" [id]="congregation.uuid">
-                {{congregation.name}}
-            </mat-list-item>
-        </cdk-virtual-scroll-viewport>
-    </mat-list>
+<div class="h-1/2 overflow-auto">
+    <mat-action-list id="congregations-list" class="space-y-2">
+        <mat-card *ngFor="let congregation of congregations$" [id]="congregation.uuid">
+            <mat-card-header>
+                <mat-card-title>
+                    {{congregation.name}}
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-actions class="text-right">
+                <button mat-icon-button>
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button [color]="congregation.activate ? 'default' : 'warn'">
+                    <mat-icon>{{congregation.activate? "work" : "work_off"}}</mat-icon>
+                </button>
+            </mat-card-actions>
+        </mat-card>
+    </mat-action-list>
 </div>
