@@ -31,7 +31,7 @@ export interface ApiInterface {
   changeCongregationActivation:(cong:Congregation)=>Promise<boolean>
 
   readSites: () => Promise<Site[]>;
-  // patchSites:()=> Promise<void>
+  patchSites:(site:Omit<Site, 'activate'>)=> Promise<void>
   createSites:(site:Omit<Site, 'uuid' | 'activate'>)=> Promise<Site>;
   changeSiteActivation:(site:Site)=>Promise<boolean>
   

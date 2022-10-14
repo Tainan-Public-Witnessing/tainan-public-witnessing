@@ -25,7 +25,10 @@ export class SitesService {
     return this.api.createSites(site);
   };
 
-  changeSiteActivation = (site:Site) => {
+  changeSiteActivation = (site: Site) => {
     return this.api.changeSiteActivation(site);
+  };
+  patchSites = (site: Omit<Site, 'activate'>) => {
+    this.api.patchSites(site);
   };
 }

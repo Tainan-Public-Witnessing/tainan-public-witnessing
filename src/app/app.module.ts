@@ -38,6 +38,7 @@ import { SettingsComponent } from './settings/settings.component';
 import { SiteComponent } from './settings/site/site.component';
 import { ShfithoursComponent } from './settings/shfithours/shfithours.component';
 import { CongregationsComponent } from './settings/congregations/congregations.component';
+import { SiteEditorComponent } from './_elements/dialogs/site-editor/site-editor.component';
 
 
 // AoT requires an exported function for factories of translate module
@@ -72,6 +73,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     SiteComponent,
     ShfithoursComponent,
     CongregationsComponent,
+    SiteEditorComponent,
   ],
   imports: [
     BrowserModule,
