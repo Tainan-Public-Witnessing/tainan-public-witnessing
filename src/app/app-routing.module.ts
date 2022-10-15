@@ -40,7 +40,7 @@ const routes: Routes = [
   {
     path: 'settings',
     component: SettingsComponent,
-    // canActivate: [AuthorityService],
+    canActivate: [AuthorityService],
   },
   { path: '**', redirectTo: 'home' },
 ];
