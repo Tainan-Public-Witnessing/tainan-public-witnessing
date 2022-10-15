@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { __values } from 'tslib';
 import { Api } from '../_api/mock.api';
 import { Site } from '../_interfaces/site.interface';
 
@@ -21,14 +22,25 @@ export class SitesService {
     return this.sites$;
   };
 
-  createSites = (site: Omit<Site, 'uuid' | 'activate'>) => {
-    return this.api.createSites(site);
+  createSites = (site: Omit<Site, 'uuid'>) => {
+    this.api.createSites(site).then((uuid) => {
+      this.sites$?.next([...(this.sites$.value || []), { ...site, uuid }]);
+    });
+
+    return this.sites$;
   };
 
   changeSiteActivation = (site: Site) => {
     return this.api.changeSiteActivation(site);
   };
-  patchSites = (site: Omit<Site, 'activate'>) => {
-    this.api.patchSites(site);
+  updateSites = (site: Site) => {
+    this.api.updateSites(site).then(() => {
+      const updatedSites = this.sites$?.value?.map((_site) => {
+        return _site.uuid === site.uuid
+          ? { ..._site, name: site.name, position: site.position }
+          : _site;
+      });
+      this.sites$?.next(updatedSites!);
+    });
   };
 }

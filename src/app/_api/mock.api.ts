@@ -170,19 +170,17 @@ export class Api implements ApiInterface {
     return this.delayReturn().then(() => [...this.sites]);
   };
 
-  patchSites = async (site: Omit<Site,'activate'>): Promise<void> => {
-    console.log('mock api patchSites');
-    const siteIndex = SITES.findIndex((_site) => _site.uuid === site.uuid);
-    SITES[siteIndex].name = site.name;
-    return this.delayReturn();
-  };
-
   createSites = async (
-    site: Omit<Site, 'uuid' | 'activate'>
-  ): Promise<Site> => {
+    site: Omit<Site, 'uuid' >
+  ): Promise<string> => {
     let uuid: string = uuidv4();
     console.log('mock api createSites');
-    return this.delayReturn().then(() => ({ uuid, ...site, activate: true }));
+    return this.delayReturn().then(() => uuid);
+  };
+
+  updateSites = async (site:Site): Promise<void> => {
+    console.log('mock api patchSites');
+    return this.delayReturn();
   };
 
   changeSiteActivation = async (site: Site): Promise<boolean> => {

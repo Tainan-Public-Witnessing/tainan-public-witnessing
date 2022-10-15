@@ -20,9 +20,12 @@ export class SiteComponent implements OnInit {
     this.sitesService.getSites().subscribe((sites) => (this.sites$ = sites));
   }
   createSite = () => {
-    this.sitesService
-      .createSites({ name: '新地點', position: '', order: this.sites$!.length })
-      .then((site) => this.sites$?.push(site));
+    this.sitesService.createSites({
+      name: '新地點',
+      position: '',
+      order: this.sites$!.length,
+      activate: true,
+    });
   };
 
   changeSiteActivation = (site: Site) => {
@@ -31,12 +34,12 @@ export class SiteComponent implements OnInit {
       .changeSiteActivation(site)
       .then((activation) => (this.sites$![index!].activate = activation));
   };
-  opneSiteEditor = (site:Site) => {
-    this.matDialog.open(SiteEditorComponent,{
+  opneSiteEditor = (site: Site) => {
+    this.matDialog.open(SiteEditorComponent, {
       panelClass: 'dialog-panel',
-      data:{
-        site:site
-      }
+      data: {
+        site: site,
+      },
     });
   };
 }
