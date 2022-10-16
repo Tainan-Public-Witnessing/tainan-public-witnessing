@@ -1,1 +1,0 @@
-web: gunicorn --chdir ./backend/heroku app:app
