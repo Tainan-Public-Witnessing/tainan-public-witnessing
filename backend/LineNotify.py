@@ -5,30 +5,14 @@ from firebase_admin import credentials
 from firebase_admin import firestore
 import os
 
-def LineNotify(text):
-    token=os.getenv('token')
-    url='https://notify-api.line.me/api/notify'
-    headers={
-        'Authorization':f'Bearer {token}'
-    }
-    data={
-        'message':text
-    }
-    return requests.post(url,headers=headers,data=data)
 
-def vacancyNotify(event, context):
-    cred = credentials.ApplicationDefault()
-    firebase_admin.initialize_app(cred)
-    db = firestore.client()
-    
-    tomorrow=datetime.today()+timedelta(days=1)
-    tomorrow_str=tomorrow.strftime('%Y-%m-%d')
-    if tomorrow.isoweekday()==7:
-        weekday=0
-    else:
-        weekday=tomorrow.isoweekday()
-    todaySiteShifts=db.collection('SiteShifts').where('weekday','==',weekday).stream()
-    weekdayToChi={
+cred = credentials.ApplicationDefault()
+firebase_admin.initialize_app(cred)
+db = firestore.client()
+
+shifthours={ doc.id:doc.to_dict()['name'] for doc in db.collection('ShiftHours').stream()}
+sites={ doc.id:doc.to_dict()['name'] for doc in db.collection('Sites').stream()}
+weekdayToChi={
         0:'日',
         1:'一',
         2:'二',
@@ -37,41 +21,118 @@ def vacancyNotify(event, context):
         5:'五',
         6:'六',
     }
+hour_order={'早上':0,'中午':1,'下午':2,'黃昏':3}
+gender_dict={'FEMALE':'姐妹','MALE':'弟兄'}
+
+
+def LineNotify(token,message):
+    url='https://notify-api.line.me/api/notify'
+    headers={
+        'Authorization':f'Bearer {token}'
+    }
+    data={
+        'message':message
+    }
+    return requests.post(url,headers=headers,data=data)
+
+def vacancyNotify():
+    tomorrow=datetime.today()+timedelta(days=1)
+    tomorrow_str=tomorrow.strftime('%Y-%m-%d')
+    if tomorrow.isoweekday()==7:
+        weekday=0
+    else:
+        weekday=tomorrow.isoweekday()
+    tomorrowSiteShifts=db.collection('SiteShifts').where('weekday','==',weekday).stream()
     hours={}
-    hour_order={'早上':0,'中午':1,'下午':2,'黃昏':3}
-    for hour in todaySiteShifts:
+    for hour in tomorrowSiteShifts:
         info=hour.to_dict()
         if info['siteUuid'] in hours:
             hours[info['siteUuid']][info['shiftHoursUuid']]=info['attendence']
         else:
             hours[info['siteUuid']]={info['shiftHoursUuid']:info['attendence']}
 
-    today_shifts=db.collection('MonthlyData').document(tomorrow_str[:7]).collection('Shifts').where('date','==',tomorrow_str).stream()
+    tomorrow_shifts=db.collection('MonthlyData').document(tomorrow_str[:7]).collection('Shifts').where('date','==',tomorrow_str).stream()
     vacancy=[]
-    for shift in today_shifts:
+    for shift in tomorrow_shifts:
         siteUuid=shift.to_dict()['siteUuid']
         shiftHourUuid=shift.to_dict()['shiftHoursUuid']
         crew=len(shift.to_dict()['crewUuids'])
         attendence=hours[siteUuid][shiftHourUuid]
         if attendence>crew:
-            hour=db.collection('ShiftHours').document(shiftHourUuid).get().to_dict()['name']
-            site=db.collection('Sites').document(siteUuid).get().to_dict()['name']
-            vacancy.append({'site':site,'hour':hour,'vacancy':attendence-crew})
+            vacancy.append({'site':sites[siteUuid],'hour':shifthours[shiftHourUuid],'vacancy':attendence-crew})
 
     if vacancy:
+        grouptoken=os.getenv('token')
         vacancy=sorted(vacancy, key=lambda v: hour_order[v['hour']]) 
         vacancy_str=[f"{v['site']} {v['hour']}：{v['vacancy']}名" for v in vacancy]
         content='\n  '.join(vacancy_str)
-        reminder=f'\n【緊急徵求支援人員】\n\n{tomorrow_str}({weekdayToChi[weekday]})\n  {content}\n\n請耐心等待。申請的時候請你再次確保那一天自己可以服務，這樣會大大減少弟兄們的負擔。謝謝你的合作！\n\n有意者，請聯繫管理者（http://nav.cx/54fnY0o） 謝謝！'
-        LineNotify(text=reminder)
+        message=f'\n【緊急徵求支援人員】\n\n{tomorrow_str}({weekdayToChi[weekday]})\n  {content}\n\n請耐心等待。申請的時候請你再次確保那一天自己可以服務，這樣會大大減少弟兄們的負擔。謝謝你的合作！\n\n有意者，請聯繫管理者（http://nav.cx/54fnY0o） 謝謝！'
+        LineNotify(grouptoken,message)
     
-    if datetime.now().day==15 and datetime.now().hour==8:
-        month=(datetime.now()+timedelta(days=32)).month
-        remimder=f'\n【排班提醒】\n\n今天是15號，如果你{month}月份有一些安排需要調整班表，請在今天晚上12點以前完成，逾時不候'
-        LineNotify(text=remimder)
+    
 
-    if datetime.now().day==16 and datetime.now().hour==8:
-        month=(datetime.now()+timedelta(days=32)).month
-        year=(datetime.now()+timedelta(days=32)).year
-        remimder=f'\n【部門公告】 {year}年{month}月 班表開放查詢\n\n各位弟兄、姊妹辛苦了!\n{year}年{month}月的班表已開放可供查詢，請各位儘速查詢自己個人班表，有無錯誤。\n\n如有問題，請透過管理者( http://nav.cx/54fnY0o )群組和部門的弟兄聯絡，負責的弟兄會儘快為你(妳)處理。'
-        LineNotify(text=remimder)
+def ScheduleReminder():
+    token=os.getenv('token')
+    month=(datetime.now()+timedelta(days=32)).month
+    message=f'\n【排班提醒】\n\n今天是15號，如果你{month}月份有一些安排需要調整班表，請在今天晚上12點以前完成，逾時不候'
+    LineNotify(token,message)
+
+def ScheduleCompleteNotify():
+    token=os.getenv('token')
+    month=(datetime.now()+timedelta(days=32)).month
+    year=(datetime.now()+timedelta(days=32)).year
+    message=f'\n【部門公告】 {year}年{month}月 班表開放查詢\n\n各位弟兄、姊妹辛苦了!\n{year}年{month}月的班表已開放可供查詢，請各位儘速查詢自己個人班表，有無錯誤。\n\n如有問題，請透過管理者( http://nav.cx/54fnY0o )群組和部門的弟兄聯絡，負責的弟兄會儘快為你(妳)處理。'
+    LineNotify(token,message)
+
+
+def SevenDaysBeforeNotify():
+    sevendays=datetime.today()+timedelta(days=7)
+    sevendays_str=sevendays.strftime('%Y-%m-%d')
+    if sevendays.isoweekday()==7:
+        weekday=0
+    else:
+        weekday=sevendays.isoweekday()
+    sevendays_shifts=db.collection('MonthlyData').document(sevendays_str[:7]).collection('Shifts').where('date','==',sevendays_str).stream()
+    for shift in sevendays_shifts:
+        siteUuid=shift.to_dict()['siteUuid']
+        shiftHourUuid=shift.to_dict()['shiftHoursUuid']
+        content='\n  '.join([f"日期：{sevendays_str}({weekdayToChi[weekday]})",f'地點：{sites[siteUuid]}',f'時段：{shifthours[shiftHourUuid]}'])
+        for userUuid in shift.to_dict()['crewUuids']:
+            user=db.collection('Users').document(userUuid).get()
+            name=user.to_dict()['name']
+            gender=user.to_dict()['gender']
+            token=db.collection('Users').document(userUuid).collection('Schedule').document('config').get().to_dict()['lineToken']
+            message=f'\n\n{name}{gender_dict[gender]}您好，\n您「一週後」有都市見證委派\n\n  {content}。\n\n如果對安排有任何疑問，請盡快聯繫管理者（http://nav.cx/54fnY0o） 謝謝！\n\n備註：這裡只有通知服務，請勿在此回覆訊息'
+            if token:
+                LineNotify(token,message)
+
+def TomorrowNotify():
+    tomorrow=datetime.today()+timedelta(days=1)
+    tomorrow_str=tomorrow.strftime('%Y-%m-%d')
+    if tomorrow.isoweekday()==7:
+        weekday=0
+    else:
+        weekday=tomorrow.isoweekday()
+    tomorrow_shifts=db.collection('MonthlyData').document(tomorrow_str[:7]).collection('Shifts').where('date','==',tomorrow_str).stream()
+    for shift in tomorrow_shifts:
+        siteUuid=shift.to_dict()['siteUuid']
+        shiftHourUuid=shift.to_dict()['shiftHoursUuid']
+        content='\n  '.join([f'日期：{tomorrow_str}({weekdayToChi[weekday]})',f'地點：{sites[siteUuid]}',f'時段：{shifthours[shiftHourUuid]}'])
+        for userUuid in shift.to_dict()['crewUuids']:
+            user=db.collection('Users').document(userUuid).get()
+            name=user.to_dict()['name']
+            gender=user.to_dict()['gender']
+            token=db.collection('Users').document(userUuid).collection('Schedule').document('config').get().to_dict()['lineToken']
+            message=f'\n\n{name}{gender_dict[gender]}您好，\n您「明天」有都市見證委派\n\n  {content}。\n\n如果對安排有任何疑問，請盡快聯繫管理者（http://nav.cx/54fnY0o） 謝謝！\n\n備註：這裡只有通知服務，請勿在此回覆訊息'
+            if token:
+                LineNotify(token,message)
+
+def Notify(event, context):
+    vacancyNotify()
+    if datetime.now().hour==20 and datetime.now().day==15:
+        ScheduleReminder()
+    if datetime.now().hour==8 and datetime.now().day==16:
+        ScheduleCompleteNotify()
+    if datetime.now().hour==8:
+        SevenDaysBeforeNotify()
+        TomorrowNotify()
