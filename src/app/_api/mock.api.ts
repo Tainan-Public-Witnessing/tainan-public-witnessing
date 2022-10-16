@@ -341,4 +341,9 @@ export class Api implements ApiInterface {
   private delayReturn = (): Promise<void> => {
     return firstValueFrom(timer(500).pipe(map(() => {})));
   };
+
+  registerLineToken = async (uuid: string,token:string) => {
+    console.log('mock api register Line token', uuid, token);
+    return this.delayReturn();
+  };
 }

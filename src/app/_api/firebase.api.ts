@@ -4,7 +4,7 @@ import { ApiInterface } from 'src/app/_api/api.interface';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { v4 as uuidv4, v5 as uuidv5 } from 'uuid';
 import { EXISTED_ERROR } from '../_classes/errors/EXISTED_ERROR';
@@ -437,5 +437,12 @@ export class Api implements ApiInterface {
     await this.angularFirestore
       .doc(`Users/${userUuid}/Schedule/config`)
       .update(data);
+  };
+
+  registerLineToken = async (uuid: string, token: string): Promise<void> => {
+    console.log(uuid, token);
+    // await this.angularFirestore
+    //   .doc(`Users/${uuid}`)
+    //   .update({lineToken:token});
   };
 }
