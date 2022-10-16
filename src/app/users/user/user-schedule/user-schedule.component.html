@@ -32,6 +32,9 @@
       >lock</mat-icon
     >
   </div>
+  <div class="text-right">
+    <mat-slide-toggle [checked]="subscribe" color="primary" [(ngModel)]="subscribe" (change)="onSubscribe(uuid)">訂閱通知</mat-slide-toggle>
+  </div>
   <div *ngIf="requireAdmin$ | async">
     <mat-form-field class="w-full">
       <mat-label>{{ "USERS.LABEL.PARTNER" | translate }}</mat-label>

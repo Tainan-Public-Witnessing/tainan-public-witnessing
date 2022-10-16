@@ -66,5 +66,5 @@ export interface ApiInterface {
     data: Partial<UserSchedule>
   ) => Promise<void>;
 
-  registerLineToken: (uuid: string, token: string) => Promise<void>;
+  cancelLineToken: (userUuid: string) => Promise<void>;
 }

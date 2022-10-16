@@ -18,6 +18,7 @@ import { User, UserKey } from '../_interfaces/user.interface';
 import { docExists as isDocExists, docsExists } from './firebase-helper';
 import { SiteShifts } from '../_interfaces/site-shifts.interface';
 import { UserSchedule } from '../_interfaces/user-schedule.interface';
+import { async } from '@angular/core/testing';
 
 @Injectable({
   providedIn: 'root',
@@ -438,11 +439,9 @@ export class Api implements ApiInterface {
       .doc(`Users/${userUuid}/Schedule/config`)
       .update(data);
   };
-
-  registerLineToken = async (uuid: string, token: string): Promise<void> => {
-    console.log(uuid, token);
-    // await this.angularFirestore
-    //   .doc(`Users/${uuid}`)
-    //   .update({lineToken:token});
+  cancelLineToken = async (userUuid: string) => {
+    await this.angularFirestore
+      .doc(`Users/${userUuid}/Schedule/config`)
+      .update({'lineToken':''});
   };
 }
