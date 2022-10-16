@@ -5,7 +5,6 @@ import { PersonalShiftComponent } from './personal-shift/personal-shift.componen
 import { ShiftsComponent } from './shifts/shifts.component';
 import { UserComponent } from './users/user/user.component';
 import { UsersComponent } from './users/users.component';
-import { CallbackComponent } from './callback/callback.component';
 import { Mode } from './_enums/mode.enum';
 import { AuthorityService } from './_services/authority.service';
 
@@ -35,11 +34,6 @@ const routes: Routes = [
   {
     path: 'profile',
     component: UserComponent,
-    canActivate: [AuthorityService],
-  },
-  {
-    path: 'callback',
-    component: CallbackComponent,
     canActivate: [AuthorityService],
   },
   { path: '**', redirectTo: 'home' },
