@@ -4,7 +4,7 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 import os
-
+from calendar import monthrange
 
 cred = credentials.ApplicationDefault()
 firebase_admin.initialize_app(cred)
@@ -96,13 +96,13 @@ def SevenDaysBeforeNotify():
     for shift in sevendays_shifts:
         siteUuid=shift.to_dict()['siteUuid']
         shiftHourUuid=shift.to_dict()['shiftHoursUuid']
-        content='\n  '.join([f"日期：{sevendays_str}({weekdayToChi[weekday]})",f'地點：{sites[siteUuid]}',f'時段：{shifthours[shiftHourUuid]}'])
+        content='\n'.join([f"日期：{sevendays_str}({weekdayToChi[weekday]})",f'地點：{sites[siteUuid]}',f'時段：{shifthours[shiftHourUuid]}'])
         for userUuid in shift.to_dict()['crewUuids']:
             user=db.collection('Users').document(userUuid).get()
             name=user.to_dict()['name']
             gender=user.to_dict()['gender']
             token=db.collection('Users').document(userUuid).collection('Schedule').document('config').get().to_dict()['lineToken']
-            message=f'\n\n{name}{gender_dict[gender]}您好，\n您「一週後」有都市見證委派\n\n  {content}。\n\n如果對安排有任何疑問，請盡快聯繫管理者（http://nav.cx/54fnY0o） 謝謝！\n\n備註：這裡只有通知服務，請勿在此回覆訊息'
+            message=f'\n\n{name}{gender_dict[gender]}您好，\n您「一週後」有都市見證委派\n\n{content}。\n\n如果對安排有任何疑問，請盡快聯繫管理者（http://nav.cx/54fnY0o） 謝謝！\n\n★請勿在此回覆訊息'
             if token:
                 LineNotify(token,message)
 
@@ -117,15 +117,29 @@ def TomorrowNotify():
     for shift in tomorrow_shifts:
         siteUuid=shift.to_dict()['siteUuid']
         shiftHourUuid=shift.to_dict()['shiftHoursUuid']
-        content='\n  '.join([f'日期：{tomorrow_str}({weekdayToChi[weekday]})',f'地點：{sites[siteUuid]}',f'時段：{shifthours[shiftHourUuid]}'])
+        content='\n'.join([f'日期：{tomorrow_str}({weekdayToChi[weekday]})',f'地點：{sites[siteUuid]}',f'時段：{shifthours[shiftHourUuid]}'])
         for userUuid in shift.to_dict()['crewUuids']:
             user=db.collection('Users').document(userUuid).get()
             name=user.to_dict()['name']
             gender=user.to_dict()['gender']
             token=db.collection('Users').document(userUuid).collection('Schedule').document('config').get().to_dict()['lineToken']
-            message=f'\n\n{name}{gender_dict[gender]}您好，\n您「明天」有都市見證委派\n\n  {content}。\n\n如果對安排有任何疑問，請盡快聯繫管理者（http://nav.cx/54fnY0o） 謝謝！\n\n備註：這裡只有通知服務，請勿在此回覆訊息'
+            message=f'\n\n{name}{gender_dict[gender]}您好，\n您「明天」有都市見證委派\n\n{content}。\n\n如果對安排有任何疑問，請盡快聯繫管理者（http://nav.cx/54fnY0o） 謝謝！\n\n★請勿在此回覆訊息'
             if token:
                 LineNotify(token,message)
+
+def Report():
+    month=datetime.now().month
+    year=datetime.now().year
+    attended=[attend_user.id for attend_user in db.collection('MonthlyData').document(f'{year}-{month:02}').collection('PersonalShifts').where('shiftUuids','!=',[]).stream()]
+    NotAttendUsersId=[user.reference.parent.parent.id for user in db.collection_group('Schedule').where('assign','==',True).stream() if user.reference.parent.parent.id not in attended]
+    NotAttendUsers=[db.collection('Users').document(userId).get().to_dict()['username'] for userId in NotAttendUsersId]
+    NotAttendUsers_str='\n'.join(NotAttendUsers)
+    message=f"\n【{year}年{month}月未參與名單】\n{NotAttendUsers_str}"
+    committee_uuids=[ user.reference for user in db.collection('Users').where('permission','==',1).stream()]
+    for member in committee_uuids:
+        doc=member.collection('Schedule').document('config').get().to_dict()
+        if doc['lineToken']:
+            LineNotify(doc['lineToken'],message)
 
 def Notify(event, context):
     vacancyNotify()
@@ -133,6 +147,8 @@ def Notify(event, context):
         ScheduleReminder()
     if datetime.now().hour==8 and datetime.now().day==16:
         ScheduleCompleteNotify()
+    if datetime.now().day==monthrange(datetime.now().year,datetime.now().month)[1]:
+        Report()
     if datetime.now().hour==8:
         SevenDaysBeforeNotify()
         TomorrowNotify()
