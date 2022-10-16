@@ -17,7 +17,7 @@ export class CallbackComponent implements OnInit {
   searchParams = new URLSearchParams({
     response_type: 'code',
     client_id: 'CumN52DojP7D7fMERzuV5o',
-    redirect_uri: 'http://localhost:4200/callback',
+    redirect_uri: 'https://line-notify-callback-nj3qdvrhgq-de.a.run.app/callback',
     scope: 'notify',
     response_mode: 'form_post',
   });
