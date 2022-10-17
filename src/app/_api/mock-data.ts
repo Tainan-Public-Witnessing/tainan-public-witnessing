@@ -276,6 +276,7 @@ export const USER_SCHEDULE_CONFIGS: { [userUuid: string]: UserSchedule } = {
   [USERS[0].uuid]: {
     unavailableDates: [],
     assign: true,
+    lineToken:'asdasdasdasd',
     partnerUuid: '',
     availableHours: {
       '0': {
@@ -286,6 +287,7 @@ export const USER_SCHEDULE_CONFIGS: { [userUuid: string]: UserSchedule } = {
   [USERS[1].uuid]: {
     unavailableDates: [],
     assign: true,
+    lineToken:'',
     partnerUuid: '',
     availableHours: {
       '3': {

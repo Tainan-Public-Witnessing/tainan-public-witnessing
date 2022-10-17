@@ -27,4 +27,8 @@ export class UserScheduleService {
     }
     await this.api.patchUserSchedule(userUuid, saveData);
   };
+
+  cancelLineToken = async (userUuid: string) => {
+    this.api.cancelLineToken(userUuid)
+  };
 }

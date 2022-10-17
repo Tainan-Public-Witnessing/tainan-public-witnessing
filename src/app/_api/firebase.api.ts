@@ -4,7 +4,7 @@ import { ApiInterface } from 'src/app/_api/api.interface';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { v4 as uuidv4, v5 as uuidv5 } from 'uuid';
 import { EXISTED_ERROR } from '../_classes/errors/EXISTED_ERROR';
@@ -18,6 +18,7 @@ import { User, UserKey } from '../_interfaces/user.interface';
 import { docExists as isDocExists, docsExists } from './firebase-helper';
 import { SiteShifts } from '../_interfaces/site-shifts.interface';
 import { UserSchedule } from '../_interfaces/user-schedule.interface';
+import { async } from '@angular/core/testing';
 
 @Injectable({
   providedIn: 'root',
@@ -437,5 +438,10 @@ export class Api implements ApiInterface {
     await this.angularFirestore
       .doc(`Users/${userUuid}/Schedule/config`)
       .update(data);
+  };
+  cancelLineToken = async (userUuid: string) => {
+    await this.angularFirestore
+      .doc(`Users/${userUuid}/Schedule/config`)
+      .update({'lineToken':''});
   };
 }
