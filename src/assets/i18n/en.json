@@ -104,7 +104,8 @@
       "ASSIGN": "Assign",
       "AVAILABLE_HOURS": "Available Shift Hours / Times",
       "UNAVILABLE_DATES": "Unavailable Dates",
-      "PARTNER": "Partner"
+      "PARTNER": "Partner",
+      "SUBSCRIBE":"Subscribe Line Notification"
     },
     "PERSONAL_SHIFTS_EXIST_ERROR": "Can not deactivate user! Please cancel the following assignments first:\n\n{{value}}",
     "PROFILE_TITLE": "Profile",
