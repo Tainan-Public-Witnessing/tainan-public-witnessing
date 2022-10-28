@@ -10,7 +10,7 @@ def LineNotifyCallback(db):
     payload = {
         "grant_type": "authorization_code",
         "code": code,
-        "redirect_uri": "https://asia-east1-tainan-public-witnessing.cloudfunctions.net/callback",
+        "redirect_uri": "https://backend-4twc3jkzwa-de.a.run.app/LineNotifyCallback",
         "client_id": "CumN52DojP7D7fMERzuV5o",
         "client_secret": os.getenv("client_secret"),
     }
@@ -20,4 +20,4 @@ def LineNotifyCallback(db):
     db.collection("Users").document(userUuid).collection("Schedule").document(
         "config"
     ).update({"lineToken": access_token})
-    return redirect("https://tainan-public-witnessing.firebaseapp.com/", code=302)
+    return redirect("https://tainan-public-witnessing-v2211.firebaseapp.com/", code=302)

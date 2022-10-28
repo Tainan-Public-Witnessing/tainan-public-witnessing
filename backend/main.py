@@ -5,19 +5,16 @@ from flask_limiter.util import get_remote_address
 import firebase_admin
 from firebase_admin import firestore
 
+from datetime import datetime
+from calendar import monthrange
 import requests
 import os
 
-from shiftschedule import ShiftSchedule
+from shiftschedule import ShiftSchedule, ScheduleReminder, ScheduleCompleteReminder
 from report import AttendanceReport
 from callback import LineNotifyCallback
-from vacancy import TomorrowVacancyNotify
-from notify import (
-    ScheduleReminder,
-    ScheduleCompleteReminder,
-    BeforeSevenDaysAssignmentNotify,
-    TomorrowAssignmentNotify,
-)
+from vacancy import Tomorrow_VacancyNotify
+from assignment import BeforeSevenDays_AssignmentNotify, Tomorrow_AssignmentNotify
 
 app = Flask(__name__)
 limiter = Limiter(
@@ -50,20 +47,21 @@ def ScheduleCompleteReminder():
     ScheduleCompleteReminder(LineNotify)
 
 
-@app.route("/SevenDaysBeforeNotify", methods=["GET"])
-def SevenDaysBeforeNotify():
-    BeforeSevenDaysAssignmentNotify(db, LineNotify)
+@app.route("/AssignmentNotify", methods=["GET"])
+def AssignmentNotify():
+    BeforeSevenDays_AssignmentNotify(db, LineNotify)
+    Tomorrow_AssignmentNotify(db, LineNotify)
 
 
-@app.route("/TomorrowNotify", methods=["GET"])
-def TomorrowNotify():
-    TomorrowAssignmentNotify(db, LineNotify)
-    TomorrowVacancyNotify(db, LineNotify)
+@app.route("/VacancyNotify", methods=["GET"])
+def VacancyNotify():
+    Tomorrow_VacancyNotify(db, LineNotify)
 
 
 @app.route("/AttendanceReport", methods=["GET"])
 def AttendanceReport():
-    AttendanceReport(db, LineNotify)
+    if datetime.now().day == monthrange(datetime.now().year, datetime.now().month)[1]:
+        AttendanceReport(db, LineNotify)
 
 
 @app.route("/ShiftSchedule", methods=["GET"])

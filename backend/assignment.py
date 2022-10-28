@@ -1,4 +1,3 @@
-import os
 from datetime import datetime, timedelta
 
 weekdayToChi = {
@@ -14,22 +13,7 @@ hour_order = {"早上": 0, "中午": 1, "下午": 2, "黃昏": 3}
 gender_dict = {"FEMALE": "姐妹", "MALE": "弟兄"}
 
 
-def ScheduleReminder(LineNotify):
-    token = os.getenv("grouptoken")
-    month = (datetime.now() + timedelta(days=32)).month
-    message = f"\n【排班提醒】\n\n今天是15號，如果你{month}月份有一些安排需要調整班表，請在今天晚上12點以前完成，謝謝你們的合作"
-    LineNotify(token, message)
-
-
-def ScheduleCompleteReminder(LineNotify):
-    token = os.getenv("grouptoken")
-    month = (datetime.now() + timedelta(days=32)).month
-    year = (datetime.now() + timedelta(days=32)).year
-    message = f"\n【部門公告】 {year}年{month}月 班表開放查詢\n\n各位弟兄、姊妹你們好\n{year}年{month}月的班表已開放查詢。\n\n如有問題，請聯繫管理者( http://nav.cx/54fnY0o )。\n\n★我們每個人都有可能收到委派，請務必到網站上確認自己的班表"
-    LineNotify(token, message)
-
-
-def BeforeSevenDaysAssignmentNotify(db, LineNotify):
+def BeforeSevenDays_AssignmentNotify(db, LineNotify):
     shifthours = {
         doc.id: {
             "name": doc.to_dict()["name"],
@@ -79,7 +63,7 @@ def BeforeSevenDaysAssignmentNotify(db, LineNotify):
                 LineNotify(token, message)
 
 
-def TomorrowAssignmentNotify(db, LineNotify):
+def Tomorrow_AssignmentNotify(db, LineNotify):
     shifthours = {
         doc.id: {
             "name": doc.to_dict()["name"],

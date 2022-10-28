@@ -14,7 +14,7 @@ hour_order = {"早上": 0, "中午": 1, "下午": 2, "黃昏": 3}
 gender_dict = {"FEMALE": "姐妹", "MALE": "弟兄"}
 
 
-def TomorrowVacancyNotify(db, LineNotify):
+def Tomorrow_VacancyNotify(db, LineNotify):
     shifthours = {
         doc.id: {
             "name": doc.to_dict()["name"],
