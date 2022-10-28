@@ -336,8 +336,7 @@ export class UserScheduleComponent implements OnInit, OnDestroy, OnChanges {
       response_type: 'code',
       client_id: 'CumN52DojP7D7fMERzuV5o',
       state: userUuid,
-      redirect_uri:
-        'https://asia-east1-tainan-public-witnessing.cloudfunctions.net/callback',
+      redirect_uri: 'https://backend-4twc3jkzwa-de.a.run.app/LineLoginCallback',
       scope: 'notify',
       response_mode: 'form_post',
     });

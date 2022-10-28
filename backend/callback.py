@@ -1,6 +1,7 @@
-from flask import redirect, request
+from flask import jsonify, redirect, request
 import os
 import requests
+from firebase_admin import auth
 
 
 def LineNotifyCallback(db):
@@ -11,8 +12,8 @@ def LineNotifyCallback(db):
         "grant_type": "authorization_code",
         "code": code,
         "redirect_uri": "https://backend-4twc3jkzwa-de.a.run.app/LineNotifyCallback",
-        "client_id": "CumN52DojP7D7fMERzuV5o",
-        "client_secret": os.getenv("client_secret"),
+        "client_id": os.getenv("client_id_notify"),
+        "client_secret": os.getenv("client_secret_notify"),
     }
     headers = {"Content-Type": "application/x-www-form-urlencoded"}
     res = requests.post(url, headers=headers, data=payload)
@@ -21,3 +22,34 @@ def LineNotifyCallback(db):
         "config"
     ).update({"lineToken": access_token})
     return redirect("https://tainan-public-witnessing-v2211.firebaseapp.com/", code=302)
+
+
+def LineLoginCallback(db):
+    code = request.form.get("code")
+    url = "https://api.line.me/oauth2/v2.1/token"
+    payload = {
+        "grant_type": "authorization_code",
+        "code": code,
+        "redirect_uri": "https://backend-4twc3jkzwa-de.a.run.app/LineLoginCallback",
+        "client_id": os.getenv("client_id_login"),
+        "client_secret": os.getenv("client_secret_login"),
+    }
+    headers = {"Content-Type": "application/x-www-form-urlencoded"}
+    res = requests.post(url, data=payload)
+    access_token = res.json()["access_token"]
+    url_getUserInfo = "https://api.line.me/oauth2/v2.1/userinfo"
+    headers = {"Authorization": f"Bearer {access_token}"}
+    res = requests.get(url_getUserInfo, headers=headers)
+    subject = res.json()["sub"]
+    user = db.collection("Users").where("subject", "==", subject).get()
+    if user:
+        custom_token = auth.create_custom_token(subject)
+        return redirect(
+            f"https://tainan-public-witnessing-v2211.firebaseapp.com/login#{custom_token}",
+            code=302,
+        )
+    else:
+        return redirect(
+            f"https://tainan-public-witnessing-v2211.firebaseapp.com/register#{subject}",
+            code=302,
+        )

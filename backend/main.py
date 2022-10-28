@@ -12,9 +12,10 @@ import os
 
 from shiftschedule import ShiftSchedule, ScheduleReminder, ScheduleCompleteReminder
 from report import AttendanceReport
-from callback import LineNotifyCallback
+from callback import LineNotifyCallback, LineLoginCallback
 from vacancy import Tomorrow_VacancyNotify
 from assignment import BeforeSevenDays_AssignmentNotify, Tomorrow_AssignmentNotify
+from bind import BindUser
 
 app = Flask(__name__)
 limiter = Limiter(
@@ -33,8 +34,20 @@ def LineNotify(token, message):
 
 
 @app.route("/LineNotifyCallback", methods=["POST"])
+@limiter.limit("10/minute")
+@limiter.limit("10/second")
 def LineNotifyCallback():
     LineNotifyCallback(db)
+
+
+@app.route("/LineLoginCallback", methods=["POST"])
+def LineLoginCallback():
+    LineLoginCallback(db)
+
+
+@app.route("/BindUser", methods=["POST"])
+def BindUser():
+    BindUser(db)
 
 
 @app.route("/ScheduleReminder", methods=["GET"])
