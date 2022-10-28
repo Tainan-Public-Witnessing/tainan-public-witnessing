@@ -1,13 +1,12 @@
 from datetime import datetime, timedelta
 import requests
 import firebase_admin
-from firebase_admin import credentials
 from firebase_admin import firestore
 import os
 from calendar import monthrange
 
-cred = credentials.ApplicationDefault()
-firebase_admin.initialize_app(cred)
+
+firebase_admin.initialize_app()
 db = firestore.client()
 
 shifthours = {
@@ -19,6 +18,10 @@ shifthours = {
     for doc in db.collection("ShiftHours").stream()
 }
 sites = {doc.id: doc.to_dict()["name"] for doc in db.collection("Sites").stream()}
+line_notify_users = [
+    doc.reference.parent.parent.id
+    for doc in db.collection_group("Schedule").where("lineToken", "!=", "").stream()
+]
 weekdayToChi = {
     0: "日",
     1: "一",
@@ -53,9 +56,9 @@ def vacancyNotify():
     for hour in tomorrowSiteShifts:
         info = hour.to_dict()
         if info["siteUuid"] in hours:
-            hours[info["siteUuid"]][info["shiftHoursUuid"]] = info["attendence"]
+            hours[info["siteUuid"]][info["shiftHoursUuid"]] = info["attendance"]
         else:
-            hours[info["siteUuid"]] = {info["shiftHoursUuid"]: info["attendence"]}
+            hours[info["siteUuid"]] = {info["shiftHoursUuid"]: info["attendance"]}
 
     tomorrow_shifts = (
         db.collection("MonthlyData")
@@ -69,13 +72,13 @@ def vacancyNotify():
         siteUuid = shift.to_dict()["siteUuid"]
         shiftHourUuid = shift.to_dict()["shiftHoursUuid"]
         crew = len(shift.to_dict()["crewUuids"])
-        attendence = hours[siteUuid][shiftHourUuid]
-        if attendence > crew:
+        attendance = hours[siteUuid][shiftHourUuid]
+        if attendance > crew:
             vacancy.append(
                 {
                     "site": sites[siteUuid],
                     "hour": shifthours[shiftHourUuid]["name"],
-                    "vacancy": attendence - crew,
+                    "vacancy": attendance - crew,
                 }
             )
 
@@ -118,30 +121,31 @@ def SevenDaysBeforeNotify():
         .stream()
     )
     for shift in sevendays_shifts:
-        siteUuid = shift.to_dict()["siteUuid"]
-        shiftHourUuid = shift.to_dict()["shiftHoursUuid"]
-        content = "\n".join(
-            [
-                f"日期：{sevendays_str}({weekdayToChi[weekday]})",
-                f"地點：{sites[siteUuid]}",
-                f"時段：{shifthours[shiftHourUuid]['name']}（{shifthours[shiftHourUuid]['startTime']} ~ {shifthours[shiftHourUuid]['endTime']}）",
-            ]
-        )
         for userUuid in shift.to_dict()["crewUuids"]:
-            user = db.collection("Users").document(userUuid).get()
-            name = user.to_dict()["name"]
-            gender = user.to_dict()["gender"]
-            token = (
-                db.collection("Users")
-                .document(userUuid)
-                .collection("Schedule")
-                .document("config")
-                .get()
-                .to_dict()["lineToken"]
-            )
-            message = f"\n\n【委派提醒】 您有7天後的委派\n\n{name}{gender_dict[gender]}您好，\n您7天後有都市見證委派\n\n{content}。\n\n如果對安排有任何疑問，請盡快聯繫《管理者》謝謝！\n\n★請勿在此回覆訊息"
-            if token:
-                LineNotify(token, message)
+            if userUuid in line_notify_users:
+                siteUuid = shift.to_dict()["siteUuid"]
+                shiftHourUuid = shift.to_dict()["shiftHoursUuid"]
+                content = "\n".join(
+                    [
+                        f"日期：{sevendays_str}({weekdayToChi[weekday]})",
+                        f"地點：{sites[siteUuid]}",
+                        f"時段：{shifthours[shiftHourUuid]['name']}（{shifthours[shiftHourUuid]['startTime']} ~ {shifthours[shiftHourUuid]['endTime']}）",
+                    ]
+                )
+                user = db.collection("Users").document(userUuid).get()
+                name = user.to_dict()["name"]
+                gender = user.to_dict()["gender"]
+                token = (
+                    db.collection("Users")
+                    .document(userUuid)
+                    .collection("Schedule")
+                    .document("config")
+                    .get()
+                    .to_dict()["lineToken"]
+                )
+                message = f"\n\n【委派提醒】 您有7天後的委派\n\n{name}{gender_dict[gender]}您好，\n您7天後有都市見證委派\n\n{content}。\n\n如果對安排有任何疑問，請盡快聯繫《管理者》謝謝！\n\n★請勿在此回覆訊息"
+                if token:
+                    LineNotify(token, message)
 
 
 def TomorrowNotify():
@@ -159,30 +163,31 @@ def TomorrowNotify():
         .stream()
     )
     for shift in tomorrow_shifts:
-        siteUuid = shift.to_dict()["siteUuid"]
-        shiftHourUuid = shift.to_dict()["shiftHoursUuid"]
-        content = "\n".join(
-            [
-                f"日期：{tomorrow_str}({weekdayToChi[weekday]})",
-                f"地點：{sites[siteUuid]}",
-                f"時段：{shifthours[shiftHourUuid]['name']}（{shifthours[shiftHourUuid]['startTime']} ~ {shifthours[shiftHourUuid]['endTime']}）",
-            ]
-        )
         for userUuid in shift.to_dict()["crewUuids"]:
-            user = db.collection("Users").document(userUuid).get()
-            name = user.to_dict()["name"]
-            gender = user.to_dict()["gender"]
-            token = (
-                db.collection("Users")
-                .document(userUuid)
-                .collection("Schedule")
-                .document("config")
-                .get()
-                .to_dict()["lineToken"]
-            )
-            message = f"\n\n【委派提醒】 您有明天的委派\n\n{name}{gender_dict[gender]}您好，\n您明天有都市見證委派\n\n{content}。\n\n如果對安排有任何疑問，請盡快聯繫《管理者》\n\n若您自行駕車前往，請盡量提早出門並且安全駕駛。如果你會遲到請直接打給當天的監督\n\n★★請勿在此回覆訊息★★"
-            if token:
-                LineNotify(token, message)
+            if userUuid in line_notify_users:
+                siteUuid = shift.to_dict()["siteUuid"]
+                shiftHourUuid = shift.to_dict()["shiftHoursUuid"]
+                content = "\n".join(
+                    [
+                        f"日期：{tomorrow_str}({weekdayToChi[weekday]})",
+                        f"地點：{sites[siteUuid]}",
+                        f"時段：{shifthours[shiftHourUuid]['name']}（{shifthours[shiftHourUuid]['startTime']} ~ {shifthours[shiftHourUuid]['endTime']}）",
+                    ]
+                )
+                user = db.collection("Users").document(userUuid).get()
+                name = user.to_dict()["name"]
+                gender = user.to_dict()["gender"]
+                token = (
+                    db.collection("Users")
+                    .document(userUuid)
+                    .collection("Schedule")
+                    .document("config")
+                    .get()
+                    .to_dict()["lineToken"]
+                )
+                message = f"\n\n【委派提醒】 您有明天的委派\n\n{name}{gender_dict[gender]}您好，\n您明天有都市見證委派\n\n{content}。\n\n如果對安排有任何疑問，請盡快聯繫《管理者》\n\n若您自行駕車前往，請盡量提早出門並且安全駕駛。如果你會遲到請直接打給當天的監督\n\n★★請勿在此回覆訊息★★"
+                if token:
+                    LineNotify(token, message)
 
 
 def Report():
