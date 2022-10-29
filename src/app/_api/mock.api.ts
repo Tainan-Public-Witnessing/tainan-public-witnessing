@@ -170,15 +170,18 @@ export class Api implements ApiInterface {
     return this.delayReturn().then(() => [...this.sites]);
   };
 
-  createSites = async (
-    site: Omit<Site, 'uuid' >
+  createSite = async (
+    site: Omit<Site, 'uuid' | 'activate' | 'order'>
   ): Promise<string> => {
     let uuid: string = uuidv4();
+    let maxOrder = Math.max(...this.sites.map(m => m.order));
+    let siteTemp: Site = { uuid, ...site, order: maxOrder + 1, activate: true };
+    this.sites.push(siteTemp);
     console.log('mock api createSites');
     return this.delayReturn().then(() => uuid);
   };
 
-  updateSites = async (site:Site): Promise<void> => {
+  updateSites = async (site: Site): Promise<void> => {
     console.log('mock api patchSites');
     return this.delayReturn();
   };
@@ -395,6 +398,6 @@ export class Api implements ApiInterface {
   };
 
   private delayReturn = (): Promise<void> => {
-    return firstValueFrom(timer(500).pipe(map(() => {})));
+    return firstValueFrom(timer(500).pipe(map(() => { })));
   };
 }

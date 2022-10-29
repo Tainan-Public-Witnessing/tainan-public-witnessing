@@ -4,7 +4,7 @@ import { ApiInterface } from 'src/app/_api/api.interface';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, map } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { v4 as uuidv4, v5 as uuidv5 } from 'uuid';
 import { EXISTED_ERROR } from '../_classes/errors/EXISTED_ERROR';
@@ -28,7 +28,7 @@ export class Api implements ApiInterface {
   constructor(
     private angularFirestore: AngularFirestore,
     private angularFireAuth: AngularFireAuth
-  ) {}
+  ) { }
 
   login = (uuid: string, password: string): Promise<void> => {
     const email = [uuid, this.mailSuffix].join('');
@@ -156,9 +156,9 @@ export class Api implements ApiInterface {
           db.collection<ShiftHours>('ShiftHours').ref.get(),
         ])
       ).map((snapshot) => snapshot.docs.map((doc) => doc.data())) as [
-        Site[],
-        ShiftHours[]
-      ];
+          Site[],
+          ShiftHours[]
+        ];
 
       return userShifts
         .map((shift) => ({
@@ -260,14 +260,18 @@ export class Api implements ApiInterface {
     });
   };
 
-  createSites = async (
-    site: Omit<Site, 'uuid' | 'activate'>
+  createSite = async (
+    site: Omit<Site, 'uuid' | 'activate' | 'order'>
   ): Promise<string> => {
     let uuid: string = uuidv4();
+    let maxOrder = await firstValueFrom(this.angularFirestore.collection<Site>('Sites').get())
+      .then(query => Math.max(...query.docs.map(m => m.data().order)));
+
     await Promise.all([
       this.angularFirestore.doc<Site>(`Sites/${uuid}`).set({
         ...site,
         uuid,
+        order: maxOrder + 1,
         activate: true,
       }),
     ]);

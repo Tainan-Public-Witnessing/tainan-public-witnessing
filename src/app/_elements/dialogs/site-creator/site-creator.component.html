@@ -1,0 +1,25 @@
+<mat-card>
+  <mat-card-title>
+    請輸入地點資訊
+  </mat-card-title>
+  <mat-card-content>
+    <form [formGroup]="siteform">
+      <mat-form-field class="w-full">
+        <mat-label>地點名稱</mat-label>
+        <input matInput formControlName="name" id="Sitename-input" required />
+      </mat-form-field>
+      <mat-form-field class="w-full">
+        <mat-label>地點位置</mat-label>
+        <input matInput formControlName="position" id="Siteposition-input" />
+      </mat-form-field>
+      <div mat-dialog-actions align="end">
+        <button mat-button color="accent" cdkFocusInitial (click)="onCancelClick()">
+          {{ "GLOBAL.CANCEL" | translate }}
+        </button>
+        <button mat-button color="primary" (click)="onSubmitClick()">
+          {{ "GLOBAL.SUBMIT" | translate }}
+        </button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>
