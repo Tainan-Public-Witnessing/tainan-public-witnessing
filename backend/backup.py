@@ -1,5 +1,4 @@
 from googleapiclient.discovery import build
-import os
 
 
 def Backup():

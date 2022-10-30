@@ -34,7 +34,7 @@ def LineNotify(token, message):
     return requests.post(url, headers=headers, data=data)
 
 
-@app.route("/LineNotifyCallback", methods=["POST"])
+@app.route("/line-notify-callback", methods=["POST"])
 @limiter.limit("10/minute")
 @limiter.limit("10/second")
 def line_notify_callback():
@@ -42,57 +42,57 @@ def line_notify_callback():
     return ("", 204)
 
 
-@app.route("/LineLoginCallback", methods=["POST"])
+@app.route("/line-login-callback", methods=["POST"])
 def line_login_callback():
     LineLoginCallback(db)
     return ("", 204)
 
 
-@app.route("/BindUser", methods=["POST"])
+@app.route("/bind-user", methods=["POST"])
 def bind_user():
     BindUser(db)
     return ("", 204)
 
 
-@app.route("/ScheduleReminder", methods=["GET"])
+@app.route("/schedule-reminder", methods=["GET"])
 def schedule_reminder():
     ScheduleReminder(LineNotify)
     return jsonify({"status": f"已送出排班調整提醒"})
 
 
-@app.route("/ScheduleCompleteReminder", methods=["GET"])
+@app.route("/schedule-complete-reminder", methods=["GET"])
 def schedule_complete_reminder():
     ScheduleCompleteReminder(LineNotify)
     return jsonify({"status": f"已送出排班完成提醒"})
 
 
-@app.route("/AssignmentNotify", methods=["GET"])
+@app.route("/assignment-notify", methods=["GET"])
 def assignment_notify():
     BeforeSevenDays_AssignmentNotify(db, LineNotify)
     Tomorrow_AssignmentNotify(db, LineNotify)
     return jsonify({"status": f"已送出委派提醒"})
 
 
-@app.route("/VacancyNotify", methods=["GET"])
+@app.route("/vacancy-notify", methods=["GET"])
 def vacancy_notify():
     Tomorrow_VacancyNotify(db, LineNotify)
     return jsonify({"status": f"已送出缺席提醒"})
 
 
-@app.route("/AttendanceReport", methods=["GET"])
+@app.route("/attendance-report", methods=["GET"])
 def attendance_report():
     if datetime.now().day == monthrange(datetime.now().year, datetime.now().month)[1]:
         AttendanceReport(db, LineNotify)
         return jsonify({"status": f"已送出報告"})
 
 
-@app.route("/ShiftSchedule", methods=["GET"])
+@app.route("/shift-schedule", methods=["GET"])
 def shift_schedule():
     year, month = ShiftSchedule(db)
     return jsonify({"status": f"{year}-{month:02}排班完成"})
 
 
-@app.route("/Backup", methods=["GET"])
+@app.route("/backup", methods=["GET"])
 def backup():
     Backup()
     return ("", 204)
