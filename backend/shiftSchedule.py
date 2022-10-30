@@ -189,3 +189,4 @@ def ShiftSchedule(db):
             user.reference, {"unavailableDates": firestore.ArrayRemove(expiredDates)}
         )
     batch.commit()
+    return year, month
