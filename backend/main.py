@@ -37,55 +37,55 @@ def LineNotify(token, message):
 @app.route("/LineNotifyCallback", methods=["POST"])
 @limiter.limit("10/minute")
 @limiter.limit("10/second")
-def LineNotifyCallback():
+def line_notify_callback():
     LineNotifyCallback(db)
 
 
 @app.route("/LineLoginCallback", methods=["POST"])
-def LineLoginCallback():
+def line_login_callback():
     LineLoginCallback(db)
 
 
 @app.route("/BindUser", methods=["POST"])
-def BindUser():
+def bind_user():
     BindUser(db)
 
 
 @app.route("/ScheduleReminder", methods=["GET"])
-def ScheduleReminder():
+def schedule_reminder():
     ScheduleReminder(LineNotify)
 
 
 @app.route("/ScheduleCompleteReminder", methods=["GET"])
-def ScheduleCompleteReminder():
+def schedule_complete_reminder():
     ScheduleCompleteReminder(LineNotify)
 
 
 @app.route("/AssignmentNotify", methods=["GET"])
-def AssignmentNotify():
+def assignment_notify():
     BeforeSevenDays_AssignmentNotify(db, LineNotify)
     Tomorrow_AssignmentNotify(db, LineNotify)
 
 
 @app.route("/VacancyNotify", methods=["GET"])
-def VacancyNotify():
+def vacancy_notify():
     Tomorrow_VacancyNotify(db, LineNotify)
 
 
 @app.route("/AttendanceReport", methods=["GET"])
-def AttendanceReport():
+def attendance_report():
     if datetime.now().day == monthrange(datetime.now().year, datetime.now().month)[1]:
         AttendanceReport(db, LineNotify)
 
 
 @app.route("/ShiftSchedule", methods=["GET"])
-def ShiftSchedule():
+def shift_schedule():
     ShiftSchedule(db)
 
 
 @app.route("/Backup", methods=["GET"])
-def Backup():
-    Backup(db)
+def backup():
+    Backup()
 
 
 if __name__ == "__main__":
