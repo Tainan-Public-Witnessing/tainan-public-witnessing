@@ -10,12 +10,13 @@ from calendar import monthrange
 import requests
 import os
 
-from shiftschedule import ShiftSchedule, ScheduleReminder, ScheduleCompleteReminder
+from shiftSchedule import ShiftSchedule, ScheduleReminder, ScheduleCompleteReminder
 from report import AttendanceReport
 from callback import LineNotifyCallback, LineLoginCallback
 from vacancy import Tomorrow_VacancyNotify
 from assignment import BeforeSevenDays_AssignmentNotify, Tomorrow_AssignmentNotify
 from bind import BindUser
+from backup import Backup
 
 app = Flask(__name__)
 limiter = Limiter(
@@ -80,6 +81,11 @@ def AttendanceReport():
 @app.route("/ShiftSchedule", methods=["GET"])
 def ShiftSchedule():
     ShiftSchedule(db)
+
+
+@app.route("/Backup", methods=["GET"])
+def Backup():
+    Backup(db)
 
 
 if __name__ == "__main__":
