@@ -1,6 +1,8 @@
 from flask import Flask, jsonify
+
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+import redis
 
 import firebase_admin
 from firebase_admin import firestore
@@ -19,8 +21,16 @@ from bind import BindUser
 from backup import Backup
 
 app = Flask(__name__)
+redis_password = os.environ.get("redis_password")
+pool = redis.connection.BlockingConnectionPool.from_url(
+    f"redis://:{redis_password}@redis-16040.c302.asia-northeast1-1.gce.cloud.redislabs.com:16040"
+)
 limiter = Limiter(
-    app, key_func=get_remote_address, default_limits=["200 per day", "50 per hour"]
+    app,
+    key_func=get_remote_address,
+    default_limits=["1000 per day", "100 per hour"],
+    storage_uri="redis://",
+    storage_options={"connection_pool": pool},
 )
 
 firebase_admin.initialize_app()
@@ -43,6 +53,8 @@ def line_notify_callback():
 
 
 @app.route("/line-login-callback", methods=["POST"])
+@limiter.limit("40/minute")
+@limiter.limit("10/second")
 def line_login_callback():
     LineLoginCallback(db)
     return ("", 204)
