@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { filter, first } from 'rxjs/operators';
-import { Api } from '../_api/mock.api';
+import { Api } from '../_api';
 import { Statistic } from '../_interfaces/statistic.interface';
 import { ShiftsService } from './shifts.service';
 

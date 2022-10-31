@@ -1,22 +1,22 @@
 import { Injectable } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import {
   ActivatedRouteSnapshot,
   CanActivate,
   Router,
   RouterStateSnapshot,
-  UrlTree,
+  UrlTree
 } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { filter, first, map, switchAll, tap } from 'rxjs/operators';
-import { Api } from 'src/app/_api/mock.api';
-import { CookieService } from 'ngx-cookie-service';
-import { MatDialog } from '@angular/material/dialog';
-import { LoginDialogComponent } from '../_elements/dialogs/login-dialog/login-dialog.component';
+import { Api } from 'src/app/_api';
 import { environment } from 'src/environments/environment';
-import { Permission } from '../_enums/permission.enum';
-import { UsersService } from './users.service';
-import { User } from '../_interfaces/user.interface';
+import { LoginDialogComponent } from '../_elements/dialogs/login-dialog/login-dialog.component';
 import { Mode } from '../_enums/mode.enum';
+import { Permission } from '../_enums/permission.enum';
+import { User } from '../_interfaces/user.interface';
+import { UsersService } from './users.service';
 
 @Injectable({
   providedIn: 'root',
