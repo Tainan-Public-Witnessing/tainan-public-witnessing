@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
@@ -25,9 +25,15 @@ redis_password = os.environ.get("redis_password")
 pool = redis.connection.BlockingConnectionPool.from_url(
     f"redis://:{redis_password}@redis-16040.c302.asia-northeast1-1.gce.cloud.redislabs.com:16040"
 )
+
+
+def get_user_ip():
+    return request.headers.get("X-Forwarded-For")[0]
+
+
 limiter = Limiter(
     app,
-    key_func=get_remote_address,
+    key_func=get_user_ip,
     default_limits=["1000 per day", "100 per hour"],
     storage_uri="redis://",
     storage_options={"connection_pool": pool},
