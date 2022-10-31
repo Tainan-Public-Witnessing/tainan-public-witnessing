@@ -18,7 +18,7 @@ jobs:
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_TAINAN_PUBLIC_WITNESSING }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_TAINAN_PUBLIC_WITNESSING_V2211 }}"
           channelId: live
           projectId: tainan-public-witnessing-v2211
           target: test
