@@ -51,4 +51,5 @@ Thumbs.db
 
 # python dev
 *.ipynb
+*.pyc
 test
