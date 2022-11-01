@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { Api } from '../_api/mock.api';
+import { Api } from '../_api';
 import { Permission } from '../_enums/permission.enum';
 import { UserSchedule } from '../_interfaces/user-schedule.interface';
 import { AuthorityService } from './authority.service';

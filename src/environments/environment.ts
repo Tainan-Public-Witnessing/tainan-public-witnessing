@@ -4,6 +4,15 @@
 
 export const environment = {
   production: false,
+  firebase: {
+    apiKey: 'AIzaSyBctAo4dEh7L22XmXqkW5iAnRyfDgvTlZQ',
+    authDomain: 'tainan-public-witnessing-dev.firebaseapp.com',
+    projectId: 'tainan-public-witnessing-dev',
+    storageBucket: 'tainan-public-witnessing-dev.appspot.com',
+    messagingSenderId: '1029341358770',
+    appId: '1:1029341358770:web:a0647b48ffb0f4e0a977ab',
+    measurementId: 'G-9S7J6K0HJ8',
+  },
   UUID_NAMESPACE: '7b921192-c856-5152-8444-bb08b1efac9b',
   TAINAN_PUBLIC_WITNESSING_PERMISSION_TOKEN:
     '3c8ec6c4-7a3b-43a6-82af-0d243d6a7fc7',

@@ -10,7 +10,7 @@ import {
 import { CookieService } from 'ngx-cookie-service';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { filter, first, map, switchAll, tap } from 'rxjs/operators';
-import { Api } from 'src/app/_api/mock.api';
+import { Api } from 'src/app/_api';
 import { environment } from 'src/environments/environment';
 import { routes } from '../routes';
 import { LoginDialogComponent } from '../_elements/dialogs/login-dialog/login-dialog.component';

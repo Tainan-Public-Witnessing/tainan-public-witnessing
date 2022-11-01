@@ -1,37 +1,54 @@
 <div class="app">
-
-  <mat-toolbar>
-
-    <button mat-icon-button (click)="onMenuButtonClick()" #menuButton cy="menu-button">
+  <mat-toolbar [class.bg-warn]="isDevMode">
+    <button
+      mat-icon-button
+      (click)="onMenuButtonClick()"
+      #menuButton
+      cy="menu-button"
+    >
       <mat-icon>menu</mat-icon>
     </button>
 
-    <span cy="app-title" class="site-name">{{ 'GLOBAL.SITE_NAME' | translate }}</span>
+    <span cy="app-title" class="site-name"
+      >{{ "GLOBAL.SITE_NAME" | translate }}
+    </span>
+    <span *ngIf="isDevMode" class="text-white ml-2">(DEV DB)</span>
 
     <span class="spacer"></span>
 
-    <button mat-button *ngIf="(currentUsername$ | async) && (displayUsername$ | async)" class="welcome-message" cy="welcome-message"
-    routerLink="/profile"
+    <button
+      mat-button
+      *ngIf="(currentUsername$ | async) && (displayUsername$ | async)"
+      class="welcome-message"
+      cy="welcome-message"
+      routerLink="/profile"
     >
-      {{'GLOBAL.WELCOME_MESSAGE' | translate: {value: currentUsername$ | async} }}
+      {{
+        "GLOBAL.WELCOME_MESSAGE"
+          | translate: { value: currentUsername$ | async }
+      }}
     </button>
 
-    <button mat-icon-button
-      [matMenuTriggerFor]="languageMenu" cy="translate-button">
+    <button
+      mat-icon-button
+      [matMenuTriggerFor]="languageMenu"
+      cy="translate-button"
+    >
       <mat-icon>translate</mat-icon>
     </button>
     <mat-menu #languageMenu="matMenu">
-      <button mat-menu-item
+      <button
+        mat-menu-item
         *ngFor="let language of languages"
         cy="language-buttons"
-        (click)="onLanguageButtonClick(language)">
-        {{ 'LANGUAGE.' + language | uppercase | translate }}
+        (click)="onLanguageButtonClick(language)"
+      >
+        {{ "LANGUAGE." + language | uppercase | translate }}
       </button>
     </mat-menu>
   </mat-toolbar>
 
   <mat-sidenav-container>
-
     <mat-sidenav #sidenav mode="over">
       <app-menu></app-menu>
     </mat-sidenav>

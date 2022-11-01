@@ -9,8 +9,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AngularMaterialModule } from 'src/app/_modules/angular-material.module';
-import { FirebaseModule } from 'src/app/_modules/firebase-develop.module';
-import { environment } from 'src/environments/environment.prod';
+import { FirebaseModule } from 'src/app/_modules/firebase.module';
+import { environment } from 'src/environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';

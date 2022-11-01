@@ -60,7 +60,7 @@ export class UserScheduleComponent implements OnInit, OnDestroy, OnChanges {
     unavailableDates: [] as string[],
     partnerUuid: '',
     assign: true,
-    lineToken:'',
+    lineToken: '',
   };
 
   userKeys$ = new BehaviorSubject<UserKey[]>([]);
@@ -70,7 +70,7 @@ export class UserScheduleComponent implements OnInit, OnDestroy, OnChanges {
   schedulingRange = this.getNextSchedulingRange();
   calendarHeader = CalendarHeaderComponent;
 
-  subscribe:boolean;
+  subscribe: boolean;
 
   constructor(
     private siteShiftsService: SiteShiftService,
@@ -178,7 +178,7 @@ export class UserScheduleComponent implements OnInit, OnDestroy, OnChanges {
 
     this.schedulingConfig = {
       assign: savedSchedule.assign,
-      lineToken:savedSchedule.lineToken||'',
+      lineToken: savedSchedule.lineToken || '',
       partnerUuid:
         (savedSchedule.partnerUuid &&
           userKeys!.find(
@@ -202,7 +202,7 @@ export class UserScheduleComponent implements OnInit, OnDestroy, OnChanges {
         return obj;
       }),
     };
-    this.subscribe=!!this.schedulingConfig.lineToken
+    this.subscribe = !!this.schedulingConfig.lineToken;
     this.partnerInput$.next(this.schedulingConfig.partnerUuid);
   }
 
@@ -331,22 +331,22 @@ export class UserScheduleComponent implements OnInit, OnDestroy, OnChanges {
     }
   };
 
-  onSubscribe=(userUuid:string)=>{
+  onSubscribe = (userUuid: string) => {
     let searchParams = new URLSearchParams({
       response_type: 'code',
       client_id: 'CumN52DojP7D7fMERzuV5o',
-      state:userUuid,
+      state: userUuid,
       redirect_uri:
-        'https://line-notify-callback-nj3qdvrhgq-de.a.run.app/callback',
+        'https://backend-4twc3jkzwa-de.a.run.app/line-notify-callback',
       scope: 'notify',
       response_mode: 'form_post',
     });
-    if (this.subscribe){
-      window.open(`https://notify-bot.line.me/oauth/authorize?${searchParams.toString()}`)
-    }else{
-      this.userScheduleService.cancelLineToken(userUuid)
+    if (this.subscribe) {
+      window.open(
+        `https://notify-bot.line.me/oauth/authorize?${searchParams.toString()}`
+      );
+    } else {
+      this.userScheduleService.cancelLineToken(userUuid);
     }
-  }
-  
-
+  };
 }
