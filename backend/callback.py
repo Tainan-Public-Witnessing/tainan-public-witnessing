@@ -11,7 +11,7 @@ def LineNotifyCallback(db):
     payload = {
         "grant_type": "authorization_code",
         "code": code,
-        "redirect_uri": "https://backend-4twc3jkzwa-de.a.run.app/LineNotifyCallback",
+        "redirect_uri": "https://backend-4twc3jkzwa-de.a.run.app/line-notify-callback",
         "client_id": os.getenv("client_id_notify"),
         "client_secret": os.getenv("client_secret_notify"),
     }
@@ -21,7 +21,9 @@ def LineNotifyCallback(db):
     db.collection("Users").document(userUuid).collection("Schedule").document(
         "config"
     ).update({"lineToken": access_token})
-    return redirect("https://tainan-public-witnessing-v2211.firebaseapp.com/", code=302)
+    return redirect(
+        "https://tainan-public-witnessing-official.firebaseapp.com/", code=302
+    )
 
 
 def LineLoginCallback(db):
@@ -30,7 +32,7 @@ def LineLoginCallback(db):
     payload = {
         "grant_type": "authorization_code",
         "code": code,
-        "redirect_uri": "https://backend-4twc3jkzwa-de.a.run.app/LineLoginCallback",
+        "redirect_uri": "https://backend-4twc3jkzwa-de.a.run.app/line-login-callback",
         "client_id": os.getenv("client_id_login"),
         "client_secret": os.getenv("client_secret_login"),
     }
@@ -45,11 +47,11 @@ def LineLoginCallback(db):
     if user:
         custom_token = auth.create_custom_token(subject)
         return redirect(
-            f"https://tainan-public-witnessing-v2211.firebaseapp.com/login#{custom_token}",
+            f"https://tainan-public-witnessing-official.firebaseapp.com/login#{custom_token}",
             code=302,
         )
     else:
         return redirect(
-            f"https://tainan-public-witnessing-v2211.firebaseapp.com/register#{subject}",
+            f"https://tainan-public-witnessing-official.firebaseapp.com/register#{subject}",
             code=302,
         )
