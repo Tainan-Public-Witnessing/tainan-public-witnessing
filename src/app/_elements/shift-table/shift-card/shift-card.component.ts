@@ -71,7 +71,9 @@ export class ShiftCardComponent implements OnInit, OnDestroy {
           _userKeys?.find((_userKey) => _userKey.uuid === _memberUuid)
         ) as UserKey[];
         this.day = environment.DAY[new Date(_shift.date).getDay()];
-        this.emptiness = new Array(_shift.attendance || 4).fill(0);
+
+        const attendance = _shift.attendance || 4;
+        this.emptiness = new Array(attendance - this.crew.length).fill(0);
       });
 
     this.pipeCanEditStatistic();

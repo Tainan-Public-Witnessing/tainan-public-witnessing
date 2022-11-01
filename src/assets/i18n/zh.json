@@ -74,6 +74,7 @@
   "OPENING_SHIFTS": {
     "TITLE": "空缺班表",
     "NO_DATA_MESSAGE": "沒有資料",
+    "NEED_SUPPORT": "請支援",
     "LABEL": {
       "YEAR_MONTH": "年份-月份"
     }

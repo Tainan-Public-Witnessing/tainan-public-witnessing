@@ -21,8 +21,8 @@
       >
         {{ user.username }}
       </mat-chip>
-      <mat-chip *ngFor="let count of emptiness" class="bg-warn text-white">
-        請支援
+      <mat-chip *ngFor="let count of emptiness" class="bg-warn text-white cursor-pointer">
+        {{ "OPENING_SHIFTS.NEED_SUPPORT" | translate }}
       </mat-chip>
     </mat-chip-list>
 
