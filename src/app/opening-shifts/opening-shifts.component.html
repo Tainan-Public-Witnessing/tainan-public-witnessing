@@ -1,0 +1,14 @@
+<div class="container">
+  <mat-form-field appearance="outline">
+    <mat-label>{{'OPENING_SHIFTS.LABEL.YEAR_MONTH' | translate}}</mat-label>
+    <input matInput [matDatepicker]="yearMonthPicker" [formControl]="yearMonthControl">
+    <mat-datepicker-toggle matSuffix [for]="yearMonthPicker"></mat-datepicker-toggle>
+    <mat-datepicker
+      #yearMonthPicker
+      startView="year"
+      (monthSelected)="setMonthAndYear($event, yearMonthPicker)">
+    </mat-datepicker>
+  </mat-form-field>
+
+  <app-shift-table [shifts$]="shifts$"></app-shift-table>
+</div>

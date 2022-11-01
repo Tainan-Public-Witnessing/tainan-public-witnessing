@@ -1,28 +1,28 @@
 <mat-card class="shift-card h-full box-border">
-
   <mat-card-header *ngIf="crew !== null">
-
     <mat-card-title>
-      <div>{{shift?.date}}</div>
-      <div>
-        <mat-icon>schedule</mat-icon>{{shiftHours?.name}}
-      </div>
-      <div>
-        <mat-icon>pin_drop</mat-icon>{{site?.name}}
-      </div>
+      <div>{{ shift?.date }}</div>
+      <div><mat-icon>schedule</mat-icon>{{ shiftHours?.name }}</div>
+      <div><mat-icon>pin_drop</mat-icon>{{ site?.name }}</div>
     </mat-card-title>
 
     <mat-card-subtitle>
-      {{'GLOBAL.DAY.' + day | translate}}
-      {{shiftHours?.startTime}} ~
-      {{shiftHours?.endTime}}
+      {{ "GLOBAL.DAY." + day | translate }}
+      {{ shiftHours?.startTime }} ~
+      {{ shiftHours?.endTime }}
     </mat-card-subtitle>
   </mat-card-header>
 
   <mat-card-content>
     <mat-chip-list *ngIf="!!crew">
-      <mat-chip *ngFor="let user of crew;let i=index" [ngClass]="{'deliver':(i==0 ||i==1) && shiftHours?.deliver}">
-        {{user.username}}
+      <mat-chip
+        *ngFor="let user of crew; let i = index"
+        [ngClass]="{ deliver: (i == 0 || i == 1) && shiftHours?.deliver }"
+      >
+        {{ user.username }}
+      </mat-chip>
+      <mat-chip *ngFor="let count of emptiness" class="bg-warn text-white">
+        請支援
       </mat-chip>
     </mat-chip-list>
 
@@ -30,13 +30,20 @@
   </mat-card-content>
 
   <mat-card-actions *ngIf="crew !== null">
-
-    <button mat-icon-button *ngIf="canEditStatistic$ | async" [ngClass]="{'has-statistic': shift?.hasStatistic}"
-      (click)="openStatisticEditor()">
+    <button
+      mat-icon-button
+      *ngIf="canEditStatistic$ | async"
+      [ngClass]="{ 'has-statistic': shift?.hasStatistic }"
+      (click)="openStatisticEditor()"
+    >
       <mat-icon>add_chart</mat-icon>
     </button>
 
-    <button mat-icon-button *ngIf="canEditCrew$ | async" (click)="openCrewEditor()">
+    <button
+      mat-icon-button
+      *ngIf="canEditCrew$ | async"
+      (click)="openCrewEditor()"
+    >
       <mat-icon>groups</mat-icon>
     </button>
   </mat-card-actions>

@@ -71,6 +71,13 @@
       "YEAR_MONTH": "年份-月份"
     }
   },
+  "OPENING_SHIFTS": {
+    "TITLE": "空缺班表",
+    "NO_DATA_MESSAGE": "沒有資料",
+    "LABEL": {
+      "YEAR_MONTH": "年份-月份"
+    }
+  },
   "USERS": {
     "TITLE": "使用者列表",
     "CREATE_TITLE": "新增使用者",
@@ -110,7 +117,7 @@
       "AVAILABLE_HOURS": "可參與時段和次數",
       "UNAVILABLE_DATES": "無法參與日期",
       "PARTNER": "同伴",
-      "SUBSCRIBE":"訂閱通知服務"
+      "SUBSCRIBE": "訂閱通知服務"
     }
   },
   "CONGREGATIONS": {

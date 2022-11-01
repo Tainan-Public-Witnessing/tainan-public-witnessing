@@ -6,4 +6,5 @@ export interface Shift {
   siteUuid: string;
   crewUuids: string[];
   hasStatistic?: boolean;
+  attendance?: number;
 }
