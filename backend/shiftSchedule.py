@@ -46,7 +46,7 @@ def ShiftSchedule(db):
                         "partner": partner,
                         "weekday": int(weekday),
                         "shiftHoursUuid": shifthour,
-                        "attendence": user["availableHours"][weekday][shifthour],
+                        "attendance": user["availableHours"][weekday][shifthour],
                         "unavailableDates": user["unavailableDates"],
                     }
                 )
@@ -65,19 +65,19 @@ def ShiftSchedule(db):
         else:
             return row["weight"]
 
-    def choose_participants(signup, attendence):
+    def choose_participants(signup, attendance):
         choosen = []
-        if len(signup) <= attendence:
-            df.loc[signup.index, "attendence"] -= 1
+        if len(signup) <= attendance:
+            df.loc[signup.index, "attendance"] -= 1
             choosen = signup["name"].to_list()
         else:
-            while len(choosen) < attendence:
+            while len(choosen) < attendance:
                 reminder_participants = signup[
                     signup["name"].apply(lambda x: x not in choosen)
                 ].copy()
-                sum = (6 - reminder_participants["attendence"]).sum()
+                sum = (6 - reminder_participants["attendance"]).sum()
                 reminder_participants["weight"] = reminder_participants[
-                    "attendence"
+                    "attendance"
                 ].apply(lambda x: (6 - x) / sum)
                 reminder_participants["weight"] = reminder_participants.apply(
                     adjustWeight, axis=1
@@ -88,25 +88,25 @@ def ShiftSchedule(db):
                 partner = choosed["partner"].values[0]
                 if not partner or partner not in signup["name"].values:
                     choosen.append(choosed["name"].values[0])
-                    df.loc[choosed.index, "attendence"] -= 1
-                elif len(choosen) == attendence - 1:
+                    df.loc[choosed.index, "attendance"] -= 1
+                elif len(choosen) == attendance - 1:
                     for participant in choosen:
                         if not signup[signup["name"] == participant]["partner"].values:
                             choosen.remove(participant)
                             choosen.extend([choosed["name"].values[0], partner])
                             df.loc[
                                 signup[signup["name"] == participant].index,
-                                "attendence",
+                                "attendance",
                             ] += 1
-                            df.loc[choosed.index, "attendence"] -= 1
+                            df.loc[choosed.index, "attendance"] -= 1
                             df.loc[
-                                signup[signup["name"] == partner].index, "attendence"
+                                signup[signup["name"] == partner].index, "attendance"
                             ] -= 1
                             break
-                elif len(choosen) < attendence - 1:
+                elif len(choosen) < attendance - 1:
                     choosen.extend([choosed["name"].values[0], partner])
-                    df.loc[choosed.index, "attendence"] -= 1
-                    df.loc[signup[signup["name"] == partner].index, "attendence"] -= 1
+                    df.loc[choosed.index, "attendance"] -= 1
+                    df.loc[signup[signup["name"] == partner].index, "attendance"] -= 1
                 else:
                     continue
         return choosen
@@ -121,7 +121,7 @@ def ShiftSchedule(db):
             weekday = date.isoweekday()
         shifts = db.collection("SiteShifts").where("weekday", "==", weekday).get()
         for shift in shifts:
-            attendence = shift.to_dict()["attendence"]
+            attendance = shift.to_dict()["attendance"]
             siteUuid = shift.to_dict()["siteUuid"]
             shiftHoursUuid = shift.to_dict()["shiftHoursUuid"]
             signup = df[
@@ -132,7 +132,7 @@ def ShiftSchedule(db):
                 & (df["name"].apply(lambda x: x not in yesterdayShift))
                 & (df["name"].apply(lambda x: x not in full))
             ].copy()
-            result = choose_participants(signup, attendence)
+            result = choose_participants(signup, attendance)
             todayShift.extend(result)
             uuid_ = str(uuid.uuid4())
             for person in result:
@@ -146,19 +146,20 @@ def ShiftSchedule(db):
                     statistics[person] = 1
                 if statistics[person] >= upper_limit:
                     full.append(person)
-
-            batch.set(
-                ref.collection("Shifts").document(uuid_),
-                {
-                    "activate": True,
-                    "crewUuids": result,
-                    "date": f"{year}-{month:02d}-{day:02d}",
-                    "shiftHoursUuid": shiftHoursUuid,
-                    "siteUuid": siteUuid,
-                    "uuid": uuid_,
-                    "expiredAt": expired,
-                },
-            )
+            shift_data = {
+                "activate": True,
+                "crewUuids": result,
+                "date": f"{year}-{month:02d}-{day:02d}",
+                "shiftHoursUuid": shiftHoursUuid,
+                "siteUuid": siteUuid,
+                "uuid": uuid_,
+                "expiredAt": expired,
+            }
+            if len(result) < attendance:
+                shift_data["full"] = False
+            else:
+                shift_data["full"] = True
+            batch.set(ref.collection("Shifts").document(uuid_), shift_data)
 
         yesterdayShift = todayShift
     batch.commit()
