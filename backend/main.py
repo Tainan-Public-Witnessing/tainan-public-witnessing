@@ -1,7 +1,6 @@
 from flask import Flask, jsonify, request
 
 from flask_limiter import Limiter
-from flask_limiter.util import get_remote_address
 import redis
 
 import firebase_admin
@@ -54,22 +53,19 @@ def LineNotify(token, message):
 @limiter.limit("10/minute")
 @limiter.limit("10/second")
 def line_notify_callback():
-    LineNotifyCallback(db)
-    return ("", 204)
+    return LineNotifyCallback(db)
 
 
 @app.route("/line-login-callback", methods=["POST"])
 @limiter.limit("40/minute")
 @limiter.limit("10/second")
 def line_login_callback():
-    LineLoginCallback(db)
-    return ("", 204)
+    return LineLoginCallback(db)
 
 
 @app.route("/bind-user", methods=["POST"])
 def bind_user():
-    BindUser(db)
-    return ("", 204)
+    return BindUser(db)
 
 
 @app.route("/schedule-reminder", methods=["GET"])
