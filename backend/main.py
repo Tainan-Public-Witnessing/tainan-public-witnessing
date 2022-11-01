@@ -27,7 +27,7 @@ pool = redis.connection.BlockingConnectionPool.from_url(
 
 
 def get_user_ip():
-    return request.headers.get("X-Forwarded-For")[0]
+    return request.headers.get("X-Forwarded-For")
 
 
 limiter = Limiter(
@@ -110,6 +110,12 @@ def shift_schedule():
 def backup():
     Backup()
     return ("", 204)
+
+
+@app.route("/test", methods=["GET"])
+@limiter.limit("2/minute")
+def test():
+    return jsonify({"status": "ok"})
 
 
 if __name__ == "__main__":
