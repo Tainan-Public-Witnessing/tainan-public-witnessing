@@ -27,7 +27,7 @@ pool = redis.connection.BlockingConnectionPool.from_url(
 
 
 def get_user_ip():
-    return request.headers.get("X-Forwarded-For")[0]
+    return request.headers.get("X-Forwarded-For")
 
 
 limiter = Limiter(

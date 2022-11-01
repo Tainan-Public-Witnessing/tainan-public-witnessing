@@ -37,9 +37,9 @@ def Tomorrow_VacancyNotify(db, LineNotify):
     for hour in tomorrowSiteShifts:
         info = hour.to_dict()
         if info["siteUuid"] in hours:
-            hours[info["siteUuid"]][info["shiftHoursUuid"]] = info["attendence"]
+            hours[info["siteUuid"]][info["shiftHoursUuid"]] = info["attendance"]
         else:
-            hours[info["siteUuid"]] = {info["shiftHoursUuid"]: info["attendence"]}
+            hours[info["siteUuid"]] = {info["shiftHoursUuid"]: info["attendance"]}
 
     tomorrow_shifts = (
         db.collection("MonthlyData")
@@ -53,13 +53,13 @@ def Tomorrow_VacancyNotify(db, LineNotify):
         siteUuid = shift.to_dict()["siteUuid"]
         shiftHourUuid = shift.to_dict()["shiftHoursUuid"]
         crew = len(shift.to_dict()["crewUuids"])
-        attendence = hours[siteUuid][shiftHourUuid]
-        if attendence > crew:
+        attendance = hours[siteUuid][shiftHourUuid]
+        if attendance > crew:
             vacancy.append(
                 {
                     "site": sites[siteUuid],
                     "hour": shifthours[shiftHourUuid]["name"],
-                    "vacancy": attendence - crew,
+                    "vacancy": attendance - crew,
                 }
             )
 
