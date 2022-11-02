@@ -115,10 +115,7 @@ def ShiftSchedule(db):
         todayShift = []
         date = datetime(year, month, day)
         date_str = date.strftime("%Y-%m-%d")
-        if date.isoweekday() == 7:
-            weekday = 0
-        else:
-            weekday = date.isoweekday()
+        weekday = date.isoweekday() if date.isoweekday() != 7 else 0
         shifts = db.collection("SiteShifts").where("weekday", "==", weekday).get()
         for shift in shifts:
             attendance = shift.to_dict()["attendance"]
@@ -154,6 +151,8 @@ def ShiftSchedule(db):
                 "siteUuid": siteUuid,
                 "uuid": uuid_,
                 "expiredAt": expired,
+                "attendance": attendance,
+                "weekday": weekday,
             }
             if len(result) < attendance:
                 shift_data["full"] = False

@@ -6,13 +6,14 @@ import redis
 import firebase_admin
 from firebase_admin import firestore
 
+from dotenv import load_dotenv
 from datetime import datetime
 from calendar import monthrange
 import requests
 import os
 import asyncio
 
-from shiftSchedule import ShiftSchedule, ScheduleReminder, ScheduleCompleteReminder
+from shiftschedule import ShiftSchedule, ScheduleReminder, ScheduleCompleteReminder
 from report import AttendanceReport
 from callback import LineNotifyCallback, LineLoginCallback
 from vacancy import VacancyNotify
@@ -20,6 +21,7 @@ from assignment import AssignmentNotify
 from bind import BindUser
 from backup import Backup
 
+load_dotenv()
 app = Flask(__name__)
 redis_password = os.environ.get("redis_password")
 pool = redis.connection.BlockingConnectionPool.from_url(

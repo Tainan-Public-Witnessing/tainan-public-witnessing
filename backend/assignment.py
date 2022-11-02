@@ -16,10 +16,7 @@ gender_dict = {"FEMALE": "姐妹", "MALE": "弟兄"}
 async def AssignmentNotify(db, LineNotify, n):
     nth_days = datetime.today() + timedelta(days=n)
     nth_days_str = nth_days.strftime("%Y-%m-%d")
-    if nth_days.isoweekday() == 7:
-        weekday = 0
-    else:
-        weekday = nth_days.isoweekday()
+    weekday = nth_days.isoweekday() if nth_days.isoweekday() != 7 else 0
     nth_days_shifts = (
         db.collection("MonthlyData")
         .document(nth_days_str[:7])
@@ -58,8 +55,8 @@ async def AssignmentNotify(db, LineNotify, n):
                 .to_dict()["lineToken"]
             )
             if n == 1:
-                message = f"\n\n【委派提醒】 您有明天的委派\n\n{name}{gender_dict[gender]}您好，\n您明天有都市見證委派\n\n{content}。\n\n如果對委派有任何疑問，請盡快聯繫《管理者》\n\n若您自行駕車前往，請盡量提早出門並且安全駕駛。如果你會遲到請直接打給緊急處理的弟兄（任何一位），謝謝你的合作\n\n★★請勿在此回覆訊息★★"
+                message = f"\n\n【委派提醒 明天的委派】\n\n{name}{gender_dict[gender]}您好，\n您明天有都市見證委派\n\n{content}。\n\n如果對委派有任何疑問，請盡快聯繫《管理者》\n\n若您自行駕車前往，請盡量提早出門並且安全駕駛。如果你會遲到請直接打給緊急處理的弟兄（任何一位），謝謝你的合作\n\n★★請勿在此回覆訊息★★"
             else:
-                message = f"\n\n【委派提醒】 您有{n}天後的委派\n\n{name}{gender_dict[gender]}您好，\n您{n}天後有都市見證委派\n\n{content}。\n\n如果對委派有任何疑問，請盡快聯繫《管理者》謝謝！\n\n★請勿在此回覆訊息"
+                message = f"\n\n【委派提醒 {n}天後的委派】\n\n{name}{gender_dict[gender]}您好，\n您{n}天後有都市見證委派\n\n{content}。\n\n如果對委派有任何疑問，請盡快聯繫《管理者》謝謝！\n\n★請勿在此回覆訊息"
             if token:
                 LineNotify(token, message)

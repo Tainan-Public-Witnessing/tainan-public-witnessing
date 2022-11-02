@@ -52,4 +52,5 @@ Thumbs.db
 # python dev
 *.ipynb
 *.pyc
+*.env
 backend-dev
