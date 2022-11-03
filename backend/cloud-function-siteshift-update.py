@@ -1,22 +1,25 @@
 import firebase_admin
 from firebase_admin import firestore
+from datetime import datetime
 
 firebase_admin.initialize_app()
 db = firestore.client()
 
 
-def ShiftUpdate(event):
+def ShiftUpdate(event, context):
     field = event["updateMask"]["fieldPaths"][0]
+    today = datetime.today().strftime("%Y-%m-%d")
     if field == "attendance":
         siteUuid = event["value"]["fields"]["siteUuid"]["stringValue"]
         shiftHoursUuid = event["value"]["fields"]["shiftHoursUuid"]["stringValue"]
         weekday = int(event["value"]["fields"]["weekday"]["integerValue"])
         new_attendance = int(event["value"]["fields"]["attendance"]["integerValue"])
-        ref = db.collection("MonthlyData").document("2022-11").collection("Shifts")
+        ref = db.collection_group("Shifts")
         beUpdatedShifts = (
             ref.where("shiftHoursUuid", "==", shiftHoursUuid)
             .where("siteUuid", "==", siteUuid)
             .where("weekday", "==", weekday)
+            .where("date", ">=", today)
             .get()
         )
         for shift in beUpdatedShifts:
