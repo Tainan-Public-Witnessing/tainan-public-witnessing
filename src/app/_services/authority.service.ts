@@ -12,8 +12,8 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
 import { filter, first, map, switchAll, tap } from 'rxjs/operators';
 import { Api } from 'src/app/_api';
 import { environment } from 'src/environments/environment';
+import { routes } from '../routes';
 import { LoginDialogComponent } from '../_elements/dialogs/login-dialog/login-dialog.component';
-import { Mode } from '../_enums/mode.enum';
 import { Permission } from '../_enums/permission.enum';
 import { User } from '../_interfaces/user.interface';
 import { UsersService } from './users.service';
@@ -23,16 +23,7 @@ import { UsersService } from './users.service';
 })
 export class AuthorityService implements CanActivate {
   currentUserUuid$ = new BehaviorSubject<string | null>(null); // uuid
-  private urlPermissions: { url: string; permission: Permission }[] = [
-    { url: 'home', permission: Permission.GUEST },
-    { url: 'personal-shift', permission: Permission.USER },
-    { url: 'shifts', permission: Permission.MANAGER },
-    { url: 'users/:mode/:uuid?', permission: Permission.MANAGER },
-    { url: `users/${Mode.CREATE}`, permission: Permission.ADMINISTRATOR },
-    { url: 'users', permission: Permission.MANAGER },
-    { url: 'profile', permission: Permission.USER },
-    { url: 'callback', permission: Permission.USER },
-  ];
+  private urlPermissions = routes;
 
   constructor(
     private matDialog: MatDialog,
@@ -66,7 +57,7 @@ export class AuthorityService implements CanActivate {
     }
 
     const currentUrlPermission = this.urlPermissions.find((urlPermission) =>
-      state.url.includes(urlPermission.url)
+      state.url.includes(urlPermission.path)
     )?.permission as Permission;
     if (currentUrlPermission !== Permission.GUEST) {
       if (this.currentUserUuid$.value) {
