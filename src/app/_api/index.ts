@@ -4,21 +4,20 @@ import { ApiInterface } from 'src/app/_api/api.interface';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 
-import { firstValueFrom, Observable } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { v4 as uuidv4, v5 as uuidv5 } from 'uuid';
 import { EXISTED_ERROR } from '../_classes/errors/EXISTED_ERROR';
+import { docExists as isDocExists, docsExists } from '../_helpers/firebase-helper';
 import { Congregation } from '../_interfaces/congregation.interface';
 import { PersonalShifts } from '../_interfaces/personal-shifts.interface';
 import { ShiftHours } from '../_interfaces/shift-hours.interface';
 import { Shift } from '../_interfaces/shift.interface';
+import { SiteShifts } from '../_interfaces/site-shifts.interface';
 import { Site } from '../_interfaces/site.interface';
 import { Statistic } from '../_interfaces/statistic.interface';
-import { User, UserKey } from '../_interfaces/user.interface';
-import { docExists as isDocExists, docsExists } from './firebase-helper';
-import { SiteShifts } from '../_interfaces/site-shifts.interface';
 import { UserSchedule } from '../_interfaces/user-schedule.interface';
-import { async } from '@angular/core/testing';
+import { User, UserKey } from '../_interfaces/user.interface';
 
 @Injectable({
   providedIn: 'root',

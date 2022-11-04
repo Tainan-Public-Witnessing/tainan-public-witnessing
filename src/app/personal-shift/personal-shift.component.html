@@ -1,15 +1,9 @@
-
 <div class="container">
-  <mat-form-field appearance="outline">
-    <mat-label>{{'PERSONAL_SHIFT.LABEL.YEAR_MONTH' | translate}}</mat-label>
-    <input matInput [matDatepicker]="yearMonthPicker" [formControl]="yearMonthControl">
-    <mat-datepicker-toggle matSuffix [for]="yearMonthPicker"></mat-datepicker-toggle>
-    <mat-datepicker
-      #yearMonthPicker
-      startView="year"
-      (monthSelected)="setMonthAndYear($event, yearMonthPicker)">
-    </mat-datepicker>
-  </mat-form-field>
+  <h1>{{ "PERSONAL_SHIFT.TITLE" | translate }}</h1>
+  <app-year-month-select
+    [label]="'PERSONAL_SHIFT.LABEL.YEAR_MONTH' | translate"
+    [forwardFormControl]="yearMonthControl"
+  ></app-year-month-select>
 
   <app-shift-table [shifts$]="shifts$"></app-shift-table>
 </div>

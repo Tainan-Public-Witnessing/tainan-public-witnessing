@@ -1,51 +1,79 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { MAT_DATE_FORMATS } from '@angular/material/core';
-import { MatDatepicker } from '@angular/material/datepicker';
 import * as moment from 'moment';
-import { Moment } from 'moment';
-import { Subject } from 'rxjs';
+import {
+  combineLatest,
+  filter,
+  from,
+  map,
+  Observable,
+  startWith,
+  Subject,
+  switchMap
+} from 'rxjs';
 import { Shift } from '../_interfaces/shift.interface';
+import { AuthorityService } from '../_services/authority.service';
+import { GlobalEventService } from '../_services/global-event.service';
+import { ShiftHoursService } from '../_services/shift-hours.service';
+import { ShiftsService } from '../_services/shifts.service';
 
 @Component({
   selector: 'app-opening-shifts',
   templateUrl: './opening-shifts.component.html',
   styleUrls: ['./opening-shifts.component.scss'],
-  providers: [
-    {
-      provide: MAT_DATE_FORMATS,
-      useValue: {
-        parse: {
-          dateInput: ['YYYY-MM'],
-        },
-        display: {
-          dateInput: 'YYYY-MM',
-          monthYearLabel: 'MM YYYY',
-          dateA11yLabel: 'LL',
-          monthYearA11yLabel: 'MM YYYY',
-        },
-      },
-    },
-  ],
 })
-export class OpeningShiftsComponent implements OnInit {
+export class OpeningShiftsComponent implements OnInit, OnDestroy {
   yearMonthControl = new FormControl(moment());
-  shifts$!: Subject<Shift[] | null | undefined>;
+  shifts$!: Observable<Shift[]>;
+  today = moment();
+  readonly unsubscribe$: Subject<void> = new Subject();
+  constructor(
+    private shiftService: ShiftsService,
+    private shiftHourService: ShiftHoursService,
+    private auth: AuthorityService,
+    private globalEvent: GlobalEventService
+  ) {}
 
-  constructor() {}
+  ngOnInit(): void {
+    this.shifts$ = combineLatest([
+      combineLatest([
+        this.globalEvent
+          .getGlobalEventById('SHIFTS_CHANGED')
+          .pipe(startWith(undefined)),
+        this.yearMonthControl.valueChanges.pipe(startWith(undefined)),
+      ]).pipe(
+        map(() => {
+          console.log(this.yearMonthControl.value);
+          return this.yearMonthControl.value;
+        }),
+        filter((value) => !!value),
+        map((value) => value!.format('YYYY-MM')),
+        switchMap((yearMonth) =>
+          from(
+            this.shiftService.getOpeningShift(
+              yearMonth,
+              this.auth.currentUserUuid$.value!
+            )
+          )
+        )
+      ),
+      this.shiftHourService.getShiftHoursList(),
+    ]).pipe(
+      map(([shifts, shiftHours]) => {
+        const hour = (shiftHourUuid: string) =>
+          shiftHours?.find((hour) => hour.uuid === shiftHourUuid)?.startTime ??
+          '00:00';
+        return shifts
+          .sort((a, b) => a.siteUuid.localeCompare(b.siteUuid))
+          .sort((a, b) =>
+            hour(a.shiftHoursUuid).localeCompare(hour(b.shiftHoursUuid))
+          )
+          .sort((a, b) => a.date.localeCompare(b.date));
+      })
+    );
+  }
 
-  ngOnInit(): void {}
-
-  setMonthAndYear(
-    normalizedMonthAndYear: Moment,
-    datepicker: MatDatepicker<Moment>
-  ) {
-    const controlValue = this.yearMonthControl.value;
-    if (controlValue !== null) {
-      controlValue.year(normalizedMonthAndYear.year());
-      controlValue.month(normalizedMonthAndYear.month());
-      this.yearMonthControl.setValue(controlValue);
-    }
-    datepicker.close();
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
   }
 }

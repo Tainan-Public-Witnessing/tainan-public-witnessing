@@ -21,9 +21,15 @@
       >
         {{ user.username }}
       </mat-chip>
-      <mat-chip *ngFor="let count of emptiness" class="bg-warn text-white cursor-pointer">
-        {{ "OPENING_SHIFTS.NEED_SUPPORT" | translate }}
-      </mat-chip>
+      <ng-template [ngIf]="showEmpty">
+        <mat-chip
+          *ngFor="let count of emptiness"
+          class="bg-warn text-white cursor-pointer"
+          (click)="onEmptySpotClick()"
+        >
+          {{ "OPENING_SHIFTS.NEED_SUPPORT" | translate }}
+        </mat-chip>
+      </ng-template>
     </mat-chip-list>
 
     <mat-spinner *ngIf="crew === null"></mat-spinner>

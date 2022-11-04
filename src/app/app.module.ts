@@ -34,6 +34,7 @@ import { LoginDialogComponent } from './_elements/dialogs/login-dialog/login-dia
 import { StatisticEditorComponent } from './_elements/dialogs/statistic-editor/statistic-editor.component';
 import { ShiftCardComponent } from './_elements/shift-table/shift-card/shift-card.component';
 import { ShiftTableComponent } from './_elements/shift-table/shift-table.component';
+import { YearMonthSelectComponent } from './_elements/year-month-select/year-month-select.component';
 
 // AoT requires an exported function for factories of translate module
 export function HttpLoaderFactory(http: HttpClient) {
@@ -63,6 +64,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     ForceRefreshDirective,
     HoursListComponent,
     OpeningShiftsComponent,
+    YearMonthSelectComponent,
   ],
   imports: [
     BrowserModule,
