@@ -33,21 +33,26 @@ export class ShiftTableComponent implements OnInit, OnDestroy {
         } else {
           this.sortedShift$s = _shifts
             .sort((a, b) => {
-              const dateCompare = a.date.localeCompare(b.date);
-              if (dateCompare === 0) {
-                let aStartTime = '';
-                let bStartTime = '';
-                _shiftHoursList.forEach((shiftHours) => {
-                  if (shiftHours.uuid === a.shiftHoursUuid) {
-                    aStartTime = shiftHours.startTime;
-                  }
-                  if (shiftHours.uuid === b.shiftHoursUuid) {
-                    bStartTime = shiftHours.startTime;
-                  }
-                });
-                return aStartTime.localeCompare(bStartTime);
+              const siteCompare = a.siteUuid.localeCompare(b.siteUuid);
+              if (siteCompare === 0) {
+                const dateCompare = a.date.localeCompare(b.date);
+                if (dateCompare === 0) {
+                  let aStartTime = '';
+                  let bStartTime = '';
+                  _shiftHoursList.forEach((shiftHours) => {
+                    if (shiftHours.uuid === a.shiftHoursUuid) {
+                      aStartTime = shiftHours.startTime;
+                    }
+                    if (shiftHours.uuid === b.shiftHoursUuid) {
+                      bStartTime = shiftHours.startTime;
+                    }
+                  });
+                  return aStartTime.localeCompare(bStartTime);
+                } else {
+                  return dateCompare;
+                }
               } else {
-                return dateCompare;
+                return siteCompare;
               }
             })
             .map((_shift) => {
