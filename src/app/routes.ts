@@ -29,10 +29,10 @@ export const routes = [
     label: 'PERSONAL_SHIFT.TITLE',
   },
   {
-    path: 'shifts/opening',
+    path: 'shifts/available',
     component: OpeningShiftsComponent,
     permission: Permission.USER,
-    label: 'OPENING_SHIFTS.TITLE',
+    label: 'AVAILABLE_SHIFTS.TITLE',
   },
   {
     path: 'shifts',

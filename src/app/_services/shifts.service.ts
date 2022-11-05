@@ -4,6 +4,7 @@ import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { filter, first, map } from 'rxjs/operators';
 import { Api } from '../_api';
 import { EXISTED_ERROR } from '../_classes/errors/EXISTED_ERROR';
+import { FULL_SHIFT_ERROR } from '../_classes/errors/FULL_SHIFT_ERROR';
 import { TOO_MANY_SHIFTS_ERROR } from '../_classes/errors/TOO_MANY_SHIFTS_ERROR';
 import { queryWithLargeArray } from '../_helpers/firebase-helper';
 import { extractPromise } from '../_helpers/promise-helper';
@@ -186,6 +187,14 @@ export class ShiftsService {
       .filter((shift) => !joinedDates.includes(shift.date));
   }
 
+  /**
+   * 使用者加入空缺的班表
+   * @param shift 班表
+   * @param userUuid 使用者uuid
+   * @throws {TOO_MANY_SHIFTS_ERROR} 使用者可自行報名次數已達上限
+   * @throws {EXISTED_ERROR} 使用者已報名此班次
+   * @throws {FULL_SHIFT_ERROR} 要報名的班次已滿
+   */
   public async joinShift(shift: Shift, userUuid: string) {
     const { promise, reject, resolve } = extractPromise<void>();
     const yearMonth = shift.date.slice(0, 7);
@@ -215,7 +224,7 @@ export class ShiftsService {
         }
 
         if (shiftData.crewUuids.length >= shiftData.attendance) {
-          return reject(new TOO_MANY_SHIFTS_ERROR());
+          return reject(new FULL_SHIFT_ERROR());
         }
 
         shiftData.crewUuids.push(userUuid);
@@ -232,9 +241,7 @@ export class ShiftsService {
           } as PersonalShifts);
         }
       })
-      .then(() => {
-        resolve();
-      });
+      .then(resolve);
 
     return promise;
   }
