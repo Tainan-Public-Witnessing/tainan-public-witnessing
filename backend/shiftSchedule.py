@@ -10,7 +10,8 @@ import os
 def ScheduleReminder(LineNotify):
     token = os.getenv("grouptoken")
     month = (datetime.now() + timedelta(days=32)).month
-    message = f"\n【排班提醒】\n\n今天是15號，如果你{month}月份有一些安排需要調整班表，請在今天晚上12點以前完成，謝謝你們的合作"
+    year = (datetime.now() + timedelta(days=32)).year
+    message = f"\n\n【每月排班提醒】\n\n如果你需要調整{year}-{month}的班表，請在今天晚上12點以前完成，你的留意可以使都市見證更順暢也減少額外的工作，謝謝大家的合作"
     LineNotify(token, message)
 
 
@@ -18,7 +19,7 @@ def ScheduleCompleteReminder(LineNotify):
     token = os.getenv("grouptoken")
     month = (datetime.now() + timedelta(days=32)).month
     year = (datetime.now() + timedelta(days=32)).year
-    message = f"\n【部門公告】 {year}年{month}月 班表開放查詢\n\n各位弟兄、姊妹你們好\n{year}年{month}月的班表已開放查詢。\n\n如有問題，請聯繫管理者( http://nav.cx/54fnY0o )。\n\n★我們每個人都有可能收到委派，請務必到網站上確認自己的班表"
+    message = f"\n【{year}年{month}月 班表通知】\n\n我們想通知大家{year}年{month}月的班表已經排班完成了。\n\n★我們每個人都有可能收到委派，請務必確認自己的委派。\n如果你沒有收到委派，也歡迎你查詢空缺報名\n\n如有問題，請聯繫《管理者》"
     LineNotify(token, message)
 
 
@@ -46,7 +47,7 @@ def ShiftSchedule(db):
                         "partner": partner,
                         "weekday": int(weekday),
                         "shiftHoursUuid": shifthour,
-                        "attendence": user["availableHours"][weekday][shifthour],
+                        "attendance": user["availableHours"][weekday][shifthour],
                         "unavailableDates": user["unavailableDates"],
                     }
                 )
@@ -65,19 +66,19 @@ def ShiftSchedule(db):
         else:
             return row["weight"]
 
-    def choose_participants(signup, attendence):
+    def choose_participants(signup, attendance):
         choosen = []
-        if len(signup) <= attendence:
-            df.loc[signup.index, "attendence"] -= 1
+        if len(signup) <= attendance:
+            df.loc[signup.index, "attendance"] -= 1
             choosen = signup["name"].to_list()
         else:
-            while len(choosen) < attendence:
+            while len(choosen) < attendance:
                 reminder_participants = signup[
                     signup["name"].apply(lambda x: x not in choosen)
                 ].copy()
-                sum = (6 - reminder_participants["attendence"]).sum()
+                sum = (6 - reminder_participants["attendance"]).sum()
                 reminder_participants["weight"] = reminder_participants[
-                    "attendence"
+                    "attendance"
                 ].apply(lambda x: (6 - x) / sum)
                 reminder_participants["weight"] = reminder_participants.apply(
                     adjustWeight, axis=1
@@ -88,25 +89,25 @@ def ShiftSchedule(db):
                 partner = choosed["partner"].values[0]
                 if not partner or partner not in signup["name"].values:
                     choosen.append(choosed["name"].values[0])
-                    df.loc[choosed.index, "attendence"] -= 1
-                elif len(choosen) == attendence - 1:
+                    df.loc[choosed.index, "attendance"] -= 1
+                elif len(choosen) == attendance - 1:
                     for participant in choosen:
                         if not signup[signup["name"] == participant]["partner"].values:
                             choosen.remove(participant)
                             choosen.extend([choosed["name"].values[0], partner])
                             df.loc[
                                 signup[signup["name"] == participant].index,
-                                "attendence",
+                                "attendance",
                             ] += 1
-                            df.loc[choosed.index, "attendence"] -= 1
+                            df.loc[choosed.index, "attendance"] -= 1
                             df.loc[
-                                signup[signup["name"] == partner].index, "attendence"
+                                signup[signup["name"] == partner].index, "attendance"
                             ] -= 1
                             break
-                elif len(choosen) < attendence - 1:
+                elif len(choosen) < attendance - 1:
                     choosen.extend([choosed["name"].values[0], partner])
-                    df.loc[choosed.index, "attendence"] -= 1
-                    df.loc[signup[signup["name"] == partner].index, "attendence"] -= 1
+                    df.loc[choosed.index, "attendance"] -= 1
+                    df.loc[signup[signup["name"] == partner].index, "attendance"] -= 1
                 else:
                     continue
         return choosen
@@ -115,13 +116,10 @@ def ShiftSchedule(db):
         todayShift = []
         date = datetime(year, month, day)
         date_str = date.strftime("%Y-%m-%d")
-        if date.isoweekday() == 7:
-            weekday = 0
-        else:
-            weekday = date.isoweekday()
+        weekday = date.isoweekday() if date.isoweekday() != 7 else 0
         shifts = db.collection("SiteShifts").where("weekday", "==", weekday).get()
         for shift in shifts:
-            attendence = shift.to_dict()["attendence"]
+            attendance = shift.to_dict()["attendance"]
             siteUuid = shift.to_dict()["siteUuid"]
             shiftHoursUuid = shift.to_dict()["shiftHoursUuid"]
             signup = df[
@@ -132,7 +130,7 @@ def ShiftSchedule(db):
                 & (df["name"].apply(lambda x: x not in yesterdayShift))
                 & (df["name"].apply(lambda x: x not in full))
             ].copy()
-            result = choose_participants(signup, attendence)
+            result = choose_participants(signup, attendance)
             todayShift.extend(result)
             uuid_ = str(uuid.uuid4())
             for person in result:
@@ -146,19 +144,22 @@ def ShiftSchedule(db):
                     statistics[person] = 1
                 if statistics[person] >= upper_limit:
                     full.append(person)
-
-            batch.set(
-                ref.collection("Shifts").document(uuid_),
-                {
-                    "activate": True,
-                    "crewUuids": result,
-                    "date": f"{year}-{month:02d}-{day:02d}",
-                    "shiftHoursUuid": shiftHoursUuid,
-                    "siteUuid": siteUuid,
-                    "uuid": uuid_,
-                    "expiredAt": expired,
-                },
-            )
+            shift_data = {
+                "activate": True,
+                "crewUuids": result,
+                "date": f"{year}-{month:02d}-{day:02d}",
+                "shiftHoursUuid": shiftHoursUuid,
+                "siteUuid": siteUuid,
+                "uuid": uuid_,
+                "expiredAt": expired,
+                "attendance": attendance,
+                "weekday": weekday,
+            }
+            if len(result) < attendance:
+                shift_data["full"] = False
+            else:
+                shift_data["full"] = True
+            batch.set(ref.collection("Shifts").document(uuid_), shift_data)
 
         yesterdayShift = todayShift
     batch.commit()

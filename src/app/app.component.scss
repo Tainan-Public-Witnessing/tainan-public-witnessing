@@ -37,9 +37,8 @@
 
         width: 100%;
         min-width: $page-min-width;
-        height: calc(100% - 32px);
-        padding: 0 calc(max($padding, (100% - $page-max-width) / 2));
-        padding-bottom: $padding;
+        height: calc(100% - $padding * 2);
+        padding: $padding calc(max($padding, (100% - $page-max-width - 16px) / 2));
         overflow: auto;
       }
     }

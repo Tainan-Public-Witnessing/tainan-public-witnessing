@@ -27,6 +27,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('sidenav') sidenav!: MatSidenav;
   @ViewChild('menuButton') menuButton!: MatButton;
 
+  readonly isDevMode = /-dev/i.test(environment.firebase.projectId);
   currentUsername$ = new BehaviorSubject<string | null>(null);
   displayUsername$ = new BehaviorSubject<boolean>(true);
   languages: string[] = Object.values(Language);
