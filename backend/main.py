@@ -95,7 +95,7 @@ async def assignment_notify():
 async def vacancy_notify():
     async with asyncio.TaskGroup() as tg:
         tg.create_task(VacancyNotify(db, LineNotify, 1))
-        tg.create_task(VacancyNotify(db, LineNotify, 7))
+        # tg.create_task(VacancyNotify(db, LineNotify, 7))
     return jsonify({"status": f"已送出缺席提醒"})
 
 
