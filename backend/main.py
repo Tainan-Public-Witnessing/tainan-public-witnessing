@@ -6,19 +6,22 @@ import redis
 import firebase_admin
 from firebase_admin import firestore
 
+from dotenv import load_dotenv
 from datetime import datetime
 from calendar import monthrange
 import requests
 import os
+import asyncio
 
-from shiftSchedule import ShiftSchedule, ScheduleReminder, ScheduleCompleteReminder
+from shiftschedule import ShiftSchedule, ScheduleReminder, ScheduleCompleteReminder
 from report import AttendanceReport
 from callback import LineNotifyCallback, LineLoginCallback
-from vacancy import Tomorrow_VacancyNotify
-from assignment import BeforeSevenDays_AssignmentNotify, Tomorrow_AssignmentNotify
+from vacancy import VacancyNotify
+from assignment import AssignmentNotify
 from bind import BindUser
 from backup import Backup
 
+load_dotenv()
 app = Flask(__name__)
 redis_password = os.environ.get("redis_password")
 pool = redis.connection.BlockingConnectionPool.from_url(
@@ -81,15 +84,18 @@ def schedule_complete_reminder():
 
 
 @app.route("/assignment-notify", methods=["GET"])
-def assignment_notify():
-    BeforeSevenDays_AssignmentNotify(db, LineNotify)
-    Tomorrow_AssignmentNotify(db, LineNotify)
+async def assignment_notify():
+    async with asyncio.TaskGroup() as tg:
+        tg.create_task(AssignmentNotify(db, LineNotify, 1))
+        tg.create_task(AssignmentNotify(db, LineNotify, 7))
     return jsonify({"status": f"已送出委派提醒"})
 
 
 @app.route("/vacancy-notify", methods=["GET"])
-def vacancy_notify():
-    Tomorrow_VacancyNotify(db, LineNotify)
+async def vacancy_notify():
+    async with asyncio.TaskGroup() as tg:
+        tg.create_task(VacancyNotify(db, LineNotify, 1))
+        tg.create_task(VacancyNotify(db, LineNotify, 7))
     return jsonify({"status": f"已送出缺席提醒"})
 
 

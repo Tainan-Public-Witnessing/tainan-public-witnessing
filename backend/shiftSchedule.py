@@ -10,7 +10,8 @@ import os
 def ScheduleReminder(LineNotify):
     token = os.getenv("grouptoken")
     month = (datetime.now() + timedelta(days=32)).month
-    message = f"\n【排班提醒】\n\n今天是15號，如果你{month}月份有一些安排需要調整班表，請在今天晚上12點以前完成，謝謝你們的合作"
+    year = (datetime.now() + timedelta(days=32)).year
+    message = f"\n\n【每月排班提醒】\n\n如果你需要調整{year}-{month}的班表，請在今天晚上12點以前完成，你的留意可以使都市見證更順暢也減少額外的工作，謝謝大家的合作"
     LineNotify(token, message)
 
 
@@ -18,7 +19,7 @@ def ScheduleCompleteReminder(LineNotify):
     token = os.getenv("grouptoken")
     month = (datetime.now() + timedelta(days=32)).month
     year = (datetime.now() + timedelta(days=32)).year
-    message = f"\n【部門公告】 {year}年{month}月 班表開放查詢\n\n各位弟兄、姊妹你們好\n{year}年{month}月的班表已開放查詢。\n\n如有問題，請聯繫管理者( http://nav.cx/54fnY0o )。\n\n★我們每個人都有可能收到委派，請務必到網站上確認自己的班表"
+    message = f"\n【{year}年{month}月 班表通知】\n\n我們想通知大家{year}年{month}月的班表已經排班完成了。\n\n★我們每個人都有可能收到委派，請務必確認自己的委派。\n如果你沒有收到委派，也歡迎你查詢空缺報名\n\n如有問題，請聯繫《管理者》"
     LineNotify(token, message)
 
 
@@ -115,10 +116,7 @@ def ShiftSchedule(db):
         todayShift = []
         date = datetime(year, month, day)
         date_str = date.strftime("%Y-%m-%d")
-        if date.isoweekday() == 7:
-            weekday = 0
-        else:
-            weekday = date.isoweekday()
+        weekday = date.isoweekday() if date.isoweekday() != 7 else 0
         shifts = db.collection("SiteShifts").where("weekday", "==", weekday).get()
         for shift in shifts:
             attendance = shift.to_dict()["attendance"]
@@ -154,6 +152,8 @@ def ShiftSchedule(db):
                 "siteUuid": siteUuid,
                 "uuid": uuid_,
                 "expiredAt": expired,
+                "attendance": attendance,
+                "weekday": weekday,
             }
             if len(result) < attendance:
                 shift_data["full"] = False
