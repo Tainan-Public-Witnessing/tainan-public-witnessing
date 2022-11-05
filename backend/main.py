@@ -13,7 +13,7 @@ import requests
 import os
 import asyncio
 
-from shiftschedule import ShiftSchedule, ScheduleReminder, ScheduleCompleteReminder
+from shiftSchedule import ShiftSchedule, ScheduleReminder, ScheduleCompleteReminder
 from report import AttendanceReport
 from callback import LineNotifyCallback, LineLoginCallback
 from vacancy import VacancyNotify
