@@ -8,57 +8,60 @@ import { ShiftsService } from 'src/app/_services/shifts.service';
 @Component({
   selector: 'app-shift-table',
   templateUrl: './shift-table.component.html',
-  styleUrls: ['./shift-table.component.scss']
+  styleUrls: ['./shift-table.component.scss'],
 })
 export class ShiftTableComponent implements OnInit, OnDestroy {
+  @Input() shifts$!: Observable<Shift[] | null | undefined>;
+  @Input() showEmpty: boolean = false;
 
-  @Input() shifts$!: Observable<Shift[]|null|undefined>;
-
-  sortedShift$s: Observable<Shift>[]|null|undefined = null;
+  sortedShift$s: Observable<Shift>[] | null | undefined = null;
   destroy$ = new Subject<void>();
 
   constructor(
     private shiftHoursService: ShiftHoursService,
-    private shiftsService: ShiftsService,
-  ) { }
+    private shiftsService: ShiftsService
+  ) {}
 
   ngOnInit(): void {
-
-    combineLatest([
-      this.shiftHoursService.getShiftHoursList(),
-      this.shifts$,
-    ]).pipe(
-      takeUntil(this.destroy$)
-    ).subscribe(([_shiftHoursList, _shifts]) => {
-      if (_shiftHoursList === null || _shifts === null) {
-        this.sortedShift$s = null;
-      } else if (_shifts === undefined) {
-        this.sortedShift$s = undefined;
-      } else {
-        this.sortedShift$s = _shifts.sort((a, b) => {
-          const dateCompare = a.date.localeCompare(b.date);
-          if (dateCompare === 0) {
-            let aStartTime = '';
-            let bStartTime = '';
-            _shiftHoursList.forEach(shiftHours => {
-              if (shiftHours.uuid === a.shiftHoursUuid) {
-                aStartTime = shiftHours.startTime;
+    combineLatest([this.shiftHoursService.getShiftHoursList(), this.shifts$])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(([_shiftHoursList, _shifts]) => {
+        if (_shiftHoursList === null || _shifts === null) {
+          this.sortedShift$s = null;
+        } else if (_shifts === undefined) {
+          this.sortedShift$s = undefined;
+        } else {
+          this.sortedShift$s = _shifts
+            .sort((a, b) => {
+              const siteCompare = a.siteUuid.localeCompare(b.siteUuid);
+              if (siteCompare === 0) {
+                const dateCompare = a.date.localeCompare(b.date);
+                if (dateCompare === 0) {
+                  let aStartTime = '';
+                  let bStartTime = '';
+                  _shiftHoursList.forEach((shiftHours) => {
+                    if (shiftHours.uuid === a.shiftHoursUuid) {
+                      aStartTime = shiftHours.startTime;
+                    }
+                    if (shiftHours.uuid === b.shiftHoursUuid) {
+                      bStartTime = shiftHours.startTime;
+                    }
+                  });
+                  return aStartTime.localeCompare(bStartTime);
+                } else {
+                  return dateCompare;
+                }
+              } else {
+                return siteCompare;
               }
-              if (shiftHours.uuid === b.shiftHoursUuid) {
-                bStartTime = shiftHours.startTime;
-              }
+            })
+            .map((_shift) => {
+              return this.shiftsService
+                .getShiftByUuid(_shift.date.slice(0, 7), _shift.uuid)
+                .pipe(filter((__shift) => !!__shift)) as Observable<Shift>;
             });
-            return aStartTime.localeCompare(bStartTime);
-          } else {
-            return dateCompare;
-          }
-        }).map(_shift => {
-          return this.shiftsService.getShiftByUuid(_shift.date.slice(0, 7), _shift.uuid).pipe(
-            filter(__shift => !!__shift)
-          ) as Observable<Shift>;
-        });
-      }
-    });
+        }
+      });
   }
 
   ngOnDestroy(): void {

@@ -1,9 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { MAT_DATE_FORMATS } from '@angular/material/core';
-import { MatDatepicker } from '@angular/material/datepicker';
-import type { Moment } from 'moment';
 import * as moment from 'moment';
 import { forkJoin, Observable, of } from 'rxjs';
 import { filter, first, map, startWith, switchAll } from 'rxjs/operators';
@@ -16,22 +13,6 @@ import { ShiftsService } from '../_services/shifts.service';
   selector: 'app-personal-shift',
   templateUrl: './personal-shift.component.html',
   styleUrls: ['./personal-shift.component.scss'],
-  providers: [
-    {
-      provide: MAT_DATE_FORMATS,
-      useValue: {
-        parse: {
-          dateInput: ['YYYY-MM'],
-        },
-        display: {
-          dateInput: 'YYYY-MM',
-          monthYearLabel: 'MM YYYY',
-          dateA11yLabel: 'LL',
-          monthYearA11yLabel: 'MM YYYY',
-        },
-      },
-    },
-  ],
 })
 export class PersonalShiftComponent implements OnInit {
 
@@ -77,14 +58,6 @@ export class PersonalShiftComponent implements OnInit {
     );
   }
 
-  setMonthAndYear(normalizedMonthAndYear: Moment, datepicker: MatDatepicker<Moment>) {
-    const controlValue = this.yearMonthControl.value;
-    if (controlValue !== null) {
-      controlValue.year(normalizedMonthAndYear.year());
-      controlValue.month(normalizedMonthAndYear.month());
-      this.yearMonthControl.setValue(controlValue);
-    }
-    datepicker.close();
-  }
+
 
 }

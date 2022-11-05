@@ -9,7 +9,9 @@ import { ConfirmDialogData } from './confirm-dialog-data.interface';
 })
 export class ConfirmDialogComponent implements OnInit {
   title: string;
+  titleParams: any;
   message: string;
+  messageParams: any;
   hideCancelButton: boolean;
 
   constructor(
@@ -19,7 +21,9 @@ export class ConfirmDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.title = this.data.title;
+    this.titleParams = this.data.titleParams;
     this.message = this.data.message;
+    this.messageParams = this.data.messageParams;
     this.hideCancelButton = this.data.hideCancelButton || false;
   }
 

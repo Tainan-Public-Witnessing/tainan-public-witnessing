@@ -2,24 +2,22 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, combineLatest, firstValueFrom, Subject } from 'rxjs';
+import { BehaviorSubject, combineLatest, Subject } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
-  take,
-  takeUntil,
   startWith,
-  tap,
-  map,
   switchMap,
+  take,
+  takeUntil
 } from 'rxjs/operators';
+import { ConfirmDialogData } from 'src/app/_elements/dialogs/confirm-dialog/confirm-dialog-data.interface';
 import { Mode } from 'src/app/_enums/mode.enum';
+import { Permission } from 'src/app/_enums/permission.enum';
 import { UserKey } from 'src/app/_interfaces/user.interface';
 import { AuthorityService } from 'src/app/_services/authority.service';
 import { UsersService } from 'src/app/_services/users.service';
 import { ConfirmDialogComponent } from '../_elements/dialogs/confirm-dialog/confirm-dialog.component';
-import { Permission } from 'src/app/_enums/permission.enum';
-import { ConfirmDialogData } from 'src/app/_elements/dialogs/confirm-dialog/confirm-dialog-data.interface';
 
 @Component({
   selector: 'app-users',
@@ -104,12 +102,14 @@ export class UsersComponent implements OnInit, OnDestroy {
         ConfirmDialogComponent,
         {
           data: {
-            title: this.translateService.instant(`USERS.${action}_TITLE`, {
+            title: `USERS.${action}_TITLE`,
+            titleParams: {
               value: userKey.username,
-            }),
-            message: this.translateService.instant(`USERS.${action}_MESSAGE`, {
+            },
+            message: `USERS.${action}_MESSAGE`,
+            messageParams: {
               value: userKey.username,
-            }),
+            },
           },
         }
       )
@@ -122,24 +122,24 @@ export class UsersComponent implements OnInit, OnDestroy {
             !userKey.activate
           );
           if (futureShifts.length) {
+            const shiftsSummary = futureShifts
+              .map(
+                (shift) =>
+                  `${shift.date}\t${shift.site.name}\t${shift.hour.name}`
+              )
+              .join('\n');
+
             this.matDialog.open<
               ConfirmDialogComponent,
               ConfirmDialogData,
               boolean
             >(ConfirmDialogComponent, {
               data: {
-                title: this.translateService.instant('GLOBAL.ERROR'),
-                message: this.translateService.instant(
-                  'USERS.PERSONAL_SHIFTS_EXIST_ERROR',
-                  {
-                    value: futureShifts
-                      .map(
-                        (shift) =>
-                          `${shift.date}\t${shift.site.name}\t${shift.hour.name}`
-                      )
-                      .join('\n'),
-                  }
-                ),
+                title: 'GLOBAL.ERROR',
+                message: 'USERS.PERSONAL_SHIFTS_EXIST_ERROR',
+                messageParams: {
+                  date: shiftsSummary,
+                },
                 hideCancelButton: true,
               },
             });

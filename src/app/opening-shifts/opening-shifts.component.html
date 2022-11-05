@@ -1,0 +1,10 @@
+<div class="container">
+  <h1>{{ "OPENING_SHIFTS.TITLE" | translate }}</h1>
+  <app-year-month-select
+    [forwardFormControl]="yearMonthControl"
+    [label]="'OPENING_SHIFTS.LABEL.YEAR_MONTH' | translate"
+    [startMonth]="today"
+  ></app-year-month-select>
+
+  <app-shift-table [shifts$]="shifts$" [showEmpty]="true"></app-shift-table>
+</div>
