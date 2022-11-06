@@ -156,8 +156,8 @@ export class ShiftCardComponent implements OnInit, OnDestroy {
       this.matDialog
         .open(ConfirmDialogComponent, {
           data: {
-            title: 'OPENING_SHIFTS.JOIN_CONFIRM_TITLE',
-            message: 'OPENING_SHIFTS.JOIN_CONFIRM_MESSAGE',
+            title: 'AVAILABLE_SHIFTS.JOIN_CONFIRM_TITLE',
+            message: 'AVAILABLE_SHIFTS.JOIN_CONFIRM_MESSAGE',
             messageParams: {
               date: this.shift.date,
               time: `${this.shiftHours?.startTime} ~ ${this.shiftHours?.endTime}`,
@@ -174,6 +174,8 @@ export class ShiftCardComponent implements OnInit, OnDestroy {
                 this.authorityService.currentUserUuid$.value!
               );
               this.globalEvent.emitGlobalEvent({ id: 'SHIFTS_CHANGED' });
+
+              this.matSnackBar.open(this.translateService.instant('AVAILABLE_SHIFTS.JOIN_SUCCESSFULLY'));
             } catch (ex) {
               let message = '';
 
@@ -188,8 +190,8 @@ export class ShiftCardComponent implements OnInit, OnDestroy {
               }
               this.matDialog.open(ConfirmDialogComponent, {
                 data: {
-                  title: 'OPENING_SHIFTS.JOIN_FAILED',
-                  message: `OPENING_SHIFTS.${message}`,
+                  title: 'AVAILABLE_SHIFTS.JOIN_FAILED',
+                  message: `AVAILABLE_SHIFTS.${message}`,
                   hideCancelButton: true,
                 } as ConfirmDialogData,
               });
