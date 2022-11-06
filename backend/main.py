@@ -13,7 +13,7 @@ import requests
 import os
 import asyncio
 
-from shiftschedule import ShiftSchedule, ScheduleReminder, ScheduleCompleteReminder
+from shiftSchedule import ShiftSchedule, ScheduleReminder, ScheduleCompleteReminder
 from report import AttendanceReport
 from callback import LineNotifyCallback, LineLoginCallback
 from vacancy import VacancyNotify
@@ -95,7 +95,7 @@ async def assignment_notify():
 async def vacancy_notify():
     async with asyncio.TaskGroup() as tg:
         tg.create_task(VacancyNotify(db, LineNotify, 1))
-        tg.create_task(VacancyNotify(db, LineNotify, 7))
+        # tg.create_task(VacancyNotify(db, LineNotify, 7))
     return jsonify({"status": f"已送出缺席提醒"})
 
 
