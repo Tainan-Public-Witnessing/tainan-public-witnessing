@@ -15,7 +15,7 @@ type RouteDef = {
   menu?: boolean;
 };
 
-export const routes = [
+export const routes: RouteDef[] = [
   {
     path: 'home',
     component: HomeComponent,
