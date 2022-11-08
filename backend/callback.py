@@ -22,9 +22,7 @@ def LineNotifyCallback(db):
     db.collection("Users").document(userUuid).collection("Schedule").document(
         "config"
     ).update({"lineToken": access_token})
-    return redirect(
-        "https://tainan-public-witnessing-official.firebaseapp.com/", code=302
-    )
+    return redirect(os.getenv("website_url"), code=302)
 
 
 def LineLoginCallback(db):
