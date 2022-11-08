@@ -1,0 +1,25 @@
+<form (submit)="onBind()" [formGroup]="bindingForm">
+  <div mat-dialog-content class="flex flex-col">
+    <span class="my-2">{{ "LOGIN.BINDING_MESSAGE" | translate }}</span>
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>{{ "LOGIN.LABEL.BINDING_CODE" | translate }}</mat-label>
+      <input matInput formControlName="bind_code" required />
+    </mat-form-field>
+
+    <mat-error *ngIf="bindingForm.hasError('bind_code')">
+      {{ "LOGIN.BINDING_CODE_INVALID_ERROR" | translate }}
+    </mat-error>
+    <mat-error *ngIf="bindingForm.hasError('bind_code_required')">
+      {{ "GLOBAL.VALIDATION.REQUIRED" | translate }}
+    </mat-error>
+  </div>
+
+  <div mat-dialog-actions class="justify-end">
+    <button mat-button color="accent" type="button" (click)="closeThis()">
+      {{ "GLOBAL.CANCEL" | translate }}
+    </button>
+    <button mat-button color="primary" type="submit">
+      {{ "LOGIN.BIND" | translate }}
+    </button>
+  </div>
+</form>

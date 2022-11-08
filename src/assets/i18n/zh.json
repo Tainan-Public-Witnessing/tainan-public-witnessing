@@ -23,6 +23,12 @@
       "THURSDAY": "週四",
       "FRIDAY": "週五",
       "SATURDAY": "週六"
+    },
+    "ERRORS": {
+      "UNKNOWN": "未知的錯誤，請稍後重試"
+    },
+    "VALIDATION": {
+      "REQUIRED": "此欄位必填"
     }
   },
   "GENDER": {
@@ -34,12 +40,18 @@
     "ZH": "中文"
   },
   "LOGIN": {
+    "ERROR_TITLE": "登入失敗",
     "TITLE": "登入",
     "LABEL": {
       "USERNAME": "使用者名稱",
-      "PASSWORD": "密碼"
+      "PASSWORD": "密碼",
+      "BINDING_CODE": "綁定代碼"
     },
-    "PERMISSION_FAIL_ERROR": "使用者不存在或密碼錯誤！"
+    "BIND": "綁定",
+    "PERMISSION_FAIL_ERROR": "使用者不存在或密碼錯誤！",
+    "FIREBASE_TOKEN_INVALID_ERROR": "登入失敗，請重試一次",
+    "BINDING_MESSAGE": "由於第一次登入，我們需要確認你的身分，請輸入綁定代碼：",
+    "BINDING_CODE_INVALID_ERROR": "綁定代碼不正確，請稍後重試"
   },
   "SHIFT_CARD": {
     "MESSAGE": {
