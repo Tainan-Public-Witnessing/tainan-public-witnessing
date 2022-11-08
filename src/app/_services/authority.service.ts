@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { MatDialog } from '@angular/material/dialog';
 import {
   ActivatedRouteSnapshot,
@@ -13,7 +14,6 @@ import { filter, first, map, switchAll, tap } from 'rxjs/operators';
 import { Api } from 'src/app/_api';
 import { environment } from 'src/environments/environment';
 import { routes } from '../routes';
-import { LoginDialogComponent } from '../_elements/dialogs/login-dialog/login-dialog.component';
 import { Permission } from '../_enums/permission.enum';
 import { User } from '../_interfaces/user.interface';
 import { UsersService } from './users.service';
@@ -30,7 +30,8 @@ export class AuthorityService implements CanActivate {
     private router: Router,
     private api: Api,
     private cookieService: CookieService,
-    private usersService: UsersService
+    private usersService: UsersService,
+    private fireAuth: AngularFireAuth
   ) {}
 
   canActivate(
@@ -56,19 +57,19 @@ export class AuthorityService implements CanActivate {
       }
     }
 
-    const currentUrlPermission = this.urlPermissions.find((urlPermission) =>
-      state.url.includes(urlPermission.path)
-    )?.permission as Permission;
+    const currentUrlPermission =
+      (this.urlPermissions.find((urlPermission) =>
+        state.url.includes(urlPermission.path)
+      )?.permission as Permission) ?? Permission.GUEST;
+
     if (currentUrlPermission !== Permission.GUEST) {
       if (this.currentUserUuid$.value) {
         return this.usersService
           .getUserByUuid(this.currentUserUuid$.value)
           .pipe(
             filter((user) => !!user),
-            map((user) => user as User),
             first(),
-            map((user) => user.permission),
-            map((userPermission) => userPermission <= currentUrlPermission),
+            map((user) => user!.permission < currentUrlPermission),
             tap((hasPermission) => {
               if (!hasPermission) {
                 this.router.navigate(['home']);
@@ -76,21 +77,8 @@ export class AuthorityService implements CanActivate {
             })
           );
       } else {
-        // should login
-        return this.matDialog
-          .open(LoginDialogComponent, {
-            disableClose: true,
-            panelClass: 'dialog-panel',
-          })
-          .afterClosed()
-          .pipe(
-            first(),
-            tap((result) => {
-              if (!result) {
-                this.router.navigate(['home']);
-              }
-            })
-          );
+        window.location.href = environment.LINE_LOGIN;
+        return false;
       }
     } else {
       return true;
@@ -102,6 +90,14 @@ export class AuthorityService implements CanActivate {
       this.currentUserUuid$.next(uuid);
       this.resetPermissionCookie();
     });
+  };
+
+  customLogin = async (firebaseCustomToken: string) => {
+    const result = await this.fireAuth.signInWithCustomToken(
+      firebaseCustomToken
+    );
+    this.currentUserUuid$.next(result.user!.email!.slice(0, 36));
+    this.resetPermissionCookie();
   };
 
   logout = (): Promise<void> => {

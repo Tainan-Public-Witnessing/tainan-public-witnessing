@@ -1,4 +1,6 @@
 import { HomeComponent } from './home/home.component';
+import { LineBindingComponent } from './line-binding/line-binding.component';
+import { LoginComponent } from './login/login.component';
 import { OpeningShiftsComponent } from './opening-shifts/opening-shifts.component';
 import { PersonalShiftComponent } from './personal-shift/personal-shift.component';
 import { ShiftsComponent } from './shifts/shifts.component';
@@ -19,7 +21,7 @@ export const routes = [
   {
     path: 'home',
     component: HomeComponent,
-    permission: Permission.GUEST,
+    permission: Permission.USER,
     label: 'HOME.TITLE',
   },
   {
@@ -63,5 +65,17 @@ export const routes = [
     component: UserComponent,
     permission: Permission.USER,
     label: 'USERS.PROFILE_TITLE',
+  },
+  {
+    path: 'login',
+    component: LoginComponent,
+    permission: Permission.GUEST,
+    menu: false,
+  },
+  {
+    path: 'bind',
+    component: LineBindingComponent,
+    permission: Permission.GUEST,
+    menu: false,
   },
 ];

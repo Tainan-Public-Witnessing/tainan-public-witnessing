@@ -23,7 +23,13 @@
       "SATURDAY": "Saturday"
     },
     "ERROR": "Error",
-    "SAVED": "Saved!"
+    "SAVED": "Saved!",
+    "ERRORS": {
+      "UNKNOWN": "Unknown error! Please try again later."
+    },
+    "VALIDATION": {
+      "REQUIRED": "This field is required"
+    }
   },
   "GENDER": {
     "MALE": "Male",
@@ -37,9 +43,15 @@
     "TITLE": "Login",
     "LABEL": {
       "USERNAME": "User name",
-      "PASSWORD": "Password"
+      "PASSWORD": "Password",
+      "BINDING_CODE": "Binding Code"
     },
-    "PERMISSION_FAIL_ERROR": "User not exist of wrong password!"
+    "PERMISSION_FAIL_ERROR": "User not exist of wrong password!",
+    "ERROR_TITLE": "Login Failed",
+    "BIND": "Bind",
+    "FIREBASE_TOKEN_INVALID_ERROR": "Login failed. Please try again later",
+    "BINDING_MESSAGE": "We need the binding code to verify your identity. This is only required for the first time(this time) you login.",
+    "BINDING_CODE_INVALID_ERROR": "Invalid binding code. Pleas try again."
   },
   "SHIFT_CARD": {
     "MESSAGE": {
