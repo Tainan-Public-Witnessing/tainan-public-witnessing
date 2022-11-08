@@ -9,9 +9,15 @@
     <mat-error *ngIf="bindingForm.hasError('bind_code')">
       {{ "LOGIN.BINDING_CODE_INVALID_ERROR" | translate }}
     </mat-error>
+    <mat-error *ngIf="bindingForm.hasError('bind_code_required')">
+      {{ "GLOBAL.VALIDATION.REQUIRED" | translate }}
+    </mat-error>
   </div>
 
   <div mat-dialog-actions class="justify-end">
+    <button mat-button color="accent" type="button" (click)="closeThis()">
+      {{ "GLOBAL.CANCEL" | translate }}
+    </button>
     <button mat-button color="primary" type="submit">
       {{ "LOGIN.BIND" | translate }}
     </button>

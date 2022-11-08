@@ -21,7 +21,7 @@ export const routes = [
   {
     path: 'home',
     component: HomeComponent,
-    permission: Permission.USER,
+    permission: Permission.GUEST,
     label: 'HOME.TITLE',
   },
   {

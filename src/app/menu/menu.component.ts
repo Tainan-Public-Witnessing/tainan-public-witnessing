@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { BehaviorSubject, of, Subject } from 'rxjs';
 import { filter, first, map, switchAll, takeUntil } from 'rxjs/operators';
-import { LoginDialogComponent } from 'src/app/_elements/dialogs/login-dialog/login-dialog.component';
 import { MenuLink } from 'src/app/_interfaces/menu-link.interface';
 import { AuthorityService } from 'src/app/_services/authority.service';
 import { GlobalEventService } from 'src/app/_services/global-event.service';
@@ -33,7 +33,8 @@ export class MenuComponent implements OnInit, OnDestroy {
     private authorityService: AuthorityService,
     private globalEventService: GlobalEventService,
     private matDiolog: MatDialog,
-    private usersService: UsersService
+    private usersService: UsersService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -85,10 +86,7 @@ export class MenuComponent implements OnInit, OnDestroy {
       id: 'ON_MENU_LINK_CLICK',
     });
 
-    this.matDiolog.open(LoginDialogComponent, {
-      disableClose: true,
-      panelClass: 'dialog-panel',
-    });
+    this.router.navigateByUrl('/login');
   };
 
   onLogoutClick = () => {
