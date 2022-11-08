@@ -13,10 +13,11 @@ export class LineBindingComponent implements OnInit {
 
   ngOnInit(): void {
     const lineToken = window.location.hash.substring(1);
+
     if (lineToken) {
       this.dialog.open(LineBindingDialogComponent, { disableClose: true });
     } else {
-      this.router.navigateByUrl('/login');
+      this.router.navigateByUrl(`/`, { replaceUrl: true });
     }
   }
 }

@@ -17,6 +17,10 @@ type RouteDef = {
   menu?: boolean;
 };
 
+type RouteDefComplete = RouteDef & {
+  pathRegexp: RegExp;
+};
+
 export const routes = [
   {
     path: 'home',
@@ -78,4 +82,11 @@ export const routes = [
     permission: Permission.GUEST,
     menu: false,
   },
-];
+].map(buildRegexp);
+
+function buildRegexp(route: RouteDef): RouteDefComplete {
+  return {
+    ...route,
+    pathRegexp: new RegExp('^\/' + route.path.replace(/:\w+/g, '.+')),
+  };
+}

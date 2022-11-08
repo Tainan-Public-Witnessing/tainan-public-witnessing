@@ -86,7 +86,9 @@ export class MenuComponent implements OnInit, OnDestroy {
       id: 'ON_MENU_LINK_CLICK',
     });
 
-    this.router.navigateByUrl('/login');
+    this.router.navigateByUrl(
+      `/login?return=${encodeURIComponent(window.location.href)}`
+    );
   };
 
   onLogoutClick = () => {

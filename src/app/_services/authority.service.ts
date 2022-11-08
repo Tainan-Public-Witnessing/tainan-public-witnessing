@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { MatDialog } from '@angular/material/dialog';
 import {
   ActivatedRouteSnapshot,
   CanActivate,
@@ -23,10 +22,8 @@ import { UsersService } from './users.service';
 })
 export class AuthorityService implements CanActivate {
   currentUserUuid$ = new BehaviorSubject<string | null>(null); // uuid
-  private urlPermissions = routes;
 
   constructor(
-    private matDialog: MatDialog,
     private router: Router,
     private api: Api,
     private cookieService: CookieService,
@@ -35,7 +32,7 @@ export class AuthorityService implements CanActivate {
   ) {}
 
   canActivate(
-    route: ActivatedRouteSnapshot,
+    _: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ):
     | boolean
@@ -57,31 +54,26 @@ export class AuthorityService implements CanActivate {
       }
     }
 
-    const currentUrlPermission =
-      (this.urlPermissions.find((urlPermission) =>
-        state.url.includes(urlPermission.path)
-      )?.permission as Permission) ?? Permission.GUEST;
-
-    if (currentUrlPermission !== Permission.GUEST) {
-      if (this.currentUserUuid$.value) {
-        return this.usersService
-          .getUserByUuid(this.currentUserUuid$.value)
-          .pipe(
-            filter((user) => !!user),
-            first(),
-            map((user) => user!.permission < currentUrlPermission),
-            tap((hasPermission) => {
-              if (!hasPermission) {
-                this.router.navigate(['home']);
-              }
-            })
-          );
-      } else {
-        window.location.href = environment.LINE_LOGIN;
-        return false;
-      }
-    } else {
+    const route = routes.find((r) => r.pathRegexp.test(state.url));
+    const currentUrlPermission = route?.permission ?? Permission.GUEST;
+    if (currentUrlPermission === Permission.GUEST) {
       return true;
+    }
+    if (this.currentUserUuid$.value) {
+      return this.usersService.getUserByUuid(this.currentUserUuid$.value).pipe(
+        filter((user) => !!user),
+        first(),
+        map((user) => user!.permission < currentUrlPermission),
+        tap((hasPermission) => {
+          if (!hasPermission) {
+            this.router.navigate(['home']);
+          }
+        })
+      );
+    } else {
+      return this.router.navigateByUrl(
+        `/login?return=${encodeURIComponent(window.location.href)}`
+      );
     }
   }
 

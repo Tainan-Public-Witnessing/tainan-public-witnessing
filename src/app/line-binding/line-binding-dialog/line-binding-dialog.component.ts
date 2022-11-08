@@ -36,7 +36,12 @@ export class LineBindingDialogComponent implements OnInit {
         .post(environment.LINE_BINDING, this.bindingForm.value)
         .subscribe((payload: any) => {
           if (payload.token) {
-            this.auth.customLogin(payload.token).then(this.closeThis);
+            const query = new URLSearchParams(
+              window.location.search.substring(1)
+            );
+            this.auth
+              .customLogin(payload.token)
+              .then(() => this.closeThis(query.get('return')));
           } else {
             this.bindingForm.setErrors({ bind_code: true });
           }
@@ -46,8 +51,8 @@ export class LineBindingDialogComponent implements OnInit {
     }
   };
 
-  closeThis = () => {
+  closeThis = (returnUrl?: string | null) => {
     this.dialogRef.close();
-    this.router.navigateByUrl('/');
+    this.router.navigateByUrl(returnUrl || '/');
   };
 }

@@ -20,11 +20,15 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     const token = window.location.hash.substring(1);
+    const query = new URLSearchParams(window.location.search.substring(1));
+
+    const returnUrl = query.get('return') || '/';
+
     if (token) {
       this.auth
         .customLogin(token)
         .then(() => {
-          this.router.navigateByUrl('/');
+          this.router.navigateByUrl(returnUrl);
         })
         .catch(() => {
           this.dialog
@@ -39,11 +43,15 @@ export class LoginComponent implements OnInit {
             .subscribe(this.redirectToLineLogin);
         });
     } else {
-      this.redirectToLineLogin();
+      this.redirectToLineLogin(returnUrl);
     }
   }
 
-  private redirectToLineLogin() {
-    window.location.href = environment.LINE_LOGIN;
+  private redirectToLineLogin(returnUrl?: string) {
+    window.location.replace(
+      returnUrl
+        ? `${environment.LINE_LOGIN}&state=${encodeURIComponent(returnUrl)}`
+        : environment.LINE_LOGIN
+    );
   }
 }
