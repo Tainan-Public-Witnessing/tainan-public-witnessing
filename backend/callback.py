@@ -8,10 +8,11 @@ def LineNotifyCallback(db):
     code = request.form["code"]
     userUuid = request.form["state"]
     url = "https://notify-bot.line.me/oauth/token"
+    callbackurl = os.getenv("backend_url")
     payload = {
         "grant_type": "authorization_code",
         "code": code,
-        "redirect_uri": "https://backend-4twc3jkzwa-de.a.run.app/line-notify-callback",
+        "redirect_uri": f"{callbackurl}/line-notify-callback",
         "client_id": os.getenv("client_id_notify"),
         "client_secret": os.getenv("client_secret_notify"),
     }
@@ -29,10 +30,11 @@ def LineNotifyCallback(db):
 def LineLoginCallback(db):
     code = request.form.get("code")
     url = "https://api.line.me/oauth2/v2.1/token"
+    callbackurl = os.getenv("backend_url")
     payload = {
         "grant_type": "authorization_code",
         "code": code,
-        "redirect_uri": "https://backend-4twc3jkzwa-de.a.run.app/line-login-callback",
+        "redirect_uri": f"{callbackurl}/line-login-callback",
         "client_id": os.getenv("client_id_login"),
         "client_secret": os.getenv("client_secret_login"),
     }
@@ -43,15 +45,16 @@ def LineLoginCallback(db):
     headers = {"Authorization": f"Bearer {access_token}"}
     res = requests.get(url_getUserInfo, headers=headers)
     subject = res.json()["sub"]
-    user = db.collection("Users").where("subject", "==", subject).get()
-    if user:
-        custom_token = auth.create_custom_token(subject)
+    query = db.collection("Users").where("subject", "==", subject).get()
+    if query:
+        fireSub = query[0].to_dict()["fireSub"]
+        custom_token = auth.create_custom_token(fireSub)
         return redirect(
-            f"https://tainan-public-witnessing-official.firebaseapp.com/login#{custom_token}",
+            f'{os.getenv("website_url")}/login#{custom_token}',
             code=302,
         )
     else:
         return redirect(
-            f"https://tainan-public-witnessing-official.firebaseapp.com/register#{subject}",
+            f'{os.getenv("website_url")}/bind#{access_token}',
             code=302,
         )

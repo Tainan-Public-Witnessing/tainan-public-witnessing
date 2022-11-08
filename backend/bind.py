@@ -1,21 +1,14 @@
-from flask import redirect, request
+from flask import redirect, request,jsonify
 from firebase_admin import auth
 
 
 def BindUser(db):
     code = request.form.get("code")
-    username = request.form.get("username")
-    user = db.collection("Users").where("verify_code", "==", code).get()
-    if user and user.to_dict()["username"] == username:
-        subject = request.form.get("subject")
-        user.reference.update({"subject": subject})
-        custom_token = auth.create_custom_token(subject)
-        return redirect(
-            f"https://tainan-public-witnessing-v2211.firebaseapp.com/login#{custom_token}",
-            code=302,
-        )
+    query = db.collection("Users").where("bindcode", "==", code).get()
+    if query:
+        mail=f"{query[0].id}@mail.tpw"
+        user=auth.get_user_by_email(mail)
+        custom_token = auth.create_custom_token(user.uid)
+        return jsonify({'bind':'success','token':custom_token})
     else:
-        return redirect(
-            "https://tainan-public-witnessing-v2211.firebaseapp.com/bind_error",
-            code=302,
-        )
+        return jsonify({'bind':'wrong code'})
