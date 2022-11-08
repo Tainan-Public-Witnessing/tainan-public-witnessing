@@ -236,6 +236,18 @@ async = ["asgiref (>=3.2)"]
 dotenv = ["python-dotenv"]
 
 [[package]]
+name = "flask-cors"
+version = "3.0.10"
+description = "A Flask extension adding a decorator for CORS support"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+Flask = ">=0.9"
+Six = "*"
+
+[[package]]
 name = "flask-limiter"
 version = "2.7.0"
 description = "Rate limiting for flask applications"
@@ -1121,7 +1133,7 @@ python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,>=2.7"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "3925849adec9ba36a3777a121b5b923123e33a459f99bd900ffc2aaa561e7e7b"
+content-hash = "8d101da90b1d83bf1f7214dc8bce54ecbfea7b841eccb9ac3c2109ccdea95d33"
 
 [metadata.files]
 appnope = [
@@ -1304,6 +1316,10 @@ firebase-admin = [
 flask = [
     {file = "Flask-2.2.2-py3-none-any.whl", hash = "sha256:b9c46cc36662a7949f34b52d8ec7bb59c0d74ba08ba6cb9ce9adc1d8676d9526"},
     {file = "Flask-2.2.2.tar.gz", hash = "sha256:642c450d19c4ad482f96729bd2a8f6d32554aa1e231f4f6b4e7e5264b16cca2b"},
+]
+flask-cors = [
+    {file = "Flask-Cors-3.0.10.tar.gz", hash = "sha256:b60839393f3b84a0f3746f6cdca56c1ad7426aa738b70d6c61375857823181de"},
+    {file = "Flask_Cors-3.0.10-py2.py3-none-any.whl", hash = "sha256:74efc975af1194fc7891ff5cd85b0f7478be4f7f59fe158102e91abb72bb4438"},
 ]
 flask-limiter = [
     {file = "Flask-Limiter-2.7.0.tar.gz", hash = "sha256:a83164ab3fd264c7e565eeebd1f825cfd014ef4972cc742dbcf0d221e3c38092"},

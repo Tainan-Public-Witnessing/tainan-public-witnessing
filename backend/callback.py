@@ -26,7 +26,7 @@ def LineNotifyCallback(db):
 
 
 def LineLoginCallback(db):
-    code = request.form.get("code")
+    code = request.args.get("code")
     url = "https://api.line.me/oauth2/v2.1/token"
     callbackurl = os.getenv("backend_url")
     payload = {
@@ -43,9 +43,9 @@ def LineLoginCallback(db):
     headers = {"Authorization": f"Bearer {access_token}"}
     res = requests.get(url_getUserInfo, headers=headers)
     subject = res.json()["sub"]
-    query = db.collection("Users").where("subject", "==", subject).get()
+    query = db.collection("Users").where("lineSub", "==", subject).get()
     if query:
-        fireSub = query[0].to_dict()["fireSub"]
+        fireSub = query[0].to_dict()["firebaseSub"]
         custom_token = auth.create_custom_token(fireSub)
         return redirect(
             f'{os.getenv("website_url")}/login#{custom_token}',

@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request
-
+from flask_cors import cross_origin, CORS
 from flask_limiter import Limiter
 import redis
 
@@ -23,6 +23,20 @@ from backup import Backup
 
 load_dotenv()
 app = Flask(__name__)
+# CORS(
+#     app,
+#     resources={
+#         r"/.*": {
+#             "origins": [
+#                 "http://127.0.0.1",
+#                 "tainan-public-witnessing-official.web.app",
+#                 "tainan-public-witnessing-official.firebaseapp.com",
+#                 "tainan-public-witnessing-official-test.web.app",
+#                 "tainan-public-witnessing-official-test.firebaseapp.com",
+#             ]
+#         }
+#     },
+# )
 redis_password = os.environ.get("redis_password")
 pool = redis.connection.BlockingConnectionPool.from_url(
     f"redis://:{redis_password}@redis-16040.c302.asia-northeast1-1.gce.cloud.redislabs.com:16040"
@@ -59,7 +73,7 @@ def line_notify_callback():
     return LineNotifyCallback(db)
 
 
-@app.route("/line-login-callback", methods=["POST"])
+@app.route("/line-login-callback", methods=["GET"])
 @limiter.limit("40/minute")
 @limiter.limit("10/second")
 def line_login_callback():
@@ -67,6 +81,15 @@ def line_login_callback():
 
 
 @app.route("/bind-user", methods=["POST"])
+@cross_origin(
+    origins=[
+        "http://localhost:4200",
+        "https://tainan-public-witnessing-official.web.app",
+        "https://tainan-public-witnessing-official.firebaseapp.com",
+        "https://tainan-public-witnessing-official-test.web.app",
+        "https://tainan-public-witnessing-official-test.firebaseapp.com",
+    ]
+)
 def bind_user():
     return BindUser(db)
 
