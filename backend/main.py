@@ -12,6 +12,7 @@ from calendar import monthrange
 import requests
 import os
 import asyncio
+import json
 
 from shiftSchedule import ShiftSchedule, ScheduleReminder, ScheduleCompleteReminder
 from report import AttendanceReport
@@ -23,20 +24,7 @@ from backup import Backup
 
 load_dotenv()
 app = Flask(__name__)
-# CORS(
-#     app,
-#     resources={
-#         r"/.*": {
-#             "origins": [
-#                 "http://127.0.0.1",
-#                 "tainan-public-witnessing-official.web.app",
-#                 "tainan-public-witnessing-official.firebaseapp.com",
-#                 "tainan-public-witnessing-official-test.web.app",
-#                 "tainan-public-witnessing-official-test.firebaseapp.com",
-#             ]
-#         }
-#     },
-# )
+
 redis_password = os.environ.get("redis_password")
 pool = redis.connection.BlockingConnectionPool.from_url(
     f"redis://:{redis_password}@redis-16040.c302.asia-northeast1-1.gce.cloud.redislabs.com:16040"
@@ -81,15 +69,7 @@ def line_login_callback():
 
 
 @app.route("/bind-user", methods=["POST"])
-@cross_origin(
-    origins=[
-        "http://localhost:4200",
-        "https://tainan-public-witnessing-official.web.app",
-        "https://tainan-public-witnessing-official.firebaseapp.com",
-        "https://tainan-public-witnessing-official-test.web.app",
-        "https://tainan-public-witnessing-official-test.firebaseapp.com",
-    ]
-)
+@cross_origin(origins=json.loads(os.getenv("allowed_domains")))
 def bind_user():
     return BindUser(db)
 
