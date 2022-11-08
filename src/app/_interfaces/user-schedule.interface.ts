@@ -2,6 +2,7 @@ export interface UserSchedule {
   availableHours: UserScheduleHours;
   partnerUuid: string | null;
   assign: boolean;
+  lineToken?:string
   unavailableDates: string[];
 }
 

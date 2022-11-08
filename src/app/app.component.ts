@@ -1,22 +1,22 @@
+import { FocusMonitor } from '@angular/cdk/a11y';
 import {
   AfterViewInit,
   Component,
   OnDestroy,
   OnInit,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
+import { MatButton } from '@angular/material/button';
+import { DateAdapter } from '@angular/material/core';
 import { MatSidenav } from '@angular/material/sidenav';
-import { FocusMonitor } from '@angular/cdk/a11y';
 import { TranslateService } from '@ngx-translate/core';
-import { Subject, fromEvent, of, BehaviorSubject } from 'rxjs';
-import { takeUntil, map, switchAll, filter, startWith } from 'rxjs/operators';
-import { GlobalEventService } from 'src/app/_services/global-event.service';
+import { BehaviorSubject, fromEvent, of, Subject } from 'rxjs';
+import { filter, map, startWith, switchAll, takeUntil } from 'rxjs/operators';
 import { Language } from 'src/app/_enums/language.enum';
 import { AuthorityService } from 'src/app/_services/authority.service';
-import { DateAdapter } from '@angular/material/core';
-import { MatButton } from '@angular/material/button';
-import { UsersService } from './_services/users.service';
+import { GlobalEventService } from 'src/app/_services/global-event.service';
 import { environment } from 'src/environments/environment';
+import { UsersService } from './_services/users.service';
 
 @Component({
   selector: 'app-root',
@@ -27,6 +27,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('sidenav') sidenav!: MatSidenav;
   @ViewChild('menuButton') menuButton!: MatButton;
 
+  readonly isDevMode = /-dev/i.test(environment.firebase.projectId);
   currentUsername$ = new BehaviorSubject<string | null>(null);
   displayUsername$ = new BehaviorSubject<boolean>(true);
   languages: string[] = Object.values(Language);
@@ -55,6 +56,10 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.translateService.setDefaultLang('zh');
     this.dateAdapter.setLocale(environment.MOMENT_LOCALES['zh']);
+
+    if (localStorage.language) {
+      this.translateService.use(localStorage.language);
+    }
 
     this.authorityService.currentUserUuid$
       .pipe(
@@ -92,6 +97,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onLanguageButtonClick = (language: Language) => {
     this.translateService.use(language);
+    localStorage.language = language;
     this.dateAdapter.setLocale(environment.MOMENT_LOCALES['zh']);
   };
 

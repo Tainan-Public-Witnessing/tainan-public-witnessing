@@ -2,13 +2,14 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject, of, Subject } from 'rxjs';
 import { filter, first, map, switchAll, takeUntil } from 'rxjs/operators';
-import { MenuLink } from 'src/app/_interfaces/menu-link.interface';
 import { LoginDialogComponent } from 'src/app/_elements/dialogs/login-dialog/login-dialog.component';
+import { MenuLink } from 'src/app/_interfaces/menu-link.interface';
 import { AuthorityService } from 'src/app/_services/authority.service';
 import { GlobalEventService } from 'src/app/_services/global-event.service';
+import { routes } from '../routes';
 import { Permission } from '../_enums/permission.enum';
-import { UsersService } from '../_services/users.service';
 import { User } from '../_interfaces/user.interface';
+import { UsersService } from '../_services/users.service';
 
 @Component({
   selector: 'app-menu',
@@ -16,26 +17,13 @@ import { User } from '../_interfaces/user.interface';
   styleUrls: ['./menu.component.scss'],
 })
 export class MenuComponent implements OnInit, OnDestroy {
-  MENU_LINKS: MenuLink[] = [
-    { display: 'HOME.TITLE', url: 'home', permission: Permission.GUEST },
-    {
-      display: 'SETTINGS.TITLE',
-      url: 'settings',
-      permission: Permission.ADMINISTRATOR,
-    },
-    {
-      display: 'PERSONAL_SHIFT.TITLE',
-      url: 'personal-shift',
-      permission: Permission.USER,
-    },
-    { display: 'SHIFTS.TITLE', url: 'shifts', permission: Permission.MANAGER },
-    { display: 'USERS.TITLE', url: 'users', permission: Permission.MANAGER },
-    {
-      display: 'USERS.PROFILE_TITLE',
-      url: 'profile',
-      permission: Permission.USER,
-    },
-  ];
+  MENU_LINKS: MenuLink[] = routes
+    .filter((route) => route.menu !== false)
+    .map((route) => ({
+      display: route.label!,
+      url: route.path,
+      permission: route.permission,
+    }));
 
   currentMenuLinks$ = new BehaviorSubject<MenuLink[]>([]);
   isLoggedIn$ = new BehaviorSubject<boolean>(false);

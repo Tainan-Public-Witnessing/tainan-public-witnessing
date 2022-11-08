@@ -9,17 +9,24 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AngularMaterialModule } from 'src/app/_modules/angular-material.module';
-import { FirebaseModule } from 'src/app/_modules/firebase-develop.module';
-import { environment } from 'src/environments/environment.prod';
+import { FirebaseModule } from 'src/app/_modules/firebase.module';
+import { environment } from 'src/environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { MenuComponent } from './menu/menu.component';
+import { OpeningShiftsComponent } from './opening-shifts/opening-shifts.component';
 import { PersonalShiftComponent } from './personal-shift/personal-shift.component';
 import { ShiftsComponent } from './shifts/shifts.component';
+import { UserDataComponent } from './users/user/user-data/user-data.component';
+import { CalendarHeaderComponent } from './users/user/user-schedule/calendar-header/calendar-header.component';
+import { HoursListComponent } from './users/user/user-schedule/hours-list/hours-list.component';
+import { HoursTableComponent } from './users/user/user-schedule/hours-table/hours-table.component';
+import { UserScheduleComponent } from './users/user/user-schedule/user-schedule.component';
 import { UserComponent } from './users/user/user.component';
 import { UsersComponent } from './users/users.component';
+import { ForceRefreshDirective } from './_directives/force-refresh.directive';
 import { ConfirmDialogComponent } from './_elements/dialogs/confirm-dialog/confirm-dialog.component';
 import { CrewEditorComponent } from './_elements/dialogs/crew-editor/crew-editor.component';
 import { MemberInputComponent } from './_elements/dialogs/crew-editor/member-input/member-input.component';
@@ -27,13 +34,7 @@ import { LoginDialogComponent } from './_elements/dialogs/login-dialog/login-dia
 import { StatisticEditorComponent } from './_elements/dialogs/statistic-editor/statistic-editor.component';
 import { ShiftCardComponent } from './_elements/shift-table/shift-card/shift-card.component';
 import { ShiftTableComponent } from './_elements/shift-table/shift-table.component';
-import { UserDataComponent } from './users/user/user-data/user-data.component';
-import { UserScheduleComponent } from './users/user/user-schedule/user-schedule.component';
-import { HoursTableComponent } from './users/user/user-schedule/hours-table/hours-table.component';
-import { CalendarHeaderComponent } from './users/user/user-schedule/calendar-header/calendar-header.component';
-import { ForceRefreshDirective } from './_directives/force-refresh.directive';
 import { ArrayFilterPipe } from './_pipes/array-filter.pipe';
-import { HoursListComponent } from './users/user/user-schedule/hours-list/hours-list.component';
 import { SettingsComponent } from './settings/settings.component';
 import { SiteComponent } from './settings/site/site.component';
 import { ShfithoursComponent } from './settings/shfithours/shfithours.component';
@@ -41,6 +42,7 @@ import { CongregationsComponent } from './settings/congregations/congregations.c
 import { SiteEditorComponent } from './_elements/dialogs/site-editor/site-editor.component';
 import { SiteCreatorComponent } from './_elements/dialogs/site-creator/site-creator.component';
 
+import { YearMonthSelectComponent } from './_elements/year-month-select/year-month-select.component';
 
 // AoT requires an exported function for factories of translate module
 export function HttpLoaderFactory(http: HttpClient) {
@@ -68,7 +70,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     HoursTableComponent,
     CalendarHeaderComponent,
     ForceRefreshDirective,
-    ArrayFilterPipe,
     HoursListComponent,
     SettingsComponent,
     SiteComponent,
@@ -76,6 +77,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     CongregationsComponent,
     SiteEditorComponent,
     SiteCreatorComponent,
+    OpeningShiftsComponent,
+    YearMonthSelectComponent,
   ],
   imports: [
     BrowserModule,

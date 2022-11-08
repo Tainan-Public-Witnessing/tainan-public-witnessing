@@ -1,0 +1,22 @@
+<mat-form-field appearance="outline">
+  <mat-label>{{ label }}</mat-label>
+  <input
+    matInput
+    [min]="startMonth"
+    [max]="endMonth"
+    [matDatepicker]="yearMonthPicker"
+    [formControl]="formControl"
+    name="yearMonth"
+  />
+  <mat-datepicker-toggle
+    matSuffix
+    [for]="yearMonthPicker"
+  ></mat-datepicker-toggle>
+  <mat-datepicker
+    #yearMonthPicker
+    startView="year"
+    (monthSelected)="setMonthAndYear($event)"
+    (viewChanged)="onViewChanged($event)"
+  >
+  </mat-datepicker>
+</mat-form-field>

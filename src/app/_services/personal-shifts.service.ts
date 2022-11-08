@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { Api } from '../_api/mock.api';
+import { Api } from '../_api';
 import { PersonalShifts } from '../_interfaces/personal-shifts.interface';
 
 @Injectable({

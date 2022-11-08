@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { __values } from 'tslib';
-import { Api } from '../_api/mock.api';
+import { Api } from '../_api';
 import { Site } from '../_interfaces/site.interface';
 
 @Injectable({
@@ -10,7 +9,7 @@ import { Site } from '../_interfaces/site.interface';
 export class SitesService {
   private sites$: BehaviorSubject<Site[] | null> | undefined = undefined;
 
-  constructor(private api: Api) { }
+  constructor(private api: Api) {}
 
   getSites = (): BehaviorSubject<Site[] | null> => {
     if (this.sites$ === undefined) {

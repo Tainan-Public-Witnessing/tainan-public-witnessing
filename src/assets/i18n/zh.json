@@ -71,6 +71,21 @@
       "YEAR_MONTH": "年份-月份"
     }
   },
+  "AVAILABLE_SHIFTS": {
+    "TITLE": "空缺班表",
+    "NO_DATA_MESSAGE": "沒有資料",
+    "NEED_SUPPORT": "請支援",
+    "JOIN_CONFIRM_TITLE": "加入班次",
+    "JOIN_CONFIRM_MESSAGE": "你確定要加入這個班次嗎？\n\n日期: {{date}}\n時間: {{time}}\n地點: {{site}}",
+    "JOIN_FAILED": "報名失敗",
+    "JOIN_SUCCESSFULLY": "報名成功",
+    "TOO_MANY_SHIFTS_ERROR": "你在這個月份已經參與十個班次，感謝你熱心的服務，超過十個班次的報名請聯絡管理員，謝謝！",
+    "FULL_SHIFT_ERROR": "可能有人已經報名了哦，請重新整理頁面後再試一次，謝謝",
+    "EXISTED_ERROR": "你已經在這個班次裡面了！",
+    "LABEL": {
+      "YEAR_MONTH": "年份-月份"
+    }
+  },
   "USERS": {
     "TITLE": "使用者列表",
     "CREATE_TITLE": "新增使用者",
@@ -109,7 +124,8 @@
       "ASSIGN": "參與排班",
       "AVAILABLE_HOURS": "可參與時段和次數",
       "UNAVILABLE_DATES": "無法參與日期",
-      "PARTNER": "同伴"
+      "PARTNER": "同伴",
+      "SUBSCRIBE": "訂閱通知服務"
     }
   },
   "CONGREGATIONS": {

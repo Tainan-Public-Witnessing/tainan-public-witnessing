@@ -50,7 +50,7 @@
   "STATISTIC_EDITOR": {
     "TITLE": "Statistic",
     "LABEL": {
-      "ATTENDANCE": "Attendance",
+      "ATTENDANCE": "Participant",
       "TRACTS": "Tracts",
       "SCRIPTURES": "Scriptures",
       "VIDEOS": "Videos",
@@ -65,7 +65,7 @@
     "SHIFTS_TOMORROW": "Tomorrow's shifts"
   },
   "PERSONAL_SHIFT": {
-    "TITLE": "Personal Shift",
+    "TITLE": "Personal Shifts",
     "NO_DATA_MESSAGE": "No data",
     "LABEL": {
       "YEAR_MONTH": "Year-Month"
@@ -93,7 +93,7 @@
       "GENDER": "Gender",
       "CONGREGATION": "Congregation",
       "PROFILE": "Profile",
-      "BAPTIZE_DATE": "Baptize date",
+      "BAPTIZE_DATE": "Baptism date",
       "BIRTH_DATE": "Birth date",
       "TAGS": "Tags",
       "CELLPHONE": "Cellphone",
@@ -104,7 +104,8 @@
       "ASSIGN": "Assign",
       "AVAILABLE_HOURS": "Available Shift Hours / Times",
       "UNAVILABLE_DATES": "Unavailable Dates",
-      "PARTNER": "Partner"
+      "PARTNER": "Partner",
+      "SUBSCRIBE": "Subscribe Line Notification"
     },
     "PERSONAL_SHIFTS_EXIST_ERROR": "Can not deactivate user! Please cancel the following assignments first:\n\n{{value}}",
     "PROFILE_TITLE": "Profile",
@@ -142,7 +143,7 @@
     }
   },
   "SHIFTS": {
-    "TITLE": "Search shifts",
+    "TITLE": "Search Shifts",
     "LABEL": {
       "DATE": "Year-Month-Date"
     }
@@ -154,7 +155,22 @@
     "3": "Publisher",
     "4": "Guest"
   },
-  "SITES":{
-    "SITE":"Site"
+  "SITES": {
+    "SITE": "Site"
+  },
+  "AVAILABLE_SHIFTS": {
+    "TITLE": "Available Shifts",
+    "NO_DATA_MESSAGE": "No data",
+    "NEED_SUPPORT": "Empty Spot",
+    "JOIN_CONFIRM_TITLE": "Join Shift",
+    "JOIN_CONFIRM_MESSAGE": "Confirm to join this shift:\n\nDate: {{date}}\nTime: {{time}}\nLocation: {{site}}",
+    "JOIN_FAILED": "Join Failed",
+    "TOO_MANY_SHIFTS_ERROR": "You are signed up for 10 shifts this month. Please contact the admin through Line messages to join extra shifts.\nThank you for your zealous participation.",
+    "FULL_SHIFT_ERROR": "Oops! Someone may have filled this spot already, please refresh the page.",
+    "EXISTED_ERROR": "You are already in this shift!",
+    "LABEL": {
+      "YEAR_MONTH": "Year-Month"
+    },
+    "JOIN_SUCCESSFULLY": "Joined successfully"
   }
 }

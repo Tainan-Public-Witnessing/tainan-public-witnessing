@@ -14,7 +14,8 @@
           "destination": "/index.html"
         }
       ]
-    }, {
+    },
+    {
       "target": "release",
       "public": "dist/TainanPublicWitnessing",
       "ignore": [

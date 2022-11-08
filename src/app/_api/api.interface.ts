@@ -1,11 +1,11 @@
-import { User, UserKey } from 'src/app/_interfaces/user.interface';
 import { Congregation } from 'src/app/_interfaces/congregation.interface';
 import { Site } from 'src/app/_interfaces/site.interface';
+import { User, UserKey } from 'src/app/_interfaces/user.interface';
+import { PersonalShifts } from '../_interfaces/personal-shifts.interface';
 import { ShiftHours } from '../_interfaces/shift-hours.interface';
 import { Shift } from '../_interfaces/shift.interface';
-import { PersonalShifts } from '../_interfaces/personal-shifts.interface';
-import { Statistic } from '../_interfaces/statistic.interface';
 import { SiteShifts } from '../_interfaces/site-shifts.interface';
+import { Statistic } from '../_interfaces/statistic.interface';
 import { UserSchedule } from '../_interfaces/user-schedule.interface';
 
 export interface ApiInterface {
@@ -74,4 +74,6 @@ export interface ApiInterface {
     userUuid: string,
     data: Partial<UserSchedule>
   ) => Promise<void>;
+
+  cancelLineToken: (userUuid: string) => Promise<void>;
 }
