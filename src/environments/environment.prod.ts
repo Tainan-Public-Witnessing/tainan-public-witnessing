@@ -14,7 +14,8 @@ export const environment = {
     '3c8ec6c4-7a3b-43a6-82af-0d243d6a7fc7',
   LINE_LOGIN:
     'https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1657601373&redirect_uri=https%3A%2F%2Fbackend-4twc3jkzwa-de.a.run.app%2Fline-login-callback&scope=profile%20openid&nonce=tpw',
-  LINE_BINDING: 'https://backend-4twc3jkzwa-de.a.run.app/bind-user',
+  BACKEND_URL: 'https://backend-4twc3jkzwa-de.a.run.app',
+  // LINE_BINDING: 'https://backend-4twc3jkzwa-de.a.run.app/bind-user',
   DAY: [
     'SUNDAY',
     'MONDAY',

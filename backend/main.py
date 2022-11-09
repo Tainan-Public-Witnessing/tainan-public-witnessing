@@ -46,8 +46,10 @@ limiter = Limiter(
     storage_uri="redis://",
     storage_options={"connection_pool": pool},
 )
-
-firebase_admin.initialize_app()
+options = {
+    "serviceAccountId": os.getenv("serviceAccountId"),
+}
+firebase_admin.initialize_app(options=options)
 db = firestore.client()
 
 
