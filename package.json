@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --port 4200 --open",
+    "start:local": "node scripts/local",
     "build": "ng build --configuration firebase",
     "test": "ng test",
     "lint": "ng lint",
