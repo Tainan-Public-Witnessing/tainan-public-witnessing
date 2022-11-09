@@ -29,6 +29,9 @@ redis_password = os.environ.get("redis_password")
 pool = redis.connection.BlockingConnectionPool.from_url(
     f"redis://:{redis_password}@redis-16040.c302.asia-northeast1-1.gce.cloud.redislabs.com:16040"
 )
+allowed_domains = json.loads(os.getenv("allowed_domains")).append(
+    "https://tainan-public-witnessing-official-test--preview-\w{8}.web.app"
+)
 
 
 def get_user_ip():
@@ -69,7 +72,7 @@ def line_login_callback():
 
 
 @app.route("/bind-user", methods=["POST"])
-@cross_origin(origins=json.loads(os.getenv("allowed_domains")))
+@cross_origin(origins=allowed_domains)
 def bind_user():
     return BindUser(db)
 
