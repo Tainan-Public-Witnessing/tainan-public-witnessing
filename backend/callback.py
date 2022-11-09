@@ -6,7 +6,7 @@ from urllib.parse import urlparse
 import re
 
 
-def LineNotifyCallback(db):
+def LineNotifyCallback(db, allowed_domains):
     code = request.form["code"]
     userUuid = request.form["state"]
     url = "https://notify-bot.line.me/oauth/token"
@@ -24,7 +24,7 @@ def LineNotifyCallback(db):
     db.collection("Users").document(userUuid).collection("Schedule").document(
         "config"
     ).update({"lineToken": access_token})
-    return redirect(urlparse(state).scheme,://{urlparse(state).netloc} code=302)
+    return redirect(allowed_domains[0], code=302)
 
 
 def LineLoginCallback(db, allowed_domains):
@@ -53,12 +53,12 @@ def LineLoginCallback(db, allowed_domains):
             fireSub = query[0].to_dict()["firebaseSub"]
             custom_token = auth.create_custom_token(fireSub).decode("utf-8")
             return redirect(
-                f'{urlparse(state).scheme}://{urlparse(state).netloc}/login?return={urlparse(state).path}#{custom_token}',
+                f"{urlparse(state).scheme}://{urlparse(state).netloc}/login?return={urlparse(state).path}#{custom_token}",
                 code=302,
             )
         else:
             return redirect(
-                f'{urlparse(state).scheme}://{urlparse(state).netloc}/bind#{access_token}',
+                f"{urlparse(state).scheme}://{urlparse(state).netloc}/bind#{access_token}",
                 code=302,
             )
     else:
@@ -73,6 +73,8 @@ def check_in_allow_domain(url, allowed_domains):
         return False
     else:
         for domain in allowed_domains:
-            if bool(re.match(domain, f'{urlparse(url).scheme}://{urlparse(url).netloc}')):
+            if bool(
+                re.match(domain, f"{urlparse(url).scheme}://{urlparse(url).netloc}")
+            ):
                 return True
         return False
