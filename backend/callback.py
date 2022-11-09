@@ -30,7 +30,6 @@ def LineNotifyCallback(db):
 def LineLoginCallback(db, allowed_domains):
     code = request.args.get("code")
     state = request.args.get("state")
-    print(check_in_allow_domain(state, allowed_domains))
     if check_in_allow_domain(state, allowed_domains):
         url = "https://api.line.me/oauth2/v2.1/token"
         callbackurl = os.getenv("backend_url")
