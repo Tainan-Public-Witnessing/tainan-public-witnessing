@@ -29,8 +29,9 @@ redis_password = os.environ.get("redis_password")
 pool = redis.connection.BlockingConnectionPool.from_url(
     f"redis://:{redis_password}@redis-16040.c302.asia-northeast1-1.gce.cloud.redislabs.com:16040"
 )
-allowed_domains = json.loads(os.getenv("allowed_domains")).append(
-    "https://tainan-public-witnessing-official-test--preview-\w{8}.web.app"
+allowed_domains = json.loads(os.getenv("allowed_domains"))
+allowed_domains.append(
+    r"https://tainan-public-witnessing-official-test--preview-\w{8}.web.app"
 )
 
 
@@ -68,7 +69,7 @@ def line_notify_callback():
 @limiter.limit("40/minute")
 @limiter.limit("10/second")
 def line_login_callback():
-    return LineLoginCallback(db)
+    return LineLoginCallback(db, allowed_domains)
 
 
 @app.route("/bind-user", methods=["POST"])
