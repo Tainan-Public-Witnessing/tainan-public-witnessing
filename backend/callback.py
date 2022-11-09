@@ -3,7 +3,7 @@ import os
 import requests
 from firebase_admin import auth
 import json
-from urllib.parse import urlparse
+from urllib.parse import urlparse, unquote
 
 
 def LineNotifyCallback(db):
@@ -29,7 +29,7 @@ def LineNotifyCallback(db):
 
 def LineLoginCallback(db):
     code = request.args.get("code")
-    previous_url = request.args.get("state")
+    previous_url = unquote(request.args.get("state"))
     allowed_domains = json.loads(os.getenv("allowed_domains"))
     if (
         not request.args.get("state")
