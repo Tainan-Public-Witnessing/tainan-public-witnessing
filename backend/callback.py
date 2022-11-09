@@ -1,4 +1,4 @@
-from flask import jsonify, redirect, request
+from flask import redirect, request
 import os
 import requests
 from firebase_admin import auth

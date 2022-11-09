@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request
-from flask_cors import cross_origin, CORS
+from flask_cors import cross_origin
 from flask_limiter import Limiter
 import redis
 
