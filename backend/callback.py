@@ -1,9 +1,9 @@
-from flask import jsonify, redirect, request
+from flask import redirect, request
 import os
 import requests
 from firebase_admin import auth
-import json
 from urllib.parse import urlparse
+import re
 
 
 def LineNotifyCallback(db):
@@ -27,20 +27,10 @@ def LineNotifyCallback(db):
     return redirect(os.getenv("website_url"), code=302)
 
 
-def LineLoginCallback(db):
+def LineLoginCallback(db, allowed_domains):
     code = request.args.get("code")
-    previous_url = request.args.get("state")
-    allowed_domains = json.loads(os.getenv("allowed_domains"))
-    if (
-        not request.args.get("state")
-        or f"{urlparse(previous_url).scheme}://{urlparse(previous_url).netloc}"
-        not in allowed_domains
-    ):
-        return redirect(
-            f"{allowed_domains[0]}",
-            code=302,
-        )
-    else:
+    state = request.args.get("state")
+    if check_in_allow_domain(state, allowed_domains):
         url = "https://api.line.me/oauth2/v2.1/token"
         callbackurl = os.getenv("backend_url")
         payload = {
@@ -63,7 +53,7 @@ def LineLoginCallback(db):
             fireSub = query[0].to_dict()["firebaseSub"]
             custom_token = auth.create_custom_token(fireSub).decode("utf-8")
             return redirect(
-                f'{os.getenv("website_url")}/login?return={urlparse(previous_url).path}#{custom_token}',
+                f'{os.getenv("website_url")}/login?return={urlparse(state).path}#{custom_token}',
                 code=302,
             )
         else:
@@ -71,3 +61,18 @@ def LineLoginCallback(db):
                 f'{os.getenv("website_url")}/bind#{access_token}',
                 code=302,
             )
+    else:
+        return redirect(
+            f"{allowed_domains[0]}",
+            code=302,
+        )
+
+
+def check_in_allow_domain(url, allowed_domains):
+    if not url:
+        return False
+    else:
+        for domain in allowed_domains:
+            if bool(re.match(domain, url)):
+                return True
+        return False

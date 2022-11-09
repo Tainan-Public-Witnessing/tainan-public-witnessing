@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request
-from flask_cors import cross_origin, CORS
+from flask_cors import cross_origin
 from flask_limiter import Limiter
 import redis
 
@@ -28,6 +28,10 @@ app = Flask(__name__)
 redis_password = os.environ.get("redis_password")
 pool = redis.connection.BlockingConnectionPool.from_url(
     f"redis://:{redis_password}@redis-16040.c302.asia-northeast1-1.gce.cloud.redislabs.com:16040"
+)
+allowed_domains = json.loads(os.getenv("allowed_domains"))
+allowed_domains.append(
+    r"https://tainan-public-witnessing-official-test--preview-\w{8}.web.app"
 )
 
 
@@ -65,11 +69,11 @@ def line_notify_callback():
 @limiter.limit("40/minute")
 @limiter.limit("10/second")
 def line_login_callback():
-    return LineLoginCallback(db)
+    return LineLoginCallback(db, allowed_domains)
 
 
 @app.route("/bind-user", methods=["POST"])
-@cross_origin(origins=json.loads(os.getenv("allowed_domains")))
+@cross_origin(origins=allowed_domains)
 def bind_user():
     return BindUser(db)
 
