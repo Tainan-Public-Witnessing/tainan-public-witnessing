@@ -62,7 +62,7 @@ def LineNotify(token, message):
 @limiter.limit("10/minute")
 @limiter.limit("10/second")
 def line_notify_callback():
-    return LineNotifyCallback(db)
+    return LineNotifyCallback(db, allowed_domains)
 
 
 @app.route("/line-login-callback", methods=["GET"])
