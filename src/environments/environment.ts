@@ -17,7 +17,7 @@ export const environment = {
   TAINAN_PUBLIC_WITNESSING_PERMISSION_TOKEN:
     '3c8ec6c4-7a3b-43a6-82af-0d243d6a7fc7',
   LINE_LOGIN: `https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1657601373&redirect_uri=http%3A%2F%2Fbackend-gjvx4y4daa-de.a.run.app%2Fline-login-callback&scope=profile%20openid&nonce=tpw`,
-  BACKEND_URL: 'https://backend-gjvx4y4daa-de.a.run.app',
+  BACKEND_URL: 'https://backend-dev-gjvx4y4daa-de.a.run.app',
   DAY: [
     'SUNDAY',
     'MONDAY',
