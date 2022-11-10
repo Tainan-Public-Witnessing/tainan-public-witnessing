@@ -25,11 +25,11 @@ from backup import Backup
 load_dotenv()
 app = Flask(__name__)
 
-redis_password = os.environ.get("redis_password")
+REDIS_PASSWORD = os.environ.get("REDIS_PASSWORD")
 pool = redis.connection.BlockingConnectionPool.from_url(
-    f"redis://:{redis_password}@redis-16040.c302.asia-northeast1-1.gce.cloud.redislabs.com:16040"
+    f"redis://:{REDIS_PASSWORD}@redis-16040.c302.asia-northeast1-1.gce.cloud.redislabs.com:16040"
 )
-allowed_domains = json.loads(os.getenv("allowed_domains"))
+allowed_domains = json.loads(os.getenv("ALLOWED_DOMAINS"))
 allowed_domains.append(
     r"https://tainan-public-witnessing-official-test--preview-\w{8}.web.app"
 )
@@ -46,10 +46,9 @@ limiter = Limiter(
     storage_uri="redis://",
     storage_options={"connection_pool": pool},
 )
-options = {
-    "serviceAccountId": os.getenv("serviceAccountId"),
-}
-firebase_admin.initialize_app(options=options)
+
+
+firebase_admin.initialize_app()
 db = firestore.client()
 
 

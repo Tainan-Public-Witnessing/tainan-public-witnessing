@@ -4,19 +4,20 @@ import requests
 from firebase_admin import auth
 from urllib.parse import urlparse
 import re
+import json
 
 
 def LineNotifyCallback(db, allowed_domains):
     code = request.form["code"]
     userUuid = request.form["state"]
+    LINE_NOTIFY_CLIENT = json.loads(os.getenv("LINE_NOTIFY_CLIENT"))
     url = "https://notify-bot.line.me/oauth/token"
-    callbackurl = os.getenv("backend_url")
     payload = {
         "grant_type": "authorization_code",
         "code": code,
-        "redirect_uri": f"{callbackurl}/line-notify-callback",
-        "client_id": os.getenv("client_id_notify"),
-        "client_secret": os.getenv("client_secret_notify"),
+        "redirect_uri": f'{os.getenv("BACKEND_URL")}/line-notify-callback',
+        "client_id": LINE_NOTIFY_CLIENT["ID"],
+        "client_secret": LINE_NOTIFY_CLIENT["SECRET"],
     }
     headers = {"Content-Type": "application/x-www-form-urlencoded"}
     res = requests.post(url, headers=headers, data=payload)
@@ -30,15 +31,15 @@ def LineNotifyCallback(db, allowed_domains):
 def LineLoginCallback(db, allowed_domains):
     code = request.args.get("code")
     state = request.args.get("state")
+    LINE_LOGIN_CLIENT = json.loads(os.getenv("LINE_LOGIN_CLIENT"))
     if check_in_allow_domain(state, allowed_domains):
         url = "https://api.line.me/oauth2/v2.1/token"
-        callbackurl = os.getenv("backend_url")
         payload = {
             "grant_type": "authorization_code",
             "code": code,
-            "redirect_uri": f"{callbackurl}/line-login-callback",
-            "client_id": os.getenv("client_id_login"),
-            "client_secret": os.getenv("client_secret_login"),
+            "redirect_uri": f'{os.getenv("BACKEND_URL")}/line-login-callback',
+            "client_id": LINE_LOGIN_CLIENT["ID"],
+            "client_secret": LINE_LOGIN_CLIENT["SECRET"],
         }
         res = requests.post(url, data=payload)
         access_token = res.json()["access_token"]
