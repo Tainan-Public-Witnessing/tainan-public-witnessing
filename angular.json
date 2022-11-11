@@ -45,7 +45,7 @@
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.official.ts"
+                  "with": "src/environments/environment.prod.ts"
                 }
               ],
               "optimization": true,
@@ -68,7 +68,7 @@
                 }
               ]
             },
-            "firebase": {
+            "test": {
               "buildOptimizer": true,
               "optimization": true,
               "vendorChunk": true,
@@ -78,7 +78,7 @@
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.test.ts"
+                  "with": "src/environments/environment.test.ts"
                 }
               ]
             },
@@ -122,8 +122,8 @@
             "production": {
               "browserTarget": "TainanPublicWitnessing:build:production"
             },
-            "firebase": {
-              "browserTarget": "TainanPublicWitnessing:build:firebase"
+            "test": {
+              "browserTarget": "TainanPublicWitnessing:build:test"
             },
             "development": {
               "browserTarget": "TainanPublicWitnessing:build:development"
