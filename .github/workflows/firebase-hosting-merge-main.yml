@@ -3,7 +3,7 @@
 
 name: Deploy to Firebase Hosting on merge
 "on":
-  pull_request:
+  push:
     branches:
       - main
 jobs:
@@ -11,11 +11,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: npm install && npm run build
+      - run: npm install && npm run build:prod
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_TAINAN_PUBLIC_WITNESSING_V2211 }}"
-          channelId: preview
+          channelId: live
           projectId: tainan-public-witnessing-v2211
           target: release

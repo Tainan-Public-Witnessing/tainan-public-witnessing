@@ -33,7 +33,7 @@ export class LineBindingDialogComponent implements OnInit {
   onBind = () => {
     if (this.bindingForm.valid) {
       this.http
-        .post(environment.LINE_BINDING, this.bindingForm.value)
+        .post(`${environment.BACKEND_URL}/bind-user`, this.bindingForm.value)
         .subscribe((payload: any) => {
           if (payload.token) {
             const query = new URLSearchParams(
