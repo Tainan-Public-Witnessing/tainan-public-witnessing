@@ -54,3 +54,6 @@ Thumbs.db
 *.pyc
 *.env
 backend-dev
+
+#cred
+serviceAccountKey.json

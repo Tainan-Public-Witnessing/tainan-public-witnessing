@@ -15,6 +15,8 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
+import { LineBindingComponent } from './line-binding/line-binding.component';
+import { LoginComponent } from './login/login.component';
 import { MenuComponent } from './menu/menu.component';
 import { OpeningShiftsComponent } from './opening-shifts/opening-shifts.component';
 import { PersonalShiftComponent } from './personal-shift/personal-shift.component';
@@ -43,6 +45,7 @@ import { SiteEditorComponent } from './_elements/dialogs/site-editor/site-editor
 import { SiteCreatorComponent } from './_elements/dialogs/site-creator/site-creator.component';
 
 import { YearMonthSelectComponent } from './_elements/year-month-select/year-month-select.component';
+import { LineBindingDialogComponent } from './line-binding/line-binding-dialog/line-binding-dialog.component';
 
 // AoT requires an exported function for factories of translate module
 export function HttpLoaderFactory(http: HttpClient) {
@@ -79,6 +82,11 @@ export function HttpLoaderFactory(http: HttpClient) {
     SiteCreatorComponent,
     OpeningShiftsComponent,
     YearMonthSelectComponent,
+    OpeningShiftsComponent,
+    YearMonthSelectComponent,
+    LoginComponent,
+    LineBindingComponent,
+    LineBindingDialogComponent,
   ],
   imports: [
     BrowserModule,

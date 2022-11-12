@@ -3,8 +3,10 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --port 4200",
-    "build": "ng build --configuration firebase",
+    "start": "ng serve --port 4200 --open",
+    "start:local": "node scripts/local",
+    "build:prod": "ng build --configuration production",
+    "build:test": "ng build --configuration test",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",

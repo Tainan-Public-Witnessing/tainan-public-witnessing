@@ -1,4 +1,6 @@
 import { HomeComponent } from './home/home.component';
+import { LineBindingComponent } from './line-binding/line-binding.component';
+import { LoginComponent } from './login/login.component';
 import { OpeningShiftsComponent } from './opening-shifts/opening-shifts.component';
 import { PersonalShiftComponent } from './personal-shift/personal-shift.component';
 import { ShiftsComponent } from './shifts/shifts.component';
@@ -13,6 +15,10 @@ type RouteDef = {
   permission: Permission;
   label?: string;
   menu?: boolean;
+};
+
+type RouteDefComplete = RouteDef & {
+  pathRegexp: RegExp;
 };
 
 export const routes = [
@@ -64,4 +70,23 @@ export const routes = [
     permission: Permission.USER,
     label: 'USERS.PROFILE_TITLE',
   },
-];
+  {
+    path: 'login',
+    component: LoginComponent,
+    permission: Permission.GUEST,
+    menu: false,
+  },
+  {
+    path: 'bind',
+    component: LineBindingComponent,
+    permission: Permission.GUEST,
+    menu: false,
+  },
+].map(buildRegexp);
+
+function buildRegexp(route: RouteDef): RouteDefComplete {
+  return {
+    ...route,
+    pathRegexp: new RegExp('^/' + route.path.replace(/:\w+/g, '.+')),
+  };
+}

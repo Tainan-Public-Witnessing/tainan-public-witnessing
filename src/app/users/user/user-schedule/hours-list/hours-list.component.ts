@@ -10,7 +10,7 @@ import {
 import { Subject } from 'rxjs';
 import { ShiftHours } from 'src/app/_interfaces/shift-hours.interface';
 import { UserScheduleDayData } from 'src/app/_interfaces/user-schedule.interface';
-import { environment } from 'src/environments/environment.prod';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-user-schedule-hours-list',

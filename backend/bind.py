@@ -1,21 +1,24 @@
-from flask import redirect, request
+from flask import request, jsonify
 from firebase_admin import auth
+import requests
 
 
 def BindUser(db):
-    code = request.form.get("code")
-    username = request.form.get("username")
-    user = db.collection("Users").where("verify_code", "==", code).get()
-    if user and user.to_dict()["username"] == username:
-        subject = request.form.get("subject")
-        user.reference.update({"subject": subject})
-        custom_token = auth.create_custom_token(subject)
-        return redirect(
-            f"https://tainan-public-witnessing-v2211.firebaseapp.com/login#{custom_token}",
-            code=302,
+    code = request.json["bind_code"]
+    query = db.collection("Users").where("bind_code", "==", code).get()
+    if query:
+        user_id = query[0].id
+        line_token = request.json["line_token"]
+        url_getUserInfo = "https://api.line.me/oauth2/v2.1/userinfo"
+        headers = {"Authorization": f"Bearer {line_token}"}
+        res = requests.get(url_getUserInfo, headers=headers)
+        subject = res.json()["sub"]
+        mail = f"{user_id}@mail.tpw"
+        user = auth.get_user_by_email(mail)
+        db.collection("Users").document(user_id).update(
+            {"lineSub": subject, "firebaseSub": user.uid}
         )
+        custom_token = auth.create_custom_token(user.uid).decode("utf-8")
+        return jsonify({"bind": "success", "token": custom_token})
     else:
-        return redirect(
-            "https://tainan-public-witnessing-v2211.firebaseapp.com/bind_error",
-            code=302,
-        )
+        return jsonify({"bind": "wrong code"})

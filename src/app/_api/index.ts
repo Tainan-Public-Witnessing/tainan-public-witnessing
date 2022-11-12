@@ -8,7 +8,10 @@ import { firstValueFrom, map } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { v4 as uuidv4, v5 as uuidv5 } from 'uuid';
 import { EXISTED_ERROR } from '../_classes/errors/EXISTED_ERROR';
-import { docExists as isDocExists, docsExists } from '../_helpers/firebase-helper';
+import {
+  docExists as isDocExists,
+  docsExists,
+} from '../_helpers/firebase-helper';
 import { Congregation } from '../_interfaces/congregation.interface';
 import { PersonalShifts } from '../_interfaces/personal-shifts.interface';
 import { ShiftHours } from '../_interfaces/shift-hours.interface';
@@ -28,7 +31,7 @@ export class Api implements ApiInterface {
   constructor(
     private angularFirestore: AngularFirestore,
     private angularFireAuth: AngularFireAuth
-  ) { }
+  ) {}
 
   login = (uuid: string, password: string): Promise<void> => {
     const email = [uuid, this.mailSuffix].join('');
@@ -86,12 +89,20 @@ export class Api implements ApiInterface {
       await isDocExists(this.angularFirestore.doc<UserKey>(`UserKeys/${uuid}`))
     );
 
+    const newUser = await this.angularFireAuth.createUserWithEmailAndPassword(
+      uuid + this.mailSuffix,
+      uuidv5(user.baptizeDate.replace(/-/g, ''), environment.UUID_NAMESPACE)
+    );
+
     await Promise.all([
-      this.angularFirestore.doc<User>(`Users/${uuid}`).set({
-        ...user,
-        uuid,
-        activate: true,
-      }),
+      this.angularFirestore
+        .doc<User & { firebaseSub: string }>(`Users/${uuid}`)
+        .set({
+          ...user,
+          uuid,
+          activate: true,
+          firebaseSub: newUser.user!.uid,
+        }),
       this.angularFirestore.doc<UserKey>(`UserKeys/${uuid}`).set({
         uuid,
         activate: true,
@@ -101,11 +112,6 @@ export class Api implements ApiInterface {
         .doc<UserSchedule>(`Users/${uuid}/Schedule/config`)
         .set(this.#EMPTY_USER_SCHEDULE),
     ]);
-
-    await this.angularFireAuth.createUserWithEmailAndPassword(
-      uuid + this.mailSuffix,
-      uuidv5(user.baptizeDate.replace(/-/g, ''), environment.UUID_NAMESPACE)
-    );
 
     return uuid;
   };
@@ -156,9 +162,9 @@ export class Api implements ApiInterface {
           db.collection<ShiftHours>('ShiftHours').ref.get(),
         ])
       ).map((snapshot) => snapshot.docs.map((doc) => doc.data())) as [
-          Site[],
-          ShiftHours[]
-        ];
+        Site[],
+        ShiftHours[]
+      ];
 
       return userShifts
         .map((shift) => ({
@@ -264,8 +270,9 @@ export class Api implements ApiInterface {
     site: Omit<Site, 'uuid' | 'activate' | 'order'>
   ): Promise<string> => {
     let uuid: string = uuidv4();
-    let maxOrder = await firstValueFrom(this.angularFirestore.collection<Site>('Sites').get())
-      .then(query => Math.max(...query.docs.map(m => m.data().order)));
+    let maxOrder = await firstValueFrom(
+      this.angularFirestore.collection<Site>('Sites').get()
+    ).then((query) => Math.max(...query.docs.map((m) => m.data().order)));
 
     await Promise.all([
       this.angularFirestore.doc<Site>(`Sites/${uuid}`).set({
@@ -545,6 +552,6 @@ export class Api implements ApiInterface {
   cancelLineToken = async (userUuid: string) => {
     await this.angularFirestore
       .doc(`Users/${userUuid}/Schedule/config`)
-      .update({'lineToken':''});
+      .update({ lineToken: '' });
   };
 }

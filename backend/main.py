@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request
-
+from flask_cors import cross_origin
 from flask_limiter import Limiter
 import redis
 
@@ -12,6 +12,7 @@ from calendar import monthrange
 import requests
 import os
 import asyncio
+import json
 
 from shiftSchedule import ShiftSchedule, ScheduleReminder, ScheduleCompleteReminder
 from report import AttendanceReport
@@ -23,9 +24,14 @@ from backup import Backup
 
 load_dotenv()
 app = Flask(__name__)
-redis_password = os.environ.get("redis_password")
+
+REDIS_PASSWORD = os.environ.get("REDIS_PASSWORD")
 pool = redis.connection.BlockingConnectionPool.from_url(
-    f"redis://:{redis_password}@redis-16040.c302.asia-northeast1-1.gce.cloud.redislabs.com:16040"
+    f"redis://:{REDIS_PASSWORD}@redis-16040.c302.asia-northeast1-1.gce.cloud.redislabs.com:16040"
+)
+allowed_domains = json.loads(os.getenv("ALLOWED_DOMAINS"))
+allowed_domains.append(
+    r"https://tainan-public-witnessing-official-test--preview-\w{8}.web.app"
 )
 
 
@@ -56,17 +62,18 @@ def LineNotify(token, message):
 @limiter.limit("10/minute")
 @limiter.limit("10/second")
 def line_notify_callback():
-    return LineNotifyCallback(db)
+    return LineNotifyCallback(db, allowed_domains)
 
 
-@app.route("/line-login-callback", methods=["POST"])
+@app.route("/line-login-callback", methods=["GET"])
 @limiter.limit("40/minute")
 @limiter.limit("10/second")
 def line_login_callback():
-    return LineLoginCallback(db)
+    return LineLoginCallback(db, allowed_domains)
 
 
 @app.route("/bind-user", methods=["POST"])
+@cross_origin(origins=allowed_domains)
 def bind_user():
     return BindUser(db)
 
