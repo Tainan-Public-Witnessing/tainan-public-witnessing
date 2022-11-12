@@ -31,7 +31,10 @@ pool = redis.connection.BlockingConnectionPool.from_url(
 )
 allowed_domains = json.loads(os.getenv("ALLOWED_DOMAINS"))
 allowed_domains.append(
-    r"https://tainan-public-witnessing-official-test--preview-\w{8}.web.app"
+    r"https://tainan-public-witnessing-official-test--preview-\w{8}.web.app",
+)
+allowed_domains.append(
+    r"https://tainan-public-witnessing-official--preview-\w{8}.web.app",
 )
 
 
