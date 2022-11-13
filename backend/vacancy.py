@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-import os
+import os, json
 
 weekdayToChi = {
     0: "日",
@@ -47,9 +47,10 @@ async def VacancyNotify(db, LineNotify, n):
         )
 
     if vacancy:
-        grouptoken = os.environ.get("grouptoken")
+        LINE_NOTIFY_CLIENT = json.loads(os.getenv("LINE_NOTIFY_CLIENT"))
+        GROUP_TOKEN = LINE_NOTIFY_CLIENT["GROUP_TOKEN"]
         vacancy = sorted(vacancy, key=lambda v: hour_order[v["hour"]])
         vacancy_str = [f"{v['site']} {v['hour']}：{v['vacancy']}名" for v in vacancy]
         content = "\n  ".join(vacancy_str)
         message = f"\n【緊急徵求支援人員】\n\n{nth_days_str}({weekdayToChi[weekday]})\n  {content}\n\n歡迎大家進入網站自行報名，謝謝。\n\n※網站有報名上限，若你已經達到上限，請改向《管理者》人工報名\n\n\n★請勿在此回覆訊息"
-        LineNotify(grouptoken, message)
+        LineNotify(GROUP_TOKEN, message)

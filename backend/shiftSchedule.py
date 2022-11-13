@@ -4,23 +4,25 @@ import uuid
 from calendar import monthrange
 from datetime import datetime, timedelta
 from dateutil import tz
-import os
+import os, json
 
 
 def ScheduleReminder(LineNotify):
-    token = os.getenv("grouptoken")
+    LINE_NOTIFY_CLIENT = json.loads(os.getenv("LINE_NOTIFY_CLIENT"))
+    GROUP_TOKEN = LINE_NOTIFY_CLIENT["GROUP_TOKEN"]
     month = (datetime.now() + timedelta(days=32)).month
     year = (datetime.now() + timedelta(days=32)).year
     message = f"\n\n【每月排班提醒】\n\n如果你需要調整{year}-{month}的班表，請在今天晚上12點以前完成，你的留意可以使都市見證更順暢也減少額外的工作，謝謝大家的合作"
-    LineNotify(token, message)
+    LineNotify(GROUP_TOKEN, message)
 
 
 def ScheduleCompleteReminder(LineNotify):
-    token = os.getenv("grouptoken")
+    LINE_NOTIFY_CLIENT = json.loads(os.getenv("LINE_NOTIFY_CLIENT"))
+    GROUP_TOKEN = LINE_NOTIFY_CLIENT["GROUP_TOKEN"]
     month = (datetime.now() + timedelta(days=32)).month
     year = (datetime.now() + timedelta(days=32)).year
     message = f"\n【{year}年{month}月 班表通知】\n\n我們想通知大家{year}年{month}月的班表已經排班完成了。\n\n★我們每個人都有可能收到委派，請務必確認自己的委派。\n如果你沒有收到委派，也歡迎你查詢空缺報名\n\n如有問題，請聯繫《管理者》"
-    LineNotify(token, message)
+    LineNotify(GROUP_TOKEN, message)
 
 
 def ShiftSchedule(db):
