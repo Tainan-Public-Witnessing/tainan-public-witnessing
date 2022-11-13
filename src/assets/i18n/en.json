@@ -167,8 +167,12 @@
     "3": "Publisher",
     "4": "Guest"
   },
-  "SITES": {
-    "SITE": "Site"
+  "SETTINGS":{
+    "TITLE":"Basic Setting",
+    "SITE":"Sites",
+    "SHIFTHOURS":"ShiftHours",
+    "START":"Start",
+    "END":"End"
   },
   "AVAILABLE_SHIFTS": {
     "TITLE": "Available Shifts",
