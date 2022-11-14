@@ -63,7 +63,7 @@ export class AuthorityService implements CanActivate {
       return this.usersService.getUserByUuid(this.currentUserUuid$.value).pipe(
         filter((user) => !!user),
         first(),
-        map((user) => user!.permission < currentUrlPermission),
+        map((user) => user!.permission <= currentUrlPermission),
         tap((hasPermission) => {
           if (!hasPermission) {
             this.router.navigate(['home']);
