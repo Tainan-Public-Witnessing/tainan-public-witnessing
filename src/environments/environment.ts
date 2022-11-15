@@ -29,7 +29,13 @@ export const environment = {
     ['en']: 'en',
     ['zh']: 'zh-tw',
   },
+  EMULATOR: queryString('emulator'),
 };
+
+function queryString(key: string) {
+  const query = new URLSearchParams(window.location.search.substring(1));
+  return query.get(key);
+}
 
 /*
  * For easier debugging in development mode, you can import the following file

@@ -21,15 +21,8 @@ import { environment } from 'src/environments/environment';
     { provide: PERSISTENCE, useValue: 'local' },
     {
       provide: USE_EMULATOR,
-      useValue: searchString('emulator')
-        ? ['http://127.0.0.1:8082']
-        : undefined,
+      useValue: environment.EMULATOR ? ['http://127.0.0.1:8082'] : undefined,
     },
   ],
 })
 export class FirebaseModule {}
-
-function searchString(key: string) {
-  const query = new URLSearchParams(window.location.search.substring(1));
-  return query.get(key);
-}
