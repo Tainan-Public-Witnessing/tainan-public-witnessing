@@ -137,7 +137,11 @@
       "AVAILABLE_HOURS": "可參與時段和次數",
       "UNAVILABLE_DATES": "無法參與日期",
       "PARTNER": "同伴",
-      "SUBSCRIBE": "訂閱通知服務"
+      "SUBSCRIBE": "訂閱通知服務",
+      "BINDCODE": "綁定代碼"
+    },
+    "STATUS": {
+      "BOUND": "Line 已綁定"
     }
   },
   "CONGREGATIONS": {

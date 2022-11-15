@@ -25,10 +25,11 @@ export class AuthorityService implements CanActivate {
     private usersService: UsersService,
     private fireAuth: AngularFireAuth
   ) {
-    fireAuth.authState.subscribe((user) => {
-      const uuid = user?.email ? user.email.substring(0, 36) : null;
-      this.currentUserUuid$.next(uuid);
-    });
+    // fireAuth.authState.subscribe((user) => {
+    //   debugger;
+    //   const uuid = user?.email ? user.email.substring(0, 36) : null;
+    //   this.currentUserUuid$.next(uuid);
+    // });
   }
 
   canActivate(
@@ -39,27 +40,30 @@ export class AuthorityService implements CanActivate {
     | UrlTree
     | Observable<boolean | UrlTree>
     | Promise<boolean | UrlTree> {
-    const route = routes.find((r) => r.pathRegexp.test(state.url));
-    const currentUrlPermission = route?.permission ?? Permission.GUEST;
-    if (currentUrlPermission === Permission.GUEST) {
-      return true;
-    }
-    if (this.currentUserUuid$.value) {
-      return this.usersService.getUserByUuid(this.currentUserUuid$.value).pipe(
-        filter((user) => !!user),
-        first(),
-        map((user) => user!.permission <= currentUrlPermission),
-        tap((hasPermission) => {
-          if (!hasPermission) {
-            this.router.navigate(['home']);
-          }
-        })
-      );
-    } else {
-      return this.router.navigateByUrl(
-        `/login?return=${encodeURIComponent(window.location.href)}`
-      );
-    }
+    return this.fireAuth.authState.pipe(
+      map((user) => {
+        const uuid = user?.email ? user.email.substring(0, 36) : null;
+        this.currentUserUuid$.next(uuid);
+
+        const route = routes.find((r) => r.pathRegexp.test(state.url));
+        const currentUrlPermission = route?.permission ?? Permission.GUEST;
+        if (currentUrlPermission === Permission.GUEST) {
+          return of(true);
+        }
+        if (!uuid) return of(false);
+        return this.usersService.getUserByUuid(uuid).pipe(
+          filter((user) => !!user),
+          first(),
+          map((user) => user!.permission <= currentUrlPermission),
+          tap((hasPermission) => {
+            if (!hasPermission) {
+              this.router.navigate(['home']);
+            }
+          })
+        );
+      }),
+      switchAll()
+    );
   }
 
   login = (uuid: string, password: string): Promise<void> => {

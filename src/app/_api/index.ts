@@ -4,6 +4,7 @@ import { ApiInterface } from 'src/app/_api/api.interface';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 
+import { connectFirestoreEmulator } from '@angular/fire/firestore';
 import { firstValueFrom } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { v4 as uuidv4, v5 as uuidv5 } from 'uuid';
@@ -31,7 +32,10 @@ export class Api implements ApiInterface {
   constructor(
     private angularFirestore: AngularFirestore,
     private angularFireAuth: AngularFireAuth
-  ) {}
+  ) {
+    const { firestore } = angularFirestore;
+    connectFirestoreEmulator(firestore, '127.0.0.1', 8082);
+  }
 
   login = (uuid: string, password: string): Promise<void> => {
     const email = [uuid, this.mailSuffix].join('');
@@ -73,7 +77,7 @@ export class Api implements ApiInterface {
       });
   };
 
-  createUser = async (user: Omit<User, 'uuid' | 'activate'>) => {
+  createUser = async (user: Omit<User, 'uuid' | 'activate' | 'bindcode'>) => {
     const userNameExists = await docsExists(
       this.angularFirestore.collection<UserKey>('UserKeys', (query) =>
         query.where('username', '==', user.username)
@@ -89,19 +93,16 @@ export class Api implements ApiInterface {
       await isDocExists(this.angularFirestore.doc<UserKey>(`UserKeys/${uuid}`))
     );
 
-    const newUser = await this.angularFireAuth.createUserWithEmailAndPassword(
-      uuid + this.mailSuffix,
-      uuidv5(user.baptizeDate.replace(/-/g, ''), environment.UUID_NAMESPACE)
-    );
-
     await Promise.all([
       this.angularFirestore
-        .doc<User & { firebaseSub: string }>(`Users/${uuid}`)
+        .doc<User>(`Users/${uuid}`)
         .set({
           ...user,
           uuid,
           activate: true,
-          firebaseSub: newUser.user!.uid,
+          bindcode: Math.floor(Math.random() * 9999_9999)
+            .toString()
+            .padStart(8, '0'),
         }),
       this.angularFirestore.doc<UserKey>(`UserKeys/${uuid}`).set({
         uuid,
@@ -116,7 +117,7 @@ export class Api implements ApiInterface {
     return uuid;
   };
 
-  patchUser = async (user: Omit<User, 'activate'>) => {
+  patchUser = async (user: Omit<User, 'activate' | 'bindcode'>) => {
     const updates = [
       this.angularFirestore.doc<User>(`Users/${user.uuid}`).update(user),
     ];
