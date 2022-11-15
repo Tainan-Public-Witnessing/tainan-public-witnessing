@@ -85,17 +85,12 @@ export class Api implements ApiInterface {
       await isDocExists(this.angularFirestore.doc<UserKey>(`UserKeys/${uuid}`))
     );
 
-    const newUser = await this.angularFireAuth.createUserWithEmailAndPassword(
-      uuid + this.mailSuffix,
-      uuidv5(user.baptizeDate.replace(/-/g, ''), environment.UUID_NAMESPACE)
-    );
-
     await Promise.all([
       this.angularFirestore.doc<User>(`Users/${uuid}`).set({
         ...user,
         uuid,
         activate: true,
-        bindcode: Math.floor(Math.random() * 9999_9999)
+        bind_code: Math.floor(Math.random() * 9999_9999)
           .toString()
           .padStart(8, '0'),
       }),

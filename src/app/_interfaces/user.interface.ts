@@ -12,7 +12,7 @@ export interface User extends UserKey {
   congregationUuid: string; // uuid
   permission: Permission;
   baptizeDate: string; // yyyy-MM-DD
-  bindcode: string;
+  bind_code?: string;
   // birthDate: string; // yyyy-MM-DD
   cellphone: string;
   // email: string;
