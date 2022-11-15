@@ -4,7 +4,6 @@ import { ApiInterface } from 'src/app/_api/api.interface';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 
-import { connectFirestoreEmulator } from '@angular/fire/firestore';
 import { firstValueFrom } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { v4 as uuidv4, v5 as uuidv5 } from 'uuid';
@@ -32,19 +31,12 @@ export class Api implements ApiInterface {
   constructor(
     private angularFirestore: AngularFirestore,
     private angularFireAuth: AngularFireAuth
-  ) {
-    const { firestore } = angularFirestore;
-    connectFirestoreEmulator(firestore, '127.0.0.1', 8082);
-  }
+  ) {}
 
-  login = (uuid: string, password: string): Promise<void> => {
+  login = async (uuid: string, password: string): Promise<void> => {
     const email = [uuid, this.mailSuffix].join('');
     const pass = uuidv5(password, environment.UUID_NAMESPACE);
-    return this.angularFireAuth
-      .signInWithEmailAndPassword(email, pass)
-      .then(() => {
-        return;
-      });
+    await this.angularFireAuth.signInWithEmailAndPassword(email, pass);
   };
 
   logout = (): Promise<void> => {
@@ -94,16 +86,14 @@ export class Api implements ApiInterface {
     );
 
     await Promise.all([
-      this.angularFirestore
-        .doc<User>(`Users/${uuid}`)
-        .set({
-          ...user,
-          uuid,
-          activate: true,
-          bindcode: Math.floor(Math.random() * 9999_9999)
-            .toString()
-            .padStart(8, '0'),
-        }),
+      this.angularFirestore.doc<User>(`Users/${uuid}`).set({
+        ...user,
+        uuid,
+        activate: true,
+        bindcode: Math.floor(Math.random() * 9999_9999)
+          .toString()
+          .padStart(8, '0'),
+      }),
       this.angularFirestore.doc<UserKey>(`UserKeys/${uuid}`).set({
         uuid,
         activate: true,
