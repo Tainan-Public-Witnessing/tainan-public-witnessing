@@ -268,7 +268,7 @@ export class Api implements ApiInterface {
 
   createSite = async (
     site: Omit<Site, 'uuid' | 'activate' | 'order'>
-  ): Promise<string> => {
+  ): Promise<void> => {
     let uuid: string = uuidv4();
     let maxOrder = await firstValueFrom(
       this.angularFirestore.collection<Site>('Sites').get()
@@ -282,10 +282,9 @@ export class Api implements ApiInterface {
         activate: true,
       }),
     ]);
-    return uuid;
   };
 
-  updateSites = async (
+  updateSite = async (
     site: Omit<Site, 'activate' | 'order'>
   ): Promise<void> => {
     const { uuid, position, name } = site;

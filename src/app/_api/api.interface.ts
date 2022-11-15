@@ -31,8 +31,8 @@ export interface ApiInterface {
   changeCongregationActivation: (cong: Congregation) => Promise<boolean>
 
   readSites: () => Promise<Site[]>;
-  createSite: (site: Omit<Site, 'uuid'>) => Promise<string>;
-  updateSites: (site: Site) => Promise<void>
+  createSite: (site: Omit<Site, 'uuid'>) => Promise<void>;
+  updateSite: (site: Site) => Promise<void>
   changeSiteActivation: (site: Site) => Promise<boolean>
 
 

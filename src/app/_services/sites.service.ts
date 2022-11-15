@@ -25,24 +25,12 @@ export class SitesService {
 
   createSite = (site: Omit<Site, 'uuid' | 'activate' | 'order'>) => {
     return this.api.createSite(site);
-    // this.api.createSite(site).then((uuid) => {
-    //   this.sites$?.next([...(this.sites$.value || []), { ...site, uuid }]);
-    // });
-
-    // return this.sites$;
   };
 
   changeSiteActivation = (site: Site) => {
     return this.api.changeSiteActivation(site);
   };
-  updateSites = (site: Site) => {
-    this.api.updateSites(site).then(() => {
-      const updatedSites = this.sites$?.value?.map((_site) => {
-        return _site.uuid === site.uuid
-          ? { ..._site, name: site.name, position: site.position }
-          : _site;
-      });
-      this.sites$?.next(updatedSites!);
-    });
+  updateSite = (site: Site) => {
+    return this.api.updateSite(site);
   };
 }
