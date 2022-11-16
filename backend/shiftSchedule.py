@@ -56,7 +56,7 @@ def ShiftSchedule(db):
     df = pd.DataFrame(available)
 
     batch = db.batch()
-    upper_limit = 10  # 每月每個人的上限
+    upper_limit = 5  # 每月每個人的上限
     full = []
     statistics = {}
     yesterdayShift = []
