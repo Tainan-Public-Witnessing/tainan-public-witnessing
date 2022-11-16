@@ -1,0 +1,78 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+  	function isLoggedIn() {
+      return request.auth != null;
+    }
+
+    function getUserUuid() {
+      return isLoggedIn()
+      	? request.auth.token.email[0:36]
+        : '';
+    }
+
+  	function getUserPermission() {
+        return isLoggedIn()
+          ? get(/databases/$(database)/documents/Users/$(getUserUuid())).data.permission
+	        : 4;
+    }
+
+    function requireManager(){
+    	return getUserPermission() <= 2;
+    }
+
+		function requireAdmin() {
+    	return getUserPermission() <= 1;
+    }
+
+    // -------------routes------------------
+    match /Congregations/{cong=**} {
+    	allow read;
+      allow write: if requireAdmin();
+    }
+
+    match /MonthlyData/{month=**} {
+    	allow read, write;
+    }
+
+    match /ShiftHours/{shift=**} {
+    	allow read;
+      allow write: if requireAdmin();
+    }
+
+    match /Sites/{site=**} {
+    	allow read;
+      allow write: if requireAdmin();
+    }
+
+    match /SiteShifts/{siteShifts=**}{
+    	allow read;
+      allow write: if requireAdmin();
+    }
+
+    match /Tags/{tag=**} {
+    	allow read;
+      allow write: if requireAdmin();
+    }
+
+    match /UserKeys/{user} {
+      allow read;
+      allow write: if requireAdmin();
+    }
+
+    match /Users/{user} {
+      allow read: if user == getUserUuid() || requireManager();
+      allow write: if requireAdmin();
+
+    	match /Schedule/config {
+      	allow read: if user == getUserUuid() || requireManager();
+      	allow write:
+        	if (user == getUserUuid()
+          	&& request.resource.data.partnerUuid == resource.data.partnerUuid
+          	&& request.resource.data.assign == true
+            && resource.data.assign == true)
+      		|| requireAdmin();
+    	}
+    }
+  }
+}

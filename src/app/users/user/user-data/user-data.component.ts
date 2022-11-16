@@ -1,14 +1,14 @@
-import { TypeofExpr } from '@angular/compiler';
 import {
+  Component,
   Input,
   OnChanges,
-  SimpleChanges,
-  ViewEncapsulation,
+  OnDestroy,
+  OnInit,
+  SimpleChanges
 } from '@angular/core';
-import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
@@ -33,7 +33,7 @@ export class UserDataComponent implements OnInit, OnDestroy, OnChanges {
   @Input() uuid: string;
 
   userForm: FormGroup;
-
+  user: any;
   genders = Object.values(Gender);
   permissions = Object.values(Permission).filter(
     (p) => /\d+/.test(p.toString()) && p < Permission.GUEST
@@ -45,7 +45,7 @@ export class UserDataComponent implements OnInit, OnDestroy, OnChanges {
   AdminOnly$ = new BehaviorSubject<boolean>(false);
   constructor(
     private router: Router,
-    private formBuilder: UntypedFormBuilder,
+    formBuilder: UntypedFormBuilder,
     private congregationsService: CongregationsService,
     private authorityService: AuthorityService,
     // private tagService: TagsService,
@@ -113,7 +113,7 @@ export class UserDataComponent implements OnInit, OnDestroy, OnChanges {
           ? baptizeDateValue
           : baptizeDateValue.format('YYYY-MM-DD');
 
-      const user: Omit<User, 'uuid' | 'activate'> = {
+      const user: Omit<User, 'uuid' | 'activate' | 'bindcode'> = {
         username: this.userForm.value.username.trim(),
         name: this.userForm.value.name.trim(),
         gender: this.userForm.value.gender,
@@ -157,6 +157,7 @@ export class UserDataComponent implements OnInit, OnDestroy, OnChanges {
       )
       .subscribe((user) => {
         const values = { ...user };
+        this.user = user!;
         this.userForm.patchValue(values);
       });
   };

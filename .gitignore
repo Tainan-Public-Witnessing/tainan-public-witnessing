@@ -57,3 +57,7 @@ backend-dev
 
 #cred
 serviceAccountKey.json
+firestore-emulator-data
+firebase-debug.log
+firestore-debug.log
+ui-debug.log

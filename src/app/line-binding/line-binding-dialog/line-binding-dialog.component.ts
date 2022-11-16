@@ -53,6 +53,6 @@ export class LineBindingDialogComponent implements OnInit {
 
   closeThis = (returnUrl?: string | null) => {
     this.dialogRef.close();
-    this.router.navigateByUrl(returnUrl || '/');
+    this.router.navigateByUrl(returnUrl || '/', { replaceUrl: true });
   };
 }

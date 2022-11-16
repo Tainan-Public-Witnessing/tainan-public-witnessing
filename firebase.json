@@ -1,13 +1,12 @@
 {
+  "firestore": {
+    "rules": "firestore.rules"
+  },
   "hosting": [
     {
       "target": "test",
       "public": "dist/TainanPublicWitnessing",
-      "ignore": [
-        "firebase.json",
-        "**/.*",
-        "**/node_modules/**"
-      ],
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
       "rewrites": [
         {
           "source": "**",
@@ -18,11 +17,7 @@
     {
       "target": "release",
       "public": "dist/TainanPublicWitnessing",
-      "ignore": [
-        "firebase.json",
-        "**/.*",
-        "**/node_modules/**"
-      ],
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
       "rewrites": [
         {
           "source": "**",
@@ -30,5 +25,13 @@
         }
       ]
     }
-  ]
+  ],
+  "emulators": {
+    "firestore": {
+      "port": 8082
+    },
+    "ui": {
+      "enabled": true
+    }
+  }
 }

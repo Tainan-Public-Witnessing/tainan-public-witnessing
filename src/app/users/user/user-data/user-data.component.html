@@ -127,7 +127,7 @@
       <input matInput formControlName="phone" id="phone-input" />
     </mat-form-field>
 
-    <mat-form-field class="w-full" *ngIf="AdminOnly$ | async">
+    <mat-form-field class="w-full sm:w-1/2" *ngIf="AdminOnly$ | async">
       <mat-label>{{ "USERS.LABEL.PERMISSION" | translate }}</mat-label>
       <mat-select formControlName="permission" required>
         <mat-option *ngFor="let permission of permissions" [value]="permission">
@@ -135,7 +135,24 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
-
+    <mat-form-field class="w-full sm:w-1/2" *ngIf="AdminOnly$ | async">
+      <mat-label>{{
+        (user?.lineSub ? "USERS.STATUS.BOUND" : "USERS.LABEL.BINDCODE")
+          | translate
+      }}</mat-label>
+      <input
+        matInput
+        [value]="user?.lineSub ? '' : user?.bindcode"
+        disabled
+        readonly
+      />
+      <span
+        *ngIf="user?.lineSub"
+        matSuffix
+        [matTooltip]="'USERS.STATUS.BOUND' | translate"
+        ><mat-icon>link</mat-icon></span
+      >
+    </mat-form-field>
     <mat-form-field class="w-full" *ngIf="AdminOnly$ | async">
       <mat-label>{{ "USERS.LABEL.NOTE" | translate }}</mat-label>
       <textarea
@@ -147,6 +164,7 @@
       >
       </textarea>
     </mat-form-field>
+
     <div class="w-full text-right">
       <button
         mat-raised-button
