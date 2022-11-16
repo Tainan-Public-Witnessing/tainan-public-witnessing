@@ -26,4 +26,5 @@ export const environment = {
     ['en']: 'en',
     ['zh']: 'zh-tw',
   },
+  EMULATOR: false,
 };
