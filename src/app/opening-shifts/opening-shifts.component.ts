@@ -42,10 +42,7 @@ export class OpeningShiftsComponent implements OnInit, OnDestroy {
           .pipe(startWith(undefined)),
         this.yearMonthControl.valueChanges.pipe(startWith(undefined)),
       ]).pipe(
-        map(() => {
-          console.log(this.yearMonthControl.value);
-          return this.yearMonthControl.value;
-        }),
+        map(() => this.yearMonthControl.value),
         filter((value) => !!value),
         map((value) => value!.format('YYYY-MM')),
         switchMap((yearMonth) =>

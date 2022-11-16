@@ -38,13 +38,13 @@ export class UsersService {
     return this.users.get(uuid) as BehaviorSubject<User | null | undefined>;
   };
 
-  createUser = (user: Omit<User, 'uuid' | 'activate'>) => {
+  createUser = (user: Omit<User, 'uuid' | 'activate' | 'bindcode'>) => {
     this.userKeys$?.complete();
     this.userKeys$ = undefined;
     return this.api.createUser(user);
   };
 
-  patchUser = (user: Omit<User, 'activate'>) => {
+  patchUser = (user: Omit<User, 'activate' | 'bindcode'>) => {
     this.users.delete(user.uuid);
     this.userKeys$?.complete();
     this.userKeys$ = undefined;
