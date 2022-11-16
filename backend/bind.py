@@ -22,9 +22,11 @@ def BindUser(db):
         try:
             user = auth.get_user_by_email(mail)
         except auth.UserNotFoundError as e:
-            password = uuid.uuid5(
-                uuid.UUID("7b921192-c856-5152-8444-bb08b1efac9b"),
-                query[0].to_dict()["baptizeDate"].replace("-", ""),
+            password = str(
+                uuid.uuid5(
+                    uuid.UUID("7b921192-c856-5152-8444-bb08b1efac9b"),
+                    query[0].to_dict()["baptizeDate"].replace("-", ""),
+                )
             )
             auth.create_user(email=mail, password=password)
         user = auth.get_user_by_email(mail)
