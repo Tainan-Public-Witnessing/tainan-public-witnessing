@@ -56,7 +56,7 @@ def ShiftSchedule(db):
     df = pd.DataFrame(available)
 
     batch = db.batch()
-    upper_limit = 10  # 每月每個人的上限
+    upper_limit = 5  # 每月每個人的上限
     full = []
     statistics = {}
     yesterdayShift = []
@@ -131,7 +131,8 @@ def ShiftSchedule(db):
                 & (df["name"].apply(lambda x: x not in todayShift))
                 & (df["name"].apply(lambda x: x not in yesterdayShift))
                 & (df["name"].apply(lambda x: x not in full))
-            ].copy()
+                & (df["attendance"].apply(lambda x: x > 0))
+            ]
             result = choose_participants(signup, attendance)
             todayShift.extend(result)
             uuid_ = str(uuid.uuid4())
