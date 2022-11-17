@@ -4,7 +4,7 @@ import {
   OnChanges,
   OnDestroy,
   OnInit,
-  SimpleChanges
+  SimpleChanges,
 } from '@angular/core';
 import { FormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -48,7 +48,6 @@ export class UserDataComponent implements OnInit, OnDestroy, OnChanges {
     formBuilder: UntypedFormBuilder,
     private congregationsService: CongregationsService,
     private authorityService: AuthorityService,
-    // private tagService: TagsService,
     private translateService: TranslateService,
     private snackBar: MatSnackBar,
     public usersService: UsersService
@@ -59,15 +58,12 @@ export class UserDataComponent implements OnInit, OnDestroy, OnChanges {
       gender: ['', Validators.required],
       congregationUuid: ['', Validators.required],
       baptizeDate: ['', Validators.required],
-      // birthDate: [""],
       cellphone: [''],
       phone: [''],
       permission: [Permission.USER, Validators.required],
       activate: [true],
       note: [''],
       assign: [true],
-      // email: [""],
-      // tags: [""],
     });
   }
 
