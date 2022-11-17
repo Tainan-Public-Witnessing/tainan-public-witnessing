@@ -10,7 +10,7 @@ import { v4 as uuidv4, v5 as uuidv5 } from 'uuid';
 import { EXISTED_ERROR } from '../_classes/errors/EXISTED_ERROR';
 import {
   docExists as isDocExists,
-  docsExists
+  docsExists,
 } from '../_helpers/firebase-helper';
 import { Congregation } from '../_interfaces/congregation.interface';
 import { PersonalShifts } from '../_interfaces/personal-shifts.interface';
@@ -90,7 +90,7 @@ export class Api implements ApiInterface {
         ...user,
         uuid,
         activate: true,
-        bind_code: Math.floor(Math.random() * 9999_9999)
+        bindCode: Math.floor(Math.random() * 9999_9999)
           .toString()
           .padStart(8, '0'),
       }),
@@ -438,6 +438,6 @@ export class Api implements ApiInterface {
   cancelLineToken = async (userUuid: string) => {
     await this.angularFirestore
       .doc(`Users/${userUuid}/Schedule/config`)
-      .update({'lineToken':''});
+      .update({ lineToken: '' });
   };
 }
