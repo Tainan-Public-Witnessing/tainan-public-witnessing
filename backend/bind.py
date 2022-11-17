@@ -5,8 +5,8 @@ import uuid
 
 
 def BindUser(db):
-    code = request.json["bind_code"]
-    query = db.collection("Users").where("bind_code", "==", code).get()
+    code = request.json["bindCode"]
+    query = db.collection("Users").where("bindCode", "==", code).get()
 
     line_token = request.json["line_token"]
     url_getUserInfo = "https://api.line.me/oauth2/v2.1/userinfo"
@@ -34,7 +34,7 @@ def BindUser(db):
             {
                 "lineSub": subject,
                 "firebaseSub": user.uid,
-                "bind_code": firestore.DELETE_FIELD,
+                "bindCode": firestore.DELETE_FIELD,
             }
         )
         additional_claims = {"uuid": user_id, "permission": permission}

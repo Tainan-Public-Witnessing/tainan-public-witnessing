@@ -3,13 +3,13 @@
     <span class="my-2">{{ "LOGIN.BINDING_MESSAGE" | translate }}</span>
     <mat-form-field class="full-width" appearance="outline">
       <mat-label>{{ "LOGIN.LABEL.BINDING_CODE" | translate }}</mat-label>
-      <input matInput formControlName="bind_code" required />
+      <input matInput formControlName="bindCode" required />
     </mat-form-field>
 
-    <mat-error *ngIf="bindingForm.hasError('bind_code')">
+    <mat-error *ngIf="bindingForm.hasError('bindCode')">
       {{ "LOGIN.BINDING_CODE_INVALID_ERROR" | translate }}
     </mat-error>
-    <mat-error *ngIf="bindingForm.hasError('bind_code_required')">
+    <mat-error *ngIf="bindingForm.hasError('bindCode_required')">
       {{ "GLOBAL.VALIDATION.REQUIRED" | translate }}
     </mat-error>
   </div>
