@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { SiteCreatorComponent } from 'src/app/_elements/dialogs/site-creator/site-creator.component';
 import { SiteEditorComponent } from 'src/app/_elements/dialogs/site-editor/site-editor.component';
 import { SitesService } from '../../_services/sites.service';
@@ -14,7 +14,7 @@ export class SiteComponent implements OnInit {
   constructor(
     private sitesService: SitesService,
     private matDialog: MatDialog
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.sitesService.getSites().subscribe((sites) => (this.sites = sites));

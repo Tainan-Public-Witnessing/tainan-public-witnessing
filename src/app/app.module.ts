@@ -43,10 +43,10 @@ import { ShfithoursComponent } from './settings/shfithours/shfithours.component'
 import { CongregationsComponent } from './settings/congregations/congregations.component';
 import { SiteEditorComponent } from './_elements/dialogs/site-editor/site-editor.component';
 import { SiteCreatorComponent } from './_elements/dialogs/site-creator/site-creator.component';
-
+import { ShifthoursCreatorComponent } from './_elements/dialogs/shifthours-creator/shifthours-creator.component';
+import { ShifthoursEditorComponent } from './_elements/dialogs/shifthours-editor/shifthours-editor.component';
 import { YearMonthSelectComponent } from './_elements/year-month-select/year-month-select.component';
 import { LineBindingDialogComponent } from './line-binding/line-binding-dialog/line-binding-dialog.component';
-
 // AoT requires an exported function for factories of translate module
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -87,6 +87,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     LoginComponent,
     LineBindingComponent,
     LineBindingDialogComponent,
+    ShifthoursCreatorComponent,
+    ShifthoursEditorComponent,
   ],
   imports: [
     BrowserModule,
@@ -122,4 +124,4 @@ export function HttpLoaderFactory(http: HttpClient) {
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

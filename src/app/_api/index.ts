@@ -31,7 +31,7 @@ export class Api implements ApiInterface {
   constructor(
     private angularFirestore: AngularFirestore,
     private angularFireAuth: AngularFireAuth
-  ) {}
+  ) { }
 
   login = (uuid: string, password: string): Promise<void> => {
     const email = [uuid, this.mailSuffix].join('');
@@ -162,9 +162,9 @@ export class Api implements ApiInterface {
           db.collection<ShiftHours>('ShiftHours').ref.get(),
         ])
       ).map((snapshot) => snapshot.docs.map((doc) => doc.data())) as [
-        Site[],
-        ShiftHours[]
-      ];
+          Site[],
+          ShiftHours[]
+        ];
 
       return userShifts
         .map((shift) => ({
@@ -329,18 +329,31 @@ export class Api implements ApiInterface {
   };
 
   createShiftHours = async (
-    shifthours: Omit<ShiftHours, 'uuid' | 'activate'>
-  ): Promise<ShiftHours> => {
+    shifthours: Omit<ShiftHours, 'uuid' | 'activate' | 'deliver'>
+  ): Promise<void> => {
     let uuid: string = uuidv4();
     await Promise.all([
       this.angularFirestore.doc<ShiftHours>(`ShiftHours/${uuid}`).set({
         ...shifthours,
         uuid,
         activate: true,
+        deliver: false
       }),
     ]);
-    return { ...shifthours, uuid, activate: true };
   };
+  updateShiftHours = async (
+    shiftHour: Omit<ShiftHours, 'activate' | 'deliver'>
+  ): Promise<void> => {
+    const { uuid, name, startTime, endTime } = shiftHour;
+    await Promise.all([
+      this.angularFirestore.doc<ShiftHours>(`ShiftHours/${uuid}`).update({
+        name,
+        startTime,
+        endTime
+      }),
+    ]);
+  };
+
 
   changeShiftHourActivation = async (
     shifthour: ShiftHours

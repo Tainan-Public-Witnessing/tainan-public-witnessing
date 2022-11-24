@@ -37,7 +37,7 @@ export interface ApiInterface {
 
 
   readShiftHoursList: () => Promise<ShiftHours[]>;
-  createShiftHours: (shifthours: Omit<ShiftHours, 'uuid' | 'activate'>) => Promise<ShiftHours>
+  createShiftHours: (shifthours: Omit<ShiftHours, 'uuid' | 'activate' | 'deliver'>) => Promise<void>
   changeShiftHourActivation: (shifthour: ShiftHours) => Promise<boolean>
   changeShiftHourDelivery: (shifthour: ShiftHours) => Promise<boolean>
 

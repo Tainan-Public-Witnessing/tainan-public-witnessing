@@ -9,17 +9,15 @@ import { Site } from '../_interfaces/site.interface';
 export class SitesService {
   private sites$: BehaviorSubject<Site[] | null> | undefined = undefined;
 
-  constructor(private api: Api) {}
+  constructor(private api: Api) { }
 
   getSites = (): BehaviorSubject<Site[] | null> => {
     if (this.sites$ === undefined) {
       this.sites$ = new BehaviorSubject<Site[] | null>(null);
     }
     this.api.readSites().then((sites) => {
-      console.log(sites);
       this.sites$?.next(sites);
     });
-
     return this.sites$;
   };
 

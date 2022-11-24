@@ -5,7 +5,7 @@
         <mat-icon>add</mat-icon>
     </button>
 </div>
-<div *ngFor="let shifthour of shifthours$" class="my-2">
+<div *ngFor="let shifthour of shifthours" class="my-2">
     <mat-card class="shift-card h-full box-border">
         <mat-card-header>
             <mat-card-title>
@@ -17,13 +17,15 @@
             </mat-card-subtitle>
         </mat-card-header>
         <mat-card-actions class="text-right">
-            <button mat-icon-button>
+            <button mat-icon-button (click)="openShiftHourEditor(shifthour)">
                 <mat-icon>edit</mat-icon>
             </button>
-            <button mat-icon-button [color]="shifthour.activate ? 'default' : 'warn'" (click)="changeShiftHourActivation(shifthour)">
+            <button mat-icon-button [color]="shifthour.activate ? 'default' : 'warn'"
+                (click)="changeShiftHourActivation(shifthour)">
                 <mat-icon>{{shifthour.activate? "work" : "work_off"}}</mat-icon>
             </button>
-            <button mat-icon-button [color]="shifthour.deliver ? 'default' : 'warn'" (click)="changeShiftHourDelivery(shifthour)">
+            <button mat-icon-button [color]="shifthour.deliver ? 'default' : 'warn'"
+                (click)="changeShiftHourDelivery(shifthour)">
                 <mat-icon>local_shipping</mat-icon>
             </button>
         </mat-card-actions>
