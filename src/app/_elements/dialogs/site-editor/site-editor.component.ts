@@ -3,10 +3,11 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SitesService } from 'src/app/_services/sites.service';
 import { Site } from 'src/app/_interfaces/site.interface';
+
 @Component({
   selector: 'app-site-editor',
   templateUrl: '../site-creator/site-creator.component.html',
-  styleUrls: ['./site-editor.component.scss'],
+  styleUrls: ['../site-creator/site-creator.component.scss'],
 })
 export class SiteEditorComponent implements OnInit {
   siteform: FormGroup;
@@ -26,7 +27,7 @@ export class SiteEditorComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   onCancelClick = () => {
     this.dialogRef.close();
