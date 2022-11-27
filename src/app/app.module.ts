@@ -39,12 +39,12 @@ import { ShiftTableComponent } from './_elements/shift-table/shift-table.compone
 import { ArrayFilterPipe } from './_pipes/array-filter.pipe';
 import { SettingsComponent } from './settings/settings.component';
 import { SiteComponent } from './settings/site/site.component';
-import { ShfithoursComponent } from './settings/shfithours/shfithours.component';
+import { ShfitHoursComponent } from './settings/shfitHours/shfitHours.component';
 import { CongregationsComponent } from './settings/congregations/congregations.component';
 import { SiteEditorComponent } from './_elements/dialogs/site-editor/site-editor.component';
 import { SiteCreatorComponent } from './_elements/dialogs/site-creator/site-creator.component';
-import { ShifthoursCreatorComponent } from './_elements/dialogs/shifthours-creator/shifthours-creator.component';
-import { ShifthoursEditorComponent } from './_elements/dialogs/shifthours-editor/shifthours-editor.component';
+import { ShiftHoursCreatorComponent } from './_elements/dialogs/shiftHour-creator/shiftHour-creator.component';
+import { ShiftHoursEditorComponent } from './_elements/dialogs/shiftHour-editor/shiftHour-editor.component';
 import { YearMonthSelectComponent } from './_elements/year-month-select/year-month-select.component';
 import { LineBindingDialogComponent } from './line-binding/line-binding-dialog/line-binding-dialog.component';
 // AoT requires an exported function for factories of translate module
@@ -76,7 +76,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     HoursListComponent,
     SettingsComponent,
     SiteComponent,
-    ShfithoursComponent,
+    ShfitHoursComponent,
     CongregationsComponent,
     SiteEditorComponent,
     SiteCreatorComponent,
@@ -87,8 +87,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     LoginComponent,
     LineBindingComponent,
     LineBindingDialogComponent,
-    ShifthoursCreatorComponent,
-    ShifthoursEditorComponent,
+    ShiftHoursCreatorComponent,
+    ShiftHoursEditorComponent,
   ],
   imports: [
     BrowserModule,

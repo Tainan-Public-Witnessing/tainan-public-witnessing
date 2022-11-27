@@ -1,41 +1,41 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Api } from '../_api';
-import { ShiftHours } from '../_interfaces/shift-hours.interface';
+import { ShiftHour } from '../_interfaces/shift-hours.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ShiftHoursService {
 
-  private shiftHours$: BehaviorSubject<ShiftHours[] | null> | undefined = undefined;
+  private shiftHours$: BehaviorSubject<ShiftHour[] | null> | undefined = undefined;
 
   constructor(
     private api: Api,
   ) { }
 
-  getShiftHoursList = (): BehaviorSubject<ShiftHours[] | null> => {
+  getShiftHours = (): BehaviorSubject<ShiftHour[] | null> => {
     if (this.shiftHours$ === undefined) {
-      this.shiftHours$ = new BehaviorSubject<ShiftHours[] | null>(null);
+      this.shiftHours$ = new BehaviorSubject<ShiftHour[] | null>(null);
     }
-    this.api.readShiftHoursList().then(shiftHours => {
-      this.shiftHours$?.next(shiftHours);
+    this.api.readShiftHours().then(shiftHour => {
+      this.shiftHours$?.next(shiftHour);
     });
     return this.shiftHours$;
   }
 
-  createShiftHours = (shifthours: Omit<ShiftHours, 'uuid' | 'activate' | 'deliver'>) => {
-    return this.api.createShiftHours(shifthours);
+  createShiftHours = (shifthours: Omit<ShiftHour, 'uuid' | 'activate' | 'deliver'>) => {
+    return this.api.createShiftHour(shifthours);
   }
-  updateShiftHours = (shiftHour: ShiftHours) => {
-    return this.api.updateShiftHours(shiftHour);
+  updateShiftHours = (shiftHour: ShiftHour) => {
+    return this.api.updateShiftHour(shiftHour);
   };
 
-  changeShiftHourActivation = (shifthour: ShiftHours) => {
+  changeShiftHourActivation = (shifthour: ShiftHour) => {
     return this.api.changeShiftHourActivation(shifthour);
   };
 
-  changeShiftHourDelivery = (shifthour: ShiftHours) => {
+  changeShiftHourDelivery = (shifthour: ShiftHour) => {
     return this.api.changeShiftHourDelivery(shifthour);
   };
 

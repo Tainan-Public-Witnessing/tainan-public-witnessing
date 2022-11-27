@@ -2,7 +2,7 @@ import { Congregation } from 'src/app/_interfaces/congregation.interface';
 import { Site } from 'src/app/_interfaces/site.interface';
 import { User, UserKey } from 'src/app/_interfaces/user.interface';
 import { PersonalShifts } from '../_interfaces/personal-shifts.interface';
-import { ShiftHours } from '../_interfaces/shift-hours.interface';
+import { ShiftHour } from '../_interfaces/shift-hours.interface';
 import { Shift } from '../_interfaces/shift.interface';
 import { SiteShifts } from '../_interfaces/site-shifts.interface';
 import { Statistic } from '../_interfaces/statistic.interface';
@@ -24,7 +24,7 @@ export interface ApiInterface {
   updateUserActivation: (
     uuid: string,
     activate: boolean
-  ) => Promise<{ date: string; hour: ShiftHours; site: Site }[]>;
+  ) => Promise<{ date: string; hour: ShiftHour; site: Site }[]>;
 
   readCongregations: () => Promise<Congregation[]>;
   createCongregation: (cong: Omit<Congregation, 'uuid' | 'activate'>) => Promise<Congregation>
@@ -35,11 +35,11 @@ export interface ApiInterface {
   updateSite: (site: Site) => Promise<void>
   changeSiteActivation: (site: Site) => Promise<boolean>
 
-
-  readShiftHoursList: () => Promise<ShiftHours[]>;
-  createShiftHours: (shifthours: Omit<ShiftHours, 'uuid' | 'activate' | 'deliver'>) => Promise<void>
-  changeShiftHourActivation: (shifthour: ShiftHours) => Promise<boolean>
-  changeShiftHourDelivery: (shifthour: ShiftHours) => Promise<boolean>
+  readShiftHours: () => Promise<ShiftHour[]>;
+  createShiftHour: (shifthour: Omit<ShiftHour, 'uuid' | 'activate' | 'deliver'>) => Promise<void>
+  updateShiftHour: (shiftHour: ShiftHour) => Promise<void>
+  changeShiftHourActivation: (shifthour: ShiftHour) => Promise<boolean>
+  changeShiftHourDelivery: (shifthour: ShiftHour) => Promise<boolean>
 
   readShiftsByMonth: (yearMonth: string) => Promise<Shift[]>; // yyyy-MM
   readShiftsByDate: (date: string) => Promise<Shift[]>; // yyyy-MM-dd

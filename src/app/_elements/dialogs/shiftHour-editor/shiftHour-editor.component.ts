@@ -1,23 +1,23 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ShiftHoursService } from 'src/app/_services/shift-hours.service';
-import { ShiftHours } from 'src/app/_interfaces/shift-hours.interface';
+import { ShiftHour } from 'src/app/_interfaces/shift-hours.interface';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-shifthours-editor',
-  templateUrl: '../shifthours-creator/shifthours-creator.component.html',
-  styleUrls: ['../shifthours-creator/shifthours-creator.component.scss']
+  selector: 'app-shiftHours-editor',
+  templateUrl: '../shiftHour-creator/shiftHour-creator.component.html',
+  styleUrls: ['../shiftHour-creator/shiftHour-creator.component.scss']
 })
-export class ShifthoursEditorComponent implements OnInit {
-  shiftHoursform: FormGroup;
+export class ShiftHoursEditorComponent implements OnInit {
+  shiftHourform: FormGroup;
   constructor(
     private formbuilder: FormBuilder,
     private shiftHoursService: ShiftHoursService,
-    private dialogRef: MatDialogRef<ShifthoursEditorComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { shiftHour: ShiftHours }
+    private dialogRef: MatDialogRef<ShiftHoursEditorComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: { shiftHour: ShiftHour }
   ) {
-    this.shiftHoursform = this.formbuilder.group({
+    this.shiftHourform = this.formbuilder.group({
       uuid: [this.data.shiftHour.uuid],
       activate: [this.data.shiftHour.activate],
       deliver: [this.data.shiftHour.deliver],
@@ -33,10 +33,10 @@ export class ShifthoursEditorComponent implements OnInit {
     this.dialogRef.close();
   }
   onSubmitClick = async () => {
-    if (this.shiftHoursform.status !== 'VALID') {
-      this.shiftHoursform.markAllAsTouched();
+    if (this.shiftHourform.status !== 'VALID') {
+      this.shiftHourform.markAllAsTouched();
     } else {
-      const { uuid, name, startTime, endTime, activate, deliver } = this.shiftHoursform.value;
+      const { uuid, name, startTime, endTime, activate, deliver } = this.shiftHourform.value;
       const data = {
         uuid: uuid!,
         name: name!,
@@ -46,7 +46,7 @@ export class ShifthoursEditorComponent implements OnInit {
         deliver: deliver!
       }
       await this.shiftHoursService.updateShiftHours(data);
-      this.shiftHoursform.disable();
+      this.shiftHourform.disable();
       this.dialogRef.close('success');
     }
   }

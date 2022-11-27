@@ -14,7 +14,7 @@ import {
 } from '../_helpers/firebase-helper';
 import { Congregation } from '../_interfaces/congregation.interface';
 import { PersonalShifts } from '../_interfaces/personal-shifts.interface';
-import { ShiftHours } from '../_interfaces/shift-hours.interface';
+import { ShiftHour } from '../_interfaces/shift-hours.interface';
 import { Shift } from '../_interfaces/shift.interface';
 import { SiteShifts } from '../_interfaces/site-shifts.interface';
 import { Site } from '../_interfaces/site.interface';
@@ -159,11 +159,11 @@ export class Api implements ApiInterface {
       const [sites, shiftHours] = (
         await Promise.all([
           db.collection<Site>('Sites').ref.get(),
-          db.collection<ShiftHours>('ShiftHours').ref.get(),
+          db.collection<ShiftHour>('ShiftHours').ref.get(),
         ])
       ).map((snapshot) => snapshot.docs.map((doc) => doc.data())) as [
           Site[],
-          ShiftHours[]
+          ShiftHour[]
         ];
 
       return userShifts
@@ -246,7 +246,7 @@ export class Api implements ApiInterface {
   ): Promise<boolean> => {
     await Promise.all([
       this.angularFirestore
-        .doc<ShiftHours>(`Congregations/${cong.uuid}`)
+        .doc<ShiftHour>(`Congregations/${cong.uuid}`)
         .update({
           activate: !cong.activate,
         }),
@@ -305,10 +305,10 @@ export class Api implements ApiInterface {
     return !site.activate;
   };
 
-  changeShiftHourDelivery = async (shifthour: ShiftHours): Promise<boolean> => {
+  changeShiftHourDelivery = async (shifthour: ShiftHour): Promise<boolean> => {
     await Promise.all([
       this.angularFirestore
-        .doc<ShiftHours>(`ShiftHours/${shifthour.uuid}`)
+        .doc<ShiftHour>(`ShiftHours/${shifthour.uuid}`)
         .update({
           deliver: !shifthour.deliver,
         }),
@@ -316,9 +316,9 @@ export class Api implements ApiInterface {
     return !shifthour.deliver;
   };
 
-  readShiftHoursList = (): Promise<ShiftHours[]> => {
+  readShiftHours = (): Promise<ShiftHour[]> => {
     return firstValueFrom(
-      this.angularFirestore.collection<ShiftHours>('ShiftHours').get()
+      this.angularFirestore.collection<ShiftHour>('ShiftHours').get()
     ).then((query) => {
       if (query.docs.length > 0) {
         return query.docs.map((doc) => doc.data());
@@ -328,12 +328,12 @@ export class Api implements ApiInterface {
     });
   };
 
-  createShiftHours = async (
-    shifthours: Omit<ShiftHours, 'uuid' | 'activate' | 'deliver'>
+  createShiftHour = async (
+    shifthours: Omit<ShiftHour, 'uuid' | 'activate' | 'deliver'>
   ): Promise<void> => {
     let uuid: string = uuidv4();
     await Promise.all([
-      this.angularFirestore.doc<ShiftHours>(`ShiftHours/${uuid}`).set({
+      this.angularFirestore.doc<ShiftHour>(`ShiftHours/${uuid}`).set({
         ...shifthours,
         uuid,
         activate: true,
@@ -341,12 +341,12 @@ export class Api implements ApiInterface {
       }),
     ]);
   };
-  updateShiftHours = async (
-    shiftHour: Omit<ShiftHours, 'activate' | 'deliver'>
+  updateShiftHour = async (
+    shiftHour: Omit<ShiftHour, 'activate' | 'deliver'>
   ): Promise<void> => {
     const { uuid, name, startTime, endTime } = shiftHour;
     await Promise.all([
-      this.angularFirestore.doc<ShiftHours>(`ShiftHours/${uuid}`).update({
+      this.angularFirestore.doc<ShiftHour>(`ShiftHours/${uuid}`).update({
         name,
         startTime,
         endTime
@@ -356,16 +356,16 @@ export class Api implements ApiInterface {
 
 
   changeShiftHourActivation = async (
-    shifthour: ShiftHours
+    shiftHour: ShiftHour
   ): Promise<boolean> => {
     await Promise.all([
       this.angularFirestore
-        .doc<ShiftHours>(`ShiftHours/${shifthour.uuid}`)
+        .doc<ShiftHour>(`ShiftHours/${shiftHour.uuid}`)
         .update({
-          activate: !shifthour.activate,
+          activate: !shiftHour.activate,
         }),
     ]);
-    return !shifthour.activate;
+    return !shiftHour.activate;
   };
 
   readShiftsByMonth = (yearMonth: string): Promise<Shift[]> => {

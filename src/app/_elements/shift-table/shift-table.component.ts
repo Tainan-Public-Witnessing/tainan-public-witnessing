@@ -20,10 +20,10 @@ export class ShiftTableComponent implements OnInit, OnDestroy {
   constructor(
     private shiftHoursService: ShiftHoursService,
     private shiftsService: ShiftsService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
-    combineLatest([this.shiftHoursService.getShiftHoursList(), this.shifts$])
+    combineLatest([this.shiftHoursService.getShiftHours(), this.shifts$])
       .pipe(takeUntil(this.destroy$))
       .subscribe(([_shiftHoursList, _shifts]) => {
         if (_shiftHoursList === null || _shifts === null) {

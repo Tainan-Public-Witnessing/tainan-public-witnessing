@@ -32,7 +32,7 @@ export class OpeningShiftsComponent implements OnInit, OnDestroy {
     private shiftHourService: ShiftHoursService,
     private auth: AuthorityService,
     private globalEvent: GlobalEventService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.shifts$ = combineLatest([
@@ -57,7 +57,7 @@ export class OpeningShiftsComponent implements OnInit, OnDestroy {
           )
         )
       ),
-      this.shiftHourService.getShiftHoursList(),
+      this.shiftHourService.getShiftHours(),
     ]).pipe(
       map(([shifts, shiftHours]) => {
         const hour = (shiftHourUuid: string) =>
