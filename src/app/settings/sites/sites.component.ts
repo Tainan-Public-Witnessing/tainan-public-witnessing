@@ -5,9 +5,9 @@ import { SiteEditorComponent } from 'src/app/_elements/dialogs/site-editor/site-
 import { SitesService } from '../../_services/sites.service';
 import { Site } from '../../_interfaces/site.interface';
 @Component({
-  selector: 'app-site',
-  templateUrl: './site.component.html',
-  styleUrls: ['./site.component.scss'],
+  selector: 'app-sites',
+  templateUrl: './sites.component.html',
+  styleUrls: ['./sites.component.scss'],
 })
 export class SiteComponent implements OnInit {
   sites: Site[] | null = [];

@@ -38,7 +38,7 @@ import { ShiftCardComponent } from './_elements/shift-table/shift-card/shift-car
 import { ShiftTableComponent } from './_elements/shift-table/shift-table.component';
 import { ArrayFilterPipe } from './_pipes/array-filter.pipe';
 import { SettingsComponent } from './settings/settings.component';
-import { SiteComponent } from './settings/site/site.component';
+import { SiteComponent } from './settings/sites/sites.component';
 import { ShfitHoursComponent } from './settings/shfitHours/shfitHours.component';
 import { CongregationsComponent } from './settings/congregations/congregations.component';
 import { SiteEditorComponent } from './_elements/dialogs/site-editor/site-editor.component';
