@@ -26,6 +26,11 @@ service cloud.firestore {
     }
 
     // -------------routes------------------
+    match /Settings/settings {
+      allow read;
+      allow write: if requireAdmin();
+    }
+
     match /Congregations/{cong=**} {
     	allow read;
       allow write: if requireAdmin();
