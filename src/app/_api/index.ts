@@ -132,7 +132,7 @@ export class Api implements ApiInterface {
       if (userShifts.length) return userShifts;
     }
 
-    writeDatabase();
+    await writeDatabase();
     return [];
 
     async function fetchFutureShifts() {
