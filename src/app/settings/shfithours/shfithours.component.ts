@@ -19,7 +19,7 @@ export class ShfitHoursComponent implements OnInit {
   ngOnInit(): void {
     this.shifthoursService.getShiftHours().subscribe((shifthours) => (this.shifthours = shifthours));
   }
-  createShiftHours = () => {
+  createShiftHour = () => {
     let creatDiagRef = this.matDialog.open(ShiftHoursCreatorComponent, {
       panelClass: 'dialog-panel',
     });

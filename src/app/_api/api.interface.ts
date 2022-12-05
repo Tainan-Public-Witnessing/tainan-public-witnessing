@@ -27,7 +27,8 @@ export interface ApiInterface {
   ) => Promise<{ date: string; hour: ShiftHour; site: Site }[]>;
 
   readCongregations: () => Promise<Congregation[]>;
-  createCongregation: (cong: Omit<Congregation, 'uuid' | 'activate'>) => Promise<Congregation>
+  createCongregation: (cong: Omit<Congregation, 'uuid' | 'activate' | 'order'>) => Promise<void>
+  updateCongregation: (cong: Omit<Congregation, 'activate' | 'order'>) => Promise<void>
   changeCongregationActivation: (cong: Congregation) => Promise<boolean>
 
   readSites: () => Promise<Site[]>;

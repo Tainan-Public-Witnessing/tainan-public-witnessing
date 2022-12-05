@@ -47,6 +47,8 @@ import { ShiftHoursCreatorComponent } from './_elements/dialogs/shiftHour-creato
 import { ShiftHoursEditorComponent } from './_elements/dialogs/shiftHour-editor/shiftHour-editor.component';
 import { YearMonthSelectComponent } from './_elements/year-month-select/year-month-select.component';
 import { LineBindingDialogComponent } from './line-binding/line-binding-dialog/line-binding-dialog.component';
+import { CongregationCreatorComponent } from './_elements/dialogs/congregation-creator/congregation-creator.component';
+import { CongregationEditorComponent } from './_elements/dialogs/congregation-editor/congregation-editor.component';
 // AoT requires an exported function for factories of translate module
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -89,6 +91,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     LineBindingDialogComponent,
     ShiftHoursCreatorComponent,
     ShiftHoursEditorComponent,
+    CongregationCreatorComponent,
+    CongregationEditorComponent,
   ],
   imports: [
     BrowserModule,

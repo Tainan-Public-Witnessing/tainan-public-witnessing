@@ -7,17 +7,18 @@
 </div>
 <div class="h-1/2 overflow-auto">
     <mat-action-list id="congregations-list" class="space-y-2">
-        <mat-card *ngFor="let congregation of congregations$" [id]="congregation.uuid">
+        <mat-card *ngFor="let congregation of congregations" [id]="congregation.uuid">
             <mat-card-header>
                 <mat-card-title>
                     {{congregation.name}}
                 </mat-card-title>
             </mat-card-header>
             <mat-card-actions class="text-right">
-                <button mat-icon-button>
+                <button mat-icon-button (click)="openCongregationEditor(congregation)">
                     <mat-icon>edit</mat-icon>
                 </button>
-                <button mat-icon-button [color]="congregation.activate ? 'default' : 'warn'" (click)="changeCongregationActivation(congregation)">
+                <button mat-icon-button [color]="congregation.activate ? 'default' : 'warn'"
+                    (click)="changeCongregationActivation(congregation)">
                     <mat-icon>{{congregation.activate? "work" : "work_off"}}</mat-icon>
                 </button>
             </mat-card-actions>

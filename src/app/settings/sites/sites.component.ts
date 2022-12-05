@@ -35,7 +35,7 @@ export class SiteComponent implements OnInit {
       .changeSiteActivation(site)
       .then((activation) => (this.sites![index!].activate = activation));
   };
-  opneSiteEditor = (site: Site) => {
+  openSiteEditor = (site: Site) => {
     let editDiagRef = this.matDialog.open(SiteEditorComponent, {
       panelClass: 'dialog-panel',
       data: {

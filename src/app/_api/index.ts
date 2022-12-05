@@ -228,17 +228,32 @@ export class Api implements ApiInterface {
   };
 
   createCongregation = async (
-    cong: Omit<Congregation, 'uuid' | 'activate'>
-  ): Promise<Congregation> => {
+    cong: Omit<Congregation, 'uuid' | 'activate' | 'order'>
+  ): Promise<void> => {
     let uuid: string = uuidv4();
+    let maxOrder = await firstValueFrom(
+      this.angularFirestore.collection<Congregation>('Congregations').get()
+    ).then((query) => Math.max(...query.docs.map((m) => m.data().order)));
+
     await Promise.all([
       this.angularFirestore.doc<Congregation>(`Congregations/${uuid}`).set({
         ...cong,
         uuid,
+        order: maxOrder + 1,
         activate: true,
       }),
     ]);
-    return { ...cong, uuid, activate: true };
+  };
+
+  updateCongregation = async (
+    cong: Omit<Congregation, 'activate' | 'order'>
+  ): Promise<void> => {
+    const { uuid, name } = cong;
+    await Promise.all([
+      this.angularFirestore.doc<Congregation>(`Congregations/${uuid}`).update({
+        name: name
+      }),
+    ]);
   };
 
   changeCongregationActivation = async (
