@@ -138,7 +138,7 @@ export class UsersComponent implements OnInit, OnDestroy {
                 title: 'GLOBAL.ERROR',
                 message: 'USERS.PERSONAL_SHIFTS_EXIST_ERROR',
                 messageParams: {
-                  date: shiftsSummary,
+                  value: shiftsSummary,
                 },
                 hideCancelButton: true,
               },
