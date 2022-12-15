@@ -119,8 +119,8 @@ def attendance_report():
 
 @app.route("/shift-schedule", methods=["GET"])
 def shift_schedule():
-    year, month = ShiftSchedule(db)
-    return jsonify({"status": f"{year}-{month:02}排班完成"})
+    ScheduleMonth = ShiftSchedule(db)
+    return jsonify({"status": f"{ScheduleMonth}排班完成"})
 
 
 @app.route("/backup", methods=["GET"])
