@@ -205,7 +205,6 @@ export class Api implements ApiInterface {
         const { userKeys } = (await trans.get(settingsRef)).data()!;
         userKeys.find((u) => u.uuid === uuid)!.activate = activate;
         trans.update(settingsRef, { userKeys });
-        trans.update(db.doc<UserKey>(`UserKeys/${uuid}`).ref, { activate });
         trans.update(db.doc<User>(`Users/${uuid}`).ref, { activate });
       });
     }
