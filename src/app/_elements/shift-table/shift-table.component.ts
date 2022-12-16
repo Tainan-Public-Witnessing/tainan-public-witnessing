@@ -31,35 +31,11 @@ export class ShiftTableComponent implements OnInit, OnDestroy {
         } else if (_shifts === undefined) {
           this.sortedShift$s = undefined;
         } else {
-          this.sortedShift$s = _shifts
-            .sort((a, b) => {
-              const siteCompare = a.siteUuid.localeCompare(b.siteUuid);
-              if (siteCompare === 0) {
-                const dateCompare = a.date.localeCompare(b.date);
-                if (dateCompare === 0) {
-                  let aStartTime = '';
-                  let bStartTime = '';
-                  _shiftHoursList.forEach((shiftHours) => {
-                    if (shiftHours.uuid === a.shiftHoursUuid) {
-                      aStartTime = shiftHours.startTime;
-                    }
-                    if (shiftHours.uuid === b.shiftHoursUuid) {
-                      bStartTime = shiftHours.startTime;
-                    }
-                  });
-                  return aStartTime.localeCompare(bStartTime);
-                } else {
-                  return dateCompare;
-                }
-              } else {
-                return siteCompare;
-              }
-            })
-            .map((_shift) => {
-              return this.shiftsService
-                .getShiftByUuid(_shift.date.slice(0, 7), _shift.uuid)
-                .pipe(filter((__shift) => !!__shift)) as Observable<Shift>;
-            });
+          this.sortedShift$s = _shifts.map((_shift) => {
+            return this.shiftsService
+              .getShiftByUuid(_shift.date.slice(0, 7), _shift.uuid)
+              .pipe(filter((__shift) => !!__shift)) as Observable<Shift>;
+          });
         }
       });
   }
