@@ -9,7 +9,7 @@ import {
   Observable,
   startWith,
   Subject,
-  switchMap
+  switchMap,
 } from 'rxjs';
 import { Shift } from '../_interfaces/shift.interface';
 import { AuthorityService } from '../_services/authority.service';
@@ -61,6 +61,7 @@ export class OpeningShiftsComponent implements OnInit, OnDestroy {
           shiftHours?.find((hour) => hour.uuid === shiftHourUuid)?.startTime ??
           '00:00';
         return shifts
+          .sort((a, b) => a.date.localeCompare(b.date))
           .sort((a, b) => a.siteUuid.localeCompare(b.siteUuid))
           .sort((a, b) =>
             hour(a.shiftHoursUuid).localeCompare(hour(b.shiftHoursUuid))

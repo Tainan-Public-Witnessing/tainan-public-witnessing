@@ -20,11 +20,8 @@ def ScheduleReminder(LineNotify):
 def ScheduleCompleteReminder(LineNotify):
     LINE_NOTIFY_CLIENT = json.loads(os.getenv("LINE_NOTIFY_CLIENT"))
     GROUP_TOKEN = LINE_NOTIFY_CLIENT["GROUP_TOKEN"]
-    nextMonth = (datetime.today() + relativedelta(months=1, day=1)).strftime("%Y-%m")
-    nextMonthChinese = (datetime.today() + relativedelta(months=1, day=1)).strftime(
-        "%Y年%m月"
-    )
-    message = f"\n【{nextMonthChinese}月 班表通知】\n\n我們想通知大家{nextMonth}月的班表已經排班完成了。\n\n★我們每個人都有可能收到委派，請務必確認自己的委派。\n如果你沒有收到委派，也歡迎你查詢空缺報名\n\n如有問題，請聯繫《管理者》"
+    nextMonth = (datetime.today() + relativedelta(months=1, day=1)).strftime("%Y年%m月")
+    message = f"\n【{nextMonth} 班表通知】\n\n我們想通知大家{nextMonth}的班表已經排班完成了。\n\n★我們每個人都有可能收到委派，請務必確認自己的委派。\n如果你沒有收到委派，也歡迎你查詢空缺報名\n\n如有問題，請聯繫《管理者》"
     LineNotify(GROUP_TOKEN, message)
 
 
@@ -129,7 +126,12 @@ def ShiftSchedule(db):
         todayShift = []
         date_str = date.strftime("%Y-%m-%d")
         weekday = date.isoweekday() if date.isoweekday() != 7 else 0
-        shifts = db.collection("SiteShifts").where("weekday", "==", weekday).get()
+        shifts = (
+            db.collection("SiteShifts")
+            .where("weekday", "==", weekday)
+            .where("activate", "==", True)
+            .get()
+        )
         for shift in shifts:
             attendance = shift.to_dict()["attendance"]
             siteUuid = shift.to_dict()["siteUuid"]
