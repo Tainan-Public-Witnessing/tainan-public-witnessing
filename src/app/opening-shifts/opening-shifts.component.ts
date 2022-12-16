@@ -65,8 +65,7 @@ export class OpeningShiftsComponent implements OnInit, OnDestroy {
           .sort((a, b) => a.siteUuid.localeCompare(b.siteUuid))
           .sort((a, b) =>
             hour(a.shiftHoursUuid).localeCompare(hour(b.shiftHoursUuid))
-          )
-          .sort((a, b) => a.date.localeCompare(b.date));
+          );
       })
     );
   }
