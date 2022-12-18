@@ -16,6 +16,7 @@ export class SitesService {
       this.sites$ = new BehaviorSubject<Site[] | null>(null);
     }
     this.api.readSites().then((sites) => {
+      let sitesSort = sites.sort((a, b) => a.order - b.order);
       this.sites$?.next(sites);
     });
     return this.sites$;

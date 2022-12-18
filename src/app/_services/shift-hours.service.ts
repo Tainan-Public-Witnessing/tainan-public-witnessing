@@ -18,8 +18,9 @@ export class ShiftHoursService {
     if (this.shiftHours$ === undefined) {
       this.shiftHours$ = new BehaviorSubject<ShiftHour[] | null>(null);
     }
-    this.api.readShiftHours().then(shiftHour => {
-      this.shiftHours$?.next(shiftHour);
+    this.api.readShiftHours().then(shiftHours => {
+      let shiftHoursSort = shiftHours.sort((a, b) => a.startTime.localeCompare(b.startTime));
+      this.shiftHours$?.next(shiftHoursSort);
     });
     return this.shiftHours$;
   }

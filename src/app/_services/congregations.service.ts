@@ -16,7 +16,8 @@ export class CongregationsService {
       this.congregations$ = new BehaviorSubject<Congregation[] | null>(null);
     }
     this.api.readCongregations().then((congs) => {
-      this.congregations$?.next(congs);
+      let congsSort = congs.sort((a, b) => a.order - b.order);
+      this.congregations$?.next(congsSort);
     });
     return this.congregations$;
   };
