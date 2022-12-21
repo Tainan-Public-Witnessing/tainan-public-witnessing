@@ -1,23 +1,39 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CongregationsService } from '../../_services/congregations.service';
 import { Congregation } from '../../_interfaces/congregation.interface';
 import { CongregationCreatorComponent } from 'src/app/_elements/dialogs/congregation-creator/congregation-creator.component';
 import { CongregationEditorComponent } from 'src/app/_elements/dialogs/congregation-editor/congregation-editor.component';
+import { Subject, BehaviorSubject, startWith, switchMap, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-congregations',
   templateUrl: './congregations.component.html',
   styleUrls: ['./congregations.component.scss']
 })
-export class CongregationsComponent implements OnInit {
-  congregations: Congregation[] | null | undefined = [];
+export class CongregationsComponent implements OnInit, OnDestroy {
+  reloadList$ = new BehaviorSubject<void>(undefined);
+  congregations$ = new BehaviorSubject<Congregation[] | null>(null);
+  unsubscribe$ = new Subject<void>();
   constructor(
     private congregationService: CongregationsService,
     private matDialog: MatDialog
   ) { }
   ngOnInit(): void {
-    this.congregationService.getCongregations().subscribe((congs) => (this.congregations = congs));
+    this.reloadList$.pipe(
+      startWith(undefined),
+      switchMap(() => {
+        return this.congregationService
+          .getCongregations()
+          .pipe(takeUntil(this.unsubscribe$))
+      })
+    ).subscribe(congs => {
+      this.congregations$.next(congs);
+    })
+  }
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
   createCongregation = () => {
     let creatDiagRef = this.matDialog.open(CongregationCreatorComponent, {
@@ -25,9 +41,7 @@ export class CongregationsComponent implements OnInit {
     });
     creatDiagRef.afterClosed().subscribe((result) => {
       if (result === 'success')
-        this.congregationService.getCongregations().subscribe(congs => {
-          this.congregations = congs;
-        })
+        this.congregationService.getCongregations();
     });
   }
   openCongregationEditor = (congregation: Congregation) => {
@@ -39,13 +53,15 @@ export class CongregationsComponent implements OnInit {
     });
     editDiagRef.afterClosed().subscribe((result) => {
       if (result === 'success')
-        this.congregationService.getCongregations().subscribe(congs => {
-          this.congregations = congs;
-        })
+        this.congregationService.getCongregations();
     });
   }
   changeCongregationActivation = (cong: Congregation) => {
-    let index = this.congregations?.indexOf(cong)
-    this.congregationService.changeCongregationsActivation(cong).then(activation => this.congregations![index!].activate = activation)
+    this.congregations$.subscribe(congs => {
+      let index = congs?.indexOf(cong);
+      this.congregationService
+        .changeCongregationsActivation(cong)
+        .then(activation => congs![index!].activate = activation)
+    })
   }
 }

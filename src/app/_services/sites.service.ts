@@ -17,7 +17,7 @@ export class SitesService {
     }
     this.api.readSites().then((sites) => {
       let sitesSort = sites.sort((a, b) => a.order - b.order);
-      this.sites$?.next(sites);
+      this.sites$?.next(sitesSort);
     });
     return this.sites$;
   };

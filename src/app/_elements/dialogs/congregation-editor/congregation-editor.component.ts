@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CongregationsService } from 'src/app/_services/congregations.service';
 import { Congregation } from 'src/app/_interfaces/congregation.interface';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-congregation-editor',
@@ -14,7 +14,14 @@ export class CongregationEditorComponent implements OnInit {
   constructor(private formbuilder: FormBuilder,
     private congregationsService: CongregationsService,
     private dialogRef: MatDialogRef<CongregationEditorComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { congregation: Congregation }) { }
+    @Inject(MAT_DIALOG_DATA) public data: { congregation: Congregation }) {
+    this.congregationform = this.formbuilder.group({
+      uuid: [this.data.congregation.uuid],
+      activate: [this.data.congregation.activate],
+      name: [this.data.congregation.name, Validators.required],
+      order: [this.data.congregation.order]
+    })
+  }
 
   ngOnInit(): void {
   }

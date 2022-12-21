@@ -1,22 +1,20 @@
 <div class="title-bar flex items-center">
-    <h1>{{'SETTINGS.SHIFTHOURS' | translate}}</h1>
+    <span class=" mr-3">
+        <mat-icon class="iconTitle" [color]="'primary'">watch_later</mat-icon>
+    </span>
+    <h2>{{'SETTINGS.SHIFTHOURS' | translate}}</h2>
     <span class="spacer"></span>
     <button mat-icon-button (click)="createShiftHour()">
         <mat-icon>add</mat-icon>
     </button>
 </div>
-<div *ngFor="let shifthour of shifthours" class="my-2">
-    <mat-card class="shift-card h-full box-border">
-        <mat-card-header>
-            <mat-card-title>
-                {{shifthour.name}}
-            </mat-card-title>
-            <mat-card-subtitle>
-                {{'SETTINGS.START' | translate}}:{{shifthour.startTime}} ～ {{'SETTINGS.END' |
-                translate}}:{{shifthour.endTime}}
-            </mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-actions class="text-right">
+<mat-card>
+    <mat-list>
+        <mat-list-item *ngFor="let shifthour of shifthours$ | async">
+            <p matLine class="shiftHourTitle">{{shifthour.name}}</p>
+            <p matLine class="shiftHourDetail"> {{'SETTINGS.START' | translate}}:{{shifthour.startTime}} ～
+                {{'SETTINGS.END' |
+                translate}}:{{shifthour.endTime}}</p>
             <button mat-icon-button (click)="openShiftHourEditor(shifthour)">
                 <mat-icon>edit</mat-icon>
             </button>
@@ -28,6 +26,7 @@
                 (click)="changeShiftHourDelivery(shifthour)">
                 <mat-icon>local_shipping</mat-icon>
             </button>
-        </mat-card-actions>
-    </mat-card>
-</div>
+            <mat-divider></mat-divider>
+        </mat-list-item>
+    </mat-list>
+</mat-card>

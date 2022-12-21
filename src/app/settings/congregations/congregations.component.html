@@ -1,27 +1,25 @@
 <div class="title-bar flex items-center">
-    <h1>{{'CONGREGATIONS.TITLE' | translate}}</h1>
+    <span class=" mr-3">
+        <mat-icon class="iconTitle" [color]="'primary'">group</mat-icon>
+    </span>
+    <h2>{{'CONGREGATIONS.TITLE' | translate}}</h2>
     <span class="spacer"></span>
     <button mat-icon-button (click)="createCongregation()">
         <mat-icon>add</mat-icon>
     </button>
 </div>
-<div class="h-1/2 overflow-auto">
-    <mat-action-list id="congregations-list" class="space-y-2">
-        <mat-card *ngFor="let congregation of congregations" [id]="congregation.uuid">
-            <mat-card-header>
-                <mat-card-title>
-                    {{congregation.name}}
-                </mat-card-title>
-            </mat-card-header>
-            <mat-card-actions class="text-right">
-                <button mat-icon-button (click)="openCongregationEditor(congregation)">
-                    <mat-icon>edit</mat-icon>
-                </button>
-                <button mat-icon-button [color]="congregation.activate ? 'default' : 'warn'"
-                    (click)="changeCongregationActivation(congregation)">
-                    <mat-icon>{{congregation.activate? "work" : "work_off"}}</mat-icon>
-                </button>
-            </mat-card-actions>
-        </mat-card>
-    </mat-action-list>
-</div>
+<mat-card class="h-1/2 overflow-auto">
+    <mat-list>
+        <mat-list-item *ngFor="let congregation of congregations$ | async">
+            <p matLine class="congTitle">{{congregation.name}}</p>
+            <button mat-icon-button (click)="openCongregationEditor(congregation)">
+                <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button [color]="congregation.activate ? 'default' : 'warn'"
+                (click)="changeCongregationActivation(congregation)">
+                <mat-icon>{{congregation.activate? "work" : "work_off"}}</mat-icon>
+            </button>
+            <mat-divider></mat-divider>
+        </mat-list-item>
+    </mat-list>
+</mat-card>

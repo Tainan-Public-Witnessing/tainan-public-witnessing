@@ -145,7 +145,8 @@
     "CREATE_TITLE": "新增會眾",
     "EDIT_TITLE": "編輯會眾",
     "DELETE_TITLE": "刪除會眾",
-    "NAME_LABEL": "會眾名稱"
+    "NAME_LABEL": "會眾名稱",
+    "IUPUT_CONGREGATION_INFO":"請輸入會眾資訊"
   },
   "TAGS": {
     "TITLE": "標簽列表",
@@ -183,8 +184,13 @@
   },
   "SETTINGS":{
     "TITLE":"基本設定",
-    "SITE":"地點列表",
+    "SITES":"地點列表",
+    "SITE_NAME":"地點名稱",
+    "SITE_POSITION":"地點位置",
+    "IUPUT_SITE_INFO":"請輸入地點資訊",
     "SHIFTHOURS":"時段列表",
+    "SHIFTHOUR_NAME":"時段名稱",
+    "IUPUT_SHIFTHOUR_INFO":"請輸入時段資訊",
     "START":"開始",
     "END":"結束"
   }
