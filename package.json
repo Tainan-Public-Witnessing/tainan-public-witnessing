@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --port 4200 --open",
+    "emulator:firestore": "firebase emulators:start --import=./firestore-emulator-data --project tainan-public-witnessing-dev --only=firestore",
     "start:local": "node scripts/local",
     "build:prod": "ng build --configuration production",
     "build:test": "ng build --configuration test",
@@ -54,6 +55,7 @@
     "codelyzer": "^6.0.0",
     "cypress": "^7.7.0",
     "firebase-tools": "^10.9.2",
+    "firestore": "^1.1.6",
     "fuzzy": "^0.1.3",
     "inquirer": "^6.2.2",
     "inquirer-autocomplete-prompt": "^1.4.0",

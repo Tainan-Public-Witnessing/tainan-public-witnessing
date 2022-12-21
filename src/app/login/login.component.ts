@@ -19,6 +19,11 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    if (this.auth.currentUserUuid$.value) {
+      this.router.navigateByUrl('/', { replaceUrl: true });
+      return;
+    }
+
     const token = window.location.hash.substring(1);
     const query = new URLSearchParams(window.location.search.substring(1));
 
@@ -28,7 +33,7 @@ export class LoginComponent implements OnInit {
       this.auth
         .customLogin(token)
         .then(() => {
-          this.router.navigateByUrl(returnUrl);
+          this.router.navigateByUrl(returnUrl, { replaceUrl: true });
         })
         .catch(() => {
           this.dialog

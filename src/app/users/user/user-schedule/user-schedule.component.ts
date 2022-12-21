@@ -6,7 +6,7 @@ import {
   OnDestroy,
   OnInit,
   SimpleChanges,
-  ViewEncapsulation,
+  ViewEncapsulation
 } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
@@ -15,18 +15,17 @@ import { Moment } from 'moment';
 import {
   BehaviorSubject,
   combineLatest,
-  combineLatestAll,
   filter,
   firstValueFrom,
   map,
   Subject,
-  takeUntil,
+  takeUntil
 } from 'rxjs';
 import { Permission } from 'src/app/_enums/permission.enum';
 import { ShiftHour } from 'src/app/_interfaces/shift-hours.interface';
 import {
   UserSchedule,
-  UserScheduleDayData,
+  UserScheduleDayData
 } from 'src/app/_interfaces/user-schedule.interface';
 import { UserKey } from 'src/app/_interfaces/user.interface';
 import { AuthorityService } from 'src/app/_services/authority.service';
@@ -113,7 +112,10 @@ export class UserScheduleComponent implements OnInit, OnDestroy, OnChanges {
       this.userKeys$.pipe(
         takeUntil(this.unsubscribe$),
         map((users) =>
-          users.sort((a, b) => a.username.localeCompare(b.username))
+          users
+            .filter((user) => user.activate)
+            .filter((user) => user.uuid !== this.uuid)
+            .sort((a, b) => a.username.localeCompare(b.username))
         )
       ),
       this.partnerInput$.pipe(takeUntil(this.unsubscribe$)),

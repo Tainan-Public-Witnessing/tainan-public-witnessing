@@ -42,10 +42,7 @@ export class OpeningShiftsComponent implements OnInit, OnDestroy {
           .pipe(startWith(undefined)),
         this.yearMonthControl.valueChanges.pipe(startWith(undefined)),
       ]).pipe(
-        map(() => {
-          console.log(this.yearMonthControl.value);
-          return this.yearMonthControl.value;
-        }),
+        map(() => this.yearMonthControl.value),
         filter((value) => !!value),
         map((value) => value!.format('YYYY-MM')),
         switchMap((yearMonth) =>
@@ -63,12 +60,12 @@ export class OpeningShiftsComponent implements OnInit, OnDestroy {
         const hour = (shiftHourUuid: string) =>
           shiftHours?.find((hour) => hour.uuid === shiftHourUuid)?.startTime ??
           '00:00';
-        return shifts
-          .sort((a, b) => a.siteUuid.localeCompare(b.siteUuid))
-          .sort((a, b) =>
-            hour(a.shiftHoursUuid).localeCompare(hour(b.shiftHoursUuid))
-          )
-          .sort((a, b) => a.date.localeCompare(b.date));
+        return shifts.sort((a, b) => {
+          if (a.date !== b.date) return a.date.localeCompare(b.date);
+          if (a.siteUuid !== b.siteUuid)
+            return a.siteUuid.localeCompare(b.siteUuid);
+          return hour(a.shiftHoursUuid).localeCompare(hour(b.shiftHoursUuid));
+        });
       })
     );
   }

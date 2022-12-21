@@ -20,7 +20,7 @@ export class LineBindingDialogComponent implements OnInit {
     private dialogRef: MatDialogRef<LineBindingDialogComponent>
   ) {
     this.bindingForm = formBuilder.group({
-      bind_code: ['', Validators.required],
+      bindCode: ['', Validators.required],
       line_token: [''],
     });
   }
@@ -43,16 +43,16 @@ export class LineBindingDialogComponent implements OnInit {
               .customLogin(payload.token)
               .then(() => this.closeThis(query.get('return')));
           } else {
-            this.bindingForm.setErrors({ bind_code: true });
+            this.bindingForm.setErrors({ bindCode: true });
           }
         });
     } else {
-      this.bindingForm.setErrors({ bind_code_required: true });
+      this.bindingForm.setErrors({ bindCode_required: true });
     }
   };
 
   closeThis = (returnUrl?: string | null) => {
     this.dialogRef.close();
-    this.router.navigateByUrl(returnUrl || '/');
+    this.router.navigateByUrl(returnUrl || '/', { replaceUrl: true });
   };
 }

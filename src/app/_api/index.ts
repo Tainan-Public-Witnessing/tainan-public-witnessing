@@ -3,18 +3,17 @@ import { ApiInterface } from 'src/app/_api/api.interface';
 
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { arrayUnion } from 'firebase/firestore';
 
 import { firstValueFrom, map } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { v4 as uuidv4, v5 as uuidv5 } from 'uuid';
 import { EXISTED_ERROR } from '../_classes/errors/EXISTED_ERROR';
-import {
-  docExists as isDocExists,
-  docsExists,
-} from '../_helpers/firebase-helper';
+import { docsExists } from '../_helpers/firebase-helper';
 import { Congregation } from '../_interfaces/congregation.interface';
 import { PersonalShifts } from '../_interfaces/personal-shifts.interface';
-import { ShiftHour } from '../_interfaces/shift-hours.interface';
+import { Settings } from '../_interfaces/settings.interface';
+import { ShiftHours } from '../_interfaces/shift-hours.interface';
 import { Shift } from '../_interfaces/shift.interface';
 import { SiteShifts } from '../_interfaces/site-shifts.interface';
 import { Site } from '../_interfaces/site.interface';
@@ -31,32 +30,23 @@ export class Api implements ApiInterface {
   constructor(
     private angularFirestore: AngularFirestore,
     private angularFireAuth: AngularFireAuth
-  ) { }
+  ) {}
 
-  login = (uuid: string, password: string): Promise<void> => {
+  login = async (uuid: string, password: string): Promise<void> => {
     const email = [uuid, this.mailSuffix].join('');
     const pass = uuidv5(password, environment.UUID_NAMESPACE);
-    return this.angularFireAuth
-      .signInWithEmailAndPassword(email, pass)
-      .then(() => {
-        return;
-      });
+    await this.angularFireAuth.signInWithEmailAndPassword(email, pass);
   };
 
   logout = (): Promise<void> => {
     return this.angularFireAuth.signOut();
   };
 
-  readUserKeys = (): Promise<UserKey[]> => {
-    return firstValueFrom(
-      this.angularFirestore.collection<UserKey>('UserKeys').get()
-    ).then((query) => {
-      if (query.docs.length > 0) {
-        return query.docs.map((doc) => doc.data());
-      } else {
-        return Promise.reject('NOT_EXIST');
-      }
-    });
+  readUserKeys = async (): Promise<UserKey[]> => {
+    const snapshot = await this.angularFirestore
+      .doc<Settings>('/Settings/settings')
+      .ref.get();
+    return snapshot.data()!.userKeys;
   };
 
   readUser = (uuid: string): Promise<User> => {
@@ -73,61 +63,66 @@ export class Api implements ApiInterface {
       });
   };
 
-  createUser = async (user: Omit<User, 'uuid' | 'activate'>) => {
-    const userNameExists = await docsExists(
-      this.angularFirestore.collection<UserKey>('UserKeys', (query) =>
-        query.where('username', '==', user.username)
-      )
-    );
-    if (userNameExists) throw new EXISTED_ERROR('username');
+  createUser = (user: Omit<User, 'uuid' | 'activate' | 'bindCode'>) => {
+    return this.angularFirestore.firestore.runTransaction(async (trans) => {
+      const userNameExists = await docsExists(
+        this.angularFirestore.collection<User>('/Users', (query) =>
+          query.where('username', '==', user.username)
+        )
+      );
+      if (userNameExists) throw new EXISTED_ERROR('username');
 
-    // ensure non-duplicated uuid
-    let uuid: string;
-    do {
-      uuid = uuidv4();
-    } while (
-      await isDocExists(this.angularFirestore.doc<UserKey>(`UserKeys/${uuid}`))
-    );
+      // ensure non-duplicated uuid
+      let uuid: string;
+      do {
+        uuid = uuidv4();
+      } while (
+        (await trans.get(this.angularFirestore.doc<User>(`/Users/${uuid}`).ref))
+          .exists
+      );
 
-    const newUser = await this.angularFireAuth.createUserWithEmailAndPassword(
-      uuid + this.mailSuffix,
-      uuidv5(user.baptizeDate.replace(/-/g, ''), environment.UUID_NAMESPACE)
-    );
-
-    await Promise.all([
-      this.angularFirestore
-        .doc<User & { firebaseSub: string }>(`Users/${uuid}`)
-        .set({
-          ...user,
-          uuid,
-          activate: true,
-          firebaseSub: newUser.user!.uid,
-        }),
-      this.angularFirestore.doc<UserKey>(`UserKeys/${uuid}`).set({
+      trans.set(this.angularFirestore.doc<User>(`Users/${uuid}`).ref, {
+        ...user,
         uuid,
         activate: true,
-        username: user.username,
-      }),
-      this.angularFirestore
-        .doc<UserSchedule>(`Users/${uuid}/Schedule/config`)
-        .set(this.#EMPTY_USER_SCHEDULE),
-    ]);
-
-    return uuid;
+        bindCode: Math.floor(Math.random() * 9999_9999)
+          .toString()
+          .padStart(8, '0'),
+      });
+      trans.set(
+        this.angularFirestore.doc<UserSchedule>(`Users/${uuid}/Schedule/config`)
+          .ref,
+        this.#EMPTY_USER_SCHEDULE
+      );
+      trans.update(
+        this.angularFirestore.doc<Settings>(`/Settings/settings`).ref,
+        {
+          userKeys: arrayUnion({
+            uuid,
+            activate: true,
+            username: user.username,
+          }),
+        }
+      );
+      return uuid;
+    });
   };
 
-  patchUser = async (user: Omit<User, 'activate'>) => {
-    const updates = [
-      this.angularFirestore.doc<User>(`Users/${user.uuid}`).update(user),
-    ];
-    if (user.username) {
-      updates.push(
-        this.angularFirestore
-          .doc<UserKey>(`UserKeys/${user.uuid}`)
-          .update({ username: user.username })
-      );
-    }
-    await Promise.all(updates);
+  patchUser = (user: Omit<User, 'activate' | 'bindCode'>) => {
+    return this.angularFirestore.firestore.runTransaction(async (trans) => {
+      if (!!user.username) {
+        const settingsRef =
+          this.angularFirestore.doc<Settings>('/Settings/settings').ref;
+        const { userKeys } = (await trans.get(settingsRef)).data()!;
+        userKeys.find((u) => u.uuid === user.uuid)!.username = user.username;
+        trans.update(settingsRef, { userKeys });
+
+        trans.update(
+          this.angularFirestore.doc<User>(`/Users/${user.uuid}`).ref,
+          user
+        );
+      }
+    });
   };
 
   updateUserActivation = async (uuid: string, activate: boolean) => {
@@ -137,7 +132,7 @@ export class Api implements ApiInterface {
       if (userShifts.length) return userShifts;
     }
 
-    writeDatabase();
+    await writeDatabase();
     return [];
 
     async function fetchFutureShifts() {
@@ -162,9 +157,9 @@ export class Api implements ApiInterface {
           db.collection<ShiftHour>('ShiftHours').ref.get(),
         ])
       ).map((snapshot) => snapshot.docs.map((doc) => doc.data())) as [
-          Site[],
-          ShiftHour[]
-        ];
+        Site[],
+        ShiftHour[]
+      ];
 
       return userShifts
         .map((shift) => ({
@@ -205,13 +200,13 @@ export class Api implements ApiInterface {
     }
 
     function writeDatabase() {
-      return Promise.all([
-        db.doc<UserKey>(`UserKeys/${uuid}`).update({ activate }),
-        db.doc<User>(`Users/${uuid}`).update({ activate }),
-        db
-          .doc<UserSchedule>(`Users/${uuid}/Schedule/config`)
-          .update({ assign: activate }),
-      ]);
+      return db.firestore.runTransaction(async (trans) => {
+        const settingsRef = db.doc<Settings>('/Settings/settings').ref;
+        const { userKeys } = (await trans.get(settingsRef)).data()!;
+        userKeys.find((u) => u.uuid === uuid)!.activate = activate;
+        trans.update(settingsRef, { userKeys });
+        trans.update(db.doc<User>(`Users/${uuid}`).ref, { activate });
+      });
     }
   };
 
@@ -251,7 +246,7 @@ export class Api implements ApiInterface {
     const { uuid, name } = cong;
     await Promise.all([
       this.angularFirestore.doc<Congregation>(`Congregations/${uuid}`).update({
-        name: name
+        name: name,
       }),
     ]);
   };
@@ -352,7 +347,7 @@ export class Api implements ApiInterface {
         ...shifthours,
         uuid,
         activate: true,
-        deliver: false
+        deliver: false,
       }),
     ]);
   };
@@ -364,11 +359,10 @@ export class Api implements ApiInterface {
       this.angularFirestore.doc<ShiftHour>(`ShiftHours/${uuid}`).update({
         name,
         startTime,
-        endTime
+        endTime,
       }),
     ]);
   };
-
 
   changeShiftHourActivation = async (
     shiftHour: ShiftHour

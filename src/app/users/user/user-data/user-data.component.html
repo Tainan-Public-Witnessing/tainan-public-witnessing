@@ -7,11 +7,7 @@
 </div>
 
 <mat-card class="overflow">
-  <form
-    [formGroup]="userForm"
-    class="flex flex-row flex-wrap"
-    (submit)="onSubmit()"
-  >
+  <form [formGroup]="userForm" class="flex flex-row flex-wrap" (submit)="onSubmit()">
     <mat-error *ngIf="!userForm.value.activate" class="text-center w-full">
       {{ "USERS.DEACTIVATED" | translate }}
     </mat-error>
@@ -20,7 +16,7 @@
       <input matInput formControlName="username" required id="username-input" />
       <mat-error *ngIf="userForm.controls.username.hasError('existed')">{{
         "USERS.VALIDATION.USERNAME_EXISTED" | translate
-      }}</mat-error>
+        }}</mat-error>
     </mat-form-field>
 
     <mat-form-field class="w-full sm:w-1/2 md:w-1/3">
@@ -31,11 +27,7 @@
     <mat-form-field class="w-full sm:w-1/2 md:w-1/3">
       <mat-label>{{ "USERS.LABEL.GENDER" | translate }}</mat-label>
       <mat-select formControlName="gender" required id="gender-select">
-        <mat-option
-          *ngFor="let gender of genders"
-          [value]="gender"
-          [id]="gender | lowercase"
-        >
+        <mat-option *ngFor="let gender of genders" [value]="gender" [id]="gender | lowercase">
           {{ "GENDER." + gender | translate }}
         </mat-option>
       </mat-select>
@@ -43,79 +35,21 @@
 
     <mat-form-field class="w-full sm:w-1/2">
       <mat-label>{{ "USERS.LABEL.CONGREGATION" | translate }}</mat-label>
-      <mat-select
-        formControlName="congregationUuid"
-        required
-        id="congregation-select"
-      >
-        <mat-option
-          *ngFor="let congregation of congregations$ | async"
-          [value]="congregation.uuid"
-          [id]="congregation.uuid"
-        >
+      <mat-select formControlName="congregationUuid" required id="congregation-select">
+        <mat-option *ngFor="let congregation of congregations$ | async" [value]="congregation.uuid"
+          [id]="congregation.uuid">
           {{ congregation.name }}
         </mat-option>
       </mat-select>
     </mat-form-field>
 
-    <!-- <mat-form-field class="w-full">
-      <mat-label>{{ "USERS.LABEL.PROFILE" | translate }}</mat-label>
-      <mat-select formControlName="profile" required id="profile-select">
-        <mat-option
-          *ngFor="let profilePrimarykey of profilePrimarykeys$ | async"
-          [value]="profilePrimarykey.uuid"
-          [id]="profilePrimarykey.uuid"
-        >
-          {{ profilePrimarykey.name }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field> -->
-
     <mat-form-field class="w-full sm:w-1/2">
       <mat-label>{{ "USERS.LABEL.BAPTIZE_DATE" | translate }}</mat-label>
-      <input
-        matInput
-        formControlName="baptizeDate"
-        required
-        [matDatepicker]="baptizeDatePicker"
-        id="baptize-date-input"
-      />
-      <mat-datepicker-toggle
-        matSuffix
-        [for]="baptizeDatePicker"
-        id="baptize-date-picker"
-      ></mat-datepicker-toggle>
+      <input matInput formControlName="baptizeDate" required [matDatepicker]="baptizeDatePicker"
+        id="baptize-date-input" />
+      <mat-datepicker-toggle matSuffix [for]="baptizeDatePicker" id="baptize-date-picker"></mat-datepicker-toggle>
       <mat-datepicker touchUi #baptizeDatePicker></mat-datepicker>
     </mat-form-field>
-
-    <!-- <mat-form-field class="w-full">
-      <mat-label>{{ "USERS.LABEL.BIRTH_DATE" | translate }}</mat-label>
-      <input
-        matInput
-        formControlName="birthDate"
-        [matDatepicker]="birthDatePicker"
-        id="birth-date-input"
-      />
-      <mat-datepicker-toggle
-        matSuffix
-        [for]="birthDatePicker"
-        id="birth-date-picker"
-      ></mat-datepicker-toggle>
-      <mat-datepicker touchUi #birthDatePicker></mat-datepicker>
-    </mat-form-field> -->
-
-    <!-- <mat-form-field class="w-full">
-      <mat-label>{{ "USERS.LABEL.TAGS" | translate }}</mat-label>
-      <mat-select formControlName="tags" multiple="true" id="tags-select">
-        <mat-option
-          *ngFor="let tag of tags$ | async"
-          [value]="tag.uuid"
-          [id]="tag.uuid"
-        >
-          {{ tag.name }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field> -->
 
     <mat-form-field class="w-full sm:w-1/2">
       <mat-label>{{ "USERS.LABEL.CELLPHONE" | translate }}</mat-label>
@@ -127,7 +61,7 @@
       <input matInput formControlName="phone" id="phone-input" />
     </mat-form-field>
 
-    <mat-form-field class="w-full" *ngIf="AdminOnly$ | async">
+    <mat-form-field class="w-full sm:w-1/2" *ngIf="AdminOnly$ | async">
       <mat-label>{{ "USERS.LABEL.PERMISSION" | translate }}</mat-label>
       <mat-select formControlName="permission" required>
         <mat-option *ngFor="let permission of permissions" [value]="permission">
@@ -135,26 +69,24 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
-
+    <mat-form-field class="w-full sm:w-1/2" *ngIf="AdminOnly$ | async">
+      <mat-label>{{
+        (user?.lineSub ? "USERS.STATUS.BOUND" : "USERS.LABEL.BINDCODE")
+        | translate
+        }}</mat-label>
+      <input matInput [value]="user?.lineSub ? '' : user?.bindCode" disabled readonly />
+      <span *ngIf="user?.lineSub" matSuffix [matTooltip]="'USERS.STATUS.BOUND' | translate">
+        <mat-icon>link</mat-icon>
+      </span>
+    </mat-form-field>
     <mat-form-field class="w-full" *ngIf="AdminOnly$ | async">
       <mat-label>{{ "USERS.LABEL.NOTE" | translate }}</mat-label>
-      <textarea
-        matInput
-        cdkTextareaAutosize
-        formControlName="note"
-        cdkAutosizeMinRows="3"
-        id="note-input"
-      >
+      <textarea matInput cdkTextareaAutosize formControlName="note" cdkAutosizeMinRows="3" id="note-input">
       </textarea>
     </mat-form-field>
+
     <div class="w-full text-right">
-      <button
-        mat-raised-button
-        color="primary"
-        *ngIf="!disabled"
-        type="submit"
-        id="create-user-submit-button"
-      >
+      <button mat-raised-button color="primary" *ngIf="!disabled" type="submit" id="create-user-submit-button">
         {{ "GLOBAL.SUBMIT" | translate }}
       </button>
     </div>

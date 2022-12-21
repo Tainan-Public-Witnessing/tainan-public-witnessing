@@ -31,7 +31,10 @@ pool = redis.connection.BlockingConnectionPool.from_url(
 )
 allowed_domains = json.loads(os.getenv("ALLOWED_DOMAINS"))
 allowed_domains.append(
-    r"https://tainan-public-witnessing-official-test--preview-\w{8}.web.app"
+    r"https://tainan-public-witnessing-official-test--preview-\w{8}.web.app",
+)
+allowed_domains.append(
+    r"https://tainan-public-witnessing-official--preview-\w{8}.web.app",
 )
 
 
@@ -115,8 +118,8 @@ def attendance_report():
 
 @app.route("/shift-schedule", methods=["GET"])
 def shift_schedule():
-    year, month = ShiftSchedule(db)
-    return jsonify({"status": f"{year}-{month:02}排班完成"})
+    ScheduleMonth = ShiftSchedule(db)
+    return jsonify({"status": f"{ScheduleMonth}排班完成"})
 
 
 @app.route("/backup", methods=["GET"])

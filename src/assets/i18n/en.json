@@ -117,14 +117,18 @@
       "AVAILABLE_HOURS": "Available Shift Hours / Times",
       "UNAVILABLE_DATES": "Unavailable Dates",
       "PARTNER": "Partner",
-      "SUBSCRIBE": "Subscribe Line Notification"
+      "SUBSCRIBE": "Subscribe Line Notification",
+      "BINDCODE": "Binding Code"
     },
     "PERSONAL_SHIFTS_EXIST_ERROR": "Can not deactivate user! Please cancel the following assignments first:\n\n{{value}}",
     "PROFILE_TITLE": "Profile",
     "SCHEDULE": "Schedule",
     "SCHEDULE_TITLE": "Schedule for {{value}}",
     "ASSIGN_MESSAGE": "This field is managed by the committee. If you are unavailable for next month please contact the committee",
-    "SCHEDULE_UPDATE_DEADLINE": "You can update this until {{value}}"
+    "SCHEDULE_UPDATE_DEADLINE": "You can update this until {{value}}",
+    "STATUS": {
+      "BOUND": "Line Bound"
+    }
   },
   "CONGREGATIONS": {
     "TITLE": "Congregations",
