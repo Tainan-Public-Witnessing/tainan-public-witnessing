@@ -13,7 +13,7 @@ import { docsExists } from '../_helpers/firebase-helper';
 import { Congregation } from '../_interfaces/congregation.interface';
 import { PersonalShifts } from '../_interfaces/personal-shifts.interface';
 import { Settings } from '../_interfaces/settings.interface';
-import { ShiftHours } from '../_interfaces/shift-hours.interface';
+import { ShiftHour } from '../_interfaces/shift-hours.interface';
 import { Shift } from '../_interfaces/shift.interface';
 import { SiteShifts } from '../_interfaces/site-shifts.interface';
 import { Site } from '../_interfaces/site.interface';

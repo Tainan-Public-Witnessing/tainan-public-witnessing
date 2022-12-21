@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { combineLatest, map, Observable, Subject } from 'rxjs';
-import { ShiftHours } from '../_interfaces/shift-hours.interface';
+import { ShiftHour } from '../_interfaces/shift-hours.interface';
 import { Shift } from '../_interfaces/shift.interface';
 import { ShiftHoursService } from '../_services/shift-hours.service';
 import { ShiftsService } from '../_services/shifts.service';
@@ -27,7 +27,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     const todayString = this.datePipe.transform(today, 'yyyy-MM-dd') as string;
     this.shiftsToday$ = combineLatest([
       this.shiftsService.getShiftsByDate(todayString),
-      this.shiftHoursService.getShiftHoursList(),
+      this.shiftHoursService.getShiftHours(),
     ]).pipe(map(sortShiftsForHome));
 
     const tomorrow = new Date();
@@ -38,7 +38,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     ) as string;
     this.shiftsTomorrow$ = combineLatest([
       this.shiftsService.getShiftsByDate(tomorrowString),
-      this.shiftHoursService.getShiftHoursList(),
+      this.shiftHoursService.getShiftHours(),
     ]).pipe(map(sortShiftsForHome));
   }
 
@@ -50,7 +50,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
 function sortShiftsForHome([shifts, shiftHours]: [
   Shift[] | undefined | null,
-  ShiftHours[] | undefined | null
+  ShiftHour[] | undefined | null
 ]) {
   if (!shifts || !shiftHours) return shifts;
   const getHour = (hourUuid: string) =>
