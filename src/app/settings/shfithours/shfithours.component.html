@@ -11,18 +11,18 @@
 <mat-card>
     <mat-list>
         <mat-list-item *ngFor="let shifthour of shifthours$ | async">
-            <p matLine class="shiftHourTitle">{{shifthour.name}}</p>
+            <p matLine class="shiftHourTitle" [class.deativated]="!shifthour.activate">{{shifthour.name}}</p>
             <p matLine class="shiftHourDetail"> {{'SETTINGS.START' | translate}}:{{shifthour.startTime}} ～
                 {{'SETTINGS.END' |
                 translate}}:{{shifthour.endTime}}</p>
             <button mat-icon-button (click)="openShiftHourEditor(shifthour)">
                 <mat-icon>edit</mat-icon>
             </button>
-            <button mat-icon-button [color]="shifthour.activate ? 'default' : 'warn'"
+            <button mat-icon-button [color]="shifthour.activate ? 'warn' : 'default'"
                 (click)="changeShiftHourActivation(shifthour)">
-                <mat-icon>{{shifthour.activate? "work" : "work_off"}}</mat-icon>
+                <mat-icon>{{shifthour.activate? "work_off" : "work"}}</mat-icon>
             </button>
-            <button mat-icon-button [color]="shifthour.deliver ? 'default' : 'warn'"
+            <button mat-icon-button [color]="shifthour.deliver ? 'warn' : 'default'"
                 (click)="changeShiftHourDelivery(shifthour)">
                 <mat-icon>local_shipping</mat-icon>
             </button>

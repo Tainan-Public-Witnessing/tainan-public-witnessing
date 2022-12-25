@@ -1,3 +1,9 @@
+@use '@angular/material' as mat;
+@import 'src/styles.scss';
+@import 'src/app/_styles/global';
+$palettes: mat.get-color-config($TainanPublicWitnessing-theme);
+$warn-palette: map-get($palettes, 'warn');
+
 :host {
   .shiftHourTitle {
     font-size: 20px;
@@ -11,5 +17,9 @@
 
   .iconTitle {
     font-size: xx-large;
+  }
+
+  .deativated {
+    color: map-get($warn-palette, 'text');
   }
 }
