@@ -5,7 +5,7 @@ import { Congregation } from '../../_interfaces/congregation.interface';
 import { CongregationCreatorComponent } from 'src/app/_elements/dialogs/congregation-creator/congregation-creator.component';
 import { CongregationEditorComponent } from 'src/app/_elements/dialogs/congregation-editor/congregation-editor.component';
 import { Subject, BehaviorSubject, startWith, switchMap, takeUntil } from 'rxjs';
-
+import { filter } from 'rxjs/operators';
 @Component({
   selector: 'app-congregations',
   templateUrl: './congregations.component.html',
@@ -23,9 +23,9 @@ export class CongregationsComponent implements OnInit, OnDestroy {
     this.reloadList$.pipe(
       startWith(undefined),
       switchMap(() => {
-        return this.congregationService
-          .getCongregations()
-          .pipe(takeUntil(this.unsubscribe$))
+        return this.congregationService.getCongregations().pipe(
+          filter((f) => f !== null),
+          takeUntil(this.unsubscribe$))
       })
     ).subscribe(congs => {
       this.congregations$.next(congs);
@@ -41,7 +41,7 @@ export class CongregationsComponent implements OnInit, OnDestroy {
     });
     creatDiagRef.afterClosed().subscribe((result) => {
       if (result === 'success')
-        this.congregationService.getCongregations();
+        this.reloadList$.next(undefined);
     });
   }
   openCongregationEditor = (congregation: Congregation) => {
@@ -53,15 +53,11 @@ export class CongregationsComponent implements OnInit, OnDestroy {
     });
     editDiagRef.afterClosed().subscribe((result) => {
       if (result === 'success')
-        this.congregationService.getCongregations();
+        this.reloadList$.next(undefined);
     });
   }
-  changeCongregationActivation = (cong: Congregation) => {
-    this.congregations$.subscribe(congs => {
-      let index = congs?.indexOf(cong);
-      this.congregationService
-        .changeCongregationsActivation(cong)
-        .then(activation => congs![index!].activate = activation)
-    })
+  changeCongregationActivation = async (cong: Congregation) => {
+    await  this.congregationService.changeCongregationsActivation(cong);
+    this.reloadList$.next(undefined);  
   }
 }

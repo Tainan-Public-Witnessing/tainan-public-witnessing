@@ -253,15 +253,14 @@ export class Api implements ApiInterface {
 
   changeCongregationActivation = async (
     cong: Congregation
-  ): Promise<boolean> => {
+  ): Promise<void> => {
     await Promise.all([
       this.angularFirestore
         .doc<ShiftHour>(`Congregations/${cong.uuid}`)
         .update({
           activate: !cong.activate,
         }),
-    ]);
-    return !cong.activate;
+    ]);    
   };
 
   readSites = (): Promise<Site[]> => {
@@ -306,24 +305,22 @@ export class Api implements ApiInterface {
     ]);
   };
 
-  changeSiteActivation = async (site: Site): Promise<boolean> => {
+  changeSiteActivation = async (site: Site): Promise<void> => {
     await Promise.all([
       this.angularFirestore.doc<Site>(`Sites/${site.uuid}`).update({
         activate: !site.activate,
       }),
     ]);
-    return !site.activate;
   };
 
-  changeShiftHourDelivery = async (shifthour: ShiftHour): Promise<boolean> => {
+  changeShiftHourDelivery = async (shifthour: ShiftHour): Promise<void> => {
     await Promise.all([
       this.angularFirestore
         .doc<ShiftHour>(`ShiftHours/${shifthour.uuid}`)
         .update({
           deliver: !shifthour.deliver,
         }),
-    ]);
-    return !shifthour.deliver;
+    ]);   
   };
 
   readShiftHours = (): Promise<ShiftHour[]> => {
@@ -366,15 +363,14 @@ export class Api implements ApiInterface {
 
   changeShiftHourActivation = async (
     shiftHour: ShiftHour
-  ): Promise<boolean> => {
+  ): Promise<void> => {
     await Promise.all([
       this.angularFirestore
         .doc<ShiftHour>(`ShiftHours/${shiftHour.uuid}`)
         .update({
           activate: !shiftHour.activate,
         }),
-    ]);
-    return !shiftHour.activate;
+    ]);    
   };
 
   readShiftsByMonth = (yearMonth: string): Promise<Shift[]> => {

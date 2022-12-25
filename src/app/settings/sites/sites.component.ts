@@ -5,6 +5,7 @@ import { SiteEditorComponent } from 'src/app/_elements/dialogs/site-editor/site-
 import { SitesService } from '../../_services/sites.service';
 import { Site } from '../../_interfaces/site.interface';
 import { Subject, BehaviorSubject, startWith, switchMap, takeUntil } from 'rxjs';
+import { filter } from 'rxjs/operators';
 @Component({
   selector: 'app-sites',
   templateUrl: './sites.component.html',
@@ -17,19 +18,21 @@ export class SiteComponent implements OnInit {
   constructor(
     private sitesService: SitesService,
     private matDialog: MatDialog
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.reloadList$.pipe(
-      startWith(undefined),
-      switchMap(() => {
-        return this.sitesService
-          .getSites()
-          .pipe(takeUntil(this.unsubscribe$))
-      })
-    ).subscribe(sites => {
-      this.sites$.next(sites);
-    })
+        startWith(undefined),
+        switchMap(() => {
+          return this.sitesService.getSites().pipe(
+            filter((f) => f !== null),
+            takeUntil(this.unsubscribe$)
+          );
+        })
+      )
+      .subscribe((sites) => {
+        this.sites$.next(sites);
+      });
   }
   ngOnDestroy(): void {
     this.unsubscribe$.next();
@@ -40,18 +43,13 @@ export class SiteComponent implements OnInit {
       panelClass: 'dialog-panel',
     });
     creatDiagRef.afterClosed().subscribe((result) => {
-      if (result === 'success')
-        this.sitesService.getSites();
+      if (result === 'success') this.reloadList$.next(undefined);
     });
   };
 
-  changeSiteActivation = (site: Site) => {
-    this.sites$?.subscribe(sites => {
-      let index = sites?.indexOf(site);
-      this.sitesService
-        .changeSiteActivation(site)
-        .then((activation) => (sites![index!].activate = activation));
-    });
+  changeSiteActivation = async (site: Site) => {
+    await this.sitesService.changeSiteActivation(site);
+    this.reloadList$.next(undefined);
   };
   openSiteEditor = (site: Site) => {
     let editDiagRef = this.matDialog.open(SiteEditorComponent, {
@@ -61,8 +59,7 @@ export class SiteComponent implements OnInit {
       },
     });
     editDiagRef.afterClosed().subscribe((result) => {
-      if (result === 'success')
-        this.sitesService.getSites();
+      if (result === 'success') this.reloadList$.next(undefined);
     });
   };
 }

@@ -5,6 +5,7 @@ import { ShiftHoursService } from '../../_services/shift-hours.service';
 import { ShiftHour } from '../../_interfaces/shift-hours.interface';
 import { ShiftHoursEditorComponent } from 'src/app/_elements/dialogs/shiftHour-editor/shiftHour-editor.component';
 import { Subject, BehaviorSubject, startWith, switchMap, takeUntil } from 'rxjs';
+import { filter } from 'rxjs/operators';
 @Component({
   selector: 'app-shfitHours',
   templateUrl: './shfitHours.component.html',
@@ -24,8 +25,10 @@ export class ShfitHoursComponent implements OnInit, OnDestroy {
       startWith(undefined),
       switchMap(() => {
         return this.shifthoursService
-          .getShiftHours()
-          .pipe(takeUntil(this.unsubscribe$))
+          .getShiftHours().pipe(
+            filter((f) => f !== null),
+            takeUntil(this.unsubscribe$)
+            )
       })
     ).subscribe(shifthours => {
       this.shifthours$.next(shifthours);
@@ -42,7 +45,7 @@ export class ShfitHoursComponent implements OnInit, OnDestroy {
     });
     creatDiagRef.afterClosed().subscribe((result) => {
       if (result === 'success')
-        this.shifthoursService.getShiftHours();
+        this.reloadList$.next(undefined);
     });
   }
   openShiftHourEditor = (shiftHour: ShiftHour) => {
@@ -54,24 +57,16 @@ export class ShfitHoursComponent implements OnInit, OnDestroy {
     });
     editDiagRef.afterClosed().subscribe((result) => {
       if (result === 'success')
-        this.shifthoursService.getShiftHours();
+        this.reloadList$.next(undefined);
     });
   }
-  changeShiftHourActivation = (shifthour: ShiftHour) => {
-    this.shifthours$.subscribe(shifthours => {
-      let index = shifthours?.indexOf(shifthour)
-      this.shifthoursService
-        .changeShiftHourActivation(shifthour)
-        .then(activation => shifthours![index!].activate = activation)
-    })
+  changeShiftHourActivation = async (shifthour: ShiftHour) => {
+    await this.shifthoursService.changeShiftHourActivation(shifthour);
+    this.reloadList$.next(undefined);   
   }
 
-  changeShiftHourDelivery = (shifthour: ShiftHour) => {
-    this.shifthours$.subscribe(shifthours => {
-      let index = shifthours?.indexOf(shifthour);
-      this.shifthoursService
-        .changeShiftHourDelivery(shifthour)
-        .then(activation => shifthours![index!].deliver = activation)
-    });
+  changeShiftHourDelivery = async (shifthour: ShiftHour) => {
+    await this.shifthoursService.changeShiftHourDelivery(shifthour);
+    this.reloadList$.next(undefined);
   }
 }
