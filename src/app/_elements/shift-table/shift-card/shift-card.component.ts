@@ -9,7 +9,7 @@ import { FULL_SHIFT_ERROR } from 'src/app/_classes/errors/FULL_SHIFT_ERROR';
 import { TOO_MANY_SHIFTS_ERROR } from 'src/app/_classes/errors/TOO_MANY_SHIFTS_ERROR';
 import { StatisticEditorComponent } from 'src/app/_elements/dialogs/statistic-editor/statistic-editor.component';
 import { Permission } from 'src/app/_enums/permission.enum';
-import { ShiftHours } from 'src/app/_interfaces/shift-hours.interface';
+import { ShiftHour } from 'src/app/_interfaces/shift-hours.interface';
 import { Shift } from 'src/app/_interfaces/shift.interface';
 import { Site } from 'src/app/_interfaces/site.interface';
 import { UserKey } from 'src/app/_interfaces/user.interface';
@@ -35,7 +35,7 @@ export class ShiftCardComponent implements OnInit, OnDestroy {
 
   emptiness: string[];
   shift: Shift | null = null;
-  shiftHours: ShiftHours | null = null;
+  shiftHour: ShiftHour | null = null;
   site: Site | null = null;
   crew: UserKey[] | null = null;
   day: string | null = null;
@@ -55,13 +55,13 @@ export class ShiftCardComponent implements OnInit, OnDestroy {
     private matSnackBar: MatSnackBar,
     private translateService: TranslateService,
     private globalEvent: GlobalEventService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     combineLatest([
       this.shift$,
       this.shiftHoursService
-        .getShiftHoursList()
+        .getShiftHours()
         .pipe(filter((_shiftHoursList) => _shiftHoursList !== null)),
       this.sitesService.getSites().pipe(filter((_sites) => _sites !== null)),
       this.usersService
@@ -71,9 +71,9 @@ export class ShiftCardComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(([_shift, _shiftHoursList, _sites, _userKeys]) => {
         this.shift = _shift;
-        this.shiftHours = _shiftHoursList?.find(
+        this.shiftHour = _shiftHoursList?.find(
           (_shiftHours) => _shift.shiftHoursUuid === _shiftHours.uuid
-        ) as ShiftHours;
+        ) as ShiftHour;
         this.site = _sites?.find(
           (_site) => _shift.siteUuid === _site.uuid
         ) as Site;
@@ -98,7 +98,7 @@ export class ShiftCardComponent implements OnInit, OnDestroy {
   openStatisticEditor = () => {
     if (this.shift) {
       const shiftEndTime = new Date(
-        [this.shift.date.replace(/\-/g, '/'), this.shiftHours?.endTime].join(
+        [this.shift.date.replace(/\-/g, '/'), this.shiftHour?.endTime].join(
           ' '
         )
       ).getTime();
@@ -160,7 +160,7 @@ export class ShiftCardComponent implements OnInit, OnDestroy {
             message: 'AVAILABLE_SHIFTS.JOIN_CONFIRM_MESSAGE',
             messageParams: {
               date: this.shift.date,
-              time: `${this.shiftHours?.startTime} ~ ${this.shiftHours?.endTime}`,
+              time: `${this.shiftHour?.startTime} ~ ${this.shiftHour?.endTime}`,
               site: this.site?.name,
             },
           } as ConfirmDialogData,

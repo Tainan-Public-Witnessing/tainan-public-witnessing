@@ -22,7 +22,7 @@ import {
   takeUntil
 } from 'rxjs';
 import { Permission } from 'src/app/_enums/permission.enum';
-import { ShiftHours } from 'src/app/_interfaces/shift-hours.interface';
+import { ShiftHour } from 'src/app/_interfaces/shift-hours.interface';
 import {
   UserSchedule,
   UserScheduleDayData
@@ -50,7 +50,7 @@ export class UserScheduleComponent implements OnInit, OnDestroy, OnChanges {
   unsubscribe$ = new Subject<void>();
   requireAdmin$ = new BehaviorSubject<boolean>(false);
 
-  shiftHours: ShiftHours[];
+  shiftHours: ShiftHour[];
   validationErrors?: {
     [field in keyof UserScheduleComponent['schedulingConfig']]?: string;
   };
@@ -80,7 +80,7 @@ export class UserScheduleComponent implements OnInit, OnDestroy, OnChanges {
     private translateService: TranslateService,
     private breakPointObserver: BreakpointObserver,
     private snackBar: MatSnackBar
-  ) {}
+  ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.uuid.currentValue) {
@@ -164,7 +164,7 @@ export class UserScheduleComponent implements OnInit, OnDestroy, OnChanges {
     const [hours, siteShift, savedSchedule, userKeys] = await Promise.all([
       firstValueFrom(
         this.shiftHoursService
-          .getShiftHoursList()
+          .getShiftHours()
           .pipe(filter((data) => !!data))
       ).then((hours) => hours?.filter((h) => h.activate) || []),
       firstValueFrom(

@@ -69,7 +69,7 @@ export class UserDataComponent implements OnInit, OnDestroy, OnChanges {
 
   ngOnInit(): void {
     this.congregationsService
-      .getCongregationList()
+      .getCongregations()
       .pipe(
         takeUntil(this.unsubscribe$),
         filter((congs) => !!congs)

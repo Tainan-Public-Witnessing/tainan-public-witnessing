@@ -8,6 +8,7 @@ import { UserComponent } from './users/user/user.component';
 import { UsersComponent } from './users/users.component';
 import { Mode } from './_enums/mode.enum';
 import { Permission } from './_enums/permission.enum';
+import { SettingsComponent } from './settings/settings.component'
 
 type RouteDef = {
   path: string;
@@ -82,11 +83,17 @@ export const routes = [
     permission: Permission.GUEST,
     menu: false,
   },
+  {
+    path: 'settings',
+    component: SettingsComponent,
+    permission: Permission.ADMINISTRATOR,
+    label: 'SETTINGS.TITLE'
+  }
 ].map(buildRegexp);
 
 function buildRegexp(route: RouteDef): RouteDefComplete {
   return {
     ...route,
-    pathRegexp: new RegExp('^\/' + route.path.replace(/:\w+/g, '.+')),
+    pathRegexp: new RegExp('^/' + route.path.replace(/:\w+/g, '.+')),
   };
 }

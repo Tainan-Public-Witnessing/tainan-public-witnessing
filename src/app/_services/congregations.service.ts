@@ -7,17 +7,28 @@ import { Congregation } from 'src/app/_interfaces/congregation.interface';
   providedIn: 'root',
 })
 export class CongregationsService {
-  private congregations$: BehaviorSubject<Congregation[]> | undefined =
-    undefined;
+  private congregations$: BehaviorSubject<Congregation[] | null> | undefined = undefined;
 
-  constructor(private api: Api) {}
+  constructor(private api: Api) { }
 
-  public getCongregationList = () => {
-    const $ = new BehaviorSubject<Congregation[] | null | undefined>(null);
-    this.api
-      .readCongregations()
-      .then((values) => $.next(values))
-      .catch(() => $.next(undefined));
-    return $;
+  getCongregations = () => {
+    if (this.congregations$ === undefined) {
+      this.congregations$ = new BehaviorSubject<Congregation[] | null>(null);
+    }
+    this.api.readCongregations().then((congs) => {
+      let congsSort = congs.sort((a, b) => a.order - b.order);
+      this.congregations$?.next(congsSort);
+    });
+    return this.congregations$;
+  };
+
+  createCongregation = (cong: Omit<Congregation, 'uuid' | 'activate' | 'order'>) => {
+    return this.api.createCongregation(cong);
+  }
+  updateCongregation = (cong: Omit<Congregation, 'activate' | 'order'>) => {
+    return this.api.updateCongregation(cong);
+  }
+  changeCongregationsActivation = (cong: Congregation) => {
+    return this.api.changeCongregationActivation(cong);
   };
 }

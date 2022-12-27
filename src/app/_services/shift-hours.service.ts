@@ -1,26 +1,51 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Api } from '../_api';
-import { ShiftHours } from '../_interfaces/shift-hours.interface';
+import { ShiftHour } from '../_interfaces/shift-hours.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ShiftHoursService {
 
-  private shiftHours$: BehaviorSubject<ShiftHours[]|null> | undefined = undefined;
+  private shiftHours$: BehaviorSubject<ShiftHour[] | null> | undefined = undefined;
 
   constructor(
     private api: Api,
   ) { }
 
-  getShiftHoursList = (): BehaviorSubject<ShiftHours[]|null> => {
+  getShiftHours = (): BehaviorSubject<ShiftHour[] | null> => {
     if (this.shiftHours$ === undefined) {
-      this.shiftHours$ = new BehaviorSubject<ShiftHours[]|null>(null);
-      this.api.readShiftHoursList().then(shiftHours => {
-        this.shiftHours$?.next(shiftHours);
+      this.shiftHours$ = new BehaviorSubject<ShiftHour[] | null>(null);
+      this.api.readShiftHours().then(shiftHours => {
+        let shiftHoursSort = shiftHours.sort((a, b) => a.startTime.localeCompare(b.startTime));
+        this.shiftHours$?.next(shiftHoursSort);
       });
-    }
+    }   
     return this.shiftHours$;
   }
+
+  createShiftHours = (shifthours: Omit<ShiftHour, 'uuid' | 'activate' | 'deliver'>) => {
+    this.shiftHours$?.complete();
+    this.shiftHours$ = undefined;
+    return this.api.createShiftHour(shifthours);
+  }
+  updateShiftHours = (shiftHour: ShiftHour) => {
+    this.shiftHours$?.complete();
+    this.shiftHours$ = undefined;
+    return this.api.updateShiftHour(shiftHour);
+  };
+
+  changeShiftHourActivation = (shifthour: ShiftHour) => {
+    this.shiftHours$?.complete();
+    this.shiftHours$ = undefined;
+    return this.api.changeShiftHourActivation(shifthour);
+  };
+
+  changeShiftHourDelivery = (shifthour: ShiftHour) => {
+    this.shiftHours$?.complete();
+    this.shiftHours$ = undefined;
+    return this.api.changeShiftHourDelivery(shifthour);
+  };
+
 }
