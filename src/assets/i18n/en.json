@@ -97,7 +97,8 @@
       "USERNAME_EXISTED": "User name already existed!",
       "UNAVAILABLE_DATES_ALL_SELECTED": "Cannot select entire month. If you are unavailable please contact the committee.",
       "AVAILABLE_HOURS_EMPTY": "Please select at least one shift. If you are unavailable please contact the committee.",
-      "PARTNER_NOT_FOUND": "User does not exist"
+      "PARTNER_NOT_FOUND": "User does not exist",
+      "NO_AVAILABLE_SHIFTS": "Your unavailable dates conflict with your chosen shift hours. Please apply for at least one shift. If you are completely unavailable this month, please notify the committee."
     },
     "LABEL": {
       "USERNAME": "User name",
