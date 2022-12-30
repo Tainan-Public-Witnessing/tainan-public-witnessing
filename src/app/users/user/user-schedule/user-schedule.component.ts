@@ -22,6 +22,7 @@ import {
   takeUntil
 } from 'rxjs';
 import { Permission } from 'src/app/_enums/permission.enum';
+import { getAllDayOfWeek } from 'src/app/_helpers/date-helper';
 import { ShiftHours } from 'src/app/_interfaces/shift-hours.interface';
 import {
   UserSchedule,
@@ -244,14 +245,6 @@ export class UserScheduleComponent implements OnInit, OnDestroy, OnChanges {
   validateData = () => {
     const result: typeof this.validationErrors = {};
 
-    function validatePartnerUuid(data: string, userKeys: UserKey[]) {
-      // partnerUuid needs to match with exists user uuid
-      if (!data) return true;
-
-      const userKey = userKeys.find((key) => key.username === data);
-      return !!userKey;
-    }
-
     if (
       !validatePartnerUuid(
         this.schedulingConfig.partnerUuid,
@@ -261,6 +254,51 @@ export class UserScheduleComponent implements OnInit, OnDestroy, OnChanges {
       result.partnerUuid = this.translateService.instant(
         'USERS.VALIDATION.PARTNER_NOT_FOUND'
       );
+    }
+
+    if (
+      !validateUnavailableDates(
+        this.schedulingConfig.unavailableDates,
+        this.schedulingRange.start
+      )
+    ) {
+      result.unavailableDates = this.translateService.instant(
+        'USERS.VALIDATION.UNAVAILABLE_DATES_ALL_SELECTED'
+      );
+    }
+
+    if (!validateAvailableHours(this.schedulingConfig.availableHours)) {
+      result.availableHours = this.translateService.instant(
+        'USERS.VALIDATION.AVAILABLE_HOURS_EMPTY'
+      );
+    }
+
+    if (
+      !validateOffOnAllAvailableHours(
+        this.schedulingRange.start.toJSON().substring(0, 7),
+        this.schedulingConfig.availableHours,
+        this.schedulingConfig.unavailableDates
+      )
+    ) {
+      if (result.unavailableDates) {
+        result.unavailableDates += '\n';
+      } else {
+        result.unavailableDates = '';
+      }
+      result.unavailableDates += this.translateService.instant(
+        'USERS.VALIDATION.NO_AVAILABLE_SHIFTS'
+      );
+    }
+
+    if (Object.keys(result).length > 0) return result;
+    return undefined;
+
+    function validatePartnerUuid(data: string, userKeys: UserKey[]) {
+      // partnerUuid needs to match with exists user uuid
+      if (!data) return true;
+
+      const userKey = userKeys.find((key) => key.username === data);
+      return !!userKey;
     }
 
     function validateUnavailableDates(
@@ -282,17 +320,6 @@ export class UserScheduleComponent implements OnInit, OnDestroy, OnChanges {
       return false;
     }
 
-    if (
-      !validateUnavailableDates(
-        this.schedulingConfig.unavailableDates,
-        this.schedulingRange.start
-      )
-    ) {
-      result.unavailableDates = this.translateService.instant(
-        'USERS.VALIDATION.UNAVAILABLE_DATES_ALL_SELECTED'
-      );
-    }
-
     function validateAvailableHours(data: UserScheduleDayData[]) {
       // user needs to select at least one
       for (let day = 0; day < 7; ++day) {
@@ -304,13 +331,34 @@ export class UserScheduleComponent implements OnInit, OnDestroy, OnChanges {
       }
       return false;
     }
-    if (!validateAvailableHours(this.schedulingConfig.availableHours)) {
-      result.availableHours = this.translateService.instant(
-        'USERS.VALIDATION.AVAILABLE_HOURS_EMPTY'
+
+    function validateOffOnAllAvailableHours(
+      ym: string,
+      hours: UserScheduleDayData[],
+      unavilableDates: string[]
+    ) {
+      const availableHourDays = hours
+        .map((dayData, day) => {
+          for (const hourUuid in dayData) {
+            if (hourUuid !== 'day' && dayData[hourUuid] > 0) {
+              return day;
+            }
+          }
+          return undefined;
+        })
+        .filter((day) => day !== undefined) as number[];
+      return (
+        availableHourDays.filter((day) => {
+          const dows = getAllDayOfWeek(ym, day);
+          for (const date of dows) {
+            if (!unavilableDates.includes(date)) {
+              return true;
+            }
+          }
+          return false;
+        }).length > 0
       );
     }
-    if (Object.keys(result).length > 0) return result;
-    return undefined;
   };
 
   onUnavailableDateSelect = (date: Moment | null) => {
