@@ -7,27 +7,14 @@ import { FormControl } from '@angular/forms';
 })
 export class YearMonthSelectComponent implements OnInit {
   constructor() {}
-
-  @Input('forwardFormControl')
-  formControl: FormControl;
+  readonly currentMonth = new Date().toJSON().substring(0, 7);
+  @Input()
+  forwardFormControl: FormControl;
 
   @Input()
   label: string;
 
   months: string[] = [];
-
-  private _value: string;
-  @Input()
-  get value(): string {
-    return this._value;
-  }
-  set value(newValue: string) {
-    if (this._value !== newValue) {
-      this._value = newValue;
-      this.valueChange.emit(newValue);
-      this.formControl?.setValue(newValue);
-    }
-  }
 
   @Output()
   valueChange = new EventEmitter<string>();
@@ -40,6 +27,8 @@ export class YearMonthSelectComponent implements OnInit {
       months.push(d.toJSON().substring(0, 7));
     }
     this.months = months;
-    this.value = new Date().toJSON().substring(0, 7);
+    if (this.forwardFormControl && !this.forwardFormControl.value) {
+      this.forwardFormControl.setValue(this.currentMonth);
+    }
   }
 }
