@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import * as moment from 'moment';
 import {
   combineLatest,
   filter,
@@ -23,16 +22,15 @@ import { ShiftsService } from '../_services/shifts.service';
   styleUrls: ['./opening-shifts.component.scss'],
 })
 export class OpeningShiftsComponent implements OnInit, OnDestroy {
-  yearMonthControl = new FormControl(moment());
+  yearMonthControl = new FormControl<string>('');
   shifts$!: Observable<Shift[]>;
-  today = moment();
   readonly unsubscribe$: Subject<void> = new Subject();
   constructor(
     private shiftService: ShiftsService,
     private shiftHourService: ShiftHoursService,
     private auth: AuthorityService,
     private globalEvent: GlobalEventService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.shifts$ = combineLatest([
@@ -44,11 +42,10 @@ export class OpeningShiftsComponent implements OnInit, OnDestroy {
       ]).pipe(
         map(() => this.yearMonthControl.value),
         filter((value) => !!value),
-        map((value) => value!.format('YYYY-MM')),
         switchMap((yearMonth) =>
           from(
             this.shiftService.getOpeningShift(
-              yearMonth,
+              yearMonth!,
               this.auth.currentUserUuid$.value!
             )
           )

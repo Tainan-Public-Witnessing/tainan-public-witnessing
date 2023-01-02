@@ -1,41 +1,12 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-  ViewChild
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { MAT_DATE_FORMATS } from '@angular/material/core';
-import { MatCalendarView, MatDatepicker } from '@angular/material/datepicker';
-import { Moment } from 'moment';
 
 @Component({
   selector: 'app-year-month-select',
   templateUrl: './year-month-select.component.html',
-  providers: [
-    {
-      provide: MAT_DATE_FORMATS,
-      useValue: {
-        parse: {
-          dateInput: ['YYYY-MM'],
-        },
-        display: {
-          dateInput: 'YYYY-MM',
-          monthYearLabel: 'MM YYYY',
-          dateA11yLabel: 'LL',
-          monthYearA11yLabel: 'MM YYYY',
-        },
-      },
-    },
-  ],
 })
 export class YearMonthSelectComponent implements OnInit {
   constructor() {}
-
-  @ViewChild('yearMonthPicker')
-  picker: MatDatepicker<Moment>;
 
   @Input('forwardFormControl')
   formControl: FormControl;
@@ -43,11 +14,7 @@ export class YearMonthSelectComponent implements OnInit {
   @Input()
   label: string;
 
-  @Input()
-  startMonth: Moment;
-
-  @Input()
-  endMonth: Moment;
+  months: string[] = [];
 
   private _value: string;
   @Input()
@@ -58,23 +25,21 @@ export class YearMonthSelectComponent implements OnInit {
     if (this._value !== newValue) {
       this._value = newValue;
       this.valueChange.emit(newValue);
+      this.formControl?.setValue(newValue);
     }
   }
 
   @Output()
   valueChange = new EventEmitter<string>();
 
-  ngOnInit(): void {}
-
-  setMonthAndYear(normalizedMonthAndYear: Moment) {
-    const controlValue = this.formControl?.value;
-    if (controlValue !== null) {
-      controlValue.year(normalizedMonthAndYear.year());
-      controlValue.month(normalizedMonthAndYear.month());
-      this.formControl.setValue(controlValue);
+  ngOnInit(): void {
+    const months = [];
+    for (let i = -3; i <= 1; ++i) {
+      const d = new Date();
+      d.setMonth(d.getMonth() + i);
+      months.push(d.toJSON().substring(0, 7));
     }
-    this.picker.close();
+    this.months = months;
+    this.value = new Date().toJSON().substring(0, 7);
   }
-
-  onViewChanged(view: MatCalendarView) {}
 }
