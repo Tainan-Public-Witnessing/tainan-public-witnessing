@@ -13,7 +13,7 @@ import { StatisticsService } from 'src/app/_services/statistics.service';
   templateUrl: './statistic-editor.component.html',
   styleUrls: ['./statistic-editor.component.scss']
 })
-export class StatisticEditorComponent implements OnInit, AfterViewInit, OnDestroy {
+export class StatisticEditorComponent implements OnInit, OnDestroy {
 
   statisticForm!: FormGroup;
   managerAccess$!: Observable<boolean>;
@@ -38,9 +38,7 @@ export class StatisticEditorComponent implements OnInit, AfterViewInit, OnDestro
     });
 
     this.managerAccess$ = this.authorityService.canAccess(Permission.MANAGER);
-  }
 
-  ngAfterViewInit(): void {
     if (this.data.mode !== 'create') {
       const yearMonth = this.data.date.slice(0, 7);
       this.statisticsService.getStatistic(yearMonth, this.data.uuid).pipe(
@@ -53,7 +51,7 @@ export class StatisticEditorComponent implements OnInit, AfterViewInit, OnDestro
             tracts: _statistic.tracts,
             videos: _statistic.videos,
             returnVisits: _statistic.returnVisits,
-            startingBibleStudies: _statistic.startingBibleStudies
+            startingBibleStudies: _statistic.startingBibleStudies | 0,
           }, {emitEvent: false});
         }
       });
