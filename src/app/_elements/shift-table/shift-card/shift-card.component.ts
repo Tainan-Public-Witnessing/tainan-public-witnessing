@@ -1,9 +1,10 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, Observable, Subject } from 'rxjs';
-import { filter, first, map, takeUntil } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, filter, first, map, takeUntil } from 'rxjs/operators';
 import { EXISTED_ERROR } from 'src/app/_classes/errors/EXISTED_ERROR';
 import { FULL_SHIFT_ERROR } from 'src/app/_classes/errors/FULL_SHIFT_ERROR';
 import { TOO_MANY_SHIFTS_ERROR } from 'src/app/_classes/errors/TOO_MANY_SHIFTS_ERROR';
@@ -36,6 +37,7 @@ export class ShiftCardComponent implements OnInit, OnDestroy {
   emptiness: string[];
   shift: Shift | null = null;
   shiftHour: ShiftHour | null = null;
+  activateControl = new FormControl(true);
   site: Site | null = null;
   crew: UserKey[] | null = null;
   day: string | null = null;
@@ -71,6 +73,7 @@ export class ShiftCardComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(([_shift, _shiftHoursList, _sites, _userKeys]) => {
         this.shift = _shift;
+        this.activateControl.setValue(this.shift.activate, { emitEvent: false });
         this.shiftHour = _shiftHoursList?.find(
           (_shiftHours) => _shift.shiftHoursUuid === _shiftHours.uuid
         ) as ShiftHour;
@@ -88,6 +91,20 @@ export class ShiftCardComponent implements OnInit, OnDestroy {
 
     this.pipeCanEditStatistic();
     this.pipeCanEditCrew();
+
+    this.activateControl
+      .valueChanges
+      .pipe(
+        debounceTime(500),
+        distinctUntilChanged(),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(_isActivate => {
+        if (!!this.shift && _isActivate !== null) {
+          this.shift.activate = _isActivate;
+          this.shiftService.updateShift(this.shift);
+        }
+      });
   }
 
   ngOnDestroy(): void {

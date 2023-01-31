@@ -18,9 +18,11 @@
   </mat-card-header>
 
   <mat-card-content>
-    <mat-chip-list *ngIf="!!crew">
-      <mat-chip *ngFor="let user of crew; let i = index"
-        [ngClass]="{ deliver: (i == 0 || i == 1) && shiftHour?.deliver }">
+    <mat-chip-list *ngIf="!!crew && activateControl.value">
+      <mat-chip
+        *ngFor="let user of crew; let i = index"
+        [ngClass]="{ deliver: (i == 0 || i == 1) && shiftHour?.deliver }"
+      >
         {{ user.username }}
       </mat-chip>
       <ng-template [ngIf]="showEmpty">
@@ -32,11 +34,23 @@
     </mat-chip-list>
 
     <mat-spinner *ngIf="crew === null"></mat-spinner>
+    <div class="canceled-message" *ngIf="!activateControl.value">
+      <mat-icon>event_busy</mat-icon>
+      {{ "SHIFT_CARD.CANCELED" | translate }}
+    </div>
   </mat-card-content>
 
   <mat-card-actions *ngIf="crew !== null">
-    <button mat-icon-button *ngIf="canEditStatistic$ | async" [ngClass]="{ 'has-statistic': shift?.hasStatistic }"
-      (click)="openStatisticEditor()">
+    <mat-slide-toggle color="primary" [formControl]="activateControl"></mat-slide-toggle>
+
+    <span class="spacer"></span>
+
+    <button
+      mat-icon-button
+      *ngIf="canEditStatistic$ | async"
+      [ngClass]="{ 'has-statistic': shift?.hasStatistic }"
+      (click)="openStatisticEditor()"
+    >
       <mat-icon>add_chart</mat-icon>
     </button>
 

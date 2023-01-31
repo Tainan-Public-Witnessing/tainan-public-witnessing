@@ -57,7 +57,8 @@
     "MESSAGE": {
       "NOT_YET": "It is not time to fill in yet!",
       "OVER_TIME": "It is timed out!"
-    }
+    },
+    "CANCELED": "This shift is canceled!"
   },
   "STATISTIC_EDITOR": {
     "TITLE": "Statistic",

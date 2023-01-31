@@ -57,7 +57,8 @@
     "MESSAGE": {
       "NOT_YET": "尚未到填寫時間！",
       "OVER_TIME": "已超過時間！"
-    }
+    },
+    "CANCELED": "班次已取消！"
   },
   "STATISTIC_EDITOR": {
     "TITLE": "統計",
