@@ -1,4 +1,10 @@
-<h1 mat-dialog-title>{{ "STATISTIC_EDITOR.TITLE" | translate }}</h1>
+<h1 mat-dialog-title>
+  {{ "STATISTIC_EDITOR.TITLE" | translate }}
+  <span class="spacer"></span>
+  <button mat-icon-button (click)="onEditClick()" *ngIf="(managerAccess$ | async) && data.mode === 'view'">
+    <mat-icon>edit</mat-icon>
+  </button>
+</h1>
 
 <div mat-dialog-content>
   <form [formGroup]="statisticForm">
@@ -14,18 +20,8 @@
     </mat-form-field>
 
     <mat-form-field class="full-width" appearance="outline">
-      <mat-label>{{ "STATISTIC_EDITOR.LABEL.SCRIPTURES" | translate }}</mat-label>
-      <input matInput formControlName="scriptures">
-    </mat-form-field>
-
-    <mat-form-field class="full-width" appearance="outline">
       <mat-label>{{ "STATISTIC_EDITOR.LABEL.VIDEOS" | translate }}</mat-label>
       <input matInput formControlName="videos">
-    </mat-form-field>
-
-    <mat-form-field class="full-width" appearance="outline">
-      <mat-label>{{ "STATISTIC_EDITOR.LABEL.ACCEPT_RETURN_VISIT" | translate }}</mat-label>
-      <input matInput formControlName="acceptReturnVisit">
     </mat-form-field>
 
     <mat-form-field class="full-width" appearance="outline">
@@ -34,8 +30,8 @@
     </mat-form-field>
 
     <mat-form-field class="full-width" appearance="outline">
-      <mat-label>{{ "STATISTIC_EDITOR.LABEL.EXPERIENCE" | translate }}</mat-label>
-      <textarea matInput formControlName="experience"></textarea>
+      <mat-label>{{ "STATISTIC_EDITOR.LABEL.STARTING_BIBLE_STUDIES" | translate }}</mat-label>
+      <input matInput formControlName="startingBibleStudies">
     </mat-form-field>
 
   </form>

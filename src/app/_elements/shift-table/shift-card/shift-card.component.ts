@@ -44,7 +44,6 @@ export class ShiftCardComponent implements OnInit, OnDestroy {
   canEditStatistic$!: Observable<boolean>;
   canEditCrew$!: Observable<boolean>;
   changes$ = new Subject<void>();
-  managerAccess!: boolean;
   destroy$ = new Subject<void>();
 
   constructor(
@@ -113,46 +112,50 @@ export class ShiftCardComponent implements OnInit, OnDestroy {
   }
 
   openStatisticEditor = () => {
-    if (this.shift) {
-      const shiftEndTime = new Date(
-        [this.shift.date.replace(/\-/g, '/'), this.shiftHour?.endTime].join(
-          ' '
-        )
-      ).getTime();
-      const shiftEndDate = new Date(this.shift.date);
-      shiftEndDate.setDate(shiftEndDate.getDate() + 1);
-      const shiftEndDateTime = shiftEndDate.getTime();
-      const nowTime = new Date().getTime();
-
-      if (this.managerAccess || shiftEndTime < nowTime) {
-        if (this.managerAccess || nowTime < shiftEndDateTime) {
-          const mode = this.shift.hasStatistic ? 'view' : 'create';
-          this.matDialog.open(StatisticEditorComponent, {
-            disableClose: mode !== 'view',
-            panelClass: 'dialog-panel',
-            data: {
-              mode,
-              uuid: this.shift.uuid,
-              date: this.shift.date,
-            },
-          });
-        } else {
-          this.translateService
-            .get('SHIFT_CARD.MESSAGE.OVER_TIME')
-            .pipe(first())
-            .subscribe((_message) => {
-              this.matSnackBar.open(_message, undefined, { duration: 3000 });
-            });
-        }
-      } else {
-        this.translateService
-          .get('SHIFT_CARD.MESSAGE.NOT_YET')
-          .pipe(first())
-          .subscribe((_message) => {
-            this.matSnackBar.open(_message, undefined, { duration: 3000 });
-          });
-      }
+    if (!this.shift) {
+      return;
     }
+
+    const shiftEndTime = new Date(
+      [this.shift.date.replace(/\-/g, '/'), this.shiftHour?.endTime].join(
+        ' '
+      )
+    ).getTime();
+    const shiftEndDate = new Date(this.shift.date);
+    shiftEndDate.setDate(shiftEndDate.getDate() + 1);
+    const shiftEndDateTime = shiftEndDate.getTime();
+    const nowTime = new Date().getTime();
+
+    if (shiftEndTime >= nowTime) {
+      this.translateService
+        .get('SHIFT_CARD.MESSAGE.NOT_YET')
+        .pipe(first())
+        .subscribe((_message) => {
+          this.matSnackBar.open(_message, undefined, { duration: 3000 });
+        });
+      return;
+    }
+
+    if (nowTime >= shiftEndDateTime) {
+      this.translateService
+        .get('SHIFT_CARD.MESSAGE.OVER_TIME')
+        .pipe(first())
+        .subscribe((_message) => {
+          this.matSnackBar.open(_message, undefined, { duration: 3000 });
+        });
+      return;
+    }
+
+    const mode = this.shift.hasStatistic ? 'view' : 'create';
+    this.matDialog.open(StatisticEditorComponent, {
+      disableClose: mode !== 'view',
+      panelClass: 'dialog-panel',
+      data: {
+        mode,
+        uuid: this.shift.uuid,
+        date: this.shift.date,
+      },
+    });
   };
 
   openCrewEditor = () => {

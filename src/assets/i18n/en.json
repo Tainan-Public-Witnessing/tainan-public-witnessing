@@ -65,11 +65,9 @@
     "LABEL": {
       "ATTENDANCE": "Participant",
       "TRACTS": "Tracts",
-      "SCRIPTURES": "Scriptures",
       "VIDEOS": "Videos",
-      "ACCEPT_RETURN_VISIT": "Accept return visit",
       "RETURN_VISIT": "Return visit",
-      "EXPERIENCE": "experience"
+      "STARTING_BIBLE_STUDIES": "Starting bible studies"
     }
   },
   "HOME": {
