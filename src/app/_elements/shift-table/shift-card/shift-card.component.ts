@@ -43,6 +43,7 @@ export class ShiftCardComponent implements OnInit, OnDestroy {
   day: string | null = null;
   canEditStatistic$!: Observable<boolean>;
   canEditCrew$!: Observable<boolean>;
+  managerAccess!: boolean;
   changes$ = new Subject<void>();
   destroy$ = new Subject<void>();
 
@@ -90,6 +91,9 @@ export class ShiftCardComponent implements OnInit, OnDestroy {
 
     this.pipeCanEditStatistic();
     this.pipeCanEditCrew();
+    this.authorityService.canAccess(Permission.MANAGER)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(_managerAccess => this.managerAccess = _managerAccess);
 
     this.activateControl
       .valueChanges
@@ -126,7 +130,7 @@ export class ShiftCardComponent implements OnInit, OnDestroy {
     const shiftEndDateTime = shiftEndDate.getTime();
     const nowTime = new Date().getTime();
 
-    if (shiftEndTime >= nowTime) {
+    if (shiftEndTime >= nowTime && !this.managerAccess) {
       this.translateService
         .get('SHIFT_CARD.MESSAGE.NOT_YET')
         .pipe(first())
@@ -136,7 +140,7 @@ export class ShiftCardComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (nowTime >= shiftEndDateTime) {
+    if (nowTime >= shiftEndDateTime && !this.managerAccess) {
       this.translateService
         .get('SHIFT_CARD.MESSAGE.OVER_TIME')
         .pipe(first())

@@ -2,7 +2,7 @@ import { AfterViewInit, Component, Inject, OnInit, OnDestroy } from '@angular/co
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable, Subject } from 'rxjs';
-import { filter, first, takeUntil } from 'rxjs/operators';
+import { filter, first } from 'rxjs/operators';
 import { Permission } from 'src/app/_enums/permission.enum';
 import { Statistic } from 'src/app/_interfaces/statistic.interface';
 import { AuthorityService } from 'src/app/_services/authority.service';
@@ -37,8 +37,7 @@ export class StatisticEditorComponent implements OnInit, AfterViewInit, OnDestro
       startingBibleStudies: [{ value: '', disabled}, [Validators.required, Validators.pattern(/^[0-9]+$/)]],
     });
 
-    this.managerAccess$ = this.authorityService.canAccess(Permission.MANAGER)
-      .pipe(takeUntil(this.destroy$));
+    this.managerAccess$ = this.authorityService.canAccess(Permission.MANAGER);
   }
 
   ngAfterViewInit(): void {
@@ -95,7 +94,7 @@ export class StatisticEditorComponent implements OnInit, AfterViewInit, OnDestro
       } else { // this.data.mode === 'edit'
         this.statisticsService.updateStatistic(statistic);
       }
-      
+
       this.dialogRef.close(true);
     } else {
       this.statisticForm.markAllAsTouched();
