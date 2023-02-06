@@ -57,18 +57,17 @@
     "MESSAGE": {
       "NOT_YET": "尚未到填寫時間！",
       "OVER_TIME": "已超過時間！"
-    }
+    },
+    "CANCELED": "班次已取消！"
   },
   "STATISTIC_EDITOR": {
     "TITLE": "統計",
     "LABEL": {
       "ATTENDANCE": "參加人數",
       "TRACTS": "分發資料",
-      "SCRIPTURES": "經文",
       "VIDEOS": "影片",
-      "ACCEPT_RETURN_VISIT": "同意拜訪",
       "RETURN_VISIT": "續訪",
-      "EXPERIENCE": "經驗"
+      "STARTING_BIBLE_STUDIES": "建立聖經課程"
     }
   },
   "HOME": {
