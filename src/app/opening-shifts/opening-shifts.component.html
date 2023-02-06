@@ -3,7 +3,6 @@
   <app-year-month-select
     [forwardFormControl]="yearMonthControl"
     [label]="'AVAILABLE_SHIFTS.LABEL.YEAR_MONTH' | translate"
-    [startMonth]="today"
   ></app-year-month-select>
 
   <app-shift-table [shifts$]="shifts$" [showEmpty]="true"></app-shift-table>
