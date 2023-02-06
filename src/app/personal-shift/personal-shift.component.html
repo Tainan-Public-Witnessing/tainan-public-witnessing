@@ -4,6 +4,31 @@
     [label]="'PERSONAL_SHIFT.LABEL.YEAR_MONTH' | translate"
     [forwardFormControl]="yearMonthControl"
   ></app-year-month-select>
+  <mat-form-field
+    appearance="outline"
+    class="ml-2"
+    *ngIf="requireAdmin$ | async"
+  >
+    <mat-label>{{ "PERSONAL_SHIFT.LABEL.USER" | translate }}</mat-label>
+    <button mat-icon-button matSuffix (click)="userFilter.setValue('')">
+      <mat-icon>close</mat-icon>
+    </button>
+    <input
+      type="text"
+      matInput
+      [formControl]="userFilter"
+      [matAutocomplete]="auto"
+    />
+    <mat-autocomplete
+      #auto="matAutocomplete"
+      [displayWith]="displayFn"
+      (optionSelected)="onOptionSelected($event.option.value)"
+    >
+      <mat-option *ngFor="let user of filteredUsers | async" [value]="user">
+        {{ user.username }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
 
   <app-shift-table [shifts$]="shifts$"></app-shift-table>
 </div>

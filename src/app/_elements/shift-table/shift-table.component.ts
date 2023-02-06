@@ -20,22 +20,35 @@ export class ShiftTableComponent implements OnInit, OnDestroy {
   constructor(
     private shiftHoursService: ShiftHoursService,
     private shiftsService: ShiftsService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     combineLatest([this.shiftHoursService.getShiftHours(), this.shifts$])
       .pipe(takeUntil(this.destroy$))
-      .subscribe(([_shiftHoursList, _shifts]) => {
-        if (_shiftHoursList === null || _shifts === null) {
+      .subscribe(([shiftHours, shifts]) => {
+        if (shiftHours === null || shifts === null) {
           this.sortedShift$s = null;
-        } else if (_shifts === undefined) {
+        } else if (shifts === undefined) {
           this.sortedShift$s = undefined;
         } else {
-          this.sortedShift$s = _shifts.map((_shift) => {
-            return this.shiftsService
-              .getShiftByUuid(_shift.date.slice(0, 7), _shift.uuid)
-              .pipe(filter((__shift) => !!__shift)) as Observable<Shift>;
-          });
+          const hour = (shiftHourUuid: string) =>
+            shiftHours?.find((hour) => hour.uuid === shiftHourUuid)
+              ?.startTime ?? '00:00';
+
+          this.sortedShift$s = shifts
+            .sort((a, b) => {
+              if (a.date !== b.date) return a.date.localeCompare(b.date);
+              if (a.siteUuid !== b.siteUuid)
+                return a.siteUuid.localeCompare(b.siteUuid);
+              return hour(a.shiftHoursUuid).localeCompare(
+                hour(b.shiftHoursUuid)
+              );
+            })
+            .map((_shift) => {
+              return this.shiftsService
+                .getShiftByUuid(_shift.date.slice(0, 7), _shift.uuid)
+                .pipe(filter((__shift) => !!__shift)) as Observable<Shift>;
+            });
         }
       });
   }
