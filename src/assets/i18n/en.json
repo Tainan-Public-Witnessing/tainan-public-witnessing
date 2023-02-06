@@ -57,18 +57,17 @@
     "MESSAGE": {
       "NOT_YET": "It is not time to fill in yet!",
       "OVER_TIME": "It is timed out!"
-    }
+    },
+    "CANCELED": "This shift is canceled!"
   },
   "STATISTIC_EDITOR": {
     "TITLE": "Statistic",
     "LABEL": {
       "ATTENDANCE": "Participant",
       "TRACTS": "Tracts",
-      "SCRIPTURES": "Scriptures",
       "VIDEOS": "Videos",
-      "ACCEPT_RETURN_VISIT": "Accept return visit",
       "RETURN_VISIT": "Return visit",
-      "EXPERIENCE": "experience"
+      "STARTING_BIBLE_STUDIES": "Starting bible studies"
     }
   },
   "HOME": {
@@ -80,7 +79,8 @@
     "TITLE": "Personal Shifts",
     "NO_DATA_MESSAGE": "No data",
     "LABEL": {
-      "YEAR_MONTH": "Year-Month"
+      "YEAR_MONTH": "Year-Month",
+      "USER": "User"
     }
   },
   "USERS": {
@@ -136,7 +136,8 @@
     "CREATE_TITLE": "Create congregation",
     "EDIT_TITLE": "Edit congregation",
     "DELETE_TITLE": "Delete congregation",
-    "NAME_LABEL": "Congregation name"
+    "NAME_LABEL": "Congregation name",
+    "IUPUT_CONGREGATION_INFO": "Please input Congregation Info"
   },
   "TAGS": {
     "TITLE": "Tags",
@@ -171,6 +172,18 @@
     "2": "Overseer",
     "3": "Publisher",
     "4": "Guest"
+  },
+  "SETTINGS": {
+    "TITLE": "Basic Setting",
+    "SITES": "Sites",
+    "SITE_NAME": "Site Name",
+    "SITE_POSITION": "Site Position",
+    "IUPUT_SITE_INFO": "Please input Site Info",
+    "SHIFTHOURS": "ShiftHours",
+    "SHIFTHOUR_NAME": "ShiftHour Name",
+    "IUPUT_SHIFTHOUR_INFO": "Please input Shifthour Info",
+    "START": "Start",
+    "END": "End"
   },
   "AVAILABLE_SHIFTS": {
     "TITLE": "Available Shifts",

@@ -50,7 +50,6 @@ limiter = Limiter(
     storage_options={"connection_pool": pool},
 )
 
-
 firebase_admin.initialize_app()
 db = firestore.client()
 

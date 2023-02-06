@@ -5,10 +5,8 @@ export interface Statistic {
   date: string; // yyyy-MM-dd
   attendance: number;
   tracts: number;
-  scriptures: number;
   videos: number;
-  acceptReturnVisit: number;
   returnVisits: number;
-  experience: string;
+  startingBibleStudies: number;
   activate: boolean;
 }

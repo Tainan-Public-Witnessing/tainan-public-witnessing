@@ -1,5 +1,9 @@
 @import 'src/app/_styles/_global.scss';
 
+h1 {
+  display: flex;
+}
+
 .mat-dialog-content {
   .mat-form-field {
 

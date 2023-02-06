@@ -1,15 +1,16 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, Observable, Subject } from 'rxjs';
-import { filter, first, map, takeUntil } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, filter, first, map, takeUntil } from 'rxjs/operators';
 import { EXISTED_ERROR } from 'src/app/_classes/errors/EXISTED_ERROR';
 import { FULL_SHIFT_ERROR } from 'src/app/_classes/errors/FULL_SHIFT_ERROR';
 import { TOO_MANY_SHIFTS_ERROR } from 'src/app/_classes/errors/TOO_MANY_SHIFTS_ERROR';
 import { StatisticEditorComponent } from 'src/app/_elements/dialogs/statistic-editor/statistic-editor.component';
 import { Permission } from 'src/app/_enums/permission.enum';
-import { ShiftHours } from 'src/app/_interfaces/shift-hours.interface';
+import { ShiftHour } from 'src/app/_interfaces/shift-hours.interface';
 import { Shift } from 'src/app/_interfaces/shift.interface';
 import { Site } from 'src/app/_interfaces/site.interface';
 import { UserKey } from 'src/app/_interfaces/user.interface';
@@ -35,14 +36,15 @@ export class ShiftCardComponent implements OnInit, OnDestroy {
 
   emptiness: string[];
   shift: Shift | null = null;
-  shiftHours: ShiftHours | null = null;
+  shiftHour: ShiftHour | null = null;
+  activateControl = new FormControl(true);
   site: Site | null = null;
   crew: UserKey[] | null = null;
   day: string | null = null;
   canEditStatistic$!: Observable<boolean>;
   canEditCrew$!: Observable<boolean>;
-  changes$ = new Subject<void>();
   managerAccess!: boolean;
+  changes$ = new Subject<void>();
   destroy$ = new Subject<void>();
 
   constructor(
@@ -55,13 +57,13 @@ export class ShiftCardComponent implements OnInit, OnDestroy {
     private matSnackBar: MatSnackBar,
     private translateService: TranslateService,
     private globalEvent: GlobalEventService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     combineLatest([
       this.shift$,
       this.shiftHoursService
-        .getShiftHoursList()
+        .getShiftHours()
         .pipe(filter((_shiftHoursList) => _shiftHoursList !== null)),
       this.sitesService.getSites().pipe(filter((_sites) => _sites !== null)),
       this.usersService
@@ -71,9 +73,10 @@ export class ShiftCardComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(([_shift, _shiftHoursList, _sites, _userKeys]) => {
         this.shift = _shift;
-        this.shiftHours = _shiftHoursList?.find(
+        this.activateControl.setValue(this.shift.activate, { emitEvent: false });
+        this.shiftHour = _shiftHoursList?.find(
           (_shiftHours) => _shift.shiftHoursUuid === _shiftHours.uuid
-        ) as ShiftHours;
+        ) as ShiftHour;
         this.site = _sites?.find(
           (_site) => _shift.siteUuid === _site.uuid
         ) as Site;
@@ -88,6 +91,23 @@ export class ShiftCardComponent implements OnInit, OnDestroy {
 
     this.pipeCanEditStatistic();
     this.pipeCanEditCrew();
+    this.authorityService.canAccess(Permission.MANAGER)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(_managerAccess => this.managerAccess = _managerAccess);
+
+    this.activateControl
+      .valueChanges
+      .pipe(
+        debounceTime(500),
+        distinctUntilChanged(),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(_isActivate => {
+        if (!!this.shift && _isActivate !== null) {
+          this.shift.activate = _isActivate;
+          this.shiftService.updateShift(this.shift);
+        }
+      });
   }
 
   ngOnDestroy(): void {
@@ -96,46 +116,50 @@ export class ShiftCardComponent implements OnInit, OnDestroy {
   }
 
   openStatisticEditor = () => {
-    if (this.shift) {
-      const shiftEndTime = new Date(
-        [this.shift.date.replace(/\-/g, '/'), this.shiftHours?.endTime].join(
-          ' '
-        )
-      ).getTime();
-      const shiftEndDate = new Date(this.shift.date);
-      shiftEndDate.setDate(shiftEndDate.getDate() + 1);
-      const shiftEndDateTime = shiftEndDate.getTime();
-      const nowTime = new Date().getTime();
-
-      if (this.managerAccess || shiftEndTime < nowTime) {
-        if (this.managerAccess || nowTime < shiftEndDateTime) {
-          const mode = this.shift.hasStatistic ? 'view' : 'create';
-          this.matDialog.open(StatisticEditorComponent, {
-            disableClose: mode !== 'view',
-            panelClass: 'dialog-panel',
-            data: {
-              mode,
-              uuid: this.shift.uuid,
-              date: this.shift.date,
-            },
-          });
-        } else {
-          this.translateService
-            .get('SHIFT_CARD.MESSAGE.OVER_TIME')
-            .pipe(first())
-            .subscribe((_message) => {
-              this.matSnackBar.open(_message, undefined, { duration: 3000 });
-            });
-        }
-      } else {
-        this.translateService
-          .get('SHIFT_CARD.MESSAGE.NOT_YET')
-          .pipe(first())
-          .subscribe((_message) => {
-            this.matSnackBar.open(_message, undefined, { duration: 3000 });
-          });
-      }
+    if (!this.shift) {
+      return;
     }
+
+    const shiftEndTime = new Date(
+      [this.shift.date.replace(/\-/g, '/'), this.shiftHour?.endTime].join(
+        ' '
+      )
+    ).getTime();
+    const shiftEndDate = new Date(this.shift.date);
+    shiftEndDate.setDate(shiftEndDate.getDate() + 1);
+    const shiftEndDateTime = shiftEndDate.getTime();
+    const nowTime = new Date().getTime();
+
+    if (shiftEndTime >= nowTime && !this.managerAccess) {
+      this.translateService
+        .get('SHIFT_CARD.MESSAGE.NOT_YET')
+        .pipe(first())
+        .subscribe((_message) => {
+          this.matSnackBar.open(_message, undefined, { duration: 3000 });
+        });
+      return;
+    }
+
+    if (nowTime >= shiftEndDateTime && !this.managerAccess) {
+      this.translateService
+        .get('SHIFT_CARD.MESSAGE.OVER_TIME')
+        .pipe(first())
+        .subscribe((_message) => {
+          this.matSnackBar.open(_message, undefined, { duration: 3000 });
+        });
+      return;
+    }
+
+    const mode = this.shift.hasStatistic ? 'view' : 'create';
+    this.matDialog.open(StatisticEditorComponent, {
+      disableClose: mode !== 'view',
+      panelClass: 'dialog-panel',
+      data: {
+        mode,
+        uuid: this.shift.uuid,
+        date: this.shift.date,
+      },
+    });
   };
 
   openCrewEditor = () => {
@@ -160,7 +184,7 @@ export class ShiftCardComponent implements OnInit, OnDestroy {
             message: 'AVAILABLE_SHIFTS.JOIN_CONFIRM_MESSAGE',
             messageParams: {
               date: this.shift.date,
-              time: `${this.shiftHours?.startTime} ~ ${this.shiftHours?.endTime}`,
+              time: `${this.shiftHour?.startTime} ~ ${this.shiftHour?.endTime}`,
               site: this.site?.name,
             },
           } as ConfirmDialogData,

@@ -8,7 +8,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { Subject } from 'rxjs';
-import { ShiftHours } from 'src/app/_interfaces/shift-hours.interface';
+import { ShiftHour } from 'src/app/_interfaces/shift-hours.interface';
 import { UserScheduleDayData } from 'src/app/_interfaces/user-schedule.interface';
 import { environment } from 'src/environments/environment';
 
@@ -18,7 +18,7 @@ import { environment } from 'src/environments/environment';
 })
 export class HoursListComponent implements OnInit, OnChanges {
   @Input() data: UserScheduleDayData[];
-  @Input() hours: ShiftHours[];
+  @Input() hours: ShiftHour[];
   @Input() disabled: boolean;
   @Output() change = new EventEmitter<UserScheduleDayData[]>();
   weekdayNames = environment.DAY;
@@ -26,9 +26,9 @@ export class HoursListComponent implements OnInit, OnChanges {
   displayedCols: string[] = [];
   unsubscribe$ = new Subject<void>();
 
-  constructor() {}
+  constructor() { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.hours && changes.hours.currentValue) {
@@ -41,7 +41,7 @@ export class HoursListComponent implements OnInit, OnChanges {
     }
   }
 
-  onHourClick = (row: UserScheduleDayData, hour: ShiftHours) => {
+  onHourClick = (row: UserScheduleDayData, hour: ShiftHour) => {
     row[hour.uuid] = (row[hour.uuid] + 1) % 5;
     this.change.emit(this.data);
   };

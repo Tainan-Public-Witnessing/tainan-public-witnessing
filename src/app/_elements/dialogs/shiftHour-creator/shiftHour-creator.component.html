@@ -1,0 +1,27 @@
+<h2 mat-dialog-title>{{"SETTINGS.IUPUT_SHIFTHOUR_INFO"|translate}}</h2>
+<form [formGroup]="shiftHourform">
+  <mat-dialog-content>
+    <mat-form-field class="w-full">
+      <mat-label>{{"SETTINGS.SHIFTHOUR_NAME"|translate}}</mat-label>
+      <input matInput formControlName="name" placeholder="早上" required />
+    </mat-form-field>
+    <div class="w-full">
+      <mat-form-field class="w-1/2">
+        <mat-label> {{'SETTINGS.START' | translate}}</mat-label>
+        <input type="time" matInput formControlName="startTime" placeholder="Time" required />
+      </mat-form-field>
+      <mat-form-field class="w-1/2">
+        <mat-label> {{'SETTINGS.END' | translate}}</mat-label>
+        <input type="time" matInput formControlName="endTime" placeholder="Time" required />
+      </mat-form-field>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button color="accent" cdkFocusInitial (click)="onCancelClick()">
+      {{ "GLOBAL.CANCEL" | translate }}
+    </button>
+    <button mat-button color="primary" (click)="onSubmitClick()">
+      {{ "GLOBAL.SUBMIT" | translate }}
+    </button>
+  </mat-dialog-actions>
+</form>

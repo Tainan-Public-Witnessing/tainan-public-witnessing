@@ -23,7 +23,7 @@ import {
 } from 'rxjs';
 import { Permission } from 'src/app/_enums/permission.enum';
 import { getAllDayOfWeek } from 'src/app/_helpers/date-helper';
-import { ShiftHours } from 'src/app/_interfaces/shift-hours.interface';
+import { ShiftHour } from 'src/app/_interfaces/shift-hours.interface';
 import {
   UserSchedule,
   UserScheduleDayData
@@ -51,7 +51,7 @@ export class UserScheduleComponent implements OnInit, OnDestroy, OnChanges {
   unsubscribe$ = new Subject<void>();
   requireAdmin$ = new BehaviorSubject<boolean>(false);
 
-  shiftHours: ShiftHours[];
+  shiftHours: ShiftHour[];
   validationErrors?: {
     [field in keyof UserScheduleComponent['schedulingConfig']]?: string;
   };
@@ -164,9 +164,7 @@ export class UserScheduleComponent implements OnInit, OnDestroy, OnChanges {
   async loadEditingData(userUuid: string) {
     const [hours, siteShift, savedSchedule, userKeys] = await Promise.all([
       firstValueFrom(
-        this.shiftHoursService
-          .getShiftHoursList()
-          .pipe(filter((data) => !!data))
+        this.shiftHoursService.getShiftHours().pipe(filter((data) => !!data))
       ).then((hours) => hours?.filter((h) => h.activate) || []),
       firstValueFrom(
         this.siteShiftsService.getSiteShiftList().pipe(filter((data) => !!data))
