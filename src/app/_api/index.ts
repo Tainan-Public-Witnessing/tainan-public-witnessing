@@ -5,7 +5,7 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { arrayUnion } from 'firebase/firestore';
 
-import { firstValueFrom, map } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { v4 as uuidv4, v5 as uuidv5 } from 'uuid';
 import { EXISTED_ERROR } from '../_classes/errors/EXISTED_ERROR';
@@ -47,6 +47,14 @@ export class Api implements ApiInterface {
       .doc<Settings>('/Settings/settings')
       .ref.get();
     return snapshot.data()!.userKeys;
+  };
+
+  readAllUsers = async (): Promise<User[]> => {
+    const snapshots = await firstValueFrom(
+      this.angularFirestore.collection<User>('/Users').get()
+    );
+
+    return snapshots.docs.map((snapshot) => snapshot.data());
   };
 
   readUser = (uuid: string): Promise<User> => {
@@ -251,16 +259,14 @@ export class Api implements ApiInterface {
     ]);
   };
 
-  changeCongregationActivation = async (
-    cong: Congregation
-  ): Promise<void> => {
+  changeCongregationActivation = async (cong: Congregation): Promise<void> => {
     await Promise.all([
       this.angularFirestore
         .doc<ShiftHour>(`Congregations/${cong.uuid}`)
         .update({
           activate: !cong.activate,
         }),
-    ]);    
+    ]);
   };
 
   readSites = (): Promise<Site[]> => {
@@ -320,7 +326,7 @@ export class Api implements ApiInterface {
         .update({
           deliver: !shifthour.deliver,
         }),
-    ]);   
+    ]);
   };
 
   readShiftHours = (): Promise<ShiftHour[]> => {
@@ -361,16 +367,14 @@ export class Api implements ApiInterface {
     ]);
   };
 
-  changeShiftHourActivation = async (
-    shiftHour: ShiftHour
-  ): Promise<void> => {
+  changeShiftHourActivation = async (shiftHour: ShiftHour): Promise<void> => {
     await Promise.all([
       this.angularFirestore
         .doc<ShiftHour>(`ShiftHours/${shiftHour.uuid}`)
         .update({
           activate: !shiftHour.activate,
         }),
-    ]);    
+    ]);
   };
 
   readShiftsByMonth = (yearMonth: string): Promise<Shift[]> => {

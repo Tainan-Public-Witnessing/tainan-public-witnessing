@@ -38,6 +38,15 @@ export class UsersService {
     return this.users.get(uuid) as BehaviorSubject<User | null | undefined>;
   };
 
+  getAllUsers = () => {
+    const sub = new BehaviorSubject<User[] | null>(null);
+    this.api
+      .readAllUsers()
+      .then((users) => sub.next(users))
+      .catch((ex) => sub.error(ex));
+    return sub;
+  };
+
   createUser = (user: Omit<User, 'uuid' | 'activate' | 'bindcode'>) => {
     this.userKeys$?.complete();
     this.userKeys$ = undefined;

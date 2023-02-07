@@ -3,12 +3,12 @@ import { LineBindingComponent } from './line-binding/line-binding.component';
 import { LoginComponent } from './login/login.component';
 import { OpeningShiftsComponent } from './opening-shifts/opening-shifts.component';
 import { PersonalShiftComponent } from './personal-shift/personal-shift.component';
+import { SettingsComponent } from './settings/settings.component';
 import { ShiftsComponent } from './shifts/shifts.component';
+import { UserTableComponent } from './users/user-table.component';
 import { UserComponent } from './users/user/user.component';
-import { UsersComponent } from './users/users.component';
 import { Mode } from './_enums/mode.enum';
 import { Permission } from './_enums/permission.enum';
-import { SettingsComponent } from './settings/settings.component'
 
 type RouteDef = {
   path: string;
@@ -49,7 +49,7 @@ export const routes = [
   },
   {
     path: 'users',
-    component: UsersComponent,
+    component: UserTableComponent,
     permission: Permission.MANAGER,
     label: 'USERS.TITLE',
   },
@@ -87,8 +87,8 @@ export const routes = [
     path: 'settings',
     component: SettingsComponent,
     permission: Permission.ADMINISTRATOR,
-    label: 'SETTINGS.TITLE'
-  }
+    label: 'SETTINGS.TITLE',
+  },
 ].map(buildRegexp);
 
 function buildRegexp(route: RouteDef): RouteDefComplete {

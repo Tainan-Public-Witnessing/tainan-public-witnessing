@@ -17,7 +17,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import {
   MatSnackBarModule,
-  MAT_SNACK_BAR_DEFAULT_OPTIONS,
+  MAT_SNACK_BAR_DEFAULT_OPTIONS
 } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -29,6 +29,10 @@ import { LayoutModule } from '@angular/cdk/layout';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { CdkTableModule } from '@angular/cdk/table';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+
 @NgModule({
   declarations: [],
   imports: [CommonModule],
@@ -47,12 +51,15 @@ import { MatMomentDateModule } from '@angular/material-moment-adapter';
     MatSelectModule,
     MatSidenavModule,
     MatSlideToggleModule,
+    MatCheckboxModule,
     MatSnackBarModule,
     MatTableModule,
     CdkTableModule,
     MatToolbarModule,
     MatTooltipModule,
     MatMomentDateModule,
+    MatPaginatorModule,
+    MatSortModule,
     DragDropModule,
     ScrollingModule,
     A11yModule,
