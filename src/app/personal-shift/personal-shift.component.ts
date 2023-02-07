@@ -36,6 +36,7 @@ export class PersonalShiftComponent implements OnInit {
   shifts$!: Observable<Shift[] | null | undefined>;
   requireManager$ = new BehaviorSubject<boolean>(false);
 
+
   constructor(
     private authorityService: AuthorityService,
     private personalShiftsService: PersonalShiftsService,
