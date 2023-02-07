@@ -7,7 +7,7 @@
   <mat-form-field
     appearance="outline"
     class="ml-2"
-    *ngIf="requireAdmin$ | async"
+    *ngIf="requireManager$ | async"
   >
     <mat-label>{{ "PERSONAL_SHIFT.LABEL.USER" | translate }}</mat-label>
     <button mat-icon-button matSuffix (click)="userFilter.setValue('')">
