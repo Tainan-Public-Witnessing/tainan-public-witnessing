@@ -34,7 +34,7 @@ export class PersonalShiftComponent implements OnInit {
   allUsers = new BehaviorSubject<UserKey[] | null>([]);
   filteredUsers = new BehaviorSubject<UserKey[]>([]);
   shifts$!: Observable<Shift[] | null | undefined>;
-  requireAdmin$ = new BehaviorSubject<boolean>(false);
+  requireManager$ = new BehaviorSubject<boolean>(false);
 
   constructor(
     private authorityService: AuthorityService,
@@ -45,13 +45,14 @@ export class PersonalShiftComponent implements OnInit {
 
   ngOnInit(): void {
     this.authorityService
-      .canAccess(Permission.ADMINISTRATOR)
-      .subscribe(this.requireAdmin$);
+      .canAccess(Permission.MANAGER)
+      .subscribe(this.requireManager$);
 
     let firstLoad = true;
     this.userService
       .getUserKeys()
       .pipe(
+        map((users) => users?.filter((u) => u.activate) || null),
         tap((users) => {
           if (!users) return;
           if (firstLoad) {
