@@ -179,6 +179,7 @@ export class ShiftsService {
         .collection(`/MonthlyData/${yearMonth}/Shifts`)
         .where('date', '>', new Date().toJSON().slice(0, 10))
         .where('full', '==', false)
+        .where('activate', '==', true)
         .get()
     ).docs.map((doc) => doc.data()) as Shift[];
 
