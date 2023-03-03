@@ -21,6 +21,7 @@ async def AssignmentNotify(db, LineNotify, n):
         db.collection("MonthlyData")
         .document(nth_days_str[:7])
         .collection("Shifts")
+        .where('activate','==',True)
         .where("date", "==", nth_days_str)
         .stream()
     )
