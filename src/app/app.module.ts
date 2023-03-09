@@ -49,6 +49,11 @@ import { YearMonthSelectComponent } from './_elements/year-month-select/year-mon
 import { LineBindingDialogComponent } from './line-binding/line-binding-dialog/line-binding-dialog.component';
 import { CongregationCreatorComponent } from './_elements/dialogs/congregation-creator/congregation-creator.component';
 import { CongregationEditorComponent } from './_elements/dialogs/congregation-editor/congregation-editor.component';
+import { SiteShiftsComponent } from './site-shifts/site-shifts.component';
+import { SelectSiteComponent } from './site-shifts/select-site/select-site.component';
+import { WeekTableComponent } from './site-shifts/week-table/week-table.component';
+import { DayScheduleComponent } from './site-shifts/day-schedule/day-schedule.component';
+import { SiteShiftComponent } from './site-shifts/site-shift/site-shift.component';
 // AoT requires an exported function for factories of translate module
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -93,6 +98,11 @@ export function HttpLoaderFactory(http: HttpClient) {
     ShiftHoursEditorComponent,
     CongregationCreatorComponent,
     CongregationEditorComponent,
+    SiteShiftsComponent,
+    SelectSiteComponent,
+    WeekTableComponent,
+    DayScheduleComponent,
+    SiteShiftComponent,
   ],
   imports: [
     BrowserModule,

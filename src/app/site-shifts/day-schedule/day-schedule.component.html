@@ -1,0 +1,8 @@
+<mat-card>
+    <mat-card-title>
+        <h4>{{"WEEKDAYS." + day | translate}}</h4>
+    </mat-card-title>
+    <mat-card-content>
+        <app-site-shift *ngFor="let shifthour of shifthours$ | async" [shiftHour]="shifthour"></app-site-shift>
+    </mat-card-content>
+</mat-card>
