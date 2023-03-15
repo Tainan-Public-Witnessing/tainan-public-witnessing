@@ -1,12 +1,25 @@
-<mat-card class="site-shift-card w-36">
-    <mat-card-header>
-        <mat-card-title>
-            <h4>{{shiftHour.name}}</h4>
-        </mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-        123
-    </mat-card-content>
-
-</mat-card>
 <!-- <mat-divider></mat-divider> -->
+<mat-card>
+  <mat-card-title-group>
+    <mat-card-title>{{shiftHour.name}}</mat-card-title>
+    <mat-card-subtitle>{{shiftHour.startTime}} ～ {{shiftHour.endTime}}</mat-card-subtitle>
+    <mat-checkbox></mat-checkbox>
+    <!-- <img matCardImage src="Side image"> -->
+  </mat-card-title-group>
+  <!-- <img matCardImage src="Card wide image source"> -->
+  <mat-card-content>
+
+  </mat-card-content>
+  <mat-card-actions align="start">
+    <div>
+      <button mat-button><mat-icon>add_circle</mat-icon></button>
+      <mat-icon>group</mat-icon>4
+      <button mat-button><mat-icon>remove_circle</mat-icon></button>
+    </div>
+    <div>
+      <button mat-button><mat-icon>add_circle</mat-icon></button>
+      <mat-icon>local_shipping</mat-icon>2
+      <button mat-button><mat-icon>remove_circle</mat-icon></button>
+    </div>
+  </mat-card-actions>
+</mat-card>

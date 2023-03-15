@@ -29,6 +29,7 @@ import { LayoutModule } from '@angular/cdk/layout';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { CdkTableModule } from '@angular/cdk/table';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 @NgModule({
   declarations: [],
   imports: [CommonModule],
@@ -57,6 +58,7 @@ import { MatMomentDateModule } from '@angular/material-moment-adapter';
     ScrollingModule,
     A11yModule,
     LayoutModule,
+    MatCheckboxModule,
   ],
   providers: [
     { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2000 } },
