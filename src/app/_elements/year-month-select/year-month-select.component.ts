@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-year-month-select',
@@ -22,9 +23,9 @@ export class YearMonthSelectComponent implements OnInit {
   ngOnInit(): void {
     const months = [];
     for (let i = -3; i <= 1; ++i) {
-      const d = new Date();
-      d.setMonth(d.getMonth() + i);
-      months.push(d.toJSON().substring(0, 7));
+      const d = moment();
+      d.add(i, 'M');
+      months.push(d.format('yyyy-MM'));
     }
     this.months = months;
     if (this.forwardFormControl && !this.forwardFormControl.value) {
