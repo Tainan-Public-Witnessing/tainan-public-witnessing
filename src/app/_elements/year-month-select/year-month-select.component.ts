@@ -23,7 +23,7 @@ export class YearMonthSelectComponent implements OnInit {
   ngOnInit(): void {
     const months = [];
     for (let i = -3; i <= 1; ++i) {
-      const d = moment();
+      const d = moment().startOf('M');
       d.add(i, 'M');
       months.push(d.format('yyyy-MM'));
     }
