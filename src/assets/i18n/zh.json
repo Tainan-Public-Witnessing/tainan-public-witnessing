@@ -29,6 +29,13 @@
     },
     "VALIDATION": {
       "REQUIRED": "此欄位必填"
+    },
+    "PAGINATOR": {
+      "PAGE_SIZE": "每頁筆數",
+      "NEXT_PAGE": "下一頁",
+      "PREV_PAGE": "上一頁",
+      "FIRST_PAGE": "第一頁",
+      "LAST_PAGE": "最後一頁"
     }
   },
   "GENDER": {

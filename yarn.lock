@@ -7487,6 +7487,13 @@ next-tick@1, next-tick@^1.1.0:
   resolved "https://registry.yarnpkg.com/next-tick/-/next-tick-1.1.0.tgz#1836ee30ad56d67ef281b22bd199f709449b35eb"
   integrity sha512-CXdUiJembsNjuToQvxayPZF9Vqht7hewsvy2sOWafLvi2awflj9mOC6bHIg50orX8IJvWKY9wYQ/zB2kogPslQ==
 
+ngx-auto-unsubscribe-decorator@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/ngx-auto-unsubscribe-decorator/-/ngx-auto-unsubscribe-decorator-1.1.0.tgz#4d7b795805857956b9ee2071e61dc34e59437c8b"
+  integrity sha512-aNlkAaO5SvbKBXvbDHhOpYkcMsUkhZbLRzS8K5GT6ZjJ5HAkiSPHiEclvGn/a8MYkOIwFvNdmp3PyjcoS2eYMw==
+  dependencies:
+    tslib "^2.1.0"
+
 ngx-cookie-service@^14.0.0:
   version "14.0.1"
   resolved "https://registry.yarnpkg.com/ngx-cookie-service/-/ngx-cookie-service-14.0.1.tgz#0c0f8a7ba91dbb68d3f8ad0f8808bbde4f6e55aa"

@@ -1,7 +1,11 @@
+<app-user-filter *ngIf="showFilter" [filterValue]="filterValue"></app-user-filter>
 <mat-card class="p-0 overflow-hidden flex flex-col">
   <mat-toolbar class="bg-inherit">
     <span>{{ "USERS.TITLE" | translate }}</span>
     <div class="flex-grow"></div>
+    <button mat-icon-button (click)="showFilter = !showFilter">
+      <mat-icon [matTooltip]="">search</mat-icon>
+    </button>
     <button mat-icon-button (click)="onAddButtonClick()">
       <mat-icon [matTooltip]="">add_box</mat-icon>
     </button>
@@ -17,7 +21,7 @@
         </td>
       </ng-container>
       <ng-container matColumnDef="activate">
-        <th mat-header-cell *matHeaderCellDef>
+        <th mat-header-cell mat-sort-header *matHeaderCellDef>
           {{ "USERS.LABEL.ACTIVATE" | translate }}
         </th>
         <td

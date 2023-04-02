@@ -27,6 +27,7 @@ import { SettingsComponent } from './settings/settings.component';
 import { ShfitHoursComponent } from './settings/shfitHours/shfitHours.component';
 import { SiteComponent } from './settings/sites/sites.component';
 import { ShiftsComponent } from './shifts/shifts.component';
+import { UserFilterComponent } from './users/user-filter/user-filter.component';
 import { UserDataComponent } from './users/user/user-data/user-data.component';
 import { CalendarHeaderComponent } from './users/user/user-schedule/calendar-header/calendar-header.component';
 import { HoursListComponent } from './users/user/user-schedule/hours-list/hours-list.component';
@@ -94,6 +95,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     CongregationCreatorComponent,
     CongregationEditorComponent,
     UserTableComponent,
+    UserFilterComponent,
   ],
   imports: [
     BrowserModule,
