@@ -14,6 +14,7 @@ export interface ApiInterface {
 
   readUserKeys: () => Promise<UserKey[]>;
 
+  readAllUsers: () => Promise<User[] | null>;
   readUser: (uuid: string) => Promise<User>;
   /**
    * create new user and return its uuid
@@ -27,20 +28,26 @@ export interface ApiInterface {
   ) => Promise<{ date: string; hour: ShiftHour; site: Site }[]>;
 
   readCongregations: () => Promise<Congregation[]>;
-  createCongregation: (cong: Omit<Congregation, 'uuid' | 'activate' | 'order'>) => Promise<void>
-  updateCongregation: (cong: Omit<Congregation, 'activate' | 'order'>) => Promise<void>
-  changeCongregationActivation: (cong: Congregation) => Promise<void>
+  createCongregation: (
+    cong: Omit<Congregation, 'uuid' | 'activate' | 'order'>
+  ) => Promise<void>;
+  updateCongregation: (
+    cong: Omit<Congregation, 'activate' | 'order'>
+  ) => Promise<void>;
+  changeCongregationActivation: (cong: Congregation) => Promise<void>;
 
   readSites: () => Promise<Site[]>;
   createSite: (site: Omit<Site, 'uuid'>) => Promise<void>;
-  updateSite: (site: Site) => Promise<void>
-  changeSiteActivation: (site: Site) => Promise<void>
+  updateSite: (site: Site) => Promise<void>;
+  changeSiteActivation: (site: Site) => Promise<void>;
 
   readShiftHours: () => Promise<ShiftHour[]>;
-  createShiftHour: (shifthour: Omit<ShiftHour, 'uuid' | 'activate' | 'deliver'>) => Promise<void>
-  updateShiftHour: (shiftHour: ShiftHour) => Promise<void>
-  changeShiftHourActivation: (shifthour: ShiftHour) => Promise<void>
-  changeShiftHourDelivery: (shifthour: ShiftHour) => Promise<void>
+  createShiftHour: (
+    shifthour: Omit<ShiftHour, 'uuid' | 'activate' | 'deliver'>
+  ) => Promise<void>;
+  updateShiftHour: (shiftHour: ShiftHour) => Promise<void>;
+  changeShiftHourActivation: (shifthour: ShiftHour) => Promise<void>;
+  changeShiftHourDelivery: (shifthour: ShiftHour) => Promise<void>;
 
   readShiftsByMonth: (yearMonth: string) => Promise<Shift[]>; // yyyy-MM
   readShiftsByDate: (date: string) => Promise<Shift[]>; // yyyy-MM-dd
