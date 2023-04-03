@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
@@ -29,9 +30,17 @@ import { LayoutModule } from '@angular/cdk/layout';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { CdkTableModule } from '@angular/cdk/table';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import {
+  MatPaginatorIntl,
+  MatPaginatorModule,
+} from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import { PaginatorIntl } from '../_classes/PagionatorIntl';
+
 @NgModule({
   declarations: [],
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule.forChild()],
   exports: [
     MatAutocompleteModule,
     MatButtonModule,
@@ -47,19 +56,24 @@ import { MatMomentDateModule } from '@angular/material-moment-adapter';
     MatSelectModule,
     MatSidenavModule,
     MatSlideToggleModule,
+    MatCheckboxModule,
     MatSnackBarModule,
     MatTableModule,
     CdkTableModule,
     MatToolbarModule,
     MatTooltipModule,
     MatMomentDateModule,
+    MatPaginatorModule,
+    MatSortModule,
     DragDropModule,
     ScrollingModule,
     A11yModule,
     LayoutModule,
+    TranslateModule,
   ],
   providers: [
     { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2000 } },
+    { provide: MatPaginatorIntl, useClass: PaginatorIntl },
   ],
 })
 export class AngularMaterialModule {}

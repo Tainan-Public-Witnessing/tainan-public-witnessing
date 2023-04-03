@@ -4,7 +4,7 @@ import {
   OnChanges,
   OnDestroy,
   OnInit,
-  SimpleChanges,
+  SimpleChanges
 } from '@angular/core';
 import { FormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -63,7 +63,6 @@ export class UserDataComponent implements OnInit, OnDestroy, OnChanges {
       permission: [Permission.USER, Validators.required],
       activate: [true],
       note: [''],
-      assign: [true],
     });
   }
 

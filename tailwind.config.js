@@ -10,11 +10,13 @@ module.exports = {
       xl: '1920px',
     },
     colors: {
+      inherit: 'inherit',
+      hovered: '#0000000a',
       primary: '#3f51b5',
       accent: '#9e9e9e',
       warn: '#f44336',
       white: '#ffffff'
-    }
+    },
   },
   plugins: [],
   important: true,

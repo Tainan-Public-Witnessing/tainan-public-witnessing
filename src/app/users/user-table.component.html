@@ -1,0 +1,145 @@
+<div class="sm:h-[200vh]">
+  <app-user-filter
+    *ngIf="showFilter"
+    [filterValue]="filterValue"
+  ></app-user-filter>
+  <mat-card class="p-0 overflow-hidden flex flex-col">
+    <mat-toolbar class="bg-inherit">
+      <span>{{ "USERS.TITLE" | translate }}</span>
+      <div class="flex-grow"></div>
+      <mat-select
+        #cols
+        multiple
+        [(ngModel)]="displayingColumns"
+        class="opacity-0 w-1 text-base"
+      >
+        <mat-option value="username">{{
+          "USERS.LABEL.USERNAME" | translate
+        }}</mat-option>
+        <mat-option value="gender">{{
+          "USERS.LABEL.GENDER" | translate
+        }}</mat-option>
+        <mat-option value="congregationUuid">{{
+          "USERS.LABEL.CONGREGATION" | translate
+        }}</mat-option>
+        <mat-option value="permission">{{
+          "USERS.LABEL.PROFILE" | translate
+        }}</mat-option>
+        <mat-option value="baptizeDate">{{
+          "USERS.LABEL.BAPTIZE_DATE" | translate
+        }}</mat-option>
+        <mat-option value="cellphone">{{
+          "USERS.LABEL.CELLPHONE" | translate
+        }}</mat-option>
+        <mat-option value="phone">{{
+          "USERS.LABEL.PHONE" | translate
+        }}</mat-option>
+      </mat-select>
+      <button mat-icon-button (click)="cols.open()">
+        <mat-icon [matTooltip]="">view_column</mat-icon>
+      </button>
+      <button mat-icon-button (click)="showFilter = !showFilter">
+        <mat-icon [matTooltip]="">search</mat-icon>
+      </button>
+      <button mat-icon-button (click)="onAddButtonClick()">
+        <mat-icon [matTooltip]="">add_box</mat-icon>
+      </button>
+    </mat-toolbar>
+    <div class="overflow-y-auto h-full">
+      <table mat-table matSort [dataSource]="tableDataSource" class="w-full">
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let row" class="">
+            <button mat-icon-button (click)="onEditButtonClick($event, row)">
+              <mat-icon [matTooltip]="">edit</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="activate">
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>
+            {{ "USERS.LABEL.ACTIVATE" | translate }}
+          </th>
+          <td
+            mat-cell
+            *matCellDef="let row"
+            class=""
+            (click)="$event.stopPropagation()"
+          >
+            <mat-checkbox
+              color="primary"
+              [disabled]="!(userDeleteAccess$ | async)"
+              [checked]="row.activate"
+              (click)="onActivateClick($event, row)"
+            ></mat-checkbox>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="username">
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>
+            {{ "USERS.LABEL.USERNAME" | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row">{{ row.username }}</td>
+        </ng-container>
+        <ng-container matColumnDef="gender">
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>
+            {{ "USERS.LABEL.GENDER" | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row">
+            {{ row.gender ? ("GENDER." + row.gender | translate) : "" }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="congregationUuid">
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>
+            {{ "USERS.LABEL.CONGREGATION" | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row">
+            {{ row.congregationUuid }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="permission">
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>
+            {{ "USERS.LABEL.PROFILE" | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row">
+            {{ "PERMISSIONS." + row.permission | translate }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="baptizeDate">
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>
+            {{ "USERS.LABEL.BAPTIZE_DATE" | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row">{{ row.baptizeDate }}</td>
+        </ng-container>
+        <ng-container matColumnDef="cellphone">
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>
+            {{ "USERS.LABEL.CELLPHONE" | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row">{{ row.cellphone }}</td>
+        </ng-container>
+        <ng-container matColumnDef="phone">
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>
+            {{ "USERS.LABEL.PHONE" | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row">{{ row.phone }}</td>
+        </ng-container>
+
+        <ng-template
+          [matHeaderRowDef]="displayingColumns"
+          [matHeaderRowDefSticky]="true"
+        >
+          <tr mat-header-row class=""></tr>
+        </ng-template>
+
+        <tr
+          mat-row
+          *matRowDef="let row; columns: displayingColumns"
+          class="cursor-pointer hover:bg-hovered"
+          (click)="onRowClick(row)"
+        ></tr>
+      </table>
+    </div>
+    <mat-paginator
+      [pageSizeOptions]="[10, 25, 50]"
+      showFirstLastButtons
+    ></mat-paginator>
+  </mat-card>
+</div>
