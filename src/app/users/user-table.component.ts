@@ -43,7 +43,7 @@ export class UserTableComponent implements OnInit, AfterViewInit {
   @AutoUnsubscribe()
   userDeleteAccess$ = new BehaviorSubject<boolean>(false);
 
-  displayingColumns = [
+  _displayingColumns = [
     'activate',
     'username',
     'gender',
@@ -54,6 +54,14 @@ export class UserTableComponent implements OnInit, AfterViewInit {
     'phone',
     'actions',
   ];
+
+  get displayingColumns() {
+    return this._displayingColumns;
+  }
+
+  set displayingColumns(value: string[]) {
+    this._displayingColumns = ['activate', ...value, 'actions'];
+  }
 
   showFilter = false;
 
@@ -71,7 +79,6 @@ export class UserTableComponent implements OnInit, AfterViewInit {
   ) {
     this.filterValue = formBuilder.group({
       username: [''],
-      name: [''],
       gender: [[]],
       congregationUuid: [[]],
       cellphone: [''],
@@ -193,20 +200,15 @@ export class UserTableComponent implements OnInit, AfterViewInit {
   };
 
   filterUser = (filterValue: any) => (user: User) => {
-    console.log(user);
-    if (filterValue.username && !user.username.includes(filterValue.username)) {
-      return false;
-    }
-
-    if (filterValue.name) {
+    if (filterValue.username) {
       try {
-        const regex = new RegExp(filterValue.name, 'i');
-        if (!regex.test(user.name)) {
+        const regex = new RegExp(filterValue.username, 'i');
+        if (!regex.test(user.username)) {
           return false;
         }
       } catch (ex) {
         // fallback if input is not valid regexp expression
-        if (!user.name.includes(filterValue.name)) {
+        if (!user.username.includes(filterValue.username)) {
           return false;
         }
       }

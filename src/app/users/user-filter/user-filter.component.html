@@ -4,17 +4,12 @@
     class="flex flex-row flex-wrap"
     (submit)="onSubmit()"
   >
-    <mat-form-field class="w-full md:w-1/3">
+    <mat-form-field class="w-full sm:w-1/2">
       <mat-label>{{ "USERS.LABEL.USERNAME" | translate }}</mat-label>
       <input matInput formControlName="username" />
     </mat-form-field>
 
-    <mat-form-field class="w-full sm:w-1/2 md:w-1/3">
-      <mat-label>{{ "USERS.LABEL.NAME" | translate }}</mat-label>
-      <input matInput formControlName="name" />
-    </mat-form-field>
-
-    <mat-form-field class="w-full sm:w-1/2 md:w-1/3">
+    <mat-form-field class="w-full sm:w-1/2">
       <mat-label>{{ "USERS.LABEL.GENDER" | translate }}</mat-label>
       <mat-select formControlName="gender" multiple>
         <mat-option
