@@ -1,16 +1,12 @@
 <mat-card class="shift-card h-full box-border">
   <mat-card-header *ngIf="crew !== null">
-    <mat-card-title>
+    <mat-card-title class="-mx-4">
       <div>{{ shift?.date }}</div>
-      <div>
-        <mat-icon>schedule</mat-icon>{{ shiftHour?.name }}
-      </div>
-      <div>
-        <mat-icon>pin_drop</mat-icon>{{ site?.name }}
-      </div>
+      <div><mat-icon>schedule</mat-icon>{{ shiftHour?.name }}</div>
+      <div><mat-icon>pin_drop</mat-icon>{{ site?.name }}</div>
     </mat-card-title>
 
-    <mat-card-subtitle>
+    <mat-card-subtitle class="-mx-4">
       {{ "GLOBAL.DAY." + day | translate }}
       {{ shiftHour?.startTime }} ~
       {{ shiftHour?.endTime }}
@@ -26,8 +22,11 @@
         {{ user.username }}
       </mat-chip>
       <ng-template [ngIf]="showEmpty">
-        <mat-chip *ngFor="let count of emptiness" class="bg-warn text-white cursor-pointer"
-          (click)="onEmptySpotClick()">
+        <mat-chip
+          *ngFor="let count of emptiness"
+          class="bg-warn text-white cursor-pointer"
+          (click)="onEmptySpotClick()"
+        >
           {{ "AVAILABLE_SHIFTS.NEED_SUPPORT" | translate }}
         </mat-chip>
       </ng-template>
@@ -41,7 +40,11 @@
   </mat-card-content>
 
   <mat-card-actions *ngIf="crew !== null">
-    <mat-slide-toggle color="primary" [formControl]="activateControl" *ngIf="canEditCrew$ | async"></mat-slide-toggle>
+    <mat-slide-toggle
+      color="primary"
+      [formControl]="activateControl"
+      *ngIf="canEditCrew$ | async"
+    ></mat-slide-toggle>
 
     <span class="spacer"></span>
 
@@ -54,7 +57,11 @@
       <mat-icon>add_chart</mat-icon>
     </button>
 
-    <button mat-icon-button *ngIf="canEditCrew$ | async" (click)="openCrewEditor()">
+    <button
+      mat-icon-button
+      *ngIf="canEditCrew$ | async"
+      (click)="openCrewEditor()"
+    >
       <mat-icon>groups</mat-icon>
     </button>
   </mat-card-actions>
