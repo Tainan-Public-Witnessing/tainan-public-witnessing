@@ -1,4 +1,10 @@
-import { Component, OnDestroy, OnInit, Input } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { SitesService } from '../../_services/sites.service';
 import { Site } from '../../_interfaces/site.interface';
 import {
@@ -19,6 +25,7 @@ export class SelectSiteComponent implements OnInit, OnDestroy {
   reloadList$ = new BehaviorSubject<void>(undefined);
   sites$ = new BehaviorSubject<Site[] | null>(null);
   unsubscribe$ = new Subject<void>();
+  @Output() onSiteSelected = new EventEmitter<string>();
 
   constructor(private sitesService: SitesService) {}
   ngOnInit(): void {
@@ -35,6 +42,9 @@ export class SelectSiteComponent implements OnInit, OnDestroy {
       .subscribe((sites) => {
         this.sites$.next(sites);
       });
+  }
+  onChange(site: Site) {
+    this.onSiteSelected.emit(site.uuid);
   }
   ngOnDestroy(): void {
     this.unsubscribe$.next();

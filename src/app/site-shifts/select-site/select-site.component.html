@@ -1,15 +1,14 @@
 <div class="title-bar flex items-center">
-
-    <span class="mr-3">
-        <mat-icon class="iconTitle" [color]="'primary'">location_on</mat-icon>
-    </span>
-    <h2 class="font-light">請選擇地點</h2>
+  <span class="mr-3">
+    <mat-icon class="iconTitle" [color]="'primary'">location_on</mat-icon>
+  </span>
+  <h2 class="font-light">請選擇地點</h2>
 </div>
 <mat-form-field appearance="fill">
-    <mat-label>地點</mat-label>
-    <mat-select>
-        <mat-option *ngFor="let site of sites$ | async" [value]="site.name">
-            {{site.name}}
-        </mat-option>
-    </mat-select>
+  <mat-label>地點</mat-label>
+  <mat-select (selectionChange)="onChange($event.value)">
+    <mat-option *ngFor=" let site of sites$ | async" [value]="site">
+      {{site.name}}
+    </mat-option>
+  </mat-select>
 </mat-form-field>

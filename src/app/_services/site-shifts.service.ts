@@ -9,7 +9,7 @@ import { SiteShifts } from '../_interfaces/site-shifts.interface';
 export class SiteShiftService {
   constructor(private api: Api) {}
 
-  cache$ = new BehaviorSubject<SiteShifts[] | null>(null);
+  cache$ = new BehaviorSubject<SiteShifts[] | null | undefined>(null);
 
   getSiteShiftList = () => {
     if (!this.cache$.value) {

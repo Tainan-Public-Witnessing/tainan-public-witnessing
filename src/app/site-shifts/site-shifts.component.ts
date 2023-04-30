@@ -6,8 +6,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./site-shifts.component.scss'],
 })
 export class SiteShiftsComponent implements OnInit {
- 
   constructor() {}
 
   ngOnInit(): void {}
+
+  onSiteSelected(uuid: string) {
+    console.log('parent');
+    console.log(uuid);
+  }
 }
