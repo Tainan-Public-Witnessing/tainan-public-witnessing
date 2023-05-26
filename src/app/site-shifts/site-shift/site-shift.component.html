@@ -1,25 +1,26 @@
-<!-- <mat-divider></mat-divider> -->
-<mat-card>
+<mat-card [ngClass]="setCardClass()">
   <mat-card-title-group>
-    <mat-card-title>{{shiftHour.name}}</mat-card-title>
-    <mat-card-subtitle>{{shiftHour.startTime}} ～ {{shiftHour.endTime}}</mat-card-subtitle>
-    <mat-checkbox></mat-checkbox>
-    <!-- <img matCardImage src="Side image"> -->
+    <mat-card-title>{{shiftHour?.name}}</mat-card-title>
+    <mat-card-subtitle>{{shiftHour?.startTime}} ～ {{shiftHour?.endTime}}</mat-card-subtitle>
+    <mat-slide-toggle [checked]="siteShift?.activate" (change)="OnCheckChange($event)" color="primary">
+    </mat-slide-toggle>
   </mat-card-title-group>
-  <!-- <img matCardImage src="Card wide image source"> -->
   <mat-card-content>
-
+    <div>
+      <button mat-button (click)="OnAddAttendence()"><mat-icon>add_circle</mat-icon></button>
+      <span [ngClass]="setGroupColor()">
+        <mat-icon class="align-middle">group</mat-icon>
+        <span class="text-xl align-middle">{{siteShift?.attendence}}</span>
+      </span>
+      <button mat-button (click)="OnSubtractAttendence()"><mat-icon>remove_circle</mat-icon></button>
+    </div>
+    <div>
+      <button mat-button (click)="OnAddDeliver()"><mat-icon>add_circle</mat-icon></button>
+      <span [ngClass]="setDeliverColor()">
+        <mat-icon class="align-middle">local_shipping</mat-icon>
+        <span class="text-xl align-middle">{{siteShift?.delivers}}</span>
+      </span>
+      <button mat-button (click)="OnSubtractDeliver()"><mat-icon>remove_circle</mat-icon></button>
+    </div>
   </mat-card-content>
-  <mat-card-actions align="start">
-    <div>
-      <button mat-button><mat-icon>add_circle</mat-icon></button>
-      <mat-icon>group</mat-icon>4
-      <button mat-button><mat-icon>remove_circle</mat-icon></button>
-    </div>
-    <div>
-      <button mat-button><mat-icon>add_circle</mat-icon></button>
-      <mat-icon>local_shipping</mat-icon>2
-      <button mat-button><mat-icon>remove_circle</mat-icon></button>
-    </div>
-  </mat-card-actions>
 </mat-card>

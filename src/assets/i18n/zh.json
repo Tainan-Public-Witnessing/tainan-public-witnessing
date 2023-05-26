@@ -200,7 +200,8 @@
     "END": "結束"
   },
   "SITE-SHIFTS":{
-    "TITLE": "地點時段排班設定"
+    "TITLE": "地點時段排班設定",
+    "UPDATEINFO": "設定已更新"
   },
   "WEEKDAYS": {
     "0": "星期日",

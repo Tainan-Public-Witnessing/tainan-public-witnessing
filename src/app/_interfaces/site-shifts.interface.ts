@@ -1,3 +1,5 @@
+import { ShiftHour } from './shift-hours.interface';
+
 export interface SiteShifts {
   activate: boolean;
   attendence: number;
@@ -6,4 +8,9 @@ export interface SiteShifts {
   siteUuid: string;
   uuid: string;
   weekday: number;
+}
+
+export interface SiteShiftFull {
+  siteShift: SiteShifts | undefined;
+  shiftHour: ShiftHour;
 }

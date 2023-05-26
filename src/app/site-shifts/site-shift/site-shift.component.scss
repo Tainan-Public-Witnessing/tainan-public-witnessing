@@ -1,4 +1,23 @@
-// blockquote {
-//   //float: right;
-//   //margin: 0px 0px 10px 10px;
-// }
+.activate {
+    background-color: rgb(238, 245, 185);
+}
+
+.inactivate {
+    background-color: grey;
+}
+
+.activate-deliver{
+    color:rgb(0, 34, 255)
+}
+
+.inactivate-deliver{
+    color:rgb(49, 49, 49)
+}
+
+.activate-group{
+    color:green
+}
+
+.warn-group{
+    color:red
+}

@@ -251,16 +251,14 @@ export class Api implements ApiInterface {
     ]);
   };
 
-  changeCongregationActivation = async (
-    cong: Congregation
-  ): Promise<void> => {
+  changeCongregationActivation = async (cong: Congregation): Promise<void> => {
     await Promise.all([
       this.angularFirestore
         .doc<ShiftHour>(`Congregations/${cong.uuid}`)
         .update({
           activate: !cong.activate,
         }),
-    ]);    
+    ]);
   };
 
   readSites = (): Promise<Site[]> => {
@@ -320,7 +318,7 @@ export class Api implements ApiInterface {
         .update({
           deliver: !shifthour.deliver,
         }),
-    ]);   
+    ]);
   };
 
   readShiftHours = (): Promise<ShiftHour[]> => {
@@ -361,16 +359,14 @@ export class Api implements ApiInterface {
     ]);
   };
 
-  changeShiftHourActivation = async (
-    shiftHour: ShiftHour
-  ): Promise<void> => {
+  changeShiftHourActivation = async (shiftHour: ShiftHour): Promise<void> => {
     await Promise.all([
       this.angularFirestore
         .doc<ShiftHour>(`ShiftHours/${shiftHour.uuid}`)
         .update({
           activate: !shiftHour.activate,
         }),
-    ]);    
+    ]);
   };
 
   readShiftsByMonth = (yearMonth: string): Promise<Shift[]> => {
@@ -545,6 +541,36 @@ export class Api implements ApiInterface {
       .collection<SiteShifts>('SiteShifts')
       .ref.get();
     return snapshots.docs.map((snapshot) => snapshot.data());
+  };
+
+  createSiteShifts = async (
+    siteShifts: Omit<
+      SiteShifts,
+      'uuid' | 'activate' | 'attendence' | 'delivers'
+    >[]
+  ) => {
+    const batch = this.angularFirestore.firestore.batch();
+    const collection =
+      this.angularFirestore.collection<SiteShifts>('SiteShifts');
+    siteShifts.forEach((siteShift) => {
+      let uuid: string = uuidv4();
+      const docRef = collection.doc(uuid).ref;
+      batch.set(docRef, {
+        ...siteShift,
+        uuid,
+        activate: false,
+        attendence: 0,
+        delivers: 0,
+      });
+    });
+    await batch.commit();
+  };
+
+  updateSiteShift = async (siteShift: SiteShifts): Promise<void> => {
+    const { uuid } = siteShift;
+    await this.angularFirestore
+      .doc<SiteShifts>(`SiteShifts/${uuid}`)
+      .update(siteShift);
   };
 
   readonly #EMPTY_USER_SCHEDULE: UserSchedule = {

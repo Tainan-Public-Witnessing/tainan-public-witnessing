@@ -186,7 +186,8 @@
     "END": "End"
   },
   "SITE-SHIFTS": {
-    "TITLE": "Site Shifts Setting"
+    "TITLE": "Site Shifts Setting",
+    "UPDATEINFO": "has been updated"
   },
   "WEEKDAYS": {
     "0": "Sunday",

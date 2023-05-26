@@ -27,20 +27,26 @@ export interface ApiInterface {
   ) => Promise<{ date: string; hour: ShiftHour; site: Site }[]>;
 
   readCongregations: () => Promise<Congregation[]>;
-  createCongregation: (cong: Omit<Congregation, 'uuid' | 'activate' | 'order'>) => Promise<void>
-  updateCongregation: (cong: Omit<Congregation, 'activate' | 'order'>) => Promise<void>
-  changeCongregationActivation: (cong: Congregation) => Promise<void>
+  createCongregation: (
+    cong: Omit<Congregation, 'uuid' | 'activate' | 'order'>
+  ) => Promise<void>;
+  updateCongregation: (
+    cong: Omit<Congregation, 'activate' | 'order'>
+  ) => Promise<void>;
+  changeCongregationActivation: (cong: Congregation) => Promise<void>;
 
   readSites: () => Promise<Site[]>;
   createSite: (site: Omit<Site, 'uuid'>) => Promise<void>;
-  updateSite: (site: Site) => Promise<void>
-  changeSiteActivation: (site: Site) => Promise<void>
+  updateSite: (site: Site) => Promise<void>;
+  changeSiteActivation: (site: Site) => Promise<void>;
 
   readShiftHours: () => Promise<ShiftHour[]>;
-  createShiftHour: (shifthour: Omit<ShiftHour, 'uuid' | 'activate' | 'deliver'>) => Promise<void>
-  updateShiftHour: (shiftHour: ShiftHour) => Promise<void>
-  changeShiftHourActivation: (shifthour: ShiftHour) => Promise<void>
-  changeShiftHourDelivery: (shifthour: ShiftHour) => Promise<void>
+  createShiftHour: (
+    shifthour: Omit<ShiftHour, 'uuid' | 'activate' | 'deliver'>
+  ) => Promise<void>;
+  updateShiftHour: (shiftHour: ShiftHour) => Promise<void>;
+  changeShiftHourActivation: (shifthour: ShiftHour) => Promise<void>;
+  changeShiftHourDelivery: (shifthour: ShiftHour) => Promise<void>;
 
   readShiftsByMonth: (yearMonth: string) => Promise<Shift[]>; // yyyy-MM
   readShiftsByDate: (date: string) => Promise<Shift[]>; // yyyy-MM-dd
@@ -69,6 +75,13 @@ export interface ApiInterface {
   updateStatistic: (statistic: Statistic) => Promise<void>;
 
   readSiteShifts: () => Promise<SiteShifts[]>;
+  createSiteShifts: (
+    siteShifts: Omit<
+      SiteShifts,
+      'uuid' | 'activate' | 'attendence' | 'delivers'
+    >[]
+  ) => Promise<void>;
+  updateSiteShift: (siteShift: SiteShifts) => Promise<void>;
 
   readUserSchedule: (userUuid: string) => Promise<UserSchedule>;
   patchUserSchedule: (
