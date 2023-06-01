@@ -136,6 +136,7 @@ def ShiftSchedule(db):
             attendance = shift.to_dict()["attendance"]
             siteUuid = shift.to_dict()["siteUuid"]
             shiftHoursUuid = shift.to_dict()["shiftHoursUuid"]
+            delivers = shift.to_dict()["delivers"]
             signup = df[
                 (df["weekday"] == weekday)
                 & (df["shiftHoursUuid"] == shiftHoursUuid)
@@ -169,6 +170,7 @@ def ShiftSchedule(db):
                 "expiredAt": expired,
                 "attendance": attendance,
                 "weekday": weekday,
+                "delivers": delivers,
             }
             if len(result) < attendance:
                 shift_data["full"] = False
