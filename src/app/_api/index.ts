@@ -551,6 +551,36 @@ export class Api implements ApiInterface {
     return snapshots.docs.map((snapshot) => snapshot.data());
   };
 
+  createSiteShifts = async (
+    siteShifts: Omit<
+      SiteShifts,
+      'uuid' | 'activate' | 'attendence' | 'delivers'
+    >[]
+  ) => {
+    const batch = this.angularFirestore.firestore.batch();
+    const collection =
+      this.angularFirestore.collection<SiteShifts>('SiteShifts');
+    siteShifts.forEach((siteShift) => {
+      let uuid: string = uuidv4();
+      const docRef = collection.doc(uuid).ref;
+      batch.set(docRef, {
+        ...siteShift,
+        uuid,
+        activate: false,
+        attendence: 0,
+        delivers: 0,
+      });
+    });
+    await batch.commit();
+  };
+
+  updateSiteShift = async (siteShift: SiteShifts): Promise<void> => {
+    const { uuid } = siteShift;
+    await this.angularFirestore
+      .doc<SiteShifts>(`SiteShifts/${uuid}`)
+      .update(siteShift);
+  };
+
   readonly #EMPTY_USER_SCHEDULE: UserSchedule = {
     availableHours: {},
     unavailableDates: [],

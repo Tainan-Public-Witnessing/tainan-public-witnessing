@@ -12,7 +12,7 @@ export class SitesService {
   constructor(private api: Api) {}
 
   getSites = (): BehaviorSubject<Site[] | null> => {
-    if (this.sites$ === undefined) {      
+    if (this.sites$ === undefined) {
       this.sites$ = new BehaviorSubject<Site[] | null>(null);
       this.api.readSites().then((sites) => {
         let sitesSort = sites.sort((a, b) => a.order - b.order);

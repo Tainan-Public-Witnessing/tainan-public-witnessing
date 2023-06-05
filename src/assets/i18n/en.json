@@ -193,6 +193,19 @@
     "START": "Start",
     "END": "End"
   },
+  "SITE-SHIFTS": {
+    "TITLE": "Site Shifts Setting",
+    "UPDATEINFO": "has been updated"
+  },
+  "WEEKDAYS": {
+    "0": "Sunday",
+    "1": "Monday",
+    "2": "Tuesday",
+    "3": "Wednesday",
+    "4": "Thursday",
+    "5": "Friday",
+    "6": "Saturday"
+  },
   "AVAILABLE_SHIFTS": {
     "TITLE": "Available Shifts",
     "NO_DATA_MESSAGE": "No data",

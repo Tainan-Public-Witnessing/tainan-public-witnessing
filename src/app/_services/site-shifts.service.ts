@@ -9,12 +9,30 @@ import { SiteShifts } from '../_interfaces/site-shifts.interface';
 export class SiteShiftService {
   constructor(private api: Api) {}
 
-  cache$ = new BehaviorSubject<SiteShifts[] | null>(null);
+  private siteShifts$: BehaviorSubject<SiteShifts[] | null> | undefined =
+    undefined;
 
   getSiteShiftList = () => {
-    if (!this.cache$.value) {
-      this.api.readSiteShifts().then((data) => this.cache$.next(data));
+    if (this.siteShifts$ === undefined) {
+      this.siteShifts$ = new BehaviorSubject<SiteShifts[] | null>(null);
+      this.api.readSiteShifts().then((data) => this.siteShifts$?.next(data));
     }
-    return this.cache$;
+    return this.siteShifts$;
+  };
+  createBatchSiteShifts = (
+    siteShifts: Omit<
+      SiteShifts,
+      'uuid' | 'activate' | 'attendence' | 'delivers'
+    >[]
+  ) => {
+    this.siteShifts$?.complete();
+    this.siteShifts$ = undefined;
+    return this.api.createSiteShifts(siteShifts);
+  };
+
+  updateSiteShift = (siteShift: SiteShifts) => {
+    this.siteShifts$?.complete();
+    this.siteShifts$ = undefined;
+    return this.api.updateSiteShift(siteShift);
   };
 }

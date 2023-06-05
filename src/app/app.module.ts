@@ -50,6 +50,10 @@ import { StatisticEditorComponent } from './_elements/dialogs/statistic-editor/s
 import { ShiftCardComponent } from './_elements/shift-table/shift-card/shift-card.component';
 import { ShiftTableComponent } from './_elements/shift-table/shift-table.component';
 import { YearMonthSelectComponent } from './_elements/year-month-select/year-month-select.component';
+import { SiteShiftsComponent } from './site-shifts/site-shifts.component';
+import { SelectSiteComponent } from './site-shifts/select-site/select-site.component';
+import { DayScheduleComponent } from './site-shifts/day-schedule/day-schedule.component';
+import { SiteShiftComponent } from './site-shifts/site-shift/site-shift.component';
 // AoT requires an exported function for factories of translate module
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -94,6 +98,10 @@ export function HttpLoaderFactory(http: HttpClient) {
     ShiftHoursEditorComponent,
     CongregationCreatorComponent,
     CongregationEditorComponent,
+    SiteShiftsComponent,
+    SelectSiteComponent,
+    DayScheduleComponent,
+    SiteShiftComponent,
     UserTableComponent,
     UserFilterComponent,
   ],

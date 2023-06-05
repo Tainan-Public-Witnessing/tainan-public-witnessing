@@ -69,6 +69,7 @@ import { PaginatorIntl } from '../_classes/PagionatorIntl';
     ScrollingModule,
     A11yModule,
     LayoutModule,
+    MatCheckboxModule,
     TranslateModule,
   ],
   providers: [

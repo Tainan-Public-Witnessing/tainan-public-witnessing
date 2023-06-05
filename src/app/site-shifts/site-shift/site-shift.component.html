@@ -1,0 +1,26 @@
+<mat-card [ngClass]="setCardClass()">
+  <mat-card-title-group>
+    <mat-card-title>{{shiftHour?.name}}</mat-card-title>
+    <mat-card-subtitle>{{shiftHour?.startTime}} ～ {{shiftHour?.endTime}}</mat-card-subtitle>
+    <mat-slide-toggle [checked]="siteShift?.activate" (change)="OnCheckChange($event)" color="primary">
+    </mat-slide-toggle>
+  </mat-card-title-group>
+  <mat-card-content>
+    <div>
+      <button mat-button (click)="OnAddAttendence()"><mat-icon>add_circle</mat-icon></button>
+      <span [ngClass]="setGroupColor()">
+        <mat-icon class="align-middle">group</mat-icon>
+        <span class="text-xl align-middle">{{siteShift?.attendence}}</span>
+      </span>
+      <button mat-button (click)="OnSubtractAttendence()"><mat-icon>remove_circle</mat-icon></button>
+    </div>
+    <div>
+      <button mat-button (click)="OnAddDeliver()"><mat-icon>add_circle</mat-icon></button>
+      <span [ngClass]="setDeliverColor()">
+        <mat-icon class="align-middle">local_shipping</mat-icon>
+        <span class="text-xl align-middle">{{siteShift?.delivers}}</span>
+      </span>
+      <button mat-button (click)="OnSubtractDeliver()"><mat-icon>remove_circle</mat-icon></button>
+    </div>
+  </mat-card-content>
+</mat-card>
