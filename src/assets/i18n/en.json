@@ -23,6 +23,7 @@
       "SATURDAY": "Saturday"
     },
     "ERROR": "Error",
+    "SAVING": "Saving...",
     "SAVED": "Saved!",
     "ERRORS": {
       "UNKNOWN": "Unknown error! Please try again later."
@@ -187,7 +188,8 @@
   },
   "SITE-SHIFTS": {
     "TITLE": "Site Shifts Setting",
-    "UPDATEINFO": "has been updated"
+    "SITE": "Site",
+    "SELECT_SITE": "Please select a site first"
   },
   "WEEKDAYS": {
     "0": "Sunday",

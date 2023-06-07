@@ -3,8 +3,12 @@
   <h1>{{ "SITE-SHIFTS.TITLE" | translate }}</h1>
   <app-select-site (onSiteSelected)="onSiteSelected($event)"></app-select-site>
   <div *ngIf="siteShiftsByDay$ | async" class="container week">
-    <app-day-schedule *ngFor="let siteShift of siteShiftsByDay$.value | keyvalue" [day]="siteShift.key"
-      [siteShiftFulls]="siteShift.value">
+    <app-day-schedule
+      class="w-full"
+      *ngFor="let siteShift of siteShiftsByDay$.value | keyvalue"
+      [day]="siteShift.key"
+      [siteShiftFulls]="siteShift.value"
+    >
     </app-day-schedule>
   </div>
 </div>

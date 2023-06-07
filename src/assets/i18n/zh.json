@@ -14,6 +14,7 @@
     "ERROR": "錯誤",
     "EXISTED_ERROR": "{{value}}已存在！",
     "DONOT_EXIST_ERROR": "{{value}}不存在！",
+    "SAVING": "儲存中…",
     "SAVED": "儲存成功！",
     "DAY": {
       "SUNDAY": "週日",
@@ -199,9 +200,10 @@
     "START": "開始",
     "END": "結束"
   },
-  "SITE-SHIFTS":{
+  "SITE-SHIFTS": {
     "TITLE": "地點時段排班設定",
-    "UPDATEINFO": "設定已更新"
+    "SITE": "地點",
+    "SELECT_SITE": "請選擇地點"
   },
   "WEEKDAYS": {
     "0": "星期日",
