@@ -1,31 +1,31 @@
-import { Injectable } from '@angular/core';
-import { ApiInterface } from 'src/app/_api/api.interface';
+import { Injectable } from "@angular/core";
+import { ApiInterface } from "src/app/_api/api.interface";
 
-import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { arrayUnion } from 'firebase/firestore';
+import { AngularFireAuth } from "@angular/fire/compat/auth";
+import { AngularFirestore } from "@angular/fire/compat/firestore";
+import { arrayUnion } from "firebase/firestore";
 
-import { firstValueFrom } from 'rxjs';
-import { environment } from 'src/environments/environment';
-import { v4 as uuidv4, v5 as uuidv5 } from 'uuid';
-import { EXISTED_ERROR } from '../_classes/errors/EXISTED_ERROR';
-import { docsExists } from '../_helpers/firebase-helper';
-import { Congregation } from '../_interfaces/congregation.interface';
-import { PersonalShifts } from '../_interfaces/personal-shifts.interface';
-import { Settings } from '../_interfaces/settings.interface';
-import { ShiftHour } from '../_interfaces/shift-hours.interface';
-import { Shift } from '../_interfaces/shift.interface';
-import { SiteShifts } from '../_interfaces/site-shifts.interface';
-import { Site } from '../_interfaces/site.interface';
-import { Statistic } from '../_interfaces/statistic.interface';
-import { UserSchedule } from '../_interfaces/user-schedule.interface';
-import { User, UserKey } from '../_interfaces/user.interface';
+import { firstValueFrom } from "rxjs";
+import { environment } from "src/environments/environment";
+import { v4 as uuidv4, v5 as uuidv5 } from "uuid";
+import { EXISTED_ERROR } from "../_classes/errors/EXISTED_ERROR";
+import { docsExists } from "../_helpers/firebase-helper";
+import { Congregation } from "../_interfaces/congregation.interface";
+import { PersonalShifts } from "../_interfaces/personal-shifts.interface";
+import { Settings } from "../_interfaces/settings.interface";
+import { ShiftHour } from "../_interfaces/shift-hours.interface";
+import { Shift } from "../_interfaces/shift.interface";
+import { SiteShifts } from "../_interfaces/site-shifts.interface";
+import { Site } from "../_interfaces/site.interface";
+import { Statistic } from "../_interfaces/statistic.interface";
+import { UserSchedule } from "../_interfaces/user-schedule.interface";
+import { User, UserKey } from "../_interfaces/user.interface";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class Api implements ApiInterface {
-  private readonly mailSuffix = '@mail.tpw';
+  private readonly mailSuffix = "@mail.tpw";
 
   constructor(
     private angularFirestore: AngularFirestore,
@@ -33,7 +33,7 @@ export class Api implements ApiInterface {
   ) {}
 
   login = async (uuid: string, password: string): Promise<void> => {
-    const email = [uuid, this.mailSuffix].join('');
+    const email = [uuid, this.mailSuffix].join("");
     const pass = uuidv5(password, environment.UUID_NAMESPACE);
     await this.angularFireAuth.signInWithEmailAndPassword(email, pass);
   };
@@ -43,51 +43,44 @@ export class Api implements ApiInterface {
   };
 
   readUserKeys = async (): Promise<UserKey[]> => {
-    const snapshot = await this.angularFirestore
-      .doc<Settings>('/Settings/settings')
-      .ref.get();
+    const snapshot = await this.angularFirestore.doc<Settings>("/Settings/settings").ref.get();
     return snapshot.data()!.userKeys;
   };
 
   readAllUsers = async (): Promise<User[]> => {
-    const snapshots = await firstValueFrom(
-      this.angularFirestore.collection<User>('/Users').get()
-    );
+    const snapshots = await firstValueFrom(this.angularFirestore.collection<User>("/Users").get());
 
     return snapshots.docs.map((snapshot) => snapshot.data());
   };
 
   readUser = (uuid: string): Promise<User> => {
     return this.angularFirestore
-      .collection<User>('Users')
+      .collection<User>("Users")
       .doc<User>(uuid)
       .ref.get()
       .then((doc) => {
         if (doc.exists) {
           return doc.data() as User;
         } else {
-          return Promise.reject('NOT_EXIST');
+          return Promise.reject("NOT_EXIST");
         }
       });
   };
 
-  createUser = (user: Omit<User, 'uuid' | 'activate' | 'bindCode'>) => {
+  createUser = (user: Omit<User, "uuid" | "activate" | "bindCode">) => {
     return this.angularFirestore.firestore.runTransaction(async (trans) => {
       const userNameExists = await docsExists(
-        this.angularFirestore.collection<User>('/Users', (query) =>
-          query.where('username', '==', user.username)
+        this.angularFirestore.collection<User>("/Users", (query) =>
+          query.where("username", "==", user.username)
         )
       );
-      if (userNameExists) throw new EXISTED_ERROR('username');
+      if (userNameExists) throw new EXISTED_ERROR("username");
 
       // ensure non-duplicated uuid
       let uuid: string;
       do {
         uuid = uuidv4();
-      } while (
-        (await trans.get(this.angularFirestore.doc<User>(`/Users/${uuid}`).ref))
-          .exists
-      );
+      } while ((await trans.get(this.angularFirestore.doc<User>(`/Users/${uuid}`).ref)).exists);
 
       trans.set(this.angularFirestore.doc<User>(`Users/${uuid}`).ref, {
         ...user,
@@ -95,40 +88,32 @@ export class Api implements ApiInterface {
         activate: true,
         bindCode: Math.floor(Math.random() * 9999_9999)
           .toString()
-          .padStart(8, '0'),
+          .padStart(8, "0"),
       });
       trans.set(
-        this.angularFirestore.doc<UserSchedule>(`Users/${uuid}/Schedule/config`)
-          .ref,
+        this.angularFirestore.doc<UserSchedule>(`Users/${uuid}/Schedule/config`).ref,
         this.#EMPTY_USER_SCHEDULE
       );
-      trans.update(
-        this.angularFirestore.doc<Settings>(`/Settings/settings`).ref,
-        {
-          userKeys: arrayUnion({
-            uuid,
-            activate: true,
-            username: user.username,
-          }),
-        }
-      );
+      trans.update(this.angularFirestore.doc<Settings>(`/Settings/settings`).ref, {
+        userKeys: arrayUnion({
+          uuid,
+          activate: true,
+          username: user.username,
+        }),
+      });
       return uuid;
     });
   };
 
-  patchUser = (user: Omit<User, 'activate' | 'bindCode'>) => {
+  patchUser = (user: Omit<User, "activate" | "bindCode">) => {
     return this.angularFirestore.firestore.runTransaction(async (trans) => {
       if (!!user.username) {
-        const settingsRef =
-          this.angularFirestore.doc<Settings>('/Settings/settings').ref;
+        const settingsRef = this.angularFirestore.doc<Settings>("/Settings/settings").ref;
         const { userKeys } = (await trans.get(settingsRef)).data()!;
         userKeys.find((u) => u.uuid === user.uuid)!.username = user.username;
         trans.update(settingsRef, { userKeys });
 
-        trans.update(
-          this.angularFirestore.doc<User>(`/Users/${user.uuid}`).ref,
-          user
-        );
+        trans.update(this.angularFirestore.doc<User>(`/Users/${user.uuid}`).ref, user);
       }
     });
   };
@@ -161,13 +146,10 @@ export class Api implements ApiInterface {
 
       const [sites, shiftHours] = (
         await Promise.all([
-          db.collection<Site>('Sites').ref.get(),
-          db.collection<ShiftHour>('ShiftHours').ref.get(),
+          db.collection<Site>("Sites").ref.get(),
+          db.collection<ShiftHour>("ShiftHours").ref.get(),
         ])
-      ).map((snapshot) => snapshot.docs.map((doc) => doc.data())) as [
-        Site[],
-        ShiftHour[]
-      ];
+      ).map((snapshot) => snapshot.docs.map((doc) => doc.data())) as [Site[], ShiftHour[]];
 
       return userShifts
         .map((shift) => ({
@@ -175,15 +157,11 @@ export class Api implements ApiInterface {
           hour: shiftHours.find((hour) => hour.uuid === shift.shiftHoursUuid)!,
           site: sites.find((site) => site.uuid === shift.siteUuid)!,
         }))
-        .filter(
-          (shift) =>
-            new Date(`${shift.date}T${shift.hour.startTime}:00.000`) >
-            new Date()
-        );
+        .filter((shift) => new Date(`${shift.date}T${shift.hour.startTime}:00.000`) > new Date());
     }
 
     async function fetchMontlyShift(ym: string) {
-      const allShifts = db.doc(`/MonthlyData/${ym}`).collection('Shifts');
+      const allShifts = db.doc(`/MonthlyData/${ym}`).collection("Shifts");
       if (!(await docsExists(allShifts))) return undefined;
 
       const userShifts = await db
@@ -198,18 +176,14 @@ export class Api implements ApiInterface {
       return await Promise.all(
         shiftUuids.map(
           async (shiftUuid) =>
-            (
-              await db
-                .doc<Shift>(`/MonthlyData/${ym}/Shifts/${shiftUuid}`)
-                .ref.get()
-            ).data()!
+            (await db.doc<Shift>(`/MonthlyData/${ym}/Shifts/${shiftUuid}`).ref.get()).data()!
         )
       );
     }
 
     function writeDatabase() {
       return db.firestore.runTransaction(async (trans) => {
-        const settingsRef = db.doc<Settings>('/Settings/settings').ref;
+        const settingsRef = db.doc<Settings>("/Settings/settings").ref;
         const { userKeys } = (await trans.get(settingsRef)).data()!;
         userKeys.find((u) => u.uuid === uuid)!.activate = activate;
         trans.update(settingsRef, { userKeys });
@@ -220,22 +194,22 @@ export class Api implements ApiInterface {
 
   readCongregations = (): Promise<Congregation[]> => {
     return firstValueFrom(
-      this.angularFirestore.collection<Congregation>('Congregations').get()
+      this.angularFirestore.collection<Congregation>("Congregations").get()
     ).then((query) => {
       if (query.docs.length > 0) {
         return query.docs.map((doc) => doc.data());
       } else {
-        return Promise.reject('NOT_EXIST');
+        return Promise.reject("NOT_EXIST");
       }
     });
   };
 
   createCongregation = async (
-    cong: Omit<Congregation, 'uuid' | 'activate' | 'order'>
+    cong: Omit<Congregation, "uuid" | "activate" | "order">
   ): Promise<void> => {
     let uuid: string = uuidv4();
     let maxOrder = await firstValueFrom(
-      this.angularFirestore.collection<Congregation>('Congregations').get()
+      this.angularFirestore.collection<Congregation>("Congregations").get()
     ).then((query) => Math.max(...query.docs.map((m) => m.data().order)));
 
     await Promise.all([
@@ -248,9 +222,7 @@ export class Api implements ApiInterface {
     ]);
   };
 
-  updateCongregation = async (
-    cong: Omit<Congregation, 'activate' | 'order'>
-  ): Promise<void> => {
+  updateCongregation = async (cong: Omit<Congregation, "activate" | "order">): Promise<void> => {
     const { uuid, name } = cong;
     await Promise.all([
       this.angularFirestore.doc<Congregation>(`Congregations/${uuid}`).update({
@@ -261,33 +233,27 @@ export class Api implements ApiInterface {
 
   changeCongregationActivation = async (cong: Congregation): Promise<void> => {
     await Promise.all([
-      this.angularFirestore
-        .doc<ShiftHour>(`Congregations/${cong.uuid}`)
-        .update({
-          activate: !cong.activate,
-        }),
+      this.angularFirestore.doc<ShiftHour>(`Congregations/${cong.uuid}`).update({
+        activate: !cong.activate,
+      }),
     ]);
   };
 
   readSites = (): Promise<Site[]> => {
-    return firstValueFrom(
-      this.angularFirestore.collection<Site>('Sites').get()
-    ).then((query) => {
+    return firstValueFrom(this.angularFirestore.collection<Site>("Sites").get()).then((query) => {
       if (query.docs.length > 0) {
         return query.docs.map((doc) => doc.data());
       } else {
-        return Promise.reject('NOT_EXIST');
+        return Promise.reject("NOT_EXIST");
       }
     });
   };
 
-  createSite = async (
-    site: Omit<Site, 'uuid' | 'activate' | 'order'>
-  ): Promise<void> => {
+  createSite = async (site: Omit<Site, "uuid" | "activate" | "order">): Promise<void> => {
     let uuid: string = uuidv4();
-    let maxOrder = await firstValueFrom(
-      this.angularFirestore.collection<Site>('Sites').get()
-    ).then((query) => Math.max(...query.docs.map((m) => m.data().order)));
+    let maxOrder = await firstValueFrom(this.angularFirestore.collection<Site>("Sites").get()).then(
+      (query) => Math.max(...query.docs.map((m) => m.data().order))
+    );
 
     await Promise.all([
       this.angularFirestore.doc<Site>(`Sites/${uuid}`).set({
@@ -299,9 +265,7 @@ export class Api implements ApiInterface {
     ]);
   };
 
-  updateSite = async (
-    site: Omit<Site, 'activate' | 'order'>
-  ): Promise<void> => {
+  updateSite = async (site: Omit<Site, "activate" | "order">): Promise<void> => {
     const { uuid, position, name } = site;
     await Promise.all([
       this.angularFirestore.doc<Site>(`Sites/${uuid}`).update({
@@ -321,28 +285,26 @@ export class Api implements ApiInterface {
 
   changeShiftHourDelivery = async (shifthour: ShiftHour): Promise<void> => {
     await Promise.all([
-      this.angularFirestore
-        .doc<ShiftHour>(`ShiftHours/${shifthour.uuid}`)
-        .update({
-          deliver: !shifthour.deliver,
-        }),
+      this.angularFirestore.doc<ShiftHour>(`ShiftHours/${shifthour.uuid}`).update({
+        deliver: !shifthour.deliver,
+      }),
     ]);
   };
 
   readShiftHours = (): Promise<ShiftHour[]> => {
-    return firstValueFrom(
-      this.angularFirestore.collection<ShiftHour>('ShiftHours').get()
-    ).then((query) => {
-      if (query.docs.length > 0) {
-        return query.docs.map((doc) => doc.data());
-      } else {
-        return Promise.reject('NOT_EXIST');
+    return firstValueFrom(this.angularFirestore.collection<ShiftHour>("ShiftHours").get()).then(
+      (query) => {
+        if (query.docs.length > 0) {
+          return query.docs.map((doc) => doc.data());
+        } else {
+          return Promise.reject("NOT_EXIST");
+        }
       }
-    });
+    );
   };
 
   createShiftHour = async (
-    shifthours: Omit<ShiftHour, 'uuid' | 'activate' | 'deliver'>
+    shifthours: Omit<ShiftHour, "uuid" | "activate" | "deliver">
   ): Promise<void> => {
     let uuid: string = uuidv4();
     await Promise.all([
@@ -354,9 +316,7 @@ export class Api implements ApiInterface {
       }),
     ]);
   };
-  updateShiftHour = async (
-    shiftHour: Omit<ShiftHour, 'activate' | 'deliver'>
-  ): Promise<void> => {
+  updateShiftHour = async (shiftHour: Omit<ShiftHour, "activate" | "deliver">): Promise<void> => {
     const { uuid, name, startTime, endTime } = shiftHour;
     await Promise.all([
       this.angularFirestore.doc<ShiftHour>(`ShiftHours/${uuid}`).update({
@@ -369,24 +329,20 @@ export class Api implements ApiInterface {
 
   changeShiftHourActivation = async (shiftHour: ShiftHour): Promise<void> => {
     await Promise.all([
-      this.angularFirestore
-        .doc<ShiftHour>(`ShiftHours/${shiftHour.uuid}`)
-        .update({
-          activate: !shiftHour.activate,
-        }),
+      this.angularFirestore.doc<ShiftHour>(`ShiftHours/${shiftHour.uuid}`).update({
+        activate: !shiftHour.activate,
+      }),
     ]);
   };
 
   readShiftsByMonth = (yearMonth: string): Promise<Shift[]> => {
     return firstValueFrom(
-      this.angularFirestore
-        .collection<Shift>(['MonthlyData', yearMonth, 'Shifts'].join('/'))
-        .get()
+      this.angularFirestore.collection<Shift>(["MonthlyData", yearMonth, "Shifts"].join("/")).get()
     ).then((query) => {
       if (query.docs.length > 0) {
         return query.docs.map((doc) => doc.data());
       } else {
-        return Promise.reject('NOT_EXIST');
+        return Promise.reject("NOT_EXIST");
       }
     });
   };
@@ -395,16 +351,15 @@ export class Api implements ApiInterface {
     const yearMonth = date.slice(0, 7);
     return firstValueFrom(
       this.angularFirestore
-        .collection<Shift>(
-          ['MonthlyData', yearMonth, 'Shifts'].join('/'),
-          (document) => document.where('date', '==', date)
+        .collection<Shift>(["MonthlyData", yearMonth, "Shifts"].join("/"), (document) =>
+          document.where("date", "==", date)
         )
         .get()
     ).then((query) => {
       if (query.docs.length > 0) {
         return query.docs.map((doc) => doc.data());
       } else {
-        return Promise.reject('NOT_EXIST');
+        return Promise.reject("NOT_EXIST");
       }
     });
   };
@@ -419,9 +374,8 @@ export class Api implements ApiInterface {
       uuidSets.map((_uuids) => {
         return firstValueFrom(
           this.angularFirestore
-            .collection<Shift>(
-              ['MonthlyData', yearMonth, 'Shifts'].join('/'),
-              (document) => document.where('uuid', 'in', _uuids)
+            .collection<Shift>(["MonthlyData", yearMonth, "Shifts"].join("/"), (document) =>
+              document.where("uuid", "in", _uuids)
             )
             .get()
         );
@@ -434,7 +388,7 @@ export class Api implements ApiInterface {
       if (_shifts.length > 0) {
         return _shifts;
       } else {
-        return Promise.reject('NOT_EXIST');
+        return Promise.reject("NOT_EXIST");
       }
     });
   };
@@ -442,16 +396,15 @@ export class Api implements ApiInterface {
   readShift = (yearMonth: string, uuid: string): Promise<Shift> => {
     return firstValueFrom(
       this.angularFirestore
-        .collection<Shift>(
-          ['MonthlyData', yearMonth, 'Shifts'].join('/'),
-          (document) => document.where('uuid', '==', uuid)
+        .collection<Shift>(["MonthlyData", yearMonth, "Shifts"].join("/"), (document) =>
+          document.where("uuid", "==", uuid)
         )
         .get()
     ).then((query) => {
       if (query.docs.length > 0) {
         return query.docs.map((doc) => doc.data())[0];
       } else {
-        return Promise.reject('NOT_EXIST');
+        return Promise.reject("NOT_EXIST");
       }
     });
   };
@@ -459,52 +412,39 @@ export class Api implements ApiInterface {
   updateShift = (shift: Shift): Promise<void> => {
     const yearMonth = shift.date.slice(0, 7);
     return this.angularFirestore
-      .doc<Shift>(['MonthlyData', yearMonth, 'Shifts', shift.uuid].join('/'))
+      .doc<Shift>(["MonthlyData", yearMonth, "Shifts", shift.uuid].join("/"))
       .update(shift);
   };
 
-  readPersonalShifts = (
-    yearMonth: string,
-    uuid: string
-  ): Promise<PersonalShifts> => {
+  readPersonalShifts = (yearMonth: string, uuid: string): Promise<PersonalShifts> => {
     return firstValueFrom(
       this.angularFirestore
         .collection<PersonalShifts>(
-          ['MonthlyData', yearMonth, 'PersonalShifts'].join('/'),
-          (document) => document.where('uuid', '==', uuid)
+          ["MonthlyData", yearMonth, "PersonalShifts"].join("/"),
+          (document) => document.where("uuid", "==", uuid)
         )
         .get()
     ).then((query) => {
       if (query.docs.length > 0) {
         return query.docs.map((doc) => doc.data())[0];
       } else {
-        return Promise.reject('NOT_EXIST');
+        return Promise.reject("NOT_EXIST");
       }
     });
   };
 
-  createPersonalShifts = (
-    yearMonth: string,
-    personalShift: PersonalShifts
-  ): Promise<void> => {
+  createPersonalShifts = (yearMonth: string, personalShift: PersonalShifts): Promise<void> => {
     return this.angularFirestore
       .doc<PersonalShifts>(
-        ['MonthlyData', yearMonth, 'PersonalShifts', personalShift.uuid].join(
-          '/'
-        )
+        ["MonthlyData", yearMonth, "PersonalShifts", personalShift.uuid].join("/")
       )
       .set(personalShift);
   };
 
-  updatePersonalShifts = (
-    yearMonth: string,
-    personalShift: PersonalShifts
-  ): Promise<void> => {
+  updatePersonalShifts = (yearMonth: string, personalShift: PersonalShifts): Promise<void> => {
     return this.angularFirestore
       .doc<PersonalShifts>(
-        ['MonthlyData', yearMonth, 'PersonalShifts', personalShift.uuid].join(
-          '/'
-        )
+        ["MonthlyData", yearMonth, "PersonalShifts", personalShift.uuid].join("/")
       )
       .update(personalShift);
   };
@@ -512,9 +452,7 @@ export class Api implements ApiInterface {
   readStatistic = (yearMonth: string, uuid: string): Promise<Statistic> => {
     return firstValueFrom(
       this.angularFirestore
-        .doc<Statistic>(
-          ['MonthlyData', yearMonth, 'Statistics', uuid].join('/')
-        )
+        .doc<Statistic>(["MonthlyData", yearMonth, "Statistics", uuid].join("/"))
         .get()
     ).then((doc) => {
       const _statistic = doc.data();
@@ -529,37 +467,27 @@ export class Api implements ApiInterface {
   createStatistic = (statistic: Statistic): Promise<void> => {
     const yearMonth = statistic.date.slice(0, 7);
     return this.angularFirestore
-      .doc<Statistic>(
-        ['MonthlyData', yearMonth, 'Statistics', statistic.uuid].join('/')
-      )
+      .doc<Statistic>(["MonthlyData", yearMonth, "Statistics", statistic.uuid].join("/"))
       .set(statistic);
   };
 
   updateStatistic = (statistic: Statistic): Promise<void> => {
     const yearMonth = statistic.date.slice(0, 7);
     return this.angularFirestore
-      .doc<Statistic>(
-        ['MonthlyData', yearMonth, 'Statistics', statistic.uuid].join('/')
-      )
+      .doc<Statistic>(["MonthlyData", yearMonth, "Statistics", statistic.uuid].join("/"))
       .update(statistic);
   };
 
   readSiteShifts = async () => {
-    const snapshots = await this.angularFirestore
-      .collection<SiteShifts>('SiteShifts')
-      .ref.get();
+    const snapshots = await this.angularFirestore.collection<SiteShifts>("SiteShifts").ref.get();
     return snapshots.docs.map((snapshot) => snapshot.data());
   };
 
   createSiteShifts = async (
-    siteShifts: Omit<
-      SiteShifts,
-      'uuid' | 'activate' | 'attendence' | 'delivers'
-    >[]
+    siteShifts: Omit<SiteShifts, "uuid" | "activate" | "attendance" | "delivers">[]
   ) => {
     const batch = this.angularFirestore.firestore.batch();
-    const collection =
-      this.angularFirestore.collection<SiteShifts>('SiteShifts');
+    const collection = this.angularFirestore.collection<SiteShifts>("SiteShifts");
     siteShifts.forEach((siteShift) => {
       let uuid: string = uuidv4();
       const docRef = collection.doc(uuid).ref;
@@ -567,7 +495,7 @@ export class Api implements ApiInterface {
         ...siteShift,
         uuid,
         activate: false,
-        attendence: 0,
+        attendance: 0,
         delivers: 0,
       });
     });
@@ -576,15 +504,13 @@ export class Api implements ApiInterface {
 
   updateSiteShift = async (siteShift: SiteShifts): Promise<void> => {
     const { uuid } = siteShift;
-    await this.angularFirestore
-      .doc<SiteShifts>(`SiteShifts/${uuid}`)
-      .update(siteShift);
+    await this.angularFirestore.doc<SiteShifts>(`SiteShifts/${uuid}`).update(siteShift);
   };
 
   readonly #EMPTY_USER_SCHEDULE: UserSchedule = {
     availableHours: {},
     unavailableDates: [],
-    partnerUuid: '',
+    partnerUuid: "",
     assign: true,
   };
 
@@ -596,13 +522,9 @@ export class Api implements ApiInterface {
     return snapshot.data() || this.#EMPTY_USER_SCHEDULE;
   };
   patchUserSchedule = async (userUuid: string, data: Partial<UserSchedule>) => {
-    await this.angularFirestore
-      .doc(`Users/${userUuid}/Schedule/config`)
-      .update(data);
+    await this.angularFirestore.doc(`Users/${userUuid}/Schedule/config`).update(data);
   };
   cancelLineToken = async (userUuid: string) => {
-    await this.angularFirestore
-      .doc(`Users/${userUuid}/Schedule/config`)
-      .update({ lineToken: '' });
+    await this.angularFirestore.doc(`Users/${userUuid}/Schedule/config`).update({ lineToken: "" });
   };
 }

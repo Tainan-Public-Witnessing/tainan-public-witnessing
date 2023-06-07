@@ -1,12 +1,12 @@
-import { Congregation } from 'src/app/_interfaces/congregation.interface';
-import { Site } from 'src/app/_interfaces/site.interface';
-import { User, UserKey } from 'src/app/_interfaces/user.interface';
-import { PersonalShifts } from '../_interfaces/personal-shifts.interface';
-import { ShiftHour } from '../_interfaces/shift-hours.interface';
-import { Shift } from '../_interfaces/shift.interface';
-import { SiteShifts } from '../_interfaces/site-shifts.interface';
-import { Statistic } from '../_interfaces/statistic.interface';
-import { UserSchedule } from '../_interfaces/user-schedule.interface';
+import { Congregation } from "src/app/_interfaces/congregation.interface";
+import { Site } from "src/app/_interfaces/site.interface";
+import { User, UserKey } from "src/app/_interfaces/user.interface";
+import { PersonalShifts } from "../_interfaces/personal-shifts.interface";
+import { ShiftHour } from "../_interfaces/shift-hours.interface";
+import { Shift } from "../_interfaces/shift.interface";
+import { SiteShifts } from "../_interfaces/site-shifts.interface";
+import { Statistic } from "../_interfaces/statistic.interface";
+import { UserSchedule } from "../_interfaces/user-schedule.interface";
 
 export interface ApiInterface {
   login: (uuid: string, password: string) => Promise<void>;
@@ -20,56 +20,38 @@ export interface ApiInterface {
    * create new user and return its uuid
    * @return {string} new user uuid
    */
-  createUser: (user: Omit<User, 'uuid' | 'activate'>) => Promise<string>;
-  patchUser: (user: Omit<User, 'activate'>) => Promise<void>;
+  createUser: (user: Omit<User, "uuid" | "activate">) => Promise<string>;
+  patchUser: (user: Omit<User, "activate">) => Promise<void>;
   updateUserActivation: (
     uuid: string,
     activate: boolean
   ) => Promise<{ date: string; hour: ShiftHour; site: Site }[]>;
 
   readCongregations: () => Promise<Congregation[]>;
-  createCongregation: (
-    cong: Omit<Congregation, 'uuid' | 'activate' | 'order'>
-  ) => Promise<void>;
-  updateCongregation: (
-    cong: Omit<Congregation, 'activate' | 'order'>
-  ) => Promise<void>;
+  createCongregation: (cong: Omit<Congregation, "uuid" | "activate" | "order">) => Promise<void>;
+  updateCongregation: (cong: Omit<Congregation, "activate" | "order">) => Promise<void>;
   changeCongregationActivation: (cong: Congregation) => Promise<void>;
 
   readSites: () => Promise<Site[]>;
-  createSite: (site: Omit<Site, 'uuid'>) => Promise<void>;
+  createSite: (site: Omit<Site, "uuid">) => Promise<void>;
   updateSite: (site: Site) => Promise<void>;
   changeSiteActivation: (site: Site) => Promise<void>;
 
   readShiftHours: () => Promise<ShiftHour[]>;
-  createShiftHour: (
-    shifthour: Omit<ShiftHour, 'uuid' | 'activate' | 'deliver'>
-  ) => Promise<void>;
+  createShiftHour: (shifthour: Omit<ShiftHour, "uuid" | "activate" | "deliver">) => Promise<void>;
   updateShiftHour: (shiftHour: ShiftHour) => Promise<void>;
   changeShiftHourActivation: (shifthour: ShiftHour) => Promise<void>;
   changeShiftHourDelivery: (shifthour: ShiftHour) => Promise<void>;
 
   readShiftsByMonth: (yearMonth: string) => Promise<Shift[]>; // yyyy-MM
   readShiftsByDate: (date: string) => Promise<Shift[]>; // yyyy-MM-dd
-  readShifts: (
-    yearMonth: string,
-    uuids: string[]
-  ) => Promise<(Shift | undefined)[]>;
+  readShifts: (yearMonth: string, uuids: string[]) => Promise<(Shift | undefined)[]>;
   readShift: (yearMonth: string, uuid: string) => Promise<Shift>;
   updateShift: (shift: Shift) => Promise<void>;
 
-  readPersonalShifts: (
-    yearMonth: string,
-    uuid: string
-  ) => Promise<PersonalShifts>;
-  createPersonalShifts: (
-    yearMonth: string,
-    personalShift: PersonalShifts
-  ) => Promise<void>;
-  updatePersonalShifts: (
-    yearMonth: string,
-    personalShift: PersonalShifts
-  ) => Promise<void>;
+  readPersonalShifts: (yearMonth: string, uuid: string) => Promise<PersonalShifts>;
+  createPersonalShifts: (yearMonth: string, personalShift: PersonalShifts) => Promise<void>;
+  updatePersonalShifts: (yearMonth: string, personalShift: PersonalShifts) => Promise<void>;
 
   readStatistic: (yearMonth: string, uuid: string) => Promise<Statistic>;
   createStatistic: (statistic: Statistic) => Promise<void>;
@@ -77,18 +59,12 @@ export interface ApiInterface {
 
   readSiteShifts: () => Promise<SiteShifts[]>;
   createSiteShifts: (
-    siteShifts: Omit<
-      SiteShifts,
-      'uuid' | 'activate' | 'attendence' | 'delivers'
-    >[]
+    siteShifts: Omit<SiteShifts, "uuid" | "activate" | "attendance" | "delivers">[]
   ) => Promise<void>;
   updateSiteShift: (siteShift: SiteShifts) => Promise<void>;
 
   readUserSchedule: (userUuid: string) => Promise<UserSchedule>;
-  patchUserSchedule: (
-    userUuid: string,
-    data: Partial<UserSchedule>
-  ) => Promise<void>;
+  patchUserSchedule: (userUuid: string, data: Partial<UserSchedule>) => Promise<void>;
 
   cancelLineToken: (userUuid: string) => Promise<void>;
 }
