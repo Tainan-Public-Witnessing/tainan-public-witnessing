@@ -5,14 +5,14 @@
   >
   <mat-card-content>
     <div>
-      <button mat-icon-button (click)="onAttendenceChange(-1)">
+      <button mat-icon-button (click)="onattendanceChange(-1)">
         <mat-icon>remove_circle</mat-icon>
       </button>
-      <span [class.activate-group]="siteShift?.attendence">
+      <span [class.activate-group]="siteShift?.attendance">
         <mat-icon class="align-middle">group</mat-icon>
-        <span class="text-xl align-middle">{{ siteShift?.attendence }}</span>
+        <span class="text-xl align-middle">{{ siteShift?.attendance }}</span>
       </span>
-      <button mat-icon-button (click)="onAttendenceChange(1)">
+      <button mat-icon-button (click)="onattendanceChange(1)">
         <mat-icon>add_circle</mat-icon>
       </button>
     </div>
