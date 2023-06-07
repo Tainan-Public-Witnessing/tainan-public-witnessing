@@ -5,7 +5,7 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { arrayUnion } from 'firebase/firestore';
 
-import { firstValueFrom, map } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { v4 as uuidv4, v5 as uuidv5 } from 'uuid';
 import { EXISTED_ERROR } from '../_classes/errors/EXISTED_ERROR';
@@ -47,6 +47,14 @@ export class Api implements ApiInterface {
       .doc<Settings>('/Settings/settings')
       .ref.get();
     return snapshot.data()!.userKeys;
+  };
+
+  readAllUsers = async (): Promise<User[]> => {
+    const snapshots = await firstValueFrom(
+      this.angularFirestore.collection<User>('/Users').get()
+    );
+
+    return snapshots.docs.map((snapshot) => snapshot.data());
   };
 
   readUser = (uuid: string): Promise<User> => {

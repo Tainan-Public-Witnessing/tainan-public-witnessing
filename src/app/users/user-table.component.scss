@@ -1,0 +1,17 @@
+@use '@angular/material' as mat;
+@import 'src/styles.scss';
+@import 'src/app/_styles/global';
+
+$palettes: mat.get-color-config($TainanPublicWitnessing-theme);
+$warn-palette: map-get($palettes, 'warn');
+
+:host {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+
+  .deativated {
+    color: map-get($warn-palette, 'text');
+  }
+}

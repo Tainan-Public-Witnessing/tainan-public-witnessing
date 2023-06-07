@@ -33,6 +33,7 @@
     "autoprefixer": "^10.4.13",
     "firebase": "^9.8.2",
     "moment": "^2.29.1",
+    "ngx-auto-unsubscribe-decorator": "^1.1.0",
     "ngx-cookie-service": "^14.0.0",
     "post": "^0.0.1",
     "postcss": "^8.4.16",

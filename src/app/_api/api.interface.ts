@@ -14,6 +14,7 @@ export interface ApiInterface {
 
   readUserKeys: () => Promise<UserKey[]>;
 
+  readAllUsers: () => Promise<User[] | null>;
   readUser: (uuid: string) => Promise<User>;
   /**
    * create new user and return its uuid

@@ -17,6 +17,8 @@ module.exports = {
       accent: "#9e9e9e",
       warn: "#f44336",
       white: "#ffffff",
+      inherit: "inherit",
+      hovered: "#0000000a",
     },
   },
   plugins: [],
