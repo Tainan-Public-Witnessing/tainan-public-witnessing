@@ -76,6 +76,13 @@ export interface ApiInterface {
   updateStatistic: (statistic: Statistic) => Promise<void>;
 
   readSiteShifts: () => Promise<SiteShifts[]>;
+  createSiteShifts: (
+    siteShifts: Omit<
+      SiteShifts,
+      'uuid' | 'activate' | 'attendence' | 'delivers'
+    >[]
+  ) => Promise<void>;
+  updateSiteShift: (siteShift: SiteShifts) => Promise<void>;
 
   readUserSchedule: (userUuid: string) => Promise<UserSchedule>;
   patchUserSchedule: (

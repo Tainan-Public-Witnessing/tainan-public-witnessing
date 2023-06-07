@@ -1,0 +1,40 @@
+<mat-card [class.bg-gray-200]="!siteShift?.activate">
+  <mat-card-title>{{ shiftHour?.name }}</mat-card-title>
+  <mat-card-subtitle
+    >{{ shiftHour?.startTime }} ～ {{ shiftHour?.endTime }}</mat-card-subtitle
+  >
+  <mat-card-content>
+    <div>
+      <button mat-icon-button (click)="onAttendenceChange(-1)">
+        <mat-icon>remove_circle</mat-icon>
+      </button>
+      <span [class.activate-group]="siteShift?.attendence">
+        <mat-icon class="align-middle">group</mat-icon>
+        <span class="text-xl align-middle">{{ siteShift?.attendence }}</span>
+      </span>
+      <button mat-icon-button (click)="onAttendenceChange(1)">
+        <mat-icon>add_circle</mat-icon>
+      </button>
+    </div>
+    <div>
+      <button mat-icon-button (click)="onDeliverChange(-1)">
+        <mat-icon>remove_circle</mat-icon>
+      </button>
+      <span [class.activate-deliver]="siteShift?.delivers">
+        <mat-icon class="align-middle">local_shipping</mat-icon>
+        <span class="text-xl align-middle">{{ siteShift?.delivers }}</span>
+      </span>
+      <button mat-icon-button (click)="onDeliverChange(1)">
+        <mat-icon>add_circle</mat-icon>
+      </button>
+    </div>
+
+    <mat-hint [class.opacity-0]="savingState === SavingState.None">
+      <!-- 因為中英文字的大小有些不同 savingState === None
+    的時候，還是需要設定成透明但是內文要有中文字，不然尺寸會出現抖動-->
+      {{
+        "GLOBAL." + (savingState || SavingState.Saving) | uppercase | translate
+      }}</mat-hint
+    >
+  </mat-card-content>
+</mat-card>

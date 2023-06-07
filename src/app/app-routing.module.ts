@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { Route, RouterModule, Routes } from '@angular/router';
 import { routes } from './routes';
 import { AuthorityService } from './_services/authority.service';
-import { SettingsComponent } from './settings/settings.component';
 
 const appRoutes: Routes = routes
   .map<Route>((route) => ({

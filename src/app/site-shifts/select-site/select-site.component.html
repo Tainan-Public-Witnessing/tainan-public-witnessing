@@ -1,0 +1,11 @@
+<div class="title-bar mb-3">
+  <mat-form-field appearance="fill">
+    <mat-label>{{ "SITE-SHIFTS.SITE" | translate }}</mat-label>
+    <mat-select (selectionChange)="onChange($event.value)">
+      <mat-option *ngFor="let site of sites$ | async" [value]="site">
+        {{ site.name }}
+      </mat-option>
+    </mat-select>
+    <mat-hint>{{ "SITE-SHIFTS.SELECT_SITE" | translate }}</mat-hint>
+  </mat-form-field>
+</div>

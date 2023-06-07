@@ -8,4 +8,5 @@ export interface Shift {
   hasStatistic?: boolean;
   attendance: number;
   full: boolean;
+  delivers: number;
 }

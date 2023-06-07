@@ -12,29 +12,7 @@ import { AngularMaterialModule } from 'src/app/_modules/angular-material.module'
 import { FirebaseModule } from 'src/app/_modules/firebase.module';
 import { environment } from 'src/environments/environment';
 import { AppRoutingModule } from './app-routing.module';
-import { UserTableComponent } from './users/user-table.component';
 
-import { AppComponent } from './app.component';
-import { HomeComponent } from './home/home.component';
-import { LineBindingDialogComponent } from './line-binding/line-binding-dialog/line-binding-dialog.component';
-import { LineBindingComponent } from './line-binding/line-binding.component';
-import { LoginComponent } from './login/login.component';
-import { MenuComponent } from './menu/menu.component';
-import { OpeningShiftsComponent } from './opening-shifts/opening-shifts.component';
-import { PersonalShiftComponent } from './personal-shift/personal-shift.component';
-import { CongregationsComponent } from './settings/congregations/congregations.component';
-import { SettingsComponent } from './settings/settings.component';
-import { ShfitHoursComponent } from './settings/shfitHours/shfitHours.component';
-import { SiteComponent } from './settings/sites/sites.component';
-import { ShiftsComponent } from './shifts/shifts.component';
-import { UserFilterComponent } from './users/user-filter/user-filter.component';
-import { UserDataComponent } from './users/user/user-data/user-data.component';
-import { CalendarHeaderComponent } from './users/user/user-schedule/calendar-header/calendar-header.component';
-import { HoursListComponent } from './users/user/user-schedule/hours-list/hours-list.component';
-import { HoursTableComponent } from './users/user/user-schedule/hours-table/hours-table.component';
-import { UserScheduleComponent } from './users/user/user-schedule/user-schedule.component';
-import { UserComponent } from './users/user/user.component';
-import { UsersComponent } from './users/users.component';
 import { ForceRefreshDirective } from './_directives/force-refresh.directive';
 import { ConfirmDialogComponent } from './_elements/dialogs/confirm-dialog/confirm-dialog.component';
 import { CongregationCreatorComponent } from './_elements/dialogs/congregation-creator/congregation-creator.component';
@@ -50,6 +28,32 @@ import { StatisticEditorComponent } from './_elements/dialogs/statistic-editor/s
 import { ShiftCardComponent } from './_elements/shift-table/shift-card/shift-card.component';
 import { ShiftTableComponent } from './_elements/shift-table/shift-table.component';
 import { YearMonthSelectComponent } from './_elements/year-month-select/year-month-select.component';
+import { AppComponent } from './app.component';
+import { HomeComponent } from './home/home.component';
+import { LineBindingDialogComponent } from './line-binding/line-binding-dialog/line-binding-dialog.component';
+import { LineBindingComponent } from './line-binding/line-binding.component';
+import { LoginComponent } from './login/login.component';
+import { MenuComponent } from './menu/menu.component';
+import { OpeningShiftsComponent } from './opening-shifts/opening-shifts.component';
+import { PersonalShiftComponent } from './personal-shift/personal-shift.component';
+import { CongregationsComponent } from './settings/congregations/congregations.component';
+import { SettingsComponent } from './settings/settings.component';
+import { ShfitHoursComponent } from './settings/shfitHours/shfitHours.component';
+import { SiteComponent } from './settings/sites/sites.component';
+import { ShiftsComponent } from './shifts/shifts.component';
+import { DayScheduleComponent } from './site-shifts/day-schedule/day-schedule.component';
+import { SelectSiteComponent } from './site-shifts/select-site/select-site.component';
+import { SiteShiftComponent } from './site-shifts/site-shift/site-shift.component';
+import { SiteShiftsComponent } from './site-shifts/site-shifts.component';
+import { UserDataComponent } from './users/user/user-data/user-data.component';
+import { CalendarHeaderComponent } from './users/user/user-schedule/calendar-header/calendar-header.component';
+import { HoursListComponent } from './users/user/user-schedule/hours-list/hours-list.component';
+import { HoursTableComponent } from './users/user/user-schedule/hours-table/hours-table.component';
+import { UserScheduleComponent } from './users/user/user-schedule/user-schedule.component';
+import { UserComponent } from './users/user/user.component';
+import { UsersComponent } from './users/users.component';
+import { UserTableComponent } from 'src/app/users/user-table.component';
+import { UserFilterComponent } from 'src/app/users/user-filter/user-filter.component';
 // AoT requires an exported function for factories of translate module
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -94,6 +98,10 @@ export function HttpLoaderFactory(http: HttpClient) {
     ShiftHoursEditorComponent,
     CongregationCreatorComponent,
     CongregationEditorComponent,
+    SiteShiftsComponent,
+    SelectSiteComponent,
+    DayScheduleComponent,
+    SiteShiftComponent,
     UserTableComponent,
     UserFilterComponent,
   ],
