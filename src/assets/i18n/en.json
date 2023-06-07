@@ -23,6 +23,7 @@
       "SATURDAY": "Saturday"
     },
     "ERROR": "Error",
+    "SAVING": "Saving...",
     "SAVED": "Saved!",
     "ERRORS": {
       "UNKNOWN": "Unknown error! Please try again later."
@@ -192,6 +193,20 @@
     "IUPUT_SHIFTHOUR_INFO": "Please input Shifthour Info",
     "START": "Start",
     "END": "End"
+  },
+  "SITE-SHIFTS": {
+    "TITLE": "Site Shifts Setting",
+    "SITE": "Site",
+    "SELECT_SITE": "Please select a site first"
+  },
+  "WEEKDAYS": {
+    "0": "Sunday",
+    "1": "Monday",
+    "2": "Tuesday",
+    "3": "Wednesday",
+    "4": "Thursday",
+    "5": "Friday",
+    "6": "Saturday"
   },
   "AVAILABLE_SHIFTS": {
     "TITLE": "Available Shifts",

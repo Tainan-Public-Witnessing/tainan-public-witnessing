@@ -1,3 +1,5 @@
+import { Mode } from './_enums/mode.enum';
+import { Permission } from './_enums/permission.enum';
 import { HomeComponent } from './home/home.component';
 import { LineBindingComponent } from './line-binding/line-binding.component';
 import { LoginComponent } from './login/login.component';
@@ -5,10 +7,9 @@ import { OpeningShiftsComponent } from './opening-shifts/opening-shifts.componen
 import { PersonalShiftComponent } from './personal-shift/personal-shift.component';
 import { SettingsComponent } from './settings/settings.component';
 import { ShiftsComponent } from './shifts/shifts.component';
+import { SiteShiftsComponent } from './site-shifts/site-shifts.component';
 import { UserTableComponent } from './users/user-table.component';
 import { UserComponent } from './users/user/user.component';
-import { Mode } from './_enums/mode.enum';
-import { Permission } from './_enums/permission.enum';
 
 type RouteDef = {
   path: string;
@@ -88,6 +89,12 @@ export const routes = [
     component: SettingsComponent,
     permission: Permission.ADMINISTRATOR,
     label: 'SETTINGS.TITLE',
+  },
+  {
+    path: 'site-shifts',
+    component: SiteShiftsComponent,
+    permission: Permission.ADMINISTRATOR,
+    label: 'SITE-SHIFTS.TITLE',
   },
 ].map(buildRegexp);
 
