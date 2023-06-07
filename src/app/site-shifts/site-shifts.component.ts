@@ -1,32 +1,20 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { SiteShiftService } from '../_services/site-shifts.service';
-import { ShiftHoursService } from '../_services/shift-hours.service';
-import {
-  BehaviorSubject,
-  map,
-  filter,
-  Subject,
-  switchMap,
-  from,
-  tap,
-  partition,
-} from 'rxjs';
-import { share } from 'rxjs/operators';
-import {
-  SiteShifts,
-  SiteShiftFull,
-} from '../_interfaces/site-shifts.interface';
-import { ShiftHour } from '../_interfaces/shift-hours.interface';
+import { Component, OnInit, OnDestroy } from "@angular/core";
+import { SiteShiftService } from "../_services/site-shifts.service";
+import { ShiftHoursService } from "../_services/shift-hours.service";
+import { BehaviorSubject, map, filter, Subject, switchMap, from, tap, partition } from "rxjs";
+import { share } from "rxjs/operators";
+import { SiteShifts, SiteShiftFull } from "../_interfaces/site-shifts.interface";
+import { ShiftHour } from "../_interfaces/shift-hours.interface";
 
 @Component({
-  selector: 'app-site-shifts',
-  templateUrl: './site-shifts.component.html',
-  styleUrls: ['./site-shifts.component.scss'],
+  selector: "app-site-shifts",
+  templateUrl: "./site-shifts.component.html",
+  styleUrls: ["./site-shifts.component.scss"],
 })
 export class SiteShiftsComponent implements OnInit, OnDestroy {
-  siteShiftsByDay$ = new BehaviorSubject<
-    Map<number, SiteShiftFull[] | undefined>
-  >(new Map<number, SiteShiftFull[]>());
+  siteShiftsByDay$ = new BehaviorSubject<Map<number, SiteShiftFull[] | undefined>>(
+    new Map<number, SiteShiftFull[]>()
+  );
   shifthours$ = new BehaviorSubject<ShiftHour[] | null>(null);
   days = [0, 1, 2, 3, 4, 5, 6];
   siteUuid: string;
@@ -57,22 +45,16 @@ export class SiteShiftsComponent implements OnInit, OnDestroy {
             const map = new Map<number, SiteShiftFull[] | undefined>();
             const missingSiteShifts: Omit<
               SiteShifts,
-              'uuid' | 'activate' | 'attendence' | 'delivers'
+              "uuid" | "activate" | "attendance" | "delivers"
             >[] = [];
             const days = [0, 1, 2, 3, 4, 5, 6];
             days.forEach((day) => {
               const dayShiftFulls: SiteShiftFull[] = [];
-              const dayShifts = data.siteShifts?.filter(
-                (f) => f.weekday === day
-              );
+              const dayShifts = data.siteShifts?.filter((f) => f.weekday === day);
               shiftHours?.forEach((shiftHour) => {
-                let exist = dayShifts?.some(
-                  (d) => d.shiftHoursUuid === shiftHour.uuid
-                );
+                let exist = dayShifts?.some((d) => d.shiftHoursUuid === shiftHour.uuid);
                 if (exist) {
-                  let dayShift = dayShifts?.find(
-                    (f) => f.shiftHoursUuid === shiftHour.uuid
-                  );
+                  let dayShift = dayShifts?.find((f) => f.shiftHoursUuid === shiftHour.uuid);
                   dayShiftFulls.push({ siteShift: dayShift, shiftHour });
                 } else {
                   missingSiteShifts.push({
@@ -99,11 +81,9 @@ export class SiteShiftsComponent implements OnInit, OnDestroy {
     });
     unReady$
       .pipe(
-        tap(() => console.log('Unready')),
+        tap(() => console.log("Unready")),
         switchMap((data) =>
-          from(
-            this.siteShiftService.createBatchSiteShifts(data.missingSiteShifts)
-          )
+          from(this.siteShiftService.createBatchSiteShifts(data.missingSiteShifts))
         )
       )
       .subscribe(() => {

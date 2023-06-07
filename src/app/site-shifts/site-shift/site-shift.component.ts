@@ -1,22 +1,19 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { Subject, debounceTime, distinctUntilChanged, tap } from 'rxjs';
-import {
-  SiteShiftFull,
-  SiteShifts,
-} from 'src/app/_interfaces/site-shifts.interface';
-import { SiteShiftService } from 'src/app/_services/site-shifts.service';
-import { ShiftHour } from '../../_interfaces/shift-hours.interface';
+import { Component, Input, OnInit } from "@angular/core";
+import { Subject, debounceTime, distinctUntilChanged, tap } from "rxjs";
+import { SiteShiftFull, SiteShifts } from "src/app/_interfaces/site-shifts.interface";
+import { SiteShiftService } from "src/app/_services/site-shifts.service";
+import { ShiftHour } from "../../_interfaces/shift-hours.interface";
 
 enum SavingState {
-  None = '',
-  Saving = 'Saving',
-  Saved = 'Saved',
+  None = "",
+  Saving = "Saving",
+  Saved = "Saved",
 }
 
 @Component({
-  selector: 'app-site-shift',
-  templateUrl: './site-shift.component.html',
-  styleUrls: ['./site-shift.component.scss'],
+  selector: "app-site-shift",
+  templateUrl: "./site-shift.component.html",
+  styleUrls: ["./site-shift.component.scss"],
 })
 export class SiteShiftComponent implements OnInit {
   @Input() day: number;
@@ -43,18 +40,18 @@ export class SiteShiftComponent implements OnInit {
   SavingState = SavingState;
 
   constructor(private siteShiftService: SiteShiftService) {}
-  languageMenu = [{ title: '', tag: '' }];
+  languageMenu = [{ title: "", tag: "" }];
 
   ngOnInit(): void {
     this.shiftHour = this.siteShiftFull.shiftHour;
     const siteShift = this.siteShiftFull.siteShift;
     this.siteShift = {
-      uuid: siteShift?.uuid ?? '',
+      uuid: siteShift?.uuid ?? "",
       activate: siteShift?.activate ?? false,
-      attendence: siteShift?.attendence ?? 0,
+      attendance: siteShift?.attendance ?? 0,
       delivers: siteShift?.delivers ?? 0,
-      shiftHoursUuid: siteShift?.shiftHoursUuid ?? '',
-      siteUuid: siteShift?.siteUuid ?? '',
+      shiftHoursUuid: siteShift?.shiftHoursUuid ?? "",
+      siteUuid: siteShift?.siteUuid ?? "",
       weekday: siteShift?.weekday ?? 0,
     };
     this.siteShift$
@@ -64,7 +61,7 @@ export class SiteShiftComponent implements OnInit {
         distinctUntilChanged(
           (previous, current): boolean =>
             previous.activate === current.activate &&
-            previous.attendence === current.attendence &&
+            previous.attendance === current.attendance &&
             previous.delivers === current.delivers
         )
       )
@@ -74,25 +71,22 @@ export class SiteShiftComponent implements OnInit {
       });
   }
 
-  onAttendenceChange(delta: number) {
-    const { attendence, delivers } = this.siteShift;
+  onattendanceChange(delta: number) {
+    const { attendance, delivers } = this.siteShift;
 
-    this.siteShift.attendence = Math.max(attendence + delta, 0);
-    this.siteShift.delivers = Math.min(delivers, this.siteShift.attendence);
-    this.siteShift.activate = this.siteShift.attendence > 0;
+    this.siteShift.attendance = Math.max(attendance + delta, 0);
+    this.siteShift.delivers = Math.min(delivers, this.siteShift.attendance);
+    this.siteShift.activate = this.siteShift.attendance > 0;
 
     this.siteShift$.next({ ...this.siteShift });
   }
 
   onDeliverChange(delta: number) {
-    const { attendence, delivers } = this.siteShift;
+    const { attendance, delivers } = this.siteShift;
 
     this.siteShift.delivers = Math.max(delivers + delta, 0);
-    this.siteShift.attendence = Math.max(
-      this.siteShift.attendence,
-      this.siteShift.delivers
-    );
-    this.siteShift.activate = this.siteShift.attendence > 0;
+    this.siteShift.attendance = Math.max(this.siteShift.attendance, this.siteShift.delivers);
+    this.siteShift.activate = this.siteShift.attendance > 0;
 
     this.siteShift$.next({ ...this.siteShift });
   }
