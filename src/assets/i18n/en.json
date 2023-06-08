@@ -222,5 +222,9 @@
       "YEAR_MONTH": "Year-Month"
     },
     "JOIN_SUCCESSFULLY": "Joined successfully"
+  },
+  "MENU": {
+    "PERSONAL": "My Shifts",
+    "MANAGEMENT": "Management"
   }
 }
