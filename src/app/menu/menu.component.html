@@ -1,25 +1,39 @@
-<mat-selection-list multiple="false">
-
-  <mat-list-option
-    *ngFor="let menuLink of (currentMenuLinks$ | async)"
-    (click)="onMenuLinkClick()"
-    [routerLink]="menuLink.url"
-    cy="menu-links">
-    {{menuLink.display | translate}}
-  </mat-list-option>
-
+<mat-selection-list multiple="false" class="flex flex-col h-full box-border">
+  <ng-template
+    ngFor
+    [ngForOf]="currentMenuLinks$ | async"
+    let-menuLink
+    let-i="index"
+  >
+    <mat-list-option
+      *ngIf="menuLink.url; else subheader"
+      [class.pl-4]="i !== 0"
+      class="box-border"
+      (click)="onMenuLinkClick()"
+      [routerLink]="menuLink.url"
+      cy="menu-links"
+    >
+      {{ menuLink.display | translate }}
+    </mat-list-option>
+    <ng-template #subheader>
+      <mat-divider *ngIf="i !== 0"></mat-divider>
+      <div mat-subheader>{{ menuLink.display | translate }}</div>
+    </ng-template>
+  </ng-template>
+  <div class="flex-grow min-h-[64px]"></div>
+  <mat-divider></mat-divider>
   <mat-list-option
     *ngIf="!(isLoggedIn$ | async)"
     (click)="onLoginClick()"
-    cy="login-button">
+    cy="login-button"
+  >
     {{ "GLOBAL.LOG_IN" | translate }}
   </mat-list-option>
-
   <mat-list-option
     *ngIf="isLoggedIn$ | async"
     (click)="onLogoutClick()"
-    cy="logout-button">
+    cy="logout-button"
+  >
     {{ "GLOBAL.LOG_OUT" | translate }}
   </mat-list-option>
-
 </mat-selection-list>

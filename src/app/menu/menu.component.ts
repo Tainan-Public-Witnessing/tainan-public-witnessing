@@ -6,7 +6,7 @@ import { filter, first, map, switchAll, takeUntil } from 'rxjs/operators';
 import { MenuLink } from 'src/app/_interfaces/menu-link.interface';
 import { AuthorityService } from 'src/app/_services/authority.service';
 import { GlobalEventService } from 'src/app/_services/global-event.service';
-import { routes } from '../routes';
+import { menu, routes } from '../routes';
 import { Permission } from '../_enums/permission.enum';
 import { User } from '../_interfaces/user.interface';
 import { UsersService } from '../_services/users.service';
@@ -17,13 +17,11 @@ import { UsersService } from '../_services/users.service';
   styleUrls: ['./menu.component.scss'],
 })
 export class MenuComponent implements OnInit, OnDestroy {
-  MENU_LINKS: MenuLink[] = routes
-    .filter((route) => route.menu !== false)
-    .map((route) => ({
-      display: route.label!,
-      url: route.path,
-      permission: route.permission,
-    }));
+  MENU_LINKS: MenuLink[] = menu.map((route) => ({
+    display: route.label!,
+    url: (route as any).path,
+    permission: route.permission,
+  }));
 
   currentMenuLinks$ = new BehaviorSubject<MenuLink[]>([]);
   isLoggedIn$ = new BehaviorSubject<boolean>(false);
@@ -32,7 +30,6 @@ export class MenuComponent implements OnInit, OnDestroy {
   constructor(
     private authorityService: AuthorityService,
     private globalEventService: GlobalEventService,
-    private matDiolog: MatDialog,
     private usersService: UsersService,
     private router: Router
   ) {}
