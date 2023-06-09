@@ -10,6 +10,8 @@ import { queryWithLargeArray } from '../_helpers/firebase-helper';
 import { extractPromise } from '../_helpers/promise-helper';
 import { PersonalShifts } from '../_interfaces/personal-shifts.interface';
 import { Shift } from '../_interfaces/shift.interface';
+import { v4 as uuidv4 } from 'uuid';
+import * as moment from 'moment';
 
 @Injectable({
   providedIn: 'root',
@@ -46,15 +48,16 @@ export class ShiftsService {
   };
 
   getShiftsByDate = (
-    date: string
+    date: string,
+    refresh = false
   ): BehaviorSubject<Shift[] | null | undefined> => {
     // yyyy-MM-dd
-    if (!this.shiftSets.has(date)) {
+    if (refresh || !this.shiftSets.has(date)) {
       const shifts$ = new BehaviorSubject<Shift[] | null | undefined>(null);
       this.shiftSets.set(date, shifts$);
 
       const yearMonth = date.slice(0, 7); // yyyy-MM
-      if (this.shiftSets.has(yearMonth)) {
+      if (!refresh && this.shiftSets.has(yearMonth)) {
         this.shiftSets
           .get(yearMonth)
           ?.pipe(
@@ -139,6 +142,29 @@ export class ShiftsService {
   updateShift = (shift: Shift): Promise<void> => {
     return this.api.updateShift(shift).then(() => {
       this.shifts.get(shift.uuid)?.next(shift);
+    });
+  };
+
+  createShift = (shift: {
+    date: string;
+    siteUuid: string;
+    shiftHoursUuid: string;
+    delivers: number;
+    attendance: number;
+  }): Promise<void> => {
+    const uuid = uuidv4();
+    return this.api.createShift({
+      activate: true,
+      attendance: shift.attendance,
+      crewUuids: [],
+      date: shift.date,
+      delivers: shift.delivers,
+      full: false,
+      shiftHoursUuid: shift.shiftHoursUuid,
+      siteUuid: shift.siteUuid,
+      uuid,
+      hasStatistic: false,
+      weekday: moment(shift.date).day(),
     });
   };
 
@@ -245,5 +271,9 @@ export class ShiftsService {
       .then(resolve);
 
     return promise;
+  }
+
+  public async deleteShift(shift: Shift) {
+    return this.api.deleteShift(shift);
   }
 }

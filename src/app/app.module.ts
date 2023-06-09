@@ -54,6 +54,7 @@ import { UserComponent } from './users/user/user.component';
 import { UsersComponent } from './users/users.component';
 import { UserTableComponent } from 'src/app/users/user-table.component';
 import { UserFilterComponent } from 'src/app/users/user-filter/user-filter.component';
+import { ShiftEditorComponent } from './shifts/shift-editor/shift-editor.component';
 // AoT requires an exported function for factories of translate module
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -104,6 +105,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     SiteShiftComponent,
     UserTableComponent,
     UserFilterComponent,
+    ShiftEditorComponent,
   ],
   imports: [
     BrowserModule,
@@ -131,6 +133,9 @@ export function HttpLoaderFactory(http: HttpClient) {
         },
         display: {
           dateInput: 'YYYY-MM-DD',
+          monthYearLabel: 'MM YYYY',
+          dateA11yLabel: 'LL',
+          monthYearA11yLabel: 'MM YYYY',
         },
       },
     },

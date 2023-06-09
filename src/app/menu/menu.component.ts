@@ -5,7 +5,10 @@ import { BehaviorSubject, of, Subject } from 'rxjs';
 import { filter, first, map, switchAll, takeUntil } from 'rxjs/operators';
 import { MenuLink } from 'src/app/_interfaces/menu-link.interface';
 import { AuthorityService } from 'src/app/_services/authority.service';
-import { GlobalEventService } from 'src/app/_services/global-event.service';
+import {
+  EVENTS,
+  GlobalEventService,
+} from 'src/app/_services/global-event.service';
 import { menu, routes } from '../routes';
 import { Permission } from '../_enums/permission.enum';
 import { User } from '../_interfaces/user.interface';
@@ -74,13 +77,13 @@ export class MenuComponent implements OnInit, OnDestroy {
 
   onMenuLinkClick = () => {
     this.globalEventService.emitGlobalEvent({
-      id: 'ON_MENU_LINK_CLICK',
+      id: EVENTS.ON_MENU_LINK_CLICK,
     });
   };
 
   onLoginClick = () => {
     this.globalEventService.emitGlobalEvent({
-      id: 'ON_MENU_LINK_CLICK',
+      id: EVENTS.ON_MENU_LINK_CLICK,
     });
 
     this.router.navigateByUrl(
@@ -90,7 +93,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 
   onLogoutClick = () => {
     this.globalEventService.emitGlobalEvent({
-      id: 'ON_MENU_LINK_CLICK',
+      id: EVENTS.ON_MENU_LINK_CLICK,
     });
 
     this.authorityService.logout();

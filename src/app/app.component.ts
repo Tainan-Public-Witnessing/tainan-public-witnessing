@@ -4,7 +4,7 @@ import {
   Component,
   OnDestroy,
   OnInit,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { DateAdapter } from '@angular/material/core';
@@ -14,7 +14,10 @@ import { BehaviorSubject, fromEvent, of, Subject } from 'rxjs';
 import { filter, map, startWith, switchAll, takeUntil } from 'rxjs/operators';
 import { Language } from 'src/app/_enums/language.enum';
 import { AuthorityService } from 'src/app/_services/authority.service';
-import { GlobalEventService } from 'src/app/_services/global-event.service';
+import {
+  EVENTS,
+  GlobalEventService,
+} from 'src/app/_services/global-event.service';
 import { environment } from 'src/environments/environment';
 import { UsersService } from './_services/users.service';
 
@@ -81,7 +84,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.globalEventService
-      .getGlobalEventById('ON_MENU_LINK_CLICK')
+      .getGlobalEventById(EVENTS.ON_MENU_LINK_CLICK)
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
         this.sidenav.close();

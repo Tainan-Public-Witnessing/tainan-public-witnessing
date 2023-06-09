@@ -37,7 +37,8 @@
       "PREV_PAGE": "Previous Page",
       "FIRST_PAGE": "First Page",
       "LAST_PAGE": "Last Page"
-    }
+    },
+    "SAVE": "Save"
   },
   "GENDER": {
     "MALE": "Male",
@@ -172,8 +173,13 @@
   "SHIFTS": {
     "TITLE": "Search Shifts",
     "LABEL": {
-      "DATE": "Year-Month-Date"
-    }
+      "DATE": "Date",
+      "SITE": "Site",
+      "SHIFTHOUR": "Hour"
+    },
+    "CREATE": "Create Shift",
+    "DELETE_CONFIRM_TITLE": "Are you sure to delete this shift?",
+    "DELETE_CONFIRM_MESSAGE": "Date: {{date}}\nTime: {{time}}\nLocation: {{site}}"
   },
   "PERMISSIONS": {
     "0": "Developer",

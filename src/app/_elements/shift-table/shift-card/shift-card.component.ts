@@ -4,7 +4,14 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, Observable, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, first, map, takeUntil } from 'rxjs/operators';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  filter,
+  first,
+  map,
+  takeUntil,
+} from 'rxjs/operators';
 import { EXISTED_ERROR } from 'src/app/_classes/errors/EXISTED_ERROR';
 import { FULL_SHIFT_ERROR } from 'src/app/_classes/errors/FULL_SHIFT_ERROR';
 import { TOO_MANY_SHIFTS_ERROR } from 'src/app/_classes/errors/TOO_MANY_SHIFTS_ERROR';
@@ -15,7 +22,10 @@ import { Shift } from 'src/app/_interfaces/shift.interface';
 import { Site } from 'src/app/_interfaces/site.interface';
 import { UserKey } from 'src/app/_interfaces/user.interface';
 import { AuthorityService } from 'src/app/_services/authority.service';
-import { GlobalEventService } from 'src/app/_services/global-event.service';
+import {
+  EVENTS,
+  GlobalEventService,
+} from 'src/app/_services/global-event.service';
 import { ShiftHoursService } from 'src/app/_services/shift-hours.service';
 import { ShiftsService } from 'src/app/_services/shifts.service';
 import { SitesService } from 'src/app/_services/sites.service';
@@ -33,6 +43,7 @@ import { CrewEditorComponent } from '../../dialogs/crew-editor/crew-editor.compo
 export class ShiftCardComponent implements OnInit, OnDestroy {
   @Input() shift$!: Observable<Shift>;
   @Input() showEmpty: boolean = false;
+  @Input() enableDelete: boolean = false;
 
   emptiness: string[];
   shift: Shift | null = null;
@@ -57,7 +68,7 @@ export class ShiftCardComponent implements OnInit, OnDestroy {
     private matSnackBar: MatSnackBar,
     private translateService: TranslateService,
     private globalEvent: GlobalEventService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     combineLatest([
@@ -73,7 +84,9 @@ export class ShiftCardComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(([_shift, _shiftHoursList, _sites, _userKeys]) => {
         this.shift = _shift;
-        this.activateControl.setValue(this.shift.activate, { emitEvent: false });
+        this.activateControl.setValue(this.shift.activate, {
+          emitEvent: false,
+        });
         this.shiftHour = _shiftHoursList?.find(
           (_shiftHours) => _shift.shiftHoursUuid === _shiftHours.uuid
         ) as ShiftHour;
@@ -91,18 +104,14 @@ export class ShiftCardComponent implements OnInit, OnDestroy {
 
     this.pipeCanEditStatistic();
     this.pipeCanEditCrew();
-    this.authorityService.canAccess(Permission.MANAGER)
+    this.authorityService
+      .canAccess(Permission.MANAGER)
       .pipe(takeUntil(this.destroy$))
-      .subscribe(_managerAccess => this.managerAccess = _managerAccess);
+      .subscribe((_managerAccess) => (this.managerAccess = _managerAccess));
 
-    this.activateControl
-      .valueChanges
-      .pipe(
-        debounceTime(500),
-        distinctUntilChanged(),
-        takeUntil(this.destroy$)
-      )
-      .subscribe(_isActivate => {
+    this.activateControl.valueChanges
+      .pipe(debounceTime(500), distinctUntilChanged(), takeUntil(this.destroy$))
+      .subscribe((_isActivate) => {
         if (!!this.shift && _isActivate !== null) {
           this.shift.activate = _isActivate;
           this.shiftService.updateShift(this.shift);
@@ -121,9 +130,7 @@ export class ShiftCardComponent implements OnInit, OnDestroy {
     }
 
     const shiftEndTime = new Date(
-      [this.shift.date.replace(/\-/g, '/'), this.shiftHour?.endTime].join(
-        ' '
-      )
+      [this.shift.date.replace(/\-/g, '/'), this.shiftHour?.endTime].join(' ')
     ).getTime();
     const shiftEndDate = new Date(this.shift.date);
     shiftEndDate.setDate(shiftEndDate.getDate() + 1);
@@ -197,9 +204,13 @@ export class ShiftCardComponent implements OnInit, OnDestroy {
                 this.shift!,
                 this.authorityService.currentUserUuid$.value!
               );
-              this.globalEvent.emitGlobalEvent({ id: 'SHIFTS_CHANGED' });
+              this.globalEvent.emitGlobalEvent({ id: EVENTS.SHIFTS_CHANGE });
 
-              this.matSnackBar.open(this.translateService.instant('AVAILABLE_SHIFTS.JOIN_SUCCESSFULLY'));
+              this.matSnackBar.open(
+                this.translateService.instant(
+                  'AVAILABLE_SHIFTS.JOIN_SUCCESSFULLY'
+                )
+              );
             } catch (ex) {
               let message = '';
 
@@ -224,6 +235,28 @@ export class ShiftCardComponent implements OnInit, OnDestroy {
         });
     }
   };
+
+  onDelete() {
+    this.matDialog
+      .open(ConfirmDialogComponent, {
+        data: {
+          title: 'SHIFTS.DELETE_CONFIRM_TITLE',
+          message: 'SHIFTS.DELETE_CONFIRM_MESSAGE',
+          messageParams: {
+            date: this.shift?.date,
+            time: this.shiftHour?.name,
+            site: this.site?.name,
+          },
+        } as ConfirmDialogData,
+      })
+      .afterClosed()
+      .subscribe((confirmed) => {
+        if (confirmed) {
+          this.shiftService.deleteShift(this.shift!);
+          this.globalEvent.emitGlobalEvent({ id: EVENTS.SHIFTS_CHANGE });
+        }
+      });
+  }
 
   private pipeCanEditCrew = () => {
     this.canEditCrew$ = this.authorityService.canAccess(Permission.MANAGER);
