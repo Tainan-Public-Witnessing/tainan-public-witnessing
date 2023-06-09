@@ -37,6 +37,7 @@ import {
 } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { PaginatorIntl } from '../_classes/PagionatorIntl';
+import { MAT_DATE_FORMATS } from '@angular/material/core';
 
 @NgModule({
   declarations: [],

@@ -15,7 +15,10 @@
 
   <mat-card-content>
     <mat-chip-list *ngIf="!!crew && activateControl.value">
-      <mat-chip *ngFor="let user of crew; let i = index" [ngClass]="{ deliver: (i < shift?.delivers) }">
+      <mat-chip
+        *ngFor="let user of crew; let i = index"
+        [ngClass]="{ deliver: i < shift?.delivers }"
+      >
         {{ user.username }}
       </mat-chip>
       <ng-template [ngIf]="showEmpty">
@@ -45,8 +48,12 @@
 
     <span class="spacer"></span>
 
-    <button mat-icon-button *ngIf="canEditStatistic$ | async" [ngClass]="{ 'has-statistic': shift?.hasStatistic }"
-      (click)="openStatisticEditor()">
+    <button
+      mat-icon-button
+      *ngIf="canEditStatistic$ | async"
+      [ngClass]="{ 'has-statistic': shift?.hasStatistic }"
+      (click)="openStatisticEditor()"
+    >
       <mat-icon>add_chart</mat-icon>
     </button>
 
@@ -56,6 +63,14 @@
       (click)="openCrewEditor()"
     >
       <mat-icon>groups</mat-icon>
+    </button>
+    <button
+      mat-icon-button
+      color="warn"
+      *ngIf="enableDelete && (canEditCrew$ | async)"
+      (click)="onDelete()"
+    >
+      <mat-icon>delete</mat-icon>
     </button>
   </mat-card-actions>
 </mat-card>

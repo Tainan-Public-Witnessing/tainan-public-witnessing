@@ -13,6 +13,7 @@ import { ShiftsService } from 'src/app/_services/shifts.service';
 export class ShiftTableComponent implements OnInit, OnDestroy {
   @Input() shifts$!: Observable<Shift[] | null | undefined>;
   @Input() showEmpty: boolean = false;
+  @Input() enableDelete: boolean = false;
 
   sortedShift$s: Observable<Shift>[] | null | undefined = null;
   destroy$ = new Subject<void>();

@@ -18,7 +18,8 @@ export class UserFilterComponent implements OnInit {
   @Output() applyFilter = new EventEmitter<void>();
 
   permissions = Object.values(Permission).filter(
-    (p) => /\d+/.test(p.toString()) && p < Permission.GUEST
+    (p) =>
+      /\d+/.test(p.toString()) && (p as number) < (Permission.GUEST as number)
   );
 
   genders = Object.values(Gender);

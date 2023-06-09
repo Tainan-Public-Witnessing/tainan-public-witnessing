@@ -235,7 +235,6 @@ export class UserTableComponent implements OnInit, AfterViewInit {
       return false;
     }
 
-    console.log(filterValue.cellphone, user.cellphone);
     if (
       filterValue.cellphone &&
       !user.cellphone?.includes(filterValue.cellphone)

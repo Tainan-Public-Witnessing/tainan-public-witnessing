@@ -1,0 +1,67 @@
+<form class="max-w-md" (submit)="onSubmit()" [formGroup]="formGroup">
+  <h2 mat-dialog-title class="px-2">{{ "SHIFTS.CREATE" | translate }}</h2>
+  <div mat-dialog-content>
+    <mat-form-field class="w-full">
+      <mat-label>{{ "SHIFTS.LABEL.DATE" | translate }}</mat-label>
+      <input matInput formControlName="date" />
+    </mat-form-field>
+    <mat-form-field class="w-full">
+      <mat-label>{{ "SHIFTS.LABEL.SHIFTHOUR" | translate }}</mat-label>
+      <mat-select formControlName="shiftHoursUuid" required>
+        <mat-option
+          *ngFor="let hour of hours$ | async"
+          [value]="hour.uuid"
+          [id]="hour.uuid | lowercase"
+        >
+          {{ hour.name }} {{ hour.startTime }} ~ {{ hour.endTime }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="w-full">
+      <mat-label>{{ "SHIFTS.LABEL.SITE" | translate }}</mat-label>
+      <mat-select formControlName="siteUuid" required>
+        <mat-option
+          *ngFor="let site of sites$ | async"
+          [value]="site.uuid"
+          [id]="site.uuid"
+        >
+          {{ site.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <div>
+      <button mat-icon-button (click)="onAttendanceChange(-1)" type="button">
+        <mat-icon>remove_circle</mat-icon>
+      </button>
+      <span>
+        <mat-icon class="align-middle mr-1">group</mat-icon>
+        <span class="text-xl align-middle">{{
+          formGroup.value.attendance
+        }}</span>
+      </span>
+      <button mat-icon-button (click)="onAttendanceChange(1)" type="button">
+        <mat-icon>add_circle</mat-icon>
+      </button>
+    </div>
+    <div>
+      <button mat-icon-button (click)="onDeliverChange(-1)" type="button">
+        <mat-icon>remove_circle</mat-icon>
+      </button>
+      <span>
+        <mat-icon class="align-middle mr-1">local_shipping</mat-icon>
+        <span class="text-xl align-middle">{{ formGroup.value.delivers }}</span>
+      </span>
+      <button mat-icon-button (click)="onDeliverChange(1)" type="button">
+        <mat-icon>add_circle</mat-icon>
+      </button>
+    </div>
+  </div>
+  <div mat-dialog-actions class="flex justify-end">
+    <button mat-button type="button" (click)="dialogRef.close()">
+      {{ "GLOBAL.CANCEL" | translate }}
+    </button>
+    <button mat-button color="primary" type="submit">
+      {{ "GLOBAL.SAVE" | translate }}
+    </button>
+  </div>
+</form>
