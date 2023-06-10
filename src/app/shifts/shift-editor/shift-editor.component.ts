@@ -7,12 +7,18 @@ import {
 } from '@angular/material/dialog';
 import * as moment from 'moment';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe-decorator';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, map } from 'rxjs';
 import { ShiftHour } from 'src/app/_interfaces/shift-hours.interface';
 import { Site } from 'src/app/_interfaces/site.interface';
 import { ShiftHoursService } from 'src/app/_services/shift-hours.service';
 import { ShiftsService } from 'src/app/_services/shifts.service';
 import { SitesService } from 'src/app/_services/sites.service';
+
+function filterActiviation() {
+  return map(
+    (hours: any[] | null) => hours?.filter((hour) => hour.activate) ?? null
+  );
+}
 
 @Component({
   selector: 'app-shift-editor',
@@ -35,8 +41,11 @@ export class ShiftEditorComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) dialogData: any,
     protected dialogRef: MatDialogRef<ShiftEditorComponent>
   ) {
-    shiftHourService.getShiftHours().subscribe(this.hours$);
-    siteService.getSites().subscribe(this.sites$);
+    shiftHourService
+      .getShiftHours()
+      .pipe(filterActiviation())
+      .subscribe(this.hours$);
+    siteService.getSites().pipe(filterActiviation()).subscribe(this.sites$);
 
     this.formGroup = formBuilder.group({
       date: [
