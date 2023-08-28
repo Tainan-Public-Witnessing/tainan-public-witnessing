@@ -3,7 +3,7 @@ import { ApiInterface } from 'src/app/_api/api.interface';
 
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { arrayUnion } from 'firebase/firestore';
+import { arrayUnion, deleteField } from 'firebase/firestore';
 
 import { firstValueFrom } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -20,6 +20,7 @@ import { Site } from '../_interfaces/site.interface';
 import { Statistic } from '../_interfaces/statistic.interface';
 import { UserSchedule } from '../_interfaces/user-schedule.interface';
 import { User, UserKey } from '../_interfaces/user.interface';
+import * as moment from 'moment';
 
 @Injectable({
   providedIn: 'root',
@@ -213,7 +214,10 @@ export class Api implements ApiInterface {
         const { userKeys } = (await trans.get(settingsRef)).data()!;
         userKeys.find((u) => u.uuid === uuid)!.activate = activate;
         trans.update(settingsRef, { userKeys });
-        trans.update(db.doc<User>(`Users/${uuid}`).ref, { activate });
+        trans.update(db.doc<User>(`Users/${uuid}`).ref, {
+          activate,
+          expireAt: activate ? deleteField() : moment().add(2, 'year').toDate(),
+        });
       });
     }
   };
@@ -463,6 +467,20 @@ export class Api implements ApiInterface {
       .update(shift);
   };
 
+  createShift = (shift: Shift): Promise<void> => {
+    const yearMonth = shift.date.slice(0, 7);
+    return this.angularFirestore
+      .doc<Shift>(['MonthlyData', yearMonth, 'Shifts', shift.uuid].join('/'))
+      .set(shift);
+  };
+
+  deleteShift = (shift: Shift): Promise<void> => {
+    const yearMonth = shift.date.slice(0, 7);
+    return this.angularFirestore
+      .doc(`/MonthlyData/${yearMonth}/Shifts/${shift.uuid}`)
+      .delete();
+  };
+
   readPersonalShifts = (
     yearMonth: string,
     uuid: string
@@ -554,7 +572,7 @@ export class Api implements ApiInterface {
   createSiteShifts = async (
     siteShifts: Omit<
       SiteShifts,
-      'uuid' | 'activate' | 'attendence' | 'delivers'
+      'uuid' | 'activate' | 'attendance' | 'delivers'
     >[]
   ) => {
     const batch = this.angularFirestore.firestore.batch();
@@ -567,7 +585,7 @@ export class Api implements ApiInterface {
         ...siteShift,
         uuid,
         activate: false,
-        attendence: 0,
+        attendance: 0,
         delivers: 0,
       });
     });

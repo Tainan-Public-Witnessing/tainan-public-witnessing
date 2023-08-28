@@ -15,15 +15,12 @@
 
   <mat-card-content>
     <mat-chip-list *ngIf="!!crew && activateControl.value">
-      <mat-chip *ngFor="let user of crew; let i = index" [ngClass]="{ deliver: (i < shift?.delivers) }">
+      <mat-chip *ngFor="let user of crew; let i = index" [ngClass]="{ deliver: i < shift?.delivers }">
         {{ user.username }}
       </mat-chip>
       <ng-template [ngIf]="showEmpty">
-        <mat-chip
-          *ngFor="let count of emptiness"
-          class="bg-warn text-white cursor-pointer"
-          (click)="onEmptySpotClick()"
-        >
+        <mat-chip *ngFor="let count of emptiness" class="bg-warn text-white cursor-pointer"
+          (click)="onEmptySpotClick()">
           {{ "AVAILABLE_SHIFTS.NEED_SUPPORT" | translate }}
         </mat-chip>
       </ng-template>
@@ -37,11 +34,7 @@
   </mat-card-content>
 
   <mat-card-actions *ngIf="crew !== null">
-    <mat-slide-toggle
-      color="primary"
-      [formControl]="activateControl"
-      *ngIf="canEditCrew$ | async"
-    ></mat-slide-toggle>
+    <mat-slide-toggle color="primary" [formControl]="activateControl" *ngIf="canEditCrew$ | async"></mat-slide-toggle>
 
     <span class="spacer"></span>
 
@@ -50,12 +43,11 @@
       <mat-icon>add_chart</mat-icon>
     </button>
 
-    <button
-      mat-icon-button
-      *ngIf="canEditCrew$ | async"
-      (click)="openCrewEditor()"
-    >
+    <button mat-icon-button *ngIf="canEditCrew$ | async" (click)="openCrewEditor()">
       <mat-icon>groups</mat-icon>
+    </button>
+    <button mat-icon-button color="warn" *ngIf="enableDelete && (canEditCrew$ | async)" (click)="onDelete()">
+      <mat-icon>delete</mat-icon>
     </button>
   </mat-card-actions>
 </mat-card>

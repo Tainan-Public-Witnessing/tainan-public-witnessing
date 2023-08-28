@@ -1,25 +1,35 @@
 <div class="title-bar flex items-center">
-  <span class=" mr-3">
+  <span class="mr-3">
     <mat-icon class="iconTitle" [color]="'primary'">location_on</mat-icon>
   </span>
-  <h2>{{'SETTINGS.SITES' | translate}}</h2>
+  <h2>{{ "SETTINGS.SITES" | translate }}</h2>
   <span class="spacer"></span>
   <button mat-icon-button (click)="createSite()">
     <mat-icon>add</mat-icon>
   </button>
 </div>
 <mat-card>
-  <mat-list>
-    <mat-list-item *ngFor="let site of sites$ | async">
-      <p matLine class="siteTitle" [class.deativated]="!site.activate">{{site.name}}</p>
-      <p matLine class="siteDetail">{{site.position}}</p>
-      <button mat-icon-button (click)="openSiteEditor(site)">
-        <mat-icon>edit</mat-icon>
-      </button>
-      <button mat-icon-button [color]="site.activate ? 'warn' : 'default'" (click)="changeSiteActivation(site)">
-        <mat-icon>{{site.activate? "work_off" : "work"}}</mat-icon>
-      </button>
-      <mat-divider></mat-divider>
-    </mat-list-item>
+  <mat-list class="relative">
+    <ng-template ngFor [ngForOf]="sites$ | async" let-site let-i="index">
+      <mat-divider *ngIf="i !== 0"></mat-divider>
+      <mat-list-item
+        [class.opacity-70]="!site.activate"
+        [class.bg-gray-200]="!site.activate"
+      >
+        <mat-slide-toggle
+          mat-list-icon
+          color="primary"
+          [checked]="site.activate"
+          (change)="changeSiteActivation(site)"
+        ></mat-slide-toggle>
+        <p mat-line class="siteTitle">
+          {{ site.name }}
+        </p>
+        <p mat-line class="siteDetail">{{ site.position }}</p>
+        <button mat-icon-button (click)="openSiteEditor(site)">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </mat-list-item>
+    </ng-template>
   </mat-list>
 </mat-card>

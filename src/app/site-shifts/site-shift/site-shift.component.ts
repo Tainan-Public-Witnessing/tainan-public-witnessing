@@ -1,14 +1,17 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ShiftHour } from '../../_interfaces/shift-hours.interface';
+import { Subject, debounceTime, distinctUntilChanged, tap } from 'rxjs';
 import {
-  SiteShifts,
   SiteShiftFull,
+  SiteShifts,
 } from 'src/app/_interfaces/site-shifts.interface';
 import { SiteShiftService } from 'src/app/_services/site-shifts.service';
-import { Subject, debounceTime } from 'rxjs';
-import { distinctUntilChanged } from 'rxjs';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { TranslateService } from '@ngx-translate/core';
+import { ShiftHour } from '../../_interfaces/shift-hours.interface';
+
+enum SavingState {
+  None = '',
+  Saving = 'Saving',
+  Saved = 'Saved',
+}
 
 @Component({
   selector: 'app-site-shift',
@@ -21,101 +24,76 @@ export class SiteShiftComponent implements OnInit {
   shiftHour: ShiftHour | undefined;
   siteShift: SiteShifts;
   siteShift$ = new Subject<SiteShifts>();
-  constructor(
-    private siteShiftService: SiteShiftService,
-    private snackBar: MatSnackBar,
-    private translate: TranslateService
-  ) {}
-  languageMenu = [{ title: '', tag: '' }];
-  getLang(data: any) {
-    this.languageMenu = [
-      { title: data.TW, tag: 'zh-TW' },
-      { title: data.US, tag: 'en-US' },
-    ];
+
+  savingStateTimer: number = 0;
+  private _savingState = SavingState.None;
+  get savingState() {
+    return this._savingState;
   }
+  set savingState(value: SavingState) {
+    this._savingState = value;
+    clearTimeout(this.savingStateTimer);
+    if (value === SavingState.Saved) {
+      this.savingStateTimer = setTimeout(
+        () => (this.savingState = SavingState.None),
+        3000
+      ) as any as number;
+    }
+  }
+  SavingState = SavingState;
+
+  constructor(private siteShiftService: SiteShiftService) {}
+  languageMenu = [{ title: '', tag: '' }];
+
   ngOnInit(): void {
     this.shiftHour = this.siteShiftFull.shiftHour;
     const siteShift = this.siteShiftFull.siteShift;
     this.siteShift = {
-      uuid: siteShift?.uuid === undefined ? '' : siteShift.uuid,
-      activate: siteShift?.activate === undefined ? false : siteShift.activate,
-      attendence:
-        siteShift?.attendence === undefined ? 0 : siteShift.attendence,
-      delivers: siteShift?.delivers === undefined ? 0 : siteShift.delivers,
-      shiftHoursUuid:
-        siteShift?.shiftHoursUuid === undefined ? '' : siteShift.shiftHoursUuid,
-      siteUuid: siteShift?.siteUuid === undefined ? '' : siteShift.siteUuid,
-      weekday: siteShift?.weekday === undefined ? 0 : siteShift.weekday,
+      uuid: siteShift?.uuid ?? '',
+      activate: siteShift?.activate ?? false,
+      attendance: siteShift?.attendance ?? 0,
+      delivers: siteShift?.delivers ?? 0,
+      shiftHoursUuid: siteShift?.shiftHoursUuid ?? '',
+      siteUuid: siteShift?.siteUuid ?? '',
+      weekday: siteShift?.weekday ?? 0,
     };
     this.siteShift$
       .pipe(
+        tap(() => (this.savingState = SavingState.Saving)),
         debounceTime(1500),
         distinctUntilChanged(
           (previous, current): boolean =>
             previous.activate === current.activate &&
-            previous.attendence === current.attendence &&
+            previous.attendance === current.attendance &&
             previous.delivers === current.delivers
         )
       )
       .subscribe(async (data) => {
         await this.siteShiftService.updateSiteShift(data);
-        let day = this.translate.instant(`WEEKDAYS.${this.day}`);
-        let confirm = this.translate.instant('GLOBAL.CONFIRM');
-        let updateInfo = this.translate.instant('SITE-SHIFTS.UPDATEINFO');
-        this.snackBar.open(
-          `[${day}] [${this.shiftHour?.name}] ${updateInfo}`,
-          confirm,
-          {
-            duration: 5000,
-          }
-        );
+        this.savingState = SavingState.Saved;
       });
   }
-  OnAddAttendence() {
-    this.siteShift.attendence++;
+
+  onAttendanceChange(delta: number) {
+    const { attendance, delivers } = this.siteShift;
+
+    this.siteShift.attendance = Math.max(attendance + delta, 0);
+    this.siteShift.delivers = Math.min(delivers, this.siteShift.attendance);
+    this.siteShift.activate = this.siteShift.attendance > 0;
+
     this.siteShift$.next({ ...this.siteShift });
-  }
-  OnSubtractAttendence() {
-    let { attendence } = this.siteShift;
-    if (attendence > 0) {
-      attendence--;
-      this.siteShift.attendence = attendence < 0 ? 0 : attendence;
-      this.siteShift$.next({ ...this.siteShift });
-    }
-  }
-  OnAddDeliver() {
-    this.siteShift.delivers++;
-    this.siteShift$.next({ ...this.siteShift });
-  }
-  OnSubtractDeliver() {
-    let { delivers } = this.siteShift;
-    if (delivers > 0) {
-      delivers--;
-      this.siteShift.delivers = delivers < 0 ? 0 : delivers;
-      this.siteShift$.next({ ...this.siteShift });
-    }
-  }
-  OnCheckChange(event: HTMLInputElement) {
-    console.log(event.checked);
-    this.siteShift.activate = event.checked;
-    this.siteShift$.next({ ...this.siteShift });
-  }
-  setCardClass() {
-    return (this.siteShift.activate ? 'activate' : 'inactivate') + ' mb-5';
   }
 
-  setDeliverColor() {
-    const { activate, delivers } = this.siteShift;
-    let colorClass = '';
-    if (activate && delivers > 0) colorClass = 'activate-deliver';
-    return colorClass;
-  }
+  onDeliverChange(delta: number) {
+    const { attendance, delivers } = this.siteShift;
 
-  setGroupColor() {
-    const { activate, attendence } = this.siteShift;
-    let colorClass = '';
-    if (activate && attendence > 0) colorClass = 'activate-group';
-    else if (activate && attendence == 0) colorClass = 'warn-group';
-    return colorClass;
+    this.siteShift.delivers = Math.max(delivers + delta, 0);
+    this.siteShift.attendance = Math.max(
+      this.siteShift.attendance,
+      this.siteShift.delivers
+    );
+    this.siteShift.activate = this.siteShift.attendance > 0;
+
+    this.siteShift$.next({ ...this.siteShift });
   }
 }

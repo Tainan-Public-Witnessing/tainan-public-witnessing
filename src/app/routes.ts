@@ -1,3 +1,5 @@
+import { Mode } from './_enums/mode.enum';
+import { Permission } from './_enums/permission.enum';
 import { HomeComponent } from './home/home.component';
 import { LineBindingComponent } from './line-binding/line-binding.component';
 import { LoginComponent } from './login/login.component';
@@ -5,18 +7,15 @@ import { OpeningShiftsComponent } from './opening-shifts/opening-shifts.componen
 import { PersonalShiftComponent } from './personal-shift/personal-shift.component';
 import { SettingsComponent } from './settings/settings.component';
 import { ShiftsComponent } from './shifts/shifts.component';
+import { SiteShiftsComponent } from './site-shifts/site-shifts.component';
 import { UserTableComponent } from './users/user-table.component';
 import { UserComponent } from './users/user/user.component';
-import { Mode } from './_enums/mode.enum';
-import { Permission } from './_enums/permission.enum';
-import { SiteShiftsComponent } from './site-shifts/site-shifts.component';
 
 type RouteDef = {
   path: string;
   component: any;
   permission: Permission;
   label?: string;
-  menu?: boolean;
 };
 
 type RouteDefComplete = RouteDef & {
@@ -58,13 +57,11 @@ export const routes = [
     path: `users/${Mode.CREATE}`,
     component: UserComponent,
     permission: Permission.ADMINISTRATOR,
-    menu: false,
   },
   {
     path: 'users/:mode/:uuid',
     component: UserComponent,
     permission: Permission.MANAGER,
-    menu: false,
   },
   {
     path: 'profile',
@@ -76,13 +73,11 @@ export const routes = [
     path: 'login',
     component: LoginComponent,
     permission: Permission.GUEST,
-    menu: false,
   },
   {
     path: 'bind',
     component: LineBindingComponent,
     permission: Permission.GUEST,
-    menu: false,
   },
   {
     path: 'settings',
@@ -104,3 +99,24 @@ function buildRegexp(route: RouteDef): RouteDefComplete {
     pathRegexp: new RegExp('^/' + route.path.replace(/:\w+/g, '.+')),
   };
 }
+
+export const menu = [
+  'home',
+  { label: 'MENU.PERSONAL', permission: Permission.USER },
+  'profile',
+  'personal-shift',
+  'shifts/available',
+  { label: 'MENU.MANAGEMENT', permission: Permission.MANAGER },
+  'users',
+  'shifts',
+  'settings',
+  'site-shifts',
+].map((item) => {
+  if (typeof item === 'string') {
+    return (
+      routes.find((route) => route.path === item)! ||
+      console.error(`Route: "${item}" does not exist`)
+    );
+  }
+  return item;
+});

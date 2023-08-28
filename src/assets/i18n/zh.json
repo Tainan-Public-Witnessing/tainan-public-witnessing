@@ -13,7 +13,9 @@
     "DELETE_MESSAGE": "你確定要刪除{{value}}嗎？",
     "ERROR": "錯誤",
     "EXISTED_ERROR": "{{value}}已存在！",
+    "SAVE": "儲存",
     "DONOT_EXIST_ERROR": "{{value}}不存在！",
+    "SAVING": "儲存中…",
     "SAVED": "儲存成功！",
     "DAY": {
       "SUNDAY": "週日",
@@ -185,8 +187,13 @@
   "SHIFTS": {
     "TITLE": "查詢班表",
     "LABEL": {
-      "DATE": "年份-月份-日期"
-    }
+      "DATE": "日期",
+      "SITE": "地點",
+      "SHIFTHOUR": "時段"
+    },
+    "CREATE": "新增班次",
+    "DELETE_CONFIRM_TITLE": "你確定要刪除這個班次嗎？",
+    "DELETE_CONFIRM_MESSAGE": "日期： {{date}}\n時段： {{time}}\n地點： {{site}}"
   },
   "PERMISSIONS": {
     "0": "開發者",
@@ -207,9 +214,10 @@
     "START": "開始",
     "END": "結束"
   },
-  "SITE-SHIFTS":{
+  "SITE-SHIFTS": {
     "TITLE": "地點時段排班設定",
-    "UPDATEINFO": "設定已更新"
+    "SITE": "地點",
+    "SELECT_SITE": "請選擇地點"
   },
   "WEEKDAYS": {
     "0": "星期日",
@@ -219,5 +227,9 @@
     "4": "星期四",
     "5": "星期五",
     "6": "星期六"
+  },
+  "MENU": {
+    "PERSONAL": "我的排班",
+    "MANAGEMENT": "管理功能"
   }
 }

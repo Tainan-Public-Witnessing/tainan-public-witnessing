@@ -9,4 +9,5 @@ export interface Shift {
   attendance: number;
   full: boolean;
   delivers: number;
+  weekday: number;
 }

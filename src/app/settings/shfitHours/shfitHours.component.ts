@@ -4,12 +4,18 @@ import { ShiftHoursCreatorComponent } from 'src/app/_elements/dialogs/shiftHour-
 import { ShiftHoursService } from '../../_services/shift-hours.service';
 import { ShiftHour } from '../../_interfaces/shift-hours.interface';
 import { ShiftHoursEditorComponent } from 'src/app/_elements/dialogs/shiftHour-editor/shiftHour-editor.component';
-import { Subject, BehaviorSubject, startWith, switchMap, takeUntil } from 'rxjs';
+import {
+  Subject,
+  BehaviorSubject,
+  startWith,
+  switchMap,
+  takeUntil,
+} from 'rxjs';
 import { filter } from 'rxjs/operators';
 @Component({
   selector: 'app-shfitHours',
   templateUrl: './shfitHours.component.html',
-  styleUrls: ['./shfitHours.component.scss']
+  styleUrls: ['./shfitHours.component.scss'],
 })
 export class ShfitHoursComponent implements OnInit, OnDestroy {
   reloadList$ = new BehaviorSubject<void>(undefined);
@@ -18,21 +24,22 @@ export class ShfitHoursComponent implements OnInit, OnDestroy {
   constructor(
     private shifthoursService: ShiftHoursService,
     private matDialog: MatDialog
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    this.reloadList$.pipe(
-      startWith(undefined),
-      switchMap(() => {
-        return this.shifthoursService
-          .getShiftHours().pipe(
+    this.reloadList$
+      .pipe(
+        startWith(undefined),
+        switchMap(() => {
+          return this.shifthoursService.getShiftHours().pipe(
             filter((f) => f !== null),
             takeUntil(this.unsubscribe$)
-            )
-      })
-    ).subscribe(shifthours => {
-      this.shifthours$.next(shifthours);
-    })
+          );
+        })
+      )
+      .subscribe((shifthours) => {
+        this.shifthours$.next(shifthours);
+      });
   }
 
   ngOnDestroy(): void {
@@ -44,10 +51,9 @@ export class ShfitHoursComponent implements OnInit, OnDestroy {
       panelClass: 'dialog-panel',
     });
     creatDiagRef.afterClosed().subscribe((result) => {
-      if (result === 'success')
-        this.reloadList$.next(undefined);
+      if (result === 'success') this.reloadList$.next(undefined);
     });
-  }
+  };
   openShiftHourEditor = (shiftHour: ShiftHour) => {
     let editDiagRef = this.matDialog.open(ShiftHoursEditorComponent, {
       panelClass: 'dialog-panel',
@@ -56,17 +62,16 @@ export class ShfitHoursComponent implements OnInit, OnDestroy {
       },
     });
     editDiagRef.afterClosed().subscribe((result) => {
-      if (result === 'success')
-        this.reloadList$.next(undefined);
+      if (result === 'success') this.reloadList$.next(undefined);
     });
-  }
+  };
   changeShiftHourActivation = async (shifthour: ShiftHour) => {
     await this.shifthoursService.changeShiftHourActivation(shifthour);
-    this.reloadList$.next(undefined);   
-  }
-
-  changeShiftHourDelivery = async (shifthour: ShiftHour) => {
-    await this.shifthoursService.changeShiftHourDelivery(shifthour);
     this.reloadList$.next(undefined);
-  }
+  };
+
+  // changeShiftHourDelivery = async (shifthour: ShiftHour) => {
+  //   await this.shifthoursService.changeShiftHourDelivery(shifthour);
+  //   this.reloadList$.next(undefined);
+  // }
 }

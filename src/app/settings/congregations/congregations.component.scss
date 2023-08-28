@@ -12,8 +12,4 @@ $warn-palette: map-get($palettes, 'warn');
   .iconTitle {
     font-size: xx-large;
   }
-
-  .deativated {
-    color: map-get($warn-palette, 'text');
-  }
 }

@@ -2,7 +2,7 @@ import { ShiftHour } from './shift-hours.interface';
 
 export interface SiteShifts {
   activate: boolean;
-  attendence: number;
+  attendance: number;
   delivers: number;
   shiftHoursUuid: string;
   siteUuid: string;

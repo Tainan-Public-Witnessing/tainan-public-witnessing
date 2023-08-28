@@ -1,25 +1,39 @@
 <div class="title-bar flex items-center">
-  <span class=" mr-3">
+  <span class="mr-3">
     <mat-icon class="iconTitle" [color]="'primary'">group</mat-icon>
   </span>
-  <h2>{{'CONGREGATIONS.TITLE' | translate}}</h2>
+  <h2>{{ "CONGREGATIONS.TITLE" | translate }}</h2>
   <span class="spacer"></span>
   <button mat-icon-button (click)="createCongregation()">
     <mat-icon>add</mat-icon>
   </button>
 </div>
 <mat-card class="h-1/2 overflow-auto">
-  <mat-list>
-    <mat-list-item *ngFor="let congregation of congregations$ | async">
-      <p matLine class="congTitle" [class.deativated]="!congregation.activate">{{congregation.name}}</p>
-      <button mat-icon-button (click)="openCongregationEditor(congregation)">
-        <mat-icon>edit</mat-icon>
-      </button>
-      <button mat-icon-button [color]="congregation.activate ? 'warn' : 'default'"
-        (click)="changeCongregationActivation(congregation)">
-        <mat-icon>{{congregation.activate? "work_off" : "work"}}</mat-icon>
-      </button>
-      <mat-divider></mat-divider>
-    </mat-list-item>
+  <mat-list class="relative">
+    <ng-template
+      ngFor
+      [ngForOf]="congregations$ | async"
+      let-congregation
+      let-i="index"
+    >
+      <mat-divider *ngIf="i !== 0"></mat-divider>
+      <mat-list-item
+        [class.bg-gray-200]="!congregation.activate"
+        [class.opacity-70]="!congregation.activate"
+      >
+        <mat-slide-toggle
+          mat-list-icon
+          color="primary"
+          [checked]="congregation.activate"
+          (change)="changeCongregationActivation(congregation)"
+        ></mat-slide-toggle>
+        <p matLine class="congTitle">
+          {{ congregation.name }}
+        </p>
+        <button mat-icon-button (click)="openCongregationEditor(congregation)">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </mat-list-item>
+    </ng-template>
   </mat-list>
 </mat-card>

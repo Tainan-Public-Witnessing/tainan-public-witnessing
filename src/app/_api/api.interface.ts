@@ -57,6 +57,7 @@ export interface ApiInterface {
   ) => Promise<(Shift | undefined)[]>;
   readShift: (yearMonth: string, uuid: string) => Promise<Shift>;
   updateShift: (shift: Shift) => Promise<void>;
+  createShift: (shift: Shift) => Promise<void>;
 
   readPersonalShifts: (
     yearMonth: string,
@@ -79,7 +80,7 @@ export interface ApiInterface {
   createSiteShifts: (
     siteShifts: Omit<
       SiteShifts,
-      'uuid' | 'activate' | 'attendence' | 'delivers'
+      'uuid' | 'activate' | 'attendance' | 'delivers'
     >[]
   ) => Promise<void>;
   updateSiteShift: (siteShift: SiteShifts) => Promise<void>;

@@ -4,6 +4,7 @@ import { routes } from './routes';
 import { AuthorityService } from './_services/authority.service';
 
 const appRoutes: Routes = routes
+  .filter((route) => 'path' in route)
   .map<Route>((route) => ({
     path: route.path,
     component: route.component,

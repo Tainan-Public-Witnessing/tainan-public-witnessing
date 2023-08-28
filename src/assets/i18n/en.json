@@ -23,6 +23,7 @@
       "SATURDAY": "Saturday"
     },
     "ERROR": "Error",
+    "SAVING": "Saving...",
     "SAVED": "Saved!",
     "ERRORS": {
       "UNKNOWN": "Unknown error! Please try again later."
@@ -36,7 +37,8 @@
       "PREV_PAGE": "Previous Page",
       "FIRST_PAGE": "First Page",
       "LAST_PAGE": "Last Page"
-    }
+    },
+    "SAVE": "Save"
   },
   "GENDER": {
     "MALE": "Male",
@@ -171,8 +173,13 @@
   "SHIFTS": {
     "TITLE": "Search Shifts",
     "LABEL": {
-      "DATE": "Year-Month-Date"
-    }
+      "DATE": "Date",
+      "SITE": "Site",
+      "SHIFTHOUR": "Hour"
+    },
+    "CREATE": "Create Shift",
+    "DELETE_CONFIRM_TITLE": "Are you sure to delete this shift?",
+    "DELETE_CONFIRM_MESSAGE": "Date: {{date}}\nTime: {{time}}\nLocation: {{site}}"
   },
   "PERMISSIONS": {
     "0": "Developer",
@@ -195,7 +202,8 @@
   },
   "SITE-SHIFTS": {
     "TITLE": "Site Shifts Setting",
-    "UPDATEINFO": "has been updated"
+    "SITE": "Site",
+    "SELECT_SITE": "Please select a site first"
   },
   "WEEKDAYS": {
     "0": "Sunday",
@@ -220,5 +228,9 @@
       "YEAR_MONTH": "Year-Month"
     },
     "JOIN_SUCCESSFULLY": "Joined successfully"
+  },
+  "MENU": {
+    "PERSONAL": "My Shifts",
+    "MANAGEMENT": "Management"
   }
 }

@@ -1,10 +1,22 @@
 <div class="container">
-  <mat-form-field appearance="outline">
-    <mat-label>{{'SHIFTS.LABEL.DATE' | translate}}</mat-label>
-    <input matInput [matDatepicker]="datePicker" [formControl]="dateControl">
-    <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
-    <mat-datepicker #datePicker></mat-datepicker>
-  </mat-form-field>
+  <div class="flex items-center justify-between">
+    <mat-form-field appearance="outline">
+      <mat-label>{{ "SHIFTS.LABEL.DATE" | translate }}</mat-label>
+      <input
+        matInput
+        [matDatepicker]="datePicker"
+        [formControl]="dateControl"
+      />
+      <mat-datepicker-toggle
+        matSuffix
+        [for]="datePicker"
+      ></mat-datepicker-toggle>
+      <mat-datepicker #datePicker></mat-datepicker>
+    </mat-form-field>
+    <button mat-raised-button (click)="onOpenDialog()">
+      {{ "SHIFTS.CREATE" | translate }}
+    </button>
+  </div>
 
-  <app-shift-table [shifts$]="shifts$"></app-shift-table>
+  <app-shift-table [shifts$]="shifts$" [enableDelete]="true"></app-shift-table>
 </div>

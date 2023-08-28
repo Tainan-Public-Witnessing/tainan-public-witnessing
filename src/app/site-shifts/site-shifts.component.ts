@@ -49,7 +49,6 @@ export class SiteShiftsComponent implements OnInit, OnDestroy {
         )
       ),
       filter((data) => data.siteShifts !== undefined),
-      tap((data) => console.log(data)),
       switchMap((data) =>
         from(this.shiftHoursService.getShiftHours()).pipe(
           filter((shiftHours) => shiftHours !== null),
@@ -57,7 +56,7 @@ export class SiteShiftsComponent implements OnInit, OnDestroy {
             const map = new Map<number, SiteShiftFull[] | undefined>();
             const missingSiteShifts: Omit<
               SiteShifts,
-              'uuid' | 'activate' | 'attendence' | 'delivers'
+              'uuid' | 'activate' | 'attendance' | 'delivers'
             >[] = [];
             const days = [0, 1, 2, 3, 4, 5, 6];
             days.forEach((day) => {

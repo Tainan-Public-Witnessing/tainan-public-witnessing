@@ -22,7 +22,7 @@ export class SiteShiftService {
   createBatchSiteShifts = (
     siteShifts: Omit<
       SiteShifts,
-      'uuid' | 'activate' | 'attendence' | 'delivers'
+      'uuid' | 'activate' | 'attendance' | 'delivers'
     >[]
   ) => {
     this.siteShifts$?.complete();

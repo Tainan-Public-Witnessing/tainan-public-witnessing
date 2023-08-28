@@ -5,14 +5,15 @@ import {
   filter,
   from,
   map,
+  merge,
   Observable,
   startWith,
   Subject,
-  switchMap
+  switchMap,
 } from 'rxjs';
 import { Shift } from '../_interfaces/shift.interface';
 import { AuthorityService } from '../_services/authority.service';
-import { GlobalEventService } from '../_services/global-event.service';
+import { EVENTS, GlobalEventService } from '../_services/global-event.service';
 import { ShiftsService } from '../_services/shifts.service';
 
 @Component({
@@ -31,14 +32,12 @@ export class OpeningShiftsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.shifts$ = combineLatest([
-      this.globalEvent
-        .getGlobalEventById('SHIFTS_CHANGED')
-        .pipe(startWith(undefined)),
-      this.yearMonthControl.valueChanges.pipe(startWith(undefined)),
-    ]).pipe(
+    this.shifts$ = merge(
+      this.globalEvent.getGlobalEventById(EVENTS.SHIFTS_CHANGE),
+      this.yearMonthControl.valueChanges
+    ).pipe(
+      startWith(undefined),
       map(() => this.yearMonthControl.value),
-      filter((value) => !!value),
       switchMap((yearMonth) =>
         from(
           this.shiftService.getOpeningShift(
