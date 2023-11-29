@@ -250,9 +250,9 @@ export class ShiftCardComponent implements OnInit, OnDestroy {
         } as ConfirmDialogData,
       })
       .afterClosed()
-      .subscribe((confirmed) => {
+      .subscribe(async (confirmed) => {
         if (confirmed) {
-          this.shiftService.deleteShift(this.shift!);
+          await this.shiftService.deleteShift(this.shift!);
           this.globalEvent.emitGlobalEvent({ id: EVENTS.SHIFTS_CHANGE });
         }
       });
