@@ -1,8 +1,6 @@
 <mat-card [class.bg-gray-200]="!siteShift?.activate">
   <mat-card-title>{{ shiftHour?.name }}</mat-card-title>
-  <mat-card-subtitle
-    >{{ shiftHour?.startTime }} ～ {{ shiftHour?.endTime }}</mat-card-subtitle
-  >
+  <mat-card-subtitle>{{ shiftHour?.startTime }} ～ {{ shiftHour?.endTime }}</mat-card-subtitle>
   <mat-card-content>
     <div>
       <button mat-icon-button (click)="onAttendanceChange(-1)">
@@ -33,8 +31,7 @@
       <!-- 因為中英文字的大小有些不同 savingState === None
     的時候，還是需要設定成透明但是內文要有中文字，不然尺寸會出現抖動-->
       {{
-        "GLOBAL." + (savingState || SavingState.Saving) | uppercase | translate
-      }}</mat-hint
-    >
+      "GLOBAL." + (savingState || SavingState.Saving) | uppercase | translate
+      }}</mat-hint>
   </mat-card-content>
 </mat-card>

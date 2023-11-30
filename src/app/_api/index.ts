@@ -474,11 +474,37 @@ export class Api implements ApiInterface {
       .set(shift);
   };
 
-  deleteShift = (shift: Shift): Promise<void> => {
+  deleteShift = async (shift: Shift): Promise<void> => {
     const yearMonth = shift.date.slice(0, 7);
-    return this.angularFirestore
-      .doc(`/MonthlyData/${yearMonth}/Shifts/${shift.uuid}`)
-      .delete();
+    let crewUuids = await firstValueFrom(
+      this.angularFirestore
+        .collection<Shift>(
+          ['MonthlyData', yearMonth, 'Shifts'].join('/'),
+          (doc) => doc.where('uuid', '==', shift.uuid)
+        )
+        .get()
+    ).then((doc) => doc.docs.map((d) => d.data())[0].crewUuids);
+    for (let crewUuid of crewUuids) {
+      let personalShift = await firstValueFrom(
+        this.angularFirestore
+          .collection<PersonalShifts>(
+            ['MonthlyData', yearMonth, 'PersonalShifts'].join('/'),
+            (doc) => doc.where('uuid', '==', crewUuid)
+          )
+          .get()
+      ).then((doc) => doc.docs.map((d) => d.data())[0]);
+      personalShift.shiftUuids = personalShift.shiftUuids.filter(
+        (f) => f !== shift.uuid
+      );
+      await this.angularFirestore
+        .doc<PersonalShifts>(
+          `MonthlyData/${yearMonth}/PersonalShifts/${crewUuid}`
+        )
+        .update(personalShift);
+      await this.angularFirestore
+        .doc(`/MonthlyData/${yearMonth}/Shifts/${shift.uuid}`)
+        .delete();
+    }
   };
 
   readPersonalShifts = (

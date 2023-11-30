@@ -1,4 +1,4 @@
-import { ShiftHour } from "./shift-hours.interface";
+import { ShiftHour } from './shift-hours.interface';
 
 export interface SiteShifts {
   activate: boolean;
