@@ -7,6 +7,7 @@ import pandas as pd
 from dateutil.relativedelta import relativedelta
 from dateutil.rrule import *
 from firebase_admin import firestore
+from dateutil.parser import parse
 
 
 def ScheduleReminder(LineNotify):
@@ -36,6 +37,10 @@ def ShiftSchedule(db):
     weekdayTodate = {"0": [], "1": [], "2": [], "3": [], "4": [], "5": [], "6": []}
     # 將該月份的每個日期按照工作日分類
     beArrangeddays = list(rrule(DAILY, dtstart=startDate, until=endDate))
+    # 避開燈會期間的安排
+    for i in range(1, 11):
+        date.remove(parse(f"2024-03-{i:02}"))
+
     for day in beArrangeddays:
         w = day.isoweekday() if day.isoweekday() != 7 else 0
         weekdayTodate[str(w)].append(day.strftime("%Y-%m-%d"))
