@@ -10,6 +10,7 @@ from firebase_admin import firestore
 from dateutil.parser import parse
 
 
+
 def ScheduleReminder(LineNotify):
     LINE_NOTIFY_CLIENT = json.loads(os.getenv("LINE_NOTIFY_CLIENT"))
     GROUP_TOKEN = LINE_NOTIFY_CLIENT["GROUP_TOKEN"]
@@ -37,9 +38,6 @@ def ShiftSchedule(db):
     weekdayTodate = {"0": [], "1": [], "2": [], "3": [], "4": [], "5": [], "6": []}
     # 將該月份的每個日期按照工作日分類
     beArrangeddays = list(rrule(DAILY, dtstart=startDate, until=endDate))
-    # 避開燈會期間的安排
-    for i in range(1, 11):
-        beArrangeddays.remove(parse(f"2024-03-{i:02}"))
 
     for day in beArrangeddays:
         w = day.isoweekday() if day.isoweekday() != 7 else 0
@@ -127,9 +125,23 @@ def ShiftSchedule(db):
                     continue
         return choosen
 
+    forbidden = [
+        "2024-03-01",
+        "2024-03-02",
+        "2024-03-03",
+        "2024-03-04",
+        "2024-03-05",
+        "2024-03-06",
+        "2024-03-07",
+        "2024-03-08",
+        "2024-03-09",
+        "2024-03-10",
+    ]
     for date in beArrangeddays:
         todayShift = []
         date_str = date.strftime("%Y-%m-%d")
+        if date_str in forbidden:
+            continue
         weekday = date.isoweekday() if date.isoweekday() != 7 else 0
         shifts = (
             db.collection("SiteShifts")
